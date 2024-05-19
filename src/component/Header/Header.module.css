@@ -19,11 +19,11 @@ nav > ul > li {
 	align-items: center;
 }
 
-.navLink {
+.navLink.light {
 	@apply rounded px-2 py-1 text-zinc-600;
 }
 
-.navLink:hover {
+.navLink.light:hover {
 	@apply bg-zinc-200/55 text-zinc-600;
 }
 

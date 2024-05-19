@@ -2,7 +2,7 @@ import { SetStoreFunction } from "solid-js/store"
 import { User } from "~/entity/user"
 import { createProviderF } from "~/util/createProvider"
 
-export const enum AppTheme {
+export enum AppTheme {
 	light,
 	dark,
 }

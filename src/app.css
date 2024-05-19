@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	--foreground-title: #000000;
+	--foreground-content: #71717a;
+	--background-primary: #ffffff;
+	--background-primary-hover: #f4f4f5;
+	--background-secondary: #f0f0f0
+}
+
+/* .test {
+	@apply bg-slate-500;
+} */
+
 body {
 	@apply bg-zinc-200/75;
 	white-space: break-spaces;
@@ -60,4 +72,15 @@ h3 {
 
 .gray-link-sm {
 	@apply text-sm text-gray-600 hover:text-gray-600/80;
+}
+
+
+/* Buttons */
+
+.button{
+	color: var(--foreground-content);
+	background-color: var(--background-primary);
+}
+.button:hover {
+	background-color: var(--background-primary-hover);
 }

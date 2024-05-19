@@ -13,6 +13,9 @@ export default function HomePage() {
 					<li>
 						<a href="/user/dev">user</a>
 					</li>
+					<li>
+						<a href="/theme">theme</a>
+					</li>
 				</ul>
 			</div>
 		</main>
