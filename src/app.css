@@ -1,30 +1,113 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-:root {
-	--foreground-title: #000000;
-	--foreground-content: #71717a;
-	--background-primary: #ffffff;
-	--background-primary-hover: #f4f4f5;
-	--background-secondary: #f0f0f0
+@font-face {
+	font-family: "Geist Sans";
+	font-weight: 100 900;
+	src:
+		local("Geist"),
+		url("/font/Geist/GeistVF.woff2") format("woff2"),
+		url("/font/Geist/GeistVF.woff") format("woff"),
+		url("/font/Geist/GeistVF.ttf") format("truetype");
 }
 
-/* .test {
-	@apply bg-slate-500;
-} */
+/* Themes */
+:root {
+	--white-100: 0 0% 98%;
+
+	--gray-1000: 240 5% 10%;
+	--gray-900: 240 3% 40%;
+	--gray-800: 240 3% 50%;
+	--gray-700: 240 3% 60%;
+	--gray-600: 240 3% 70%;
+	--gray-500: 240 4% 80%;
+	--gray-400: 240 4% 85%;
+	--gray-300: 240 5% 89%;
+	--gray-200: 240 5% 92%;
+	--gray-100: 240 5% 95%;
+
+	--blue-1000: 220 90% 25%;
+	--blue-900: 215 90% 41%;
+	--blue-800: 213 90% 52%;
+	--blue-700: 208 100% 58%;
+	--blue-600: 208 100% 70%;
+	--blue-500: 208 100% 82%;
+	--blue-400: 206 100% 88%;
+	--blue-300: 206 100% 92%;
+	--blue-200: 204 100% 94%;
+	--blue-100: 204 100% 97%;
+
+	--red-1000: -5 90% 20%;
+	--red-900: -5 90% 41%;
+	--red-800: -5 75% 55%;
+	--red-700: -3 90% 63%;
+	--red-600: -3 100% 72%;
+	--red-500: 0 100% 81%;
+	--red-400: 0 100% 88%;
+	--red-300: 0 100% 92%;
+	--red-200: 0 100% 94%;
+	--red-100: 0 100% 96%;
+
+	--green-1000: 140 30% 15%;
+	--green-900: 138 50% 30%;
+	--green-800: 138 45% 38%;
+	--green-700: 135 45% 45%;
+	--green-600: 130 60% 63%;
+	--green-500: 128 60% 75%;
+	--green-400: 128 60% 85%;
+	--green-300: 125 50% 89%;
+	--green-200: 125 50% 93%;
+	--green-100: 120 50% 95%;
+}
+
+.notransition * {
+	transition: none !important;
+}
+
+.light {
+	--fg-pri: 240 5% 10%;
+	--fg-sec: 240 5% 45%;
+	--bg-pri: var(--white-100);
+	--bg-sec: var(--gray-200);
+}
+
+.dark {
+	--fg-pri: 0 0% 98%;
+	--fg-sec: 240 5% 65%;
+	--bg-pri: 240 5% 10%;
+	--bg-sec: 240° 5% 15%;
+}
 
 body {
-	@apply bg-zinc-200/75;
 	white-space: break-spaces;
-	/* min-height: 100vh; */
-	/* height: minmax(100vh); */
+	font-family:
+		"Geist Sans",
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Open Sans",
+		"Helvetica Neue",
+		sans-serif;
+}
+
+#app {
+	background-color: hsl(var(--bg-pri));
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
 }
 
 main {
 	/* min-width: 64rem; */
 	@apply px-4 py-1;
-	background-color: white ;
+	background-color: hsl(var(--bg-pri));
+
 	width: 64rem;
 	max-width: 96vw;
 }
@@ -36,14 +119,6 @@ main {
 :focus-visible {
 	outline: 0.1rem solid;
 	border-radius: 0.1rem;
-}
-
-#app {
-	/* @apply h-full ; */
-	width: 100%;
-	display: flex;
-	align-items: center;
-	flex-direction: column;
 }
 
 h1 {
@@ -74,13 +149,36 @@ h3 {
 	@apply text-sm text-gray-600 hover:text-gray-600/80;
 }
 
-
 /* Buttons */
 
-.button{
-	color: var(--foreground-content);
-	background-color: var(--background-primary);
+.button {
+	color: hsl(var(--fg-sec));
+	background-color: hsl(var(--bg-pri));
+	transition-duration: 150ms;
+	border-color: hsl(var(--bg-sec));
+	border-radius: 0.25rem;
+	font-weight: 500;
 }
+
 .button:hover {
-	background-color: var(--background-primary-hover);
+	background-color: hsl(var(--bg-sec));
+}
+
+.highlight-button {
+	color: hsl(var(--bg-pri));
+	background-color: hsl(var(--fg-pri));
+}
+
+.highlight-button:hover {
+	color: hsl(var(--bg-pri));
+	background-color: hsl(var(--fg-pri) / 0.85);
+}
+
+.button:disabled {
+	background-color: hsl(var(--bg-sec));
+}
+
+.border-button {
+	border-color: hsl(var(--bg-sec));
+	border-width: 0.125rem;
 }

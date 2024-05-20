@@ -1,5 +1,5 @@
 import { Title } from "@solidjs/meta"
-import { Match, Show, Switch } from "solid-js"
+import { JSX, Match, Show, Switch, splitProps } from "solid-js"
 import { AppTheme, useAppState } from "~/state/app.state"
 
 export default function () {
@@ -8,27 +8,35 @@ export default function () {
 		<main>
 			<Title>Theme</Title>
 			<div
-				class="grid h-[100vh] gap-2 py-4"
+				class="grid h-auto grid-flow-col gap-4 py-4"
 				style={{
-					"grid-template-columns": "repeat(10, minmax(0, 1fr))",
-					"grid-template-rows": "repeat(24, minmax(0, 1fr))",
+					"grid-template-columns": "repeat(8, 1fr)",
+					"grid-template-rows": "repeat(12, 1fr)",
 				}}>
 				<Switch>
 					<Match when={theme() === AppTheme.light}>
 						<button
-							onClick={() => setTheme(AppTheme.dark)}
-							class="button dark">
-							Dark
+							class="button"
+							onClick={() => setTheme(AppTheme.dark)}>
+							Light
 						</button>
 					</Match>
 					<Match when={theme() === AppTheme.dark}>
 						<button
-							onClick={() => setTheme(AppTheme.light)}
-							class={`button light`}>
-							Light
+							class="button"
+							onClick={() => setTheme(AppTheme.light)}>
+							Dark
 						</button>
 					</Match>
 				</Switch>
+				<button class="button">Borderless</button>
+				<button class="button border-button">With Border</button>
+				<button
+					class="button"
+					disabled>
+					Disabled
+				</button>
+				<button class="button highlight-button">Highlight</button>
 			</div>
 		</main>
 	)
