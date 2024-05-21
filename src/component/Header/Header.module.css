@@ -1,7 +1,5 @@
 header {
-	@apply z-[1] box-border flex w-full justify-center shadow;
-	color: var(--foreground-content);
-	background-color: var(--bg-pri);
+	@apply z-[1] box-border flex w-full justify-center shadow text-gray-1000;
 }
 
 nav {

@@ -3,7 +3,6 @@ import { Router } from "@solidjs/router"
 import { FileRoutes } from "@solidjs/start/router"
 import { Suspense, createEffect, on, onMount } from "solid-js"
 import "./app.css"
-import "~/style/variables.css"
 import {
 	AppStateProvider,
 	AppTheme,
@@ -14,20 +13,19 @@ import {
 import Header from "~/component/Header/Header"
 
 function updateTheme(theme: AppTheme) {
-	function run(str: string) {
-		document.getElementById("app")!.className = ""
+	function change(str: string) {
 		document.getElementById("app")!.classList.add("notransition")
-		document.getElementById("app")!.classList.add(str)
+		document.documentElement.setAttribute("data-mode", str)
 		setTimeout(() => {
 			document.getElementById("app")!.classList.remove("notransition")
 		}, 0)
 	}
 	switch (theme) {
 		case AppTheme.light:
-			run("light")
+			change("light")
 			break
 		case AppTheme.dark:
-			run("dark")
+			change("dark")
 			break
 		default:
 			return -1

@@ -11,71 +11,207 @@
 		url("/font/Geist/GeistVF.ttf") format("truetype");
 }
 
-/* Themes */
-:root {
-	--white-100: 0 0% 98%;
-
-	--gray-1000: 240 5% 10%;
-	--gray-900: 240 3% 40%;
-	--gray-800: 240 3% 50%;
-	--gray-700: 240 3% 60%;
-	--gray-600: 240 3% 70%;
-	--gray-500: 240 4% 80%;
-	--gray-400: 240 4% 85%;
-	--gray-300: 240 5% 89%;
-	--gray-200: 240 5% 92%;
-	--gray-100: 240 5% 95%;
-
-	--blue-1000: 220 90% 25%;
-	--blue-900: 215 90% 41%;
-	--blue-800: 213 90% 52%;
-	--blue-700: 208 100% 58%;
-	--blue-600: 208 100% 70%;
-	--blue-500: 208 100% 82%;
-	--blue-400: 206 100% 88%;
-	--blue-300: 206 100% 92%;
-	--blue-200: 204 100% 94%;
-	--blue-100: 204 100% 97%;
-
-	--red-1000: -5 90% 20%;
-	--red-900: -5 90% 41%;
-	--red-800: -5 75% 55%;
-	--red-700: -3 90% 63%;
-	--red-600: -3 100% 72%;
-	--red-500: 0 100% 81%;
-	--red-400: 0 100% 88%;
-	--red-300: 0 100% 92%;
-	--red-200: 0 100% 94%;
-	--red-100: 0 100% 96%;
-
-	--green-1000: 140 30% 15%;
-	--green-900: 138 50% 30%;
-	--green-800: 138 45% 38%;
-	--green-700: 135 45% 45%;
-	--green-600: 130 60% 63%;
-	--green-500: 128 60% 75%;
-	--green-400: 128 60% 85%;
-	--green-300: 125 50% 89%;
-	--green-200: 125 50% 93%;
-	--green-100: 120 50% 95%;
-}
-
 .notransition * {
 	transition: none !important;
 }
 
-.light {
-	--fg-pri: 240 5% 10%;
-	--fg-sec: 240 5% 45%;
-	--bg-pri: var(--white-100);
-	--bg-sec: var(--gray-200);
+@layer base {
+	/* 颜色食用说明：https://vercel.com/geist/colors */
+	[data-mode="light"] {
+		--gray-100: 0 0% 95%;
+		--gray-200: 0 0% 92%;
+		--gray-300: 0 0% 90%;
+		--gray-400: 0 0% 84%;
+		--gray-500: 0 0% 79%;
+		--gray-600: 0 0% 66%;
+		--gray-700: 0 0% 56%;
+		--gray-800: 0 0% 49%;
+		--gray-900: 0 0% 40%;
+		--gray-1000: 0 0% 9%;
+
+		--red-100: 0 100% 97%;
+		--red-200: 0 100% 96%;
+		--red-300: 0 100% 95%;
+		--red-400: 0 90% 92%;
+		--red-500: 0 82% 85%;
+		--red-600: 359 91% 71%;
+		--red-700: 358 75% 59%;
+		--red-800: 358 70% 52%;
+		--red-900: 358 66% 48%;
+		--red-1000: 355 48% 15%;
+
+		--orange-100: 38 100% 95%;
+		--orange-200: 44 100% 92%;
+		--orange-300: 43 96% 90%;
+		--orange-400: 42 100% 78%;
+		--orange-500: 38 100% 71%;
+		--orange-600: 36 90% 62%;
+		--orange-700: 39 100% 57%;
+		--orange-800: 35 100% 52%;
+		--orange-900: 30 100% 32%;
+		--orange-1000: 20 79% 17%;
+
+		--green-100: 120 60% 96%;
+		--green-200: 120 60% 95%;
+		--green-300: 120 61% 91%;
+		--green-400: 121 61% 86%;
+		--green-500: 124 61% 75%;
+		--green-600: 125 60% 64%;
+		--green-700: 131 41% 46%;
+		--green-800: 132 43% 39%;
+		--green-900: 133 50% 32%;
+		--green-1000: 128 29% 15%;
+
+		--cyan-100: 177 70% 96%;
+		--cyan-200: 179 68% 94%;
+		--cyan-300: 178 69% 90%;
+		--cyan-400: 180 71% 85%;
+		--cyan-500: 180 70% 72%;
+		--cyan-600: 180 70% 57%;
+		--cyan-700: 183 80% 36%;
+		--cyan-800: 183 83% 30%;
+		--cyan-900: 184 91% 25%;
+		--cyan-1000: 171 79% 13%;
+
+		--blue-100: 212 100% 97%;
+		--blue-200: 210 100% 96%;
+		--blue-300: 209 100% 94%;
+		--blue-400: 209 100% 90%;
+		--blue-500: 209 100% 80%;
+		--blue-600: 208 100% 66%;
+		--blue-700: 212 100% 48%;
+		--blue-800: 212 100% 41%;
+		--blue-900: 211 100% 42%;
+		--blue-1000: 211 100% 15%;
+
+		--purple-100: 276 100% 97%;
+		--purple-200: 277 87% 97%;
+		--purple-300: 276 77% 95%;
+		--purple-400: 275 71% 92%;
+		--purple-500: 274 70% 82%;
+		--purple-600: 273 72% 73%;
+		--purple-700: 272 51% 54%;
+		--purple-800: 272 47% 45%;
+		--purple-900: 274 71% 43%;
+		--purple-1000: 276 100% 15%;
+
+		--pink-100: 330 100% 96%;
+		--pink-200: 340 90% 96%;
+		--pink-300: 338 81% 94%;
+		--pink-400: 341 74% 91%;
+		--pink-500: 340 75% 84%;
+		--pink-600: 341 75% 73%;
+		--pink-700: 336 80% 58%;
+		--pink-800: 336 74% 51%;
+		--pink-900: 336 65% 45%;
+		--pink-1000: 334 74% 15%;
+
+		--bg-100: 0 0% 100%;
+		--bg-main: 0 0% 98%;
+	}
+	[data-mode="dark"] {
+		--gray-100: 0 0% 10%;
+		--gray-200: 0 0% 12%;
+		--gray-300: 0 0% 16%;
+		--gray-400: 0 0% 18%;
+		--gray-500: 0 0% 27%;
+		--gray-600: 0 0% 53%;
+		--gray-700: 0 0% 56%;
+		--gray-800: 0 0% 49%;
+		--gray-900: 0 0% 63%;
+		--gray-1000: 0 0% 93%;
+
+		--red-100: 357 38% 12%;
+		--red-200: 357 46% 16%;
+		--red-300: 356 54% 22%;
+		--red-400: 358 55% 26%;
+		--red-500: 357 60% 32%;
+		--red-600: 358 75% 59%;
+		--red-700: 358 75% 59%;
+		--red-800: 358 69% 52%;
+		--red-900: 358 100% 69%;
+		--red-1000: 353 90% 96%;
+
+		--orange-100: 35 100% 8%;
+		--orange-200: 32 100% 10%;
+		--orange-300: 33 100% 15%;
+		--orange-400: 35 100% 17%;
+		--orange-500: 35 91% 22%;
+		--orange-600: 39 85% 49%;
+		--orange-700: 39 100% 57%;
+		--orange-800: 35 100% 52%;
+		--orange-900: 35 100% 52%;
+		--orange-1000: 41 94% 93%;
+
+		--green-100: 138 51% 9%;
+		--green-200: 137 51% 12%;
+		--green-300: 135 50% 14%;
+		--green-400: 136 70% 16%;
+		--green-500: 135 69% 23%;
+		--green-600: 135 70% 34%;
+		--green-700: 131 41% 46%;
+		--green-800: 132 43% 39%;
+		--green-900: 131 43% 57%;
+		--green-1000: 134 73% 94%;
+
+		--cyan-100: 169 78% 7%;
+		--cyan-200: 169 74% 9%;
+		--cyan-300: 172 76% 13%;
+		--cyan-400: 171 85% 13%;
+		--cyan-500: 172 84% 20%;
+		--cyan-600: 172 85% 32%;
+		--cyan-700: 173 80% 36%;
+		--cyan-800: 173 83% 30%;
+		--cyan-900: 174 90% 41%;
+		--cyan-1000: 166 72% 93%;
+
+		--blue-100: 215 51% 12%;
+		--blue-200: 215 58% 15%;
+		--blue-300: 213 71% 20%;
+		--blue-400: 212 78% 23%;
+		--blue-500: 211 86% 27%;
+		--blue-600: 206 100% 50%;
+		--blue-700: 212 100% 48%;
+		--blue-800: 212 100% 41%;
+		--blue-900: 210 100% 66%;
+		--blue-1000: 207 100% 96%;
+
+		--purple-100: 284 31% 12%;
+		--purple-200: 281 38% 16%;
+		--purple-300: 279 44% 23%;
+		--purple-400: 277 45% 28%;
+		--purple-500: 274 49% 35%;
+		--purple-600: 272 51% 54%;
+		--purple-700: 272 51% 54%;
+		--purple-800: 272 47% 45%;
+		--purple-900: 275 80% 71%;
+		--purple-1000: 284 71% 96%;
+
+		--pink-100: 335 31% 12%;
+		--pink-200: 334 43% 16%;
+		--pink-300: 335 48% 21%;
+		--pink-400: 335 52% 22%;
+		--pink-500: 335 57% 27%;
+		--pink-600: 336 75% 40%;
+		--pink-700: 336 80% 58%;
+		--pink-800: 336 74% 51%;
+		--pink-900: 341 90% 67%;
+		--pink-1000: 333 90% 96%;
+
+		--bg-100: 0 0% 4%;
+		--bg-main: 0 0% 0%;
+	}
 }
 
-.dark {
-	--fg-pri: 0 0% 98%;
-	--fg-sec: 240 5% 65%;
-	--bg-pri: 240 5% 10%;
-	--bg-sec: 240° 5% 15%;
+/* Shadows */
+[data-mode="light"] {
+	--shadow-1: inset 0 0 0 1px hsl(var(--gray-900) / 0.15),
+		inset 0 1.5px 2px 0 hsl(var(--gray-900) / 0.15);
+}
+[data-mode="dark"] {
+	--shadow-1: inset 0 -1px 1px 0 hsl(var(--gray-900) / 0.2),
+		inset 0 0 0 1px hsl(var(--gray-1000) / 0.2),
+		inset 0 3px 4px 0 hsl(var(--bg-main) / 0.3);
 }
 
 body {
@@ -96,7 +232,7 @@ body {
 }
 
 #app {
-	background-color: hsl(var(--bg-pri));
+	background-color: hsl(var(--bg-main));
 	width: 100%;
 	display: flex;
 	align-items: center;
@@ -106,20 +242,19 @@ body {
 main {
 	/* min-width: 64rem; */
 	@apply px-4 py-1;
-	background-color: hsl(var(--bg-pri));
-
+	background-color: hsl(var(--bg-main));
 	width: 64rem;
 	max-width: 96vw;
 }
 
-:focus {
+/* :focus {
 	outline: none;
 }
 
 :focus-visible {
 	outline: 0.1rem solid;
 	border-radius: 0.1rem;
-}
+} */
 
 h1 {
 	@apply text-3xl;
@@ -133,13 +268,9 @@ h3 {
 	@apply text-xl;
 }
 
-.blue_link {
+/* .blue_link {
 	@apply text-blue-600/90 hover:text-blue-500/80;
-}
-
-.border-sm {
-	border-width: 1.5px;
-}
+} */
 
 .gray-link {
 	@apply text-gray-600 hover:text-gray-600/80;
@@ -149,36 +280,40 @@ h3 {
 	@apply text-sm text-gray-600 hover:text-gray-600/80;
 }
 
-/* Buttons */
+@layer components {
+	/* Buttons */
+	.button_base {
+		@apply rounded font-medium transition-all;
+	}
 
-.button {
-	color: hsl(var(--fg-sec));
-	background-color: hsl(var(--bg-pri));
-	transition-duration: 150ms;
-	border-color: hsl(var(--bg-sec));
-	border-radius: 0.25rem;
-	font-weight: 500;
+	.button {
+		@apply button_base
+		text-gray-1000
+		bg-primary hover:bg-gray-200 active:bg-gray-300
+		dark:hover:bg-gray-200 dark:active:bg-gray-300
+		disabled:text-gray-1000 disabled:!bg-gray-300;
+	}
+
+	.border-button {
+		@apply button
+		border-gray-200
+		active:bg-gray-300
+		active:border-gray-300;
+		/* border-width: 0.125rem; */
+		box-shadow: var(--shadow-1);
+	}
+
+	.highlight-button {
+		@apply button_base
+		hover:bg-gray-1000/85 dark:hover:bg-gray-1000/95
+		active:bg-gray-1000/75 dark:active:bg-gray-1000/80;
+		color: hsl(var(--bg-main));
+		background-color: hsl(var(--gray-1000));
+	}
 }
 
-.button:hover {
-	background-color: hsl(var(--bg-sec));
-}
-
-.highlight-button {
-	color: hsl(var(--bg-pri));
-	background-color: hsl(var(--fg-pri));
-}
-
-.highlight-button:hover {
-	color: hsl(var(--bg-pri));
-	background-color: hsl(var(--fg-pri) / 0.85);
-}
-
-.button:disabled {
-	background-color: hsl(var(--bg-sec));
-}
-
-.border-button {
-	border-color: hsl(var(--bg-sec));
-	border-width: 0.125rem;
+@layer utilities {
+	.border-sm {
+		border-width: 1.5px;
+	}
 }
