@@ -31,13 +31,14 @@ export default function () {
 					</Match>
 				</Switch>
 				<button class=" button px-3 py-1">Borderless</button>
-				<button class=" border-button">With Border</button>
+				<button class=" border_button">With Border</button>
 				<button
 					class="button"
 					disabled>
 					Disabled
 				</button>
-				<button class=" highlight-button">Highlight</button>
+				<button class=" highlight_button">Highlight</button>
+				<button class=" highlight_button">Highlight</button>
 			</div>
 			<ColorPanel />
 		</main>
@@ -80,16 +81,20 @@ function ColorPanel() {
 	return (
 		<main class="grid-row-10 grid grid-flow-row gap-2">
 			<div class="grid size-fit grid-cols-3 gap-2">
-				<div class="place-content-center text-center">White</div>
+				<div class="place-content-center text-center text-gray-1000">
+					Bg
+				</div>
 				<div
 					style={{
 						...colorItemStyle,
-						"background-color": "white",
+						"background-color": "hsl(var(--bg-main))",
+						"box-shadow": "var(--shadow-3)",
 					}}></div>
 				<div
 					style={{
 						...colorItemStyle,
-						"background-color": `var(--gray-12)`,
+						"background-color": `hsl(var(--bg-highlight))`,
+						"box-shadow": "var(--shadow-3)",
 					}}></div>
 			</div>
 			{/* <For each={colors}>
@@ -174,7 +179,7 @@ function ColorPanel() {
 							<div
 								class="place-content-center text-center"
 								style={{
-									color: `var(--${color}-8))`,
+									color: `hsl(var(--${color}-800))`,
 								}}>
 								{color[0].toUpperCase() + color.slice(1)}
 							</div>
@@ -190,7 +195,8 @@ function ColorPanel() {
 								)}
 							</For>
 						</div>
-						<div class="my-2 grid grid-flow-col grid-cols-12 grid-rows-1 size-fit gap-2 rounded-md">
+						{/* Radix Colors */}
+						{/* <div class="my-2 grid grid-flow-col grid-cols-12 grid-rows-1 size-fit gap-2 rounded-md">
 							<div
 								class="place-content-center text-center"
 								style={{
@@ -207,7 +213,7 @@ function ColorPanel() {
 									</>
 								)}
 							</For>
-						</div>
+						</div> */}
 					</>
 				)}
 			</For>
