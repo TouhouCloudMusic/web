@@ -7,9 +7,9 @@
 	font-family: "Geist";
 	font-weight: 100 900;
 	src:
-		url("/font/Geist/GeistVF.woff2") format("woff2"),
-		url("/font/Geist/GeistVF.woff") format("woff"),
-		url("/font/Geist/GeistVF.ttf") format("truetype");
+		url("./style/font/Geist/GeistVF.woff2") format("woff2"),
+		url("./style/font/Geist/GeistVF.woff") format("woff"),
+		url("./style/font/Geist/GeistVF.ttf") format("truetype");
 }
 
 html {
@@ -36,7 +36,8 @@ html {
 
 @layer base {
 	/* 颜色食用说明：https://vercel.com/geist/colors */
-	html, html[data-mode="light"] {
+	html,
+	html[data-mode="light"] {
 		--gray-100: 0 0% 95%;
 		--gray-200: 0 0% 93%;
 		--gray-300: 0 0% 91%;
