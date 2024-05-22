@@ -1,6 +1,8 @@
+@import "./style/_main.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @font-face {
 	font-family: "Geist Sans";
 	font-weight: 100 900;
@@ -20,8 +22,8 @@
 	[data-mode="light"] {
 		--gray-100: 0 0% 95%;
 		--gray-200: 0 0% 92%;
-		--gray-300: 0 0% 90%;
-		--gray-400: 0 0% 84%;
+		--gray-300: 0 0% 89%;
+		--gray-400: 0 0% 85%;
 		--gray-500: 0 0% 79%;
 		--gray-600: 0 0% 66%;
 		--gray-700: 0 0% 56%;
@@ -106,7 +108,8 @@
 		--pink-900: 336 65% 45%;
 		--pink-1000: 334 74% 15%;
 
-		--bg-100: 0 0% 100%;
+		--bg-100: var(--gray-12);
+		/* --bg-100: 0 0% 100%; */
 		--bg-main: 0 0% 98%;
 	}
 	[data-mode="dark"] {
@@ -198,20 +201,11 @@
 		--pink-900: 341 90% 67%;
 		--pink-1000: 333 90% 96%;
 
-		--bg-100: 0 0% 4%;
+		--bg-100: 0 0% 5%;
 		--bg-main: 0 0% 0%;
 	}
-}
 
-/* Shadows */
-[data-mode="light"] {
-	--shadow-1: inset 0 0 0 1px hsl(var(--gray-900) / 0.15),
-		inset 0 1.5px 2px 0 hsl(var(--gray-900) / 0.15);
-}
-[data-mode="dark"] {
-	--shadow-1: inset 0 -1px 1px 0 hsl(var(--gray-900) / 0.2),
-		inset 0 0 0 1px hsl(var(--gray-1000) / 0.2),
-		inset 0 3px 4px 0 hsl(var(--bg-main) / 0.3);
+
 }
 
 body {
@@ -289,18 +283,19 @@ h3 {
 	.button {
 		@apply button_base
 		text-gray-1000
-		bg-primary hover:bg-gray-200 active:bg-gray-300
-		dark:hover:bg-gray-200 dark:active:bg-gray-300
+		bg-primary
+		hover:bg-gray-200 dark:hover:bg-gray-200
+		active:bg-gray-300 dark:active:bg-gray-300
 		disabled:text-gray-1000 disabled:!bg-gray-300;
 	}
 
 	.border-button {
 		@apply button
-		border-gray-200
+		bg-primary
 		active:bg-gray-300
-		active:border-gray-300;
-		/* border-width: 0.125rem; */
-		box-shadow: var(--shadow-1);
+		border-gray-1000/20
+		active:border-gray-1000/25;
+		box-shadow: var(--shadow-2);
 	}
 
 	.highlight-button {
