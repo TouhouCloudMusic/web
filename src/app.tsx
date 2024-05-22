@@ -9,46 +9,17 @@ import {
 	devAppState,
 	useAppState,
 } from "./state/app.state"
-
 import Header from "~/component/Header/Header"
-
-function updateTheme(theme: AppTheme) {
-	function change(str: string) {
-		document.getElementById("app")!.classList.add("notransition")
-		document.documentElement.setAttribute("data-mode", str)
-		setTimeout(() => {
-			document.getElementById("app")!.classList.remove("notransition")
-		}, 0)
-	}
-	switch (theme) {
-		case AppTheme.light:
-			change("light")
-			break
-		case AppTheme.dark:
-			change("dark")
-			break
-		default:
-			return -1
-	}
-	return 0
-}
-
-function storageTheme(theme: AppTheme) {
-	localStorage.setItem("app_theme", theme.toString())
-}
-
-function readLocalTheme() {
-	const localTheme = localStorage.getItem("app_theme")
-	if (!localTheme) return
-	if (!Object.values(AppTheme).includes(parseInt(localTheme, 10))) return
-	else return parseInt(localTheme, 10)
-}
+import { readLocalTheme } from "./state/theme"
+import { storageTheme } from "./state/theme"
+import { updateTheme } from "./state/theme"
 
 function App() {
 	const { theme, setTheme } = useAppState()
 	onMount(() => {
-		const theme = readLocalTheme() ?? AppTheme.light
-		setTheme(theme)
+		const localTheme = readLocalTheme() ?? AppTheme.light
+		updateTheme(localTheme)
+		setTheme(localTheme)
 	})
 	createEffect(
 		on(theme, () => {
@@ -61,7 +32,6 @@ function App() {
 			root={(props) => (
 				<MetaProvider>
 					<Title>Doujin Cloud DB</Title>
-
 					<Header />
 					<Suspense>{props.children}</Suspense>
 				</MetaProvider>

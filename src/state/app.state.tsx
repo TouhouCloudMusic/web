@@ -8,12 +8,12 @@ export enum AppTheme {
 }
 
 export interface AppState {
-	theme: AppTheme
+	theme?: AppTheme
 	user: User | undefined
 }
 
 export const devAppState: AppState = {
-	theme: AppTheme.light,
+	// theme: AppTheme.light,
 	user: {
 		id: 1,
 		username: "admin",
