@@ -28,7 +28,7 @@ function createAppStateController(
 ) {
 	return {
 		theme: () => state.theme,
-		setTheme: (theme: AppState["theme"]) => setState("theme", theme),
+		setTheme: (theme: AppTheme) => setState("theme", theme),
 		user: () => state.user,
 		setUser: (user: AppState["user"]) => setState("user", user),
 		logOut: () => setState("user", undefined),

@@ -23,6 +23,7 @@
 		"solid-floating-ui": "^0.3.1",
 		"solid-js": "^1.8.17",
 		"solid-popper": "^0.3.0",
+		"solid-radix-icons": "^1.0.0",
 		"ts-pattern": "^5.1.1",
 		"vinxi": "^0.3.11"
 	},

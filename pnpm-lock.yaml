@@ -53,6 +53,9 @@ importers:
       solid-popper:
         specifier: ^0.3.0
         version: 0.3.0(@popperjs/core@2.11.8)(solid-js@1.8.17)
+      solid-radix-icons:
+        specifier: ^1.0.0
+        version: 1.0.0(solid-js@1.8.17)
       ts-pattern:
         specifier: ^5.1.1
         version: 5.1.1
@@ -3507,6 +3510,11 @@ packages:
     peerDependencies:
       '@popperjs/core': ^2.11
       solid-js: ^1.2
+
+  solid-radix-icons@1.0.0:
+    resolution: {integrity: sha512-3SsUeYuasp5y+XDDaA4Pb7ZYS7ieSQa2GY4p2YZ/i6Ces4RR6vjkAWvDXcBkCT6CyAkAC6Y1hLmRT+6kr3ArnA==}
+    peerDependencies:
+      solid-js: ^1.6.11
 
   solid-refresh@0.6.3:
     resolution: {integrity: sha512-F3aPsX6hVw9ttm5LYlth8Q15x6MlI/J3Dn+o3EQyRTtTxidepSTwAYdozt01/YA+7ObcciagGEyXIopGZzQtbA==}
@@ -7850,6 +7858,10 @@ snapshots:
   solid-popper@0.3.0(@popperjs/core@2.11.8)(solid-js@1.8.17):
     dependencies:
       '@popperjs/core': 2.11.8
+      solid-js: 1.8.17
+
+  solid-radix-icons@1.0.0(solid-js@1.8.17):
+    dependencies:
       solid-js: 1.8.17
 
   solid-refresh@0.6.3(solid-js@1.8.17):

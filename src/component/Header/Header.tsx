@@ -1,7 +1,8 @@
 import { Match, Show, Switch } from "solid-js"
 import style from "./Header.module.css"
 import { AppTheme, useAppState } from "~/state/app.state"
-import { DarkThemeIcon, LightThemeIcon } from "~/style/icon/theme"
+import { SunIcon, MoonIcon } from "solid-radix-icons"
+import { ThemeButton } from "../ThemeButton"
 export default function Header() {
 	const appState = useAppState()
 	const navLinkClass =
@@ -51,23 +52,8 @@ export default function Header() {
 					<li>
 						<a class={navLinkClass}>占位符</a>
 					</li>
-					<li class="size-7">
-						<Switch>
-							<Match when={theme() === AppTheme.light}>
-								<button
-									class="button place-content-center flex items-center size-full rounded-full"
-									onClick={() => setTheme(AppTheme.dark)}>
-									<DarkThemeIcon />
-								</button>
-							</Match>
-							<Match when={theme() === AppTheme.dark}>
-								<button
-									class="button place-content-center flex items-center size-full rounded-full"
-									onClick={() => setTheme(AppTheme.light)}>
-									<LightThemeIcon />
-								</button>
-							</Match>
-						</Switch>
+					<li class="size-8">
+						<ThemeButton class="rounded-full size-full" />
 					</li>
 					<li class={style.avatarWrapper}>
 						<Show

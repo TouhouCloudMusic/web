@@ -1,10 +1,8 @@
 import { Title } from "@solidjs/meta"
-import { For, JSX, Match, Switch } from "solid-js"
-import { AppTheme, useAppState } from "~/state/app.state"
-import { DarkThemeIcon, LightThemeIcon } from "~/style/icon/theme"
+import { For, JSX } from "solid-js"
+import { ThemeButton } from "~/component/ThemeButton"
 
 export default function () {
-	const { theme, setTheme } = useAppState()
 	return (
 		<main class="flex flex-col">
 			<Title>Theme</Title>
@@ -14,22 +12,7 @@ export default function () {
 					"grid-template-columns": "repeat(8, 1fr)",
 					"grid-template-rows": "repeat(12, 1fr)",
 				}}>
-				<Switch>
-					<Match when={theme() === AppTheme.light}>
-						<button
-							class="button place-content-center flex items-center"
-							onClick={() => setTheme(AppTheme.dark)}>
-							<DarkThemeIcon />
-						</button>
-					</Match>
-					<Match when={theme() === AppTheme.dark}>
-						<button
-							class="button place-content-center flex items-center"
-							onClick={() => setTheme(AppTheme.light)}>
-							<LightThemeIcon />
-						</button>
-					</Match>
-				</Switch>
+				<ThemeButton />
 				<button class=" button px-3 py-1">Borderless</button>
 				<button class=" border_button">With Border</button>
 				<button
@@ -97,81 +80,6 @@ function ColorPanel() {
 						"box-shadow": "var(--shadow-3)",
 					}}></div>
 			</div>
-			{/* <For each={colors}>
-				{(color) => (
-					<>
-						<div class={colorRowClass}>
-							<div
-								class="place-content-center text-center"
-								style={{
-									color: `hsl(var(--${color}-700))`,
-								}}>
-								{color[0].toUpperCase() + color.slice(1)}
-							</div>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-100))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-200))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-300))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-400))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-500))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-600))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-700))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-800))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-900))`,
-								}}
-							/>
-							<div
-								style={{
-									...colorItemStyle,
-									"background-color": `hsl(var(--${color}-1000)`,
-								}}
-							/>
-						</div>
-					</>
-				)}
-			</For> */}
 			<For each={colors}>
 				{(color) => (
 					<>
