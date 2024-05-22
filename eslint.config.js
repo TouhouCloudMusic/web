@@ -32,6 +32,6 @@ export default [
 		},
 	},
 	{
-		ignores: [".cz-config.cjs"]
-	}
+		ignores: [".cz-config.cjs", ".output/", ".vinxi/"],
+	},
 ]
