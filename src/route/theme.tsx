@@ -1,6 +1,7 @@
 import { Title } from "@solidjs/meta"
-import { For, JSX, Match, Show, Switch, splitProps } from "solid-js"
+import { For, JSX, Match, Switch } from "solid-js"
 import { AppTheme, useAppState } from "~/state/app.state"
+import { DarkThemeIcon, LightThemeIcon } from "~/style/icons/theme"
 
 export default function () {
 	const { theme, setTheme } = useAppState()
@@ -16,16 +17,16 @@ export default function () {
 				<Switch>
 					<Match when={theme() === AppTheme.light}>
 						<button
-							class="button"
+							class="button place-content-center flex items-center"
 							onClick={() => setTheme(AppTheme.dark)}>
-							Light
+							<DarkThemeIcon />
 						</button>
 					</Match>
 					<Match when={theme() === AppTheme.dark}>
 						<button
-							class="button"
+							class="button place-content-center flex items-center"
 							onClick={() => setTheme(AppTheme.light)}>
-							Dark
+							<LightThemeIcon />
 						</button>
 					</Match>
 				</Switch>
@@ -44,7 +45,8 @@ export default function () {
 }
 
 function ColorPanel() {
-	const colorRowClass = "my-2 grid grid-cols-11 size-fit gap-2 rounded-md"
+	const colorRowClass =
+		"my-2 grid grid-flow-col grid-rows-2 size-fit gap-2 rounded-md"
 
 	const colorItemStyle: JSX.CSSProperties = {
 		// "border-width": "1px",
@@ -69,22 +71,28 @@ function ColorPanel() {
 		// "grape",
 		"pink",
 	]
+
+	function colorConvert(color: string) {
+		if (color == "pink") return "crimson"
+		if (color == "orange") return "amber"
+		else return color
+	}
 	return (
 		<main class="grid-row-10 grid grid-flow-row gap-2">
-			<Title>Color Panel</Title>
 			<div class="grid size-fit grid-cols-3 gap-2">
 				<div class="place-content-center text-center">White</div>
 				<div
-					style={{ ...colorItemStyle, "background-color": "white" }}
-				/>
+					style={{
+						...colorItemStyle,
+						"background-color": "white",
+					}}></div>
 				<div
 					style={{
 						...colorItemStyle,
-						"background-color": `hsl(var(--white-100)`,
-					}}
-				/>
+						"background-color": `var(--gray-12)`,
+					}}></div>
 			</div>
-			<For each={colors}>
+			{/* <For each={colors}>
 				{(color) => (
 					<>
 						<div class={colorRowClass}>
@@ -155,6 +163,50 @@ function ColorPanel() {
 									"background-color": `hsl(var(--${color}-1000)`,
 								}}
 							/>
+						</div>
+					</>
+				)}
+			</For> */}
+			<For each={colors}>
+				{(color) => (
+					<>
+						<div class="my-2 grid grid-flow-col grid-cols-12 grid-rows-1 size-fit gap-2 rounded-md">
+							<div
+								class="place-content-center text-center"
+								style={{
+									color: `var(--${color}-8))`,
+								}}>
+								{color[0].toUpperCase() + color.slice(1)}
+							</div>
+							<For each={new Array(10)}>
+								{(_, idx) => (
+									<>
+										<div
+											style={{
+												...colorItemStyle,
+												"background-color": `hsl(var(--${color}-${(idx() + 1) * 100}))`,
+											}}></div>
+									</>
+								)}
+							</For>
+						</div>
+						<div class="my-2 grid grid-flow-col grid-cols-12 grid-rows-1 size-fit gap-2 rounded-md">
+							<div
+								class="place-content-center text-center"
+								style={{
+									color: `var(--${color}-8))`,
+								}}></div>
+							<For each={new Array(12)}>
+								{(_, idx) => (
+									<>
+										<div
+											style={{
+												...colorItemStyle,
+												"background-color": `var(--${colorConvert(color)}-${idx() + 3})`,
+											}}></div>
+									</>
+								)}
+							</For>
 						</div>
 					</>
 				)}
