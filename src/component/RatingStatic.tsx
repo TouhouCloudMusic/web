@@ -2,8 +2,6 @@ import { StarIcon } from "lucide-solid"
 import { Index, Match, Show, Switch } from "solid-js"
 
 export function RatingStatic(props: { rating: number }) {
-	const arr5 = new Array(5)
-	const arr10 = new Array(10)
 	// const starLeftClass = "mask mask-star-2 mask-half-1 bg-gray-500";
 	// const starLeftClassHighLight = "mask mask-star-2 mask-half-1 bg-yellow-400";
 	// const starRightClass = "mask mask-star-2 mask-half-2 bg-gray-500";
@@ -11,7 +9,7 @@ export function RatingStatic(props: { rating: number }) {
 	// 	"mask mask-star-2 mask-half-2 bg-yellow-400";
 	return (
 		<div class="flex">
-			<Index each={arr5}>
+			<Index each={new Array(5)}>
 				{(_item, index) => (
 					<Switch
 						fallback={

@@ -7,7 +7,7 @@ module.exports = {
         { value: "test"     , name: "test:     Added or modify tests                                        \n            测试" },
         { value: "format"   , name: "format:   Changes that do not affect the meaning of the code           \n            (white-space, formatting, missing semi-colons, etc)      \n            代码格式" },
         { value: "build"    , name: "build:    Changes that affect the build system or external dependencies\n            (example scopes: gulp, broccoli, npm)                    \n            构建工具与依赖" },
-        { value: "ci"       , name: "ci:       Changes to our CI configuration files and scripts            \n            (example scopes: Travis, Circle, BrowserStack, SauceLabs)\n            命令行工具与配置文件" },
+        { value: "ci"       , name: "ci:       Changes to our CI configuration files and scripts            \n            (example scopes: Travis, Circle, BrowserStack, SauceLabs)\n            持续整合工具" },
         { value: "chore"    , name: "chore:    Other changes that don't modify src or test files            \n            杂项" },
         { value: "doc"      , name: "docs:     Documentation only changes                                   \n            文档更改" },
         { value: "revert"   , name: "revert:   Revert to a previous commit                                  \n            回退提交" },
@@ -15,10 +15,10 @@ module.exports = {
     ],
 
     scopes: [
-        "page",
-        "css",
-        "component",
-        "util"
+        // "page",
+        // "css",
+        // "component",
+        // "util"
     ],
 
     usePreparedCommit: false, // to re-use commit from ./.git/COMMIT_EDITMSG

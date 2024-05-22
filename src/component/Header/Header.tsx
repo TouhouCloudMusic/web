@@ -1,14 +1,11 @@
-import { Match, Show, Switch } from "solid-js"
+import { Show } from "solid-js"
 import style from "./Header.module.css"
-import { AppTheme, useAppState } from "~/state/app.state"
-import { SunIcon, MoonIcon } from "solid-radix-icons"
+import { useAppState } from "~/state/app.state"
 import { ThemeButton } from "../ThemeButton"
 export default function Header() {
 	const appState = useAppState()
 	const navLinkClass =
 		"button !rounded-full mx-0 my-2 px-1 py-1 text-nowrap w-20 text-center"
-
-	const { theme, setTheme } = useAppState()
 	return (
 		<header>
 			<nav>
