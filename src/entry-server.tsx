@@ -1,9 +1,11 @@
 // @refresh reload
-import { createHandler, StartServer } from "@solidjs/start/server";
+import { createHandler, StartServer } from "@solidjs/start/server"
+import { AppTheme } from "./state/app.state"
+import { getCookie } from "vinxi/http"
 export default createHandler(() => (
 	<StartServer
 		document={({ assets, children, scripts }) => (
-			<html lang="en">
+			<html lang="en" data-mode={getCookie("app_theme") === AppTheme.dark.toString() ? "dark" : "light"}>
 				<head>
 					<meta charset="utf-8" />
 					<meta
@@ -17,10 +19,10 @@ export default createHandler(() => (
 					{assets}
 				</head>
 				<body>
-					<div id="app">{children}</div>
+					<div id="app" class="notransition">{children}</div>
 					{scripts}
 				</body>
 			</html>
 		)}
 	/>
-));
+))
