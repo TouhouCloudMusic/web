@@ -1,11 +1,11 @@
 {
-	"name": "example-basic",
-	"type": "module",
-	"scripts": {
-		"dev": "vinxi dev",
-		"build": "vinxi build",
-		"start": "vinxi start",
-		"version": "vinxi version"
+	"config": {
+		"commitizen": {
+			"path": "node_modules/cz-customizable"
+		},
+		"cz-customizable": {
+			"config": ".cz-config.cjs"
+		}
 	},
 	"dependencies": {
 		"@ark-ui/solid": "^2.2.0",
@@ -16,6 +16,7 @@
 		"@solidjs/meta": "^0.29.4",
 		"@solidjs/router": "^0.13.3",
 		"@solidjs/start": "1.0.0-rc.0",
+		"cz-customizable": "^7.0.0",
 		"globals": "^15.2.0",
 		"lucide-solid": "^0.373.0",
 		"ramda": "^0.29.1",
@@ -49,5 +50,13 @@
 	},
 	"engines": {
 		"node": ">=18"
-	}
+	},
+	"name": "example-basic",
+	"scripts": {
+		"build": "vinxi build",
+		"dev": "vinxi dev",
+		"start": "vinxi start",
+		"version": "vinxi version"
+	},
+	"type": "module"
 }
