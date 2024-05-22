@@ -15,7 +15,7 @@
 }
 
 /* Shadows */
-[data-mode="light"] {
+html, html[data-mode="light"] {
 	--gray-a1: #00000003;
 	--gray-a2: #00000006;
 	--gray-a3: #0000000f;
@@ -49,7 +49,7 @@
 		0 16px 64px var(--gray-a2), 0 16px 36px -20px var(--gray-a7);
 }
 
-[data-mode="dark"] {
+html[data-mode="dark"] {
 	--gray-a1: #00000000;
 	--gray-a2: #ffffff09;
 	--gray-a3: #ffffff12;

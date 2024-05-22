@@ -5,7 +5,7 @@ export default {
 	darkMode: ["selector", '[data-mode="dark"]'],
 	theme: {
 		colors: {
-			primary: "hsl(var(--bg-main) / <alpha-value>)",
+			main: "hsl(var(--bg-main) / <alpha-value>)",
 			highlight: "hsl(var(--bg-highlight) / <alpha-value>)",
 			gray: {
 				100: "hsl(var(--gray-100) / <alpha-value>)",

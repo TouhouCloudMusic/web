@@ -4,13 +4,30 @@
 @tailwind utilities;
 
 @font-face {
-	font-family: "Geist Sans";
+	font-family: "Geist";
 	font-weight: 100 900;
 	src:
-		local("Geist"),
 		url("/font/Geist/GeistVF.woff2") format("woff2"),
 		url("/font/Geist/GeistVF.woff") format("woff"),
 		url("/font/Geist/GeistVF.ttf") format("truetype");
+}
+
+html {
+	background-color: hsl(var(--bg-main));
+	white-space: break-spaces;
+	font-family:
+		"Geist",
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Open Sans",
+		"Helvetica Neue",
+		sans-serif;
 }
 
 .notransition * {
@@ -19,7 +36,7 @@
 
 @layer base {
 	/* 颜色食用说明：https://vercel.com/geist/colors */
-	[data-mode="light"] {
+	html, html[data-mode="light"] {
 		--gray-100: 0 0% 95%;
 		--gray-200: 0 0% 93%;
 		--gray-300: 0 0% 91%;
@@ -111,7 +128,7 @@
 		--bg-highlight: 0 0% 100%;
 		--bg-main: 0 0% 98%;
 	}
-	[data-mode="dark"] {
+	html[data-mode="dark"] {
 		--gray-100: 0 0% 10%;
 		--gray-200: 0 0% 12%;
 		--gray-300: 0 0% 16%;
@@ -203,24 +220,6 @@
 		--bg-highlight: 0 0% 8%;
 		--bg-main: 0 0% 5%;
 	}
-}
-
-html {
-	background-color: hsl(var(--bg-main));
-	white-space: break-spaces;
-	font-family:
-		"Geist Sans",
-		system-ui,
-		-apple-system,
-		BlinkMacSystemFont,
-		"Segoe UI",
-		Roboto,
-		Oxygen,
-		Ubuntu,
-		Cantarell,
-		"Open Sans",
-		"Helvetica Neue",
-		sans-serif;
 }
 
 #app {
