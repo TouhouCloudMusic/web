@@ -1,7 +1,7 @@
 import { Title } from "@solidjs/meta"
 import { For, JSX, Match, Switch } from "solid-js"
 import { AppTheme, useAppState } from "~/state/app.state"
-import { DarkThemeIcon, LightThemeIcon } from "~/style/icons/theme"
+import { DarkThemeIcon, LightThemeIcon } from "~/style/icon/theme"
 
 export default function () {
 	const { theme, setTheme } = useAppState()

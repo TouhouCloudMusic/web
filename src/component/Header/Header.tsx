@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js"
 import style from "./Header.module.css"
 import { AppTheme, useAppState } from "~/state/app.state"
-import { DarkThemeIcon, LightThemeIcon } from "~/style/icons/theme"
+import { DarkThemeIcon, LightThemeIcon } from "~/style/icon/theme"
 export default function Header() {
 	const appState = useAppState()
 	const navLinkClass =
