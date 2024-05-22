@@ -21,8 +21,8 @@
 	/* 颜色食用说明：https://vercel.com/geist/colors */
 	[data-mode="light"] {
 		--gray-100: 0 0% 95%;
-		--gray-200: 0 0% 92%;
-		--gray-300: 0 0% 89%;
+		--gray-200: 0 0% 93%;
+		--gray-300: 0 0% 91%;
 		--gray-400: 0 0% 85%;
 		--gray-500: 0 0% 79%;
 		--gray-600: 0 0% 66%;
@@ -108,8 +108,7 @@
 		--pink-900: 336 65% 45%;
 		--pink-1000: 334 74% 15%;
 
-		--bg-100: var(--gray-12);
-		/* --bg-100: 0 0% 100%; */
+		--bg-highlight: 0 0% 100%;
 		--bg-main: 0 0% 98%;
 	}
 	[data-mode="dark"] {
@@ -201,14 +200,13 @@
 		--pink-900: 341 90% 67%;
 		--pink-1000: 333 90% 96%;
 
-		--bg-100: 0 0% 5%;
-		--bg-main: 0 0% 0%;
+		--bg-highlight: 0 0% 8%;
+		--bg-main: 0 0% 5%;
 	}
-
-
 }
 
-body {
+html {
+	background-color: hsl(var(--bg-main));
 	white-space: break-spaces;
 	font-family:
 		"Geist Sans",
@@ -226,7 +224,6 @@ body {
 }
 
 #app {
-	background-color: hsl(var(--bg-main));
 	width: 100%;
 	display: flex;
 	align-items: center;
@@ -283,27 +280,24 @@ h3 {
 	.button {
 		@apply button_base
 		text-gray-1000
-		bg-primary
+		bg-main
 		hover:bg-gray-200 dark:hover:bg-gray-200
 		active:bg-gray-300 dark:active:bg-gray-300
-		disabled:text-gray-1000 disabled:!bg-gray-300;
+		disabled:!bg-gray-200;
 	}
 
-	.border-button {
-		@apply button
-		bg-primary
-		active:bg-gray-300
-		border-gray-1000/20
-		active:border-gray-1000/25;
+	.border_button {
+		@apply button;
 		box-shadow: var(--shadow-2);
 	}
 
-	.highlight-button {
+	.highlight_button {
 		@apply button_base
-		hover:bg-gray-1000/85 dark:hover:bg-gray-1000/95
-		active:bg-gray-1000/75 dark:active:bg-gray-1000/80;
+		hover:bg-gray-1000/85 active:bg-gray-1000/80
+		dark:hover:bg-gray-1000/90 dark:active:bg-gray-1000/85;
 		color: hsl(var(--bg-main));
 		background-color: hsl(var(--gray-1000));
+		box-shadow: var(--shadow-2);
 	}
 }
 
