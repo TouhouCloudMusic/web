@@ -1,30 +1,30 @@
-import { Accessor, JSX, Show } from "solid-js";
-import { Portal } from "solid-js/web";
+import { Accessor, JSX, Show } from "solid-js"
+import { Portal } from "solid-js/web"
 
-type RequiredParameter<T> = T extends () => unknown ? never : T;
+type RequiredParameter<T> = T extends () => unknown ? never : T
 export function ShowPortal<
 	RenderFunction extends (item: Accessor<NonNullable<T>>) => JSX.Element,
 	T extends boolean = false,
-	S extends boolean = false
+	S extends boolean = false,
 >(props: {
-	when: T | undefined | null | false;
-	keyed?: false;
-	fallback?: JSX.Element;
-	children: JSX.Element | RequiredParameter<RenderFunction>;
-	mount?: Node;
-	useShadow?: T;
-	isSVG?: S;
+	when: T | undefined | null | false
+	keyed?: false
+	fallback?: JSX.Element
+	children: JSX.Element | RequiredParameter<RenderFunction>
+	mount?: Node
+	useShadow?: T
+	isSVG?: S
 	ref?:
 		| (S extends true ? SVGGElement : HTMLDivElement)
 		| ((
 				el: (T extends true
 					? {
-							readonly shadowRoot: ShadowRoot;
+							readonly shadowRoot: ShadowRoot
 						}
 					: // 原文： {}
 						Record<string, never>) &
 					(S extends true ? SVGGElement : HTMLDivElement)
-		  ) => void);
+		  ) => void)
 }): JSX.Element {
 	return (
 		<Portal
@@ -39,5 +39,5 @@ export function ShowPortal<
 				{props.children}
 			</Show>
 		</Portal>
-	);
+	)
 }

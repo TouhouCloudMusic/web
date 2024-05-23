@@ -19,7 +19,8 @@
 
 @supports (color: color(display-p3 1 1 1)) {
 	@media (color-gamut: p3) {
-		html, html[data-mode="light"] {
+		html,
+		html[data-mode="light"] {
 			--gray-a1: color(display-p3 0 0 0 / 0.012);
 			--gray-a2: color(display-p3 0 0 0 / 0.024);
 			--gray-a3: color(display-p3 0 0 0 / 0.063);

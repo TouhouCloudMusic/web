@@ -15,7 +15,8 @@
 }
 
 /* Shadows */
-html, html[data-mode="light"] {
+html,
+html[data-mode="light"] {
 	--gray-a1: #00000003;
 	--gray-a2: #00000006;
 	--gray-a3: #0000000f;
