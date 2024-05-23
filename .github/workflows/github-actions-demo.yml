@@ -11,7 +11,8 @@ jobs:
       # test build
       - run: bun install
       # format
-      - run: bun run format
+      - run: bun run prettier --check ./src
+      - run: bun run eslint ./src
       # TODO: test
       # build
       - run: bun run build
