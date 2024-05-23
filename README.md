@@ -1,20 +1,30 @@
 # Web
 
-## 包管理器
+## 安装
+
+### 安装包管理器
 
 包管理器使用Bun
 
-安装Bun:
+#### 安装Bun
 
   ```bash
   powershell -c "irm bun.sh/install.ps1 | iex"
   ```
 
-安装依赖:
+#### 设置Bun
+
+  见<https://bun.sh/docs/install/lockfile>
+
+### 安装依赖
 
   ```bash
   bun install
   ```
+
+## 设置
+
+
 
 ## 开发
 

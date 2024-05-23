@@ -56,7 +56,7 @@
 	"scripts": {
 		"build": "vinxi build",
 		"dev": "vinxi dev",
-		"dev-b": "bunx --bun vinxi dev",
+		"dev-bun": "bunx --bun vinxi dev",
 		"start": "vinxi start",
 		"version": "vinxi version",
 		"format": "bun run prettier --write ./src && bun run eslint ./src"
