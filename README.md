@@ -14,7 +14,7 @@
 
 #### 设置Bun
 
-  见<https://bun.sh/docs/install/lockfile>
+  如果你需要diff bun的lockb文件，请参考<https://bun.sh/docs/install/lockfile>
 
 ### 安装依赖
 
