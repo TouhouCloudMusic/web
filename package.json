@@ -60,7 +60,9 @@
 		"dev-bun": "bunx --bun vinxi dev",
 		"start": "vinxi start",
 		"version": "vinxi version",
-		"format": "bun run prettier --write ./src && bun run eslint ./src"
+		"format": "prettier --write . && eslint ./src ./test",
+		"commit": "bun run format && git cz"
 	},
-	"type": "module"
+	"type": "module",
+	"module": "index.ts"
 }
