@@ -1,10 +1,10 @@
+.husky
+.idea
+.output
+.vinxi
+.vscode
+
 dist
 node_modules
 public
-.husky
-.vscode
-.idea
-*.sh
-*.md
-
 src/assets

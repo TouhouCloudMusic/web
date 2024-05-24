@@ -8,23 +8,21 @@
 
 #### 安装Bun
 
-  ```bash
-  powershell -c "irm bun.sh/install.ps1 | iex"
-  ```
+```bash
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
 
 #### 设置Bun
 
-  如果你需要diff bun的lockb文件，请参考<https://bun.sh/docs/install/lockfile>
+如果你需要diff bun的lockb文件，请参考<https://bun.sh/docs/install/lockfile>
 
 ### 安装依赖
 
-  ```bash
-  bun install
-  ```
+```bash
+bun install
+```
 
 ## 设置
-
-
 
 ## 开发
 

@@ -2,26 +2,27 @@
 	"compilerOptions": {
 		// Bundler
 		"lib": ["ESNext", "DOM"],
+		"types": ["@types/bun", "vinxi/types/client"],
 		"target": "ESNext",
 		"module": "ESNext",
-		// "moduleResolution": "bundler",
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
+		// "moduleResolution": "node",
 		"allowImportingTsExtensions": true,
-		"noEmit": true,
+		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
+		"isolatedModules": true,
 		"jsx": "preserve",
 		"jsxImportSource": "solid-js",
-		"allowJs": true,
-		// lint
+		"noEmit": true,
+		"skipLibCheck": true,
+		// Linter
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"noPropertyAccessFromIndexSignature": true,
 		"noFallthroughCasesInSwitch": true,
-		"skipLibCheck": true,
-		"types": ["@types/bun", "vinxi/types/client"],
-		"isolatedModules": true,
+		// Path Alias
 		"paths": {
 			"~/*": ["./src/*"]
 		}

@@ -1,0 +1,22 @@
+bracketSameLine: true
+endOfLine: "lf"
+htmlWhitespaceSensitivity: "css"
+insertPragma: false
+overrides:
+  - files: "*.json"
+    options:
+      trailingComma: "none"
+  - files:
+      - "*.yaml"
+      - "*.yml"
+      - "*.md"
+    options:
+      tabWidth: 2
+      useTabs: false
+quoteProps: "as-needed"
+requirePragma: false
+semi: false
+singleAttributePerLine: true
+tabWidth: 4
+trailingComma: "es5"
+useTabs: true
