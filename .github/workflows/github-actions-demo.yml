@@ -1,6 +1,12 @@
 name: GitHub Actions
 run-name: TODO 🚀
-on: [push]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
   TODO_Name:
     runs-on: ubuntu-latest

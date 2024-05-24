@@ -13,6 +13,13 @@
 			"options": {
 				"trailingComma": "none"
 			}
+		},
+		{
+			"files": ["*.yaml", "*.yml"],
+			"options": {
+				"useTabs": false,
+				"tabWidth": 2
+			}
 		}
 	],
 	"printWidth": 80,
