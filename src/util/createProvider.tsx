@@ -1,11 +1,11 @@
 /* eslint-disable solid/reactivity */
-import { JSX, createContext, useContext } from "solid-js"
-import { SetStoreFunction, createStore } from "solid-js/store"
+import { type JSXElement, createContext, useContext } from "solid-js"
+import { type SetStoreFunction, createStore } from "solid-js/store"
 
 export type Provider<T> = (props: {
-	children: JSX.Element
+	children: JSXElement
 	defaultState: T
-}) => JSX.Element
+}) => JSXElement
 
 export function createProviderF<T extends object, U>(
 	createController: (store: T, setStore: SetStoreFunction<T>) => U
