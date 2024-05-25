@@ -1,0 +1,29 @@
+@layer components {
+	/* Buttons */
+	.button_base {
+		@apply rounded font-medium transition-all;
+	}
+
+	.button {
+		@apply button_base
+		text-gray-1000
+		bg-main
+		hover:bg-gray-200 dark:hover:bg-gray-200
+		active:bg-gray-300 dark:active:bg-gray-300
+		disabled:!bg-gray-200;
+	}
+
+	.border_button {
+		@apply button;
+		box-shadow: var(--shadow-2);
+	}
+
+	.highlight_button {
+		@apply button_base
+		hover:bg-gray-1000/85 active:bg-gray-1000/80
+		dark:hover:bg-gray-1000/90 dark:active:bg-gray-1000/85;
+		color: hsl(var(--bg-main));
+		background-color: hsl(var(--gray-1000));
+		box-shadow: var(--shadow-2);
+	}
+}

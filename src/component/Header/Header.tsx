@@ -10,7 +10,7 @@ export default function Header() {
 		<header>
 			<nav>
 				<ul>
-					<li class={style.logo}>
+					<li class={style["logo"]}>
 						<a href="/">
 							<strong>LOGO</strong>
 						</a>
@@ -34,7 +34,7 @@ export default function Header() {
 						<input
 							type="text"
 							placeholder="Search"
-							class={style.search_input}
+							class={style["search_input"]}
 						/>
 					</li>
 					<li>
@@ -52,7 +52,7 @@ export default function Header() {
 					<li class="size-8">
 						<ThemeButton class="rounded-full size-full" />
 					</li>
-					<li class={style.avatarWrapper}>
+					<li class={style["avatarWrapper"]}>
 						<Show
 							when={appState.user()?.username ?? false}
 							fallback={
@@ -67,7 +67,7 @@ export default function Header() {
 							}>
 							<div class="flex">
 								<div
-									class={style.avatar}
+									class={style["avatar"]}
 									onClick={() => {
 										appState.logOut()
 									}}>
