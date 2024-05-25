@@ -1,16 +1,17 @@
 // prettier-ignore
 module.exports = {
     types: [
-        { value: "feat"     , name: "feat:     A new feature                                                \n            新功能" },
-        { value: "fix"      , name: "fix:      A bug fix                                                    \n            漏洞修复" },
-        { value: "refactor" , name: "refactor: A code change that neither fixes a bug nor adds a feature    \n            代码重构" },
+        { value: "add"      , name: "add:      Add new stuff                                                \n            添加" },
+        { value: "fix"      , name: "fix:      A bug fix                                                    \n            修复" },
+        { value: "remove"   , name: "remove:   Remove something                                             \n            移除" },
+        { value: "refactor" , name: "refactor: A code change that neither fixes a bug nor adds a feature    \n            重构" },
         { value: "test"     , name: "test:     Added or modify tests                                        \n            测试" },
-        { value: "format"   , name: "format:   Changes that do not affect the meaning of the code           \n            (white-space, formatting, missing semi-colons, etc)      \n            代码格式" },
+        { value: "format"   , name: "format:   Changes that do not affect the meaning of the code           \n            (white-space, formatting, missing semi-colons, etc)      \n            格式" },
         { value: "build"    , name: "build:    Changes that affect the build system or external dependencies\n            (example scopes: gulp, broccoli, npm)                    \n            构建工具与依赖" },
         { value: "ci"       , name: "ci:       Changes to our CI configuration files and scripts            \n            (example scopes: Travis, Circle, BrowserStack, SauceLabs)\n            持续整合工具" },
         { value: "chore"    , name: "chore:    Other changes that don't modify src or test files            \n            杂项" },
-        { value: "doc"      , name: "docs:     Documentation only changes                                   \n            文档更改" },
-        { value: "revert"   , name: "revert:   Revert to a previous commit                                  \n            回退提交" },
+        { value: "doc"      , name: "doc:      Documentation only changes                                   \n            文档" },
+        { value: "revert"   , name: "revert:   Revert to a previous commit                                  \n            回退" },
         { value: "wip"      , name: "wip:      Work in progress                                             \n            未完成" },
     ],
 

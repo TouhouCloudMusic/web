@@ -1,0 +1,18 @@
+@layer components {
+	/* .link_base {
+		@apply transition-all;
+	} */
+
+	.link {
+		@apply transition-all text-blue-700
+		hover:underline;
+		text-decoration: solid none currentColor;
+	}
+
+	.link_gray {
+		@apply transition-all
+		text-gray-700 dark:text-gray-700
+		hover:underline;
+		text-decoration: solid none currentColor;
+	}
+}

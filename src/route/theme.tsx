@@ -1,29 +1,23 @@
 import { Title } from "@solidjs/meta"
 import { For, JSX } from "solid-js"
 import { ThemeButton } from "~/component/ThemeButton"
-
+import { A } from "@solidjs/router"
 export default function () {
 	return (
-		<main class="flex flex-col">
+		<main class="flex flex-col items-center justify-center place-content-center">
 			<Title>Theme</Title>
+			<div class="my-4">
+				<ColorPanel />
+			</div>
 			<div
-				class="grid h-auto grid-flow-col gap-3 py-4 w-fit"
+				class="grid h-auto grid-flow-col gap-3 py-4 w-fit "
 				style={{
 					"grid-template-columns": "repeat(8, 1fr)",
 					"grid-template-rows": "repeat(12, 1fr)",
 				}}>
-				<ThemeButton />
-				<button class=" button px-3 py-1">Borderless</button>
-				<button class=" border_button">With Border</button>
-				<button
-					class="button"
-					disabled>
-					Disabled
-				</button>
-				<button class=" highlight_button">Highlight</button>
-				<button class=" highlight_button">Highlight</button>
+				<Buttons />
+				<Links />
 			</div>
-			<ColorPanel />
 		</main>
 	)
 }
@@ -92,5 +86,47 @@ function ColorPanel() {
 				)}
 			</For>
 		</div>
+	)
+}
+
+function Buttons() {
+	return (
+		<>
+			<div class="items-center text-center font-bold row-span-12 grid-rows-subgrid grid">
+				<div>Button</div>
+			</div>
+			<ThemeButton />
+			<button class=" button px-3 py-1">Borderless</button>
+			<button class=" border_button">With Border</button>
+			<button
+				class="button"
+				disabled>
+				Disabled
+			</button>
+			<button class=" highlight_button">Highlight</button>
+			<button class=" warning_button">Warning</button>
+		</>
+	)
+}
+
+function Links() {
+	const linkClass = "place-content-center text-center"
+	return (
+		<>
+			<div class="items-center text-center font-bold row-span-12 grid-rows-subgrid grid">
+				<div id="link">Link</div>
+			</div>
+
+			<a
+				class={`link ${linkClass}`}
+				href="/114514">
+				Normal
+			</a>
+			<A
+				class={`link_gray ${linkClass}`}
+				href="/">
+				Gray
+			</A>
+		</>
 	)
 }

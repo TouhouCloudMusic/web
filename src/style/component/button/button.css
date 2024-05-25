@@ -20,10 +20,18 @@
 
 	.highlight_button {
 		@apply button_base
+		bg-gray-1000
 		hover:bg-gray-1000/85 active:bg-gray-1000/80
-		dark:hover:bg-gray-1000/90 dark:active:bg-gray-1000/85;
+		dark:hover:bg-gray-1000/90 dark:active:bg-gray-1000/80;
 		color: hsl(var(--bg-main));
-		background-color: hsl(var(--gray-1000));
+		box-shadow: var(--shadow-2);
+	}
+
+	.warning_button {
+		@apply button_base
+		text-white
+		bg-red-800
+		hover:bg-red-700 active:bg-red-600;
 		box-shadow: var(--shadow-2);
 	}
 }

@@ -13,6 +13,7 @@
 }
 
 html {
+	color: hsl(var(--gray-1000));
 	background-color: hsl(var(--bg-main));
 	white-space: break-spaces;
 	font-family:
@@ -71,18 +72,6 @@ html {
 	h3 {
 		@apply text-xl;
 	}
-}
-
-/* .blue_link {
-	@apply text-blue-600/90 hover:text-blue-500/80;
-} */
-
-.gray-link {
-	@apply text-gray-600 hover:text-gray-600/80;
-}
-
-.gray-link-sm {
-	@apply text-sm text-gray-600 hover:text-gray-600/80;
 }
 
 @layer utilities {
