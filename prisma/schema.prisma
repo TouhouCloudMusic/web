@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Artist {
+  id               BigInt             @id @default(autoincrement())
+  createAt         DateTime           @default(now())
+  updateAt         DateTime           @updatedAt
+  name             String             @db.VarChar(100)
+  alias            Aritst_Alias_Set   @relation(fields: [aliasSetId], references: [id])
+  aliasSetId       BigInt             @map("alias_set_id")
+  release          Release[]
+  Song             Song[]
+  SongCredit       SongCredit[]
+  ReleaseTracklist ReleaseTracklist[]
+  ReleaseCredit    ReleaseCredit[]
+}
+
+model Aritst_Alias_Set {
+  id     BigInt   @id
+  Artist Artist[]
+}
+
+model Release {
+  id               BigInt             @id @default(autoincrement())
+  createAt         DateTime           @default(now())
+  updateAt         DateTime           @updatedAt
+  title            String             @db.VarChar(100)
+  artist           Artist             @relation(fields: [artistId], references: [id])
+  artistId         BigInt
+  song             Song?              @relation(fields: [songId], references: [id])
+  songId           BigInt
+  ReleaseTracklist ReleaseTracklist[]
+  ReleaseCredit    ReleaseCredit[]
+}
+
+model ReleaseTracklist {
+  releaseId  BigInt
+  release    Release @relation(fields: [releaseId], references: [id])
+  songId     BigInt
+  song       Song    @relation(fields: [songId], references: [id])
+  trackOrder Int     @db.UnsignedTinyInt
+  trackNum   String  @db.VarChar(4)
+  artist     Artist? @relation(fields: [artistId], references: [id])
+  artistId   BigInt?
+
+  @@id([releaseId, songId])
+}
+
+model ReleaseCredit {
+  releaseId   BigInt
+  release     Release    @relation(fields: [releaseId], references: [id])
+  artistId    BigInt
+  artist      Artist     @relation(fields: [artistId], references: [id])
+  musicRoleId BigInt
+  musicRole   MusicRole? @relation(fields: [musicRoleId], references: [id])
+  track       Int?       @db.UnsignedTinyInt
+
+  @@id([releaseId])
+}
+
+model Song {
+  id               BigInt             @id @default(autoincrement())
+  createAt         DateTime           @default(now())
+  updateAt         DateTime           @updatedAt
+  title            String             @db.VarChar(100)
+  artist           Artist             @relation(fields: [artistId], references: [id])
+  artistId         BigInt
+  SongCredit       SongCredit[]
+  Release          Release[]
+  ReleaseTracklist ReleaseTracklist[]
+}
+
+model SongCredit {
+  songId      BigInt
+  song        Song       @relation(fields: [songId], references: [id])
+  artist      Artist     @relation(fields: [artistId], references: [id])
+  artistId    BigInt
+  musicRole   MusicRole? @relation(fields: [musicRoleId], references: [id])
+  musicRoleId BigInt
+
+  @@id([songId, artistId, musicRoleId])
+}
+
+model MusicRole {
+  id            BigInt          @id @default(autoincrement())
+  createAt      DateTime        @default(now())
+  updateAt      DateTime        @updatedAt
+  SongCredit    SongCredit[]
+  ReleaseCredit ReleaseCredit[]
+}
