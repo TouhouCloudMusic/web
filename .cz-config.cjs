@@ -5,21 +5,22 @@ module.exports = {
         { value: "fix"      , name: "fix:      A bug fix                                                    \n            修复" },
         { value: "remove"   , name: "remove:   Remove something                                             \n            移除" },
         { value: "refactor" , name: "refactor: A code change that neither fixes a bug nor adds a feature    \n            重构" },
-        { value: "test"     , name: "test:     Added or modify tests                                        \n            测试" },
         { value: "format"   , name: "format:   Changes that do not affect the meaning of the code           \n            (white-space, formatting, missing semi-colons, etc)      \n            格式" },
-        { value: "build"    , name: "build:    Changes that affect the build system or external dependencies\n            (example scopes: gulp, broccoli, npm)                    \n            构建工具与依赖" },
-        { value: "ci"       , name: "ci:       Changes to our CI configuration files and scripts            \n            (example scopes: Travis, Circle, BrowserStack, SauceLabs)\n            持续整合工具" },
-        { value: "chore"    , name: "chore:    Other changes that don't modify src or test files            \n            杂项" },
         { value: "doc"      , name: "doc:      Documentation only changes                                   \n            文档" },
         { value: "revert"   , name: "revert:   Revert to a previous commit                                  \n            回退" },
         { value: "wip"      , name: "wip:      Work in progress                                             \n            未完成" },
+        // { value: "test"     , name: "test:     Added or modify tests                                        \n            测试" },
+        // { value: "build"    , name: "build:    Changes that affect the build system or external dependencies\n            (example scopes: gulp, broccoli, npm)                    \n            构建工具与依赖" },
+        // { value: "ci"       , name: "ci:       Changes to our CI configuration files and scripts            \n            (example scopes: Travis, Circle, BrowserStack, SauceLabs)\n            持续整合工具" },
+        // { value: "chore"    , name: "chore:    Other changes that don't modify src or test files            \n            杂项" },
+
     ],
 
     scopes: [
-        // "page",
-        // "css",
-        // "component",
-        // "util"
+       "page",
+       "style",
+       "util",
+       "test",
     ],
 
     usePreparedCommit: false, // to re-use commit from ./.git/COMMIT_EDITMSG
@@ -49,9 +50,9 @@ module.exports = {
     },
 
     allowCustomScopes: true,
-    allowBreakingChanges: ["feat", "fix"],
+    allowBreakingChanges: ["add", "fix", "remove"],
     // skip any questions you want
-    // skipQuestions: ['scope', 'body'],
+    skipQuestions: ['scope'],
 
     // limit subject length
     subjectLimit: 100,

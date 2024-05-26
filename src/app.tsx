@@ -4,7 +4,7 @@ import { FileRoutes } from "@solidjs/start/router"
 import { Suspense, createResource } from "solid-js"
 import "./app.css"
 import { AppStateProvider, AppTheme, devAppState } from "./state/app.state"
-import Header from "~/component/Header/Header"
+import Header from "~/component/header/header"
 import { getCookieTheme } from "./state/theme"
 
 function App() {

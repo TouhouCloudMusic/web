@@ -1,6 +1,6 @@
 import { Title } from "@solidjs/meta"
 import { For, JSX } from "solid-js"
-import { ThemeButton } from "~/component/ThemeButton"
+import { ThemeButton } from "~/component/themeButton"
 import { A } from "@solidjs/router"
 export default function () {
 	return (

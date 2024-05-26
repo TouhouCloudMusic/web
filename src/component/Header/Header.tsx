@@ -1,7 +1,7 @@
 import { Show } from "solid-js"
 import style from "./Header.module.css"
 import { useAppState } from "~/state/app.state"
-import { ThemeButton } from "../ThemeButton"
+import { ThemeButton } from "../themeButton"
 export default function Header() {
 	const appState = useAppState()
 	const navLinkClass =

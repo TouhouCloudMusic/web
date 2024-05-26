@@ -2,7 +2,6 @@
 .idea
 .output
 .vinxi
-.vscode
 
 dist
 node_modules

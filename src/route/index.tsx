@@ -5,27 +5,27 @@ export default function HomePage() {
 
 	return (
 		<main class="flex justify-center">
-			<div class="w-[60rem] bg-white">
+			<div class="w-[60rem]">
 				<Title>Hello World</Title>
-				<ul class="my-2 flex flex-col gap-2 text-gray-1000">
+				<ul class="my-2 flex flex-col gap-2">
 					<li>
 						<a
 							href="/song/example"
-							class="text-blue-900">
+							class="link">
 							song
 						</a>
 					</li>
 					<li>
 						<a
 							href="/user/dev"
-							class="text-gray-1000">
+							class="link">
 							user
 						</a>
 					</li>
 					<li>
 						<a
 							href="/theme"
-							class="text-gray-1000">
+							class="link">
 							theme
 						</a>
 					</li>

@@ -4,17 +4,17 @@ import { createAtom } from "~/util/createAtom"
 describe("createAtom with single value", () => {
 	const count = createAtom(0)
 
-	test("get value", () => {
+	test("Get value", () => {
 		expect(count()).toBe(0)
 	})
 
-	test("set value", () => {
+	test("Set value", () => {
 		count(0)
 		count(1)
 		expect(count()).toBe(1)
 	})
 
-	test("set value by function", () => {
+	test("Set value with function", () => {
 		count(0)
 		count((c) => c + 1)
 		expect(count()).toBe(1)
@@ -29,11 +29,11 @@ describe("createAtom with object", () => {
 
 	const obj = createAtom(example)
 
-	test("get value", () => {
+	test("Get value", () => {
 		expect(obj()).toEqual(example)
 	})
 
-	test("set value", () => {
+	test("Set value", () => {
 		obj({ ...obj(), foo: 1 })
 
 		expect(obj()).toEqual({
@@ -42,7 +42,7 @@ describe("createAtom with object", () => {
 		})
 	})
 
-	test("set value by function", () => {
+	test("Set value with function", () => {
 		obj(example)
 		obj((prev) => ({ ...prev, bar: ++prev.bar }))
 		expect(obj()).toEqual({
