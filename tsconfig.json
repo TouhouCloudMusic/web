@@ -2,7 +2,11 @@
 	"compilerOptions": {
 		// Bundler
 		"lib": ["ESNext", "DOM"],
-		"types": ["@types/bun", "vinxi/types/client", "@testing-library/jest-dom"],
+		"types": [
+			"@types/bun",
+			"vinxi/types/client",
+			"@testing-library/jest-dom"
+		],
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler",

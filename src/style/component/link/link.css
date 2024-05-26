@@ -4,15 +4,18 @@
 	} */
 
 	.link {
-		@apply transition-all text-blue-700
+		@apply transition-all
+		text-blue-700
 		hover:underline;
 		text-decoration: solid none currentColor;
+		text-underline-offset: 4px;
 	}
 
 	.link_gray {
 		@apply transition-all
-		text-gray-700 dark:text-gray-700
+		text-gray-700
 		hover:underline;
 		text-decoration: solid none currentColor;
+		text-underline-offset: 4px;
 	}
 }

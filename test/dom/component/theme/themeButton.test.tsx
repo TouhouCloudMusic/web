@@ -22,7 +22,7 @@ const themeButtonTestWrapper: ParentComponent = (props) => (
 	</div>
 )
 
-describe("Theme Button", async () => {
+describe("Theme button", async () => {
 	const user = userEvent.setup()
 	const { findByRole } = render(() => <ThemeButton />, {
 		wrapper: themeButtonTestWrapper,
