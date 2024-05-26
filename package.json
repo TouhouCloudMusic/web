@@ -68,7 +68,7 @@
 		"version": "vinxi version",
 		"format": "prettier --write . ",
 		"lint": "eslint ./src",
-		"test-dom": "bun vitest",
+		"test-dom": "bun vitest run",
 		"test-bun": "bun test ./test/util/*",
 		"test": "bun run test-bun && bun run test-dom",
 		"commit": "bun run format && bun run lint && git cz"
