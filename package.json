@@ -11,6 +11,7 @@
 		"@ark-ui/solid": "^2.2.0",
 		"@eslint/js": "^9.3.0",
 		"@floating-ui/dom": "^1.6.5",
+		"@prisma/client": "^5.14.0",
 		"@radix-ui/colors": "^3.0.0",
 		"@sinclair/typebox": "^0.32.30",
 		"@solid-primitives/destructure": "^0.1.17",
@@ -72,7 +73,9 @@
 		"test-dom": "bun vitest run",
 		"test-bun": "bun test ./test/util/*",
 		"test": "bun run test-bun && bun run test-dom",
-		"commit": "bun run format && bun run lint && git cz"
+		"commit": "bun run format && bun run lint && git cz",
+		"initdb": "bunx prisma migrate dev --name init",
+		"updb": "prisma migrate dev && prisma db push"
 	},
 	"type": "module",
 	"module": "index.ts"

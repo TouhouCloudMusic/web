@@ -5,98 +5,131 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["relationJoins"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model Artist {
-  id               BigInt             @id @default(autoincrement())
-  createAt         DateTime           @default(now())
-  updateAt         DateTime           @updatedAt
-  name             String             @db.VarChar(100)
-  alias            Aritst_Alias_Set   @relation(fields: [aliasSetId], references: [id])
-  aliasSetId       BigInt             @map("alias_set_id")
-  release          Release[]
-  Song             Song[]
-  SongCredit       SongCredit[]
-  ReleaseTracklist ReleaseTracklist[]
-  ReleaseCredit    ReleaseCredit[]
+  id            BigInt     @id @default(autoincrement())
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now()) @updatedAt
+  name          String     @db.VarChar(100)
+  date_of_birth DateTime?  @db.Date
+  date_of_death DateTime?  @db.Date
+  type          ArtistType
+
+  alias_id BigInt?
+  alias_of Artist?  @relation("alias", fields: [alias_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  alias    Artist[] @relation("alias")
+
+  member_of Artist[] @relation("member")
+  members   Artist[] @relation("member")
+
+  song        Song[]
+  song_credit SongCredit[]
+
+  release           Release[]
+  release_tracklist ReleaseTracklist[]
+  release_credit    ReleaseCredit[]
+
+  @@index([alias_id])
+  @@map("artist")
 }
 
-model Aritst_Alias_Set {
-  id     BigInt   @id
-  Artist Artist[]
+enum ArtistType {
+  PERSON
+  GROUP
 }
 
 model Release {
-  id               BigInt             @id @default(autoincrement())
-  createAt         DateTime           @default(now())
-  updateAt         DateTime           @updatedAt
-  title            String             @db.VarChar(100)
-  artist           Artist             @relation(fields: [artistId], references: [id])
-  artistId         BigInt
-  song             Song?              @relation(fields: [songId], references: [id])
-  songId           BigInt
-  ReleaseTracklist ReleaseTracklist[]
-  ReleaseCredit    ReleaseCredit[]
+  id         BigInt             @id @default(autoincrement())
+  created_at DateTime           @default(now())
+  updated_at DateTime           @updatedAt
+  title      String             @db.VarChar(100)
+  artist     Artist             @relation(fields: [artist_id], references: [id])
+  artist_id  BigInt
+  tracklist  ReleaseTracklist[]
+  credit     ReleaseCredit[]
+  song       Song?              @relation(fields: [song_id], references: [id])
+  song_id    BigInt?
+
+  @@index([artist_id])
+  @@index([song_id])
+  @@map("release")
 }
 
 model ReleaseTracklist {
-  releaseId  BigInt
-  release    Release @relation(fields: [releaseId], references: [id])
-  songId     BigInt
-  song       Song    @relation(fields: [songId], references: [id])
-  trackOrder Int     @db.UnsignedTinyInt
-  trackNum   String  @db.VarChar(4)
-  artist     Artist? @relation(fields: [artistId], references: [id])
-  artistId   BigInt?
+  release_id  BigInt
+  release     Release @relation(fields: [release_id], references: [id])
+  song_id     BigInt
+  song        Song    @relation(fields: [song_id], references: [id])
+  track_order Int     @db.UnsignedTinyInt
+  track_num   String  @db.VarChar(4)
+  artist      Artist? @relation(fields: [artist_id], references: [id])
+  artist_id   BigInt?
 
-  @@id([releaseId, songId])
+  @@id([release_id, track_order])
+  @@index([song_id])
+  @@index([artist_id])
+  @@map("release_tracklist")
 }
 
 model ReleaseCredit {
-  releaseId   BigInt
-  release     Release    @relation(fields: [releaseId], references: [id])
-  artistId    BigInt
-  artist      Artist     @relation(fields: [artistId], references: [id])
-  musicRoleId BigInt
-  musicRole   MusicRole? @relation(fields: [musicRoleId], references: [id])
-  track       Int?       @db.UnsignedTinyInt
+  release_id    BigInt
+  release       Release    @relation(fields: [release_id], references: [id])
+  artist_id     BigInt
+  artist        Artist     @relation(fields: [artist_id], references: [id])
+  music_role_id BigInt
+  music_role    MusicRole? @relation(fields: [music_role_id], references: [id])
+  track_num     Int?       @db.UnsignedTinyInt
 
-  @@id([releaseId])
+  @@id([release_id])
+  @@index([music_role_id])
+  @@index([artist_id])
+  @@map("release_credit")
 }
 
 model Song {
-  id               BigInt             @id @default(autoincrement())
-  createAt         DateTime           @default(now())
-  updateAt         DateTime           @updatedAt
-  title            String             @db.VarChar(100)
-  artist           Artist             @relation(fields: [artistId], references: [id])
-  artistId         BigInt
-  SongCredit       SongCredit[]
-  Release          Release[]
-  ReleaseTracklist ReleaseTracklist[]
+  id                BigInt             @id @default(autoincrement())
+  created_at        DateTime           @default(now())
+  updated_at        DateTime           @updatedAt
+  title             String             @db.VarChar(100)
+  artist            Artist             @relation(fields: [artist_id], references: [id])
+  artist_id         BigInt
+  song_credit       SongCredit[]
+  release           Release[]
+  release_tracklist ReleaseTracklist[]
+
+  @@index([artist_id])
+  @@map("song")
 }
 
 model SongCredit {
-  songId      BigInt
-  song        Song       @relation(fields: [songId], references: [id])
-  artist      Artist     @relation(fields: [artistId], references: [id])
-  artistId    BigInt
-  musicRole   MusicRole? @relation(fields: [musicRoleId], references: [id])
-  musicRoleId BigInt
+  song_id       BigInt
+  song          Song       @relation(fields: [song_id], references: [id])
+  artist        Artist     @relation(fields: [artist_id], references: [id])
+  artist_id     BigInt
+  music_role    MusicRole? @relation(fields: [music_role_id], references: [id])
+  music_role_id BigInt
 
-  @@id([songId, artistId, musicRoleId])
+  @@id([song_id, artist_id, music_role_id])
+  @@index([artist_id])
+  @@index([music_role_id])
+  @@map("song_credit")
 }
 
 model MusicRole {
-  id            BigInt          @id @default(autoincrement())
-  createAt      DateTime        @default(now())
-  updateAt      DateTime        @updatedAt
-  SongCredit    SongCredit[]
-  ReleaseCredit ReleaseCredit[]
+  id             BigInt          @id @default(autoincrement())
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  song_credit    SongCredit[]
+  release_credit ReleaseCredit[]
+
+  @@map("music_role")
 }

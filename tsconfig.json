@@ -5,7 +5,7 @@
 		"types": [
 			"@types/bun",
 			"vinxi/types/client",
-			"@testing-library/jest-dom"
+			"@testing-library/jest-dom",
 		],
 		"target": "ESNext",
 		"module": "ESNext",
@@ -28,7 +28,7 @@
 		"noFallthroughCasesInSwitch": true,
 		// Path Alias
 		"paths": {
-			"~/*": ["./src/*"]
-		}
-	}
+			"~/*": ["./src/*"],
+		},
+	},
 }

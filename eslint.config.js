@@ -20,6 +20,15 @@ export default [
 		rules: {
 			"@typescript-eslint/no-unused-vars": "warn",
 			"@typescript-eslint/array-type": "off",
+			"@typescript-eslint/no-misused-promises": [
+				"error",
+				{
+					checksVoidReturn: {
+						// arguments: false,
+						attributes: false,
+					},
+				},
+			],
 			"solid/self-closing-comp": [
 				"warn",
 				{

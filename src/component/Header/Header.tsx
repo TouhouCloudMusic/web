@@ -1,5 +1,5 @@
 import { Show } from "solid-js"
-import style from "./Header.module.css"
+import style from "./header.module.css"
 import { useAppState } from "~/state/app.state"
 import { ThemeButton } from "../themeButton"
 export default function Header() {
