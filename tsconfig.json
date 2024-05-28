@@ -10,7 +10,6 @@
 		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "bundler",
-		// "moduleResolution": "node",
 		"allowImportingTsExtensions": true,
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,

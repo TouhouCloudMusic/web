@@ -2,7 +2,9 @@
 import { PrismaClient } from "@prisma/client"
 
 function prismaSigleton() {
-	return new PrismaClient()
+	return new PrismaClient({
+		datasourceUrl: import.meta.env.VITE_DATABASE_URL,
+	})
 }
 
 declare const globalThis: {

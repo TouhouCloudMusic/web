@@ -7,7 +7,7 @@ export default defineConfig({
 		build: {
 			minify: false,
 		},
+		ssr: { external: ["@prisma/client"] },
 	},
-
 	routeDir: "./route",
 })
