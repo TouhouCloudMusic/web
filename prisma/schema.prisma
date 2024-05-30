@@ -22,29 +22,19 @@ model Artist {
   date_of_birth DateTime?  @db.Date
   date_of_death DateTime?  @db.Date
 
-  // Alias
-
   alias_id BigInt?
   alias_of Artist?  @relation("alias", fields: [alias_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   alias    Artist[] @relation("alias")
 
-  // Member
-
   member_of Artist[] @relation("member")
   members   Artist[] @relation("member")
-
-  // Song
 
   song        Song[]
   song_credit SongCredit[]
 
-  // Credit
-
   release           Release[]
   release_tracklist ReleaseTracklist[]
   release_credit    ReleaseCredit[]
-
-  //
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
@@ -59,50 +49,54 @@ enum ArtistType {
 }
 
 model Release {
-  id         BigInt             @id @default(autoincrement())
-  created_at DateTime           @default(now())
-  updated_at DateTime           @updatedAt
-  title      String             @db.VarChar(100)
-  artist     Artist             @relation(fields: [artist_id], references: [id])
-  artist_id  BigInt
-  tracklist  ReleaseTracklist[]
-  credit     ReleaseCredit[]
-  song       Song?              @relation(fields: [song_id], references: [id])
-  song_id    BigInt?
+  id           BigInt   @id @default(autoincrement())
+  title        String   @db.VarChar(100)
+  release_date DateTime @db.Date
 
-  @@index([artist_id])
-  @@index([song_id])
+  artist    Artist[]
+  song      Song[]
+  tracklist ReleaseTracklist[]
+  credit    ReleaseCredit[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("release")
 }
 
 model ReleaseTracklist {
-  release_id  BigInt
-  release     Release @relation(fields: [release_id], references: [id])
-  song_id     BigInt
-  song        Song    @relation(fields: [song_id], references: [id])
-  track_order Int     @db.UnsignedTinyInt
-  track_num   String  @db.VarChar(4)
-  artist      Artist? @relation(fields: [artist_id], references: [id])
-  artist_id   BigInt?
+  id          BigInt @id @default(autoincrement())
+  track_order Int    @db.UnsignedTinyInt
+  track_num   String @db.VarChar(4)
 
-  @@id([release_id, track_order])
+  artist Artist[]
+
+  song_id BigInt
+  song    Song   @relation(fields: [song_id], references: [id])
+
+  release    Release         @relation(fields: [release_id], references: [id])
+  release_id BigInt
+  credit     ReleaseCredit[]
+
   @@index([song_id])
-  @@index([artist_id])
+  @@index([release_id])
   @@map("release_tracklist")
 }
 
 model ReleaseCredit {
   release_id    BigInt
-  release       Release    @relation(fields: [release_id], references: [id])
+  release       Release           @relation(fields: [release_id], references: [id])
   artist_id     BigInt
-  artist        Artist     @relation(fields: [artist_id], references: [id])
+  artist        Artist            @relation(fields: [artist_id], references: [id])
   music_role_id BigInt
-  music_role    MusicRole? @relation(fields: [music_role_id], references: [id])
-  track_num     Int?       @db.UnsignedTinyInt
+  music_role    MusicRole?        @relation(fields: [music_role_id], references: [id])
+  track         ReleaseTracklist? @relation(fields: [track_id], references: [id])
+  track_id      BigInt?
 
   @@id([release_id])
   @@index([music_role_id])
   @@index([artist_id])
+  @@index([track_id])
   @@map("release_credit")
 }
 
