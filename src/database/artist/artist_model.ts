@@ -1,20 +1,21 @@
 "use server"
-import { usePrisma } from "~/server/prisma/prisma"
+import { usePrisma } from "~/database/prisma_singleton"
 export async function findArtistWithAlias() {
-	"use server"
 	try {
 		const prisma = usePrisma()
 		const artist = await prisma.artist.findFirst({
 			where: { id: 1 },
 			include: { alias: { where: { NOT: { id: 1 } } } },
 		})
+
 		return artist
 	} catch (e) {
-		return e
+		console.log(e)
+	} finally {
+		console.log("find artist with alias finished")
 	}
 }
 export async function findArtistMember() {
-	"use server"
 	try {
 		const prisma = usePrisma()
 		const artist = await prisma.artist.findFirst({
@@ -27,7 +28,6 @@ export async function findArtistMember() {
 	}
 }
 export async function addData() {
-	"use server"
 	try {
 		const prisma = usePrisma()
 		await prisma.artist.createMany({
@@ -36,19 +36,19 @@ export async function addData() {
 					id: 1,
 					name: "foo",
 					alias_id: 1,
-					type: "PERSON",
+					type: "Person",
 				},
 				{
 					id: 2,
 					name: "bar",
 					alias_id: 1,
-					type: "PERSON",
+					type: "Person",
 				},
 				{
 					id: 3,
 					name: "baz",
 					alias_id: 1,
-					type: "PERSON",
+					type: "Person",
 				},
 			],
 			skipDuplicates: true,
@@ -59,14 +59,14 @@ export async function addData() {
 			},
 			update: {
 				name: "test group",
-				type: "GROUP",
+				type: "Group",
 				members: {
 					connect: [{ id: 1 }, { id: 2 }, { id: 3 }],
 				},
 			},
 			create: {
 				name: "test group",
-				type: "GROUP",
+				type: "Group",
 				members: {
 					connect: [{ id: 1 }, { id: 2 }, { id: 3 }],
 				},
@@ -78,17 +78,15 @@ export async function addData() {
 			},
 			update: {
 				name: "test group 2",
-				type: "GROUP",
+				type: "Group",
 				members: {
 					connect: [{ id: 1 }],
 				},
 			},
 			create: {
-				name: "test group",
-				type: "GROUP",
-				members: {
-					connect: [{ id: 1 }],
-				},
+				name: "test group 2",
+				type: "Group",
+				members: {},
 			},
 		})
 

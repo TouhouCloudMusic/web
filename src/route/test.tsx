@@ -5,11 +5,8 @@ import {
 	findArtistMember,
 	findArtistMemberOf,
 	addData,
-} from "~/server/db/artist/artist_model"
-import {
-	resetArtistTableAutoIncrement,
-	resetAutoIncrement,
-} from "~/server/db/util/reset_auto_increment"
+} from "~/database/artist/artist_model"
+import { resetAutoIncrement } from "~/database/util/reset_auto_increment"
 
 export default function () {
 	const [data] = createResource(() => findArtistWithAlias())
@@ -22,15 +19,15 @@ export default function () {
 				onClick={() => addData()}>
 				Add
 			</button>
-			<button
+			{/* <button
 				class="button p-2"
 				onClick={() => resetArtistTableAutoIncrement()}>
-				Reset Auto Increment
-			</button>
+						Reset Auto Increment
+			</button> */}
 			<button
 				class="button p-2"
 				onClick={() => resetAutoIncrement("artist")}>
-				Reset Auto Increment B
+				Reset Auto Increment
 			</button>
 			<button
 				class="button p-2"
