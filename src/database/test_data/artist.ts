@@ -2,18 +2,42 @@ import { pipe } from "fp-ts/lib/function"
 import { usePrisma } from "../prisma_singleton"
 const prisma = usePrisma()
 
-async function addTestArtistData() {
-	let step = 0
+async function createArtist(
+	name: string,
+	type: "Person" | "Group",
+	member_of_id?: number
+) {
+	try {
+		await prisma.artist.create({
+			data: {
+				name: name.trim(),
+				type: type,
+				member_of: {
+					connect: {
+						id: member_of_id,
+					},
+				},
+			},
+		})
+		return
+	} catch (e) {
+		return e
+	}
+}
+
+export async function addTestArtistData() {
+	let step = 1
+	const group_id = 1
+
 	function errHandle(e: unknown) {
-		throw new Error(`Error while add artist data on step ${step}: ${e}`)
+		throw [new Error(`Error while add artist data on step ${step}`), e]
 	}
 	try {
 		step++
-		// 先添加团体
 		await prisma.artist.create({
 			data: {
-				id: 1,
-				name: "foo",
+				id: group_id,
+				name: "Alstroemeria Records",
 				type: "Group",
 			},
 		})
@@ -21,21 +45,28 @@ async function addTestArtistData() {
 		errHandle(e)
 	}
 	try {
-		await prisma.artist.create({
-			data: {
-				id: 2,
-				name: " foo",
-				type: "Person",
-				member_of: {
-					// 将该成员链接至团体
-					connect: {
-						id: 1,
-					},
-				},
-			},
-		})
+		await createArtist("Masayoshi Minoshima", "Person", group_id)
 	} catch (e) {
 		errHandle(e)
 	}
-	// 再添加成员
+	try {
+		await createArtist("	Ryo Ohnuki", "Person", group_id)
+	} catch (e) {
+		errHandle(e)
+	}
+	try {
+		await createArtist("nomico", "Person", group_id)
+	} catch (e) {
+		errHandle(e)
+	}
+	try {
+		await createArtist("Haruka", "Person", group_id)
+	} catch (e) {
+		errHandle(e)
+	}
+	try {
+		await createArtist("深崎暮人", "Person", group_id)
+	} catch (e) {
+		errHandle(e)
+	}
 }

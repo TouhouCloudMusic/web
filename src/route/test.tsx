@@ -1,17 +1,32 @@
 import { createAsync } from "@solidjs/router"
-import { Show, Suspense, createResource } from "solid-js"
+import {
+	Show,
+	Suspense,
+	createEffect,
+	createResource,
+	on,
+	onMount,
+} from "solid-js"
 import {
 	findArtistWithAlias,
 	findArtistMember,
 	findArtistMemberOf,
 	addData,
 } from "~/database/artist/artist_model"
+import { getReleaseByIDT } from "~/database/test_data/release"
 import { resetAutoIncrement } from "~/database/util/reset_auto_increment"
+import { logWithouProto } from "~/util/log_without_proto"
 
 export default function () {
 	const [data] = createResource(() => findArtistWithAlias())
+	const releaseData = createAsync(() => getReleaseByIDT())
 	const group = createAsync(() => findArtistMember())
 	const findMemberTest = createAsync(() => findArtistMemberOf())
+	createEffect(
+		on(releaseData, () => {
+			console.log(releaseData())
+		})
+	)
 	return (
 		<>
 			<button
