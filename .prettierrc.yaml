@@ -13,6 +13,11 @@ overrides:
     options:
       tabWidth: 2
       useTabs: false
+  - files:
+      - "package.json"
+    options:
+      tabWidth: 2
+      useTabs: false
 quoteProps: as-needed
 requirePragma: false
 semi: false

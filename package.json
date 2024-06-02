@@ -1,82 +1,83 @@
 {
-	"config": {
-		"commitizen": {
-			"path": "node_modules/cz-customizable"
-		},
-		"cz-customizable": {
-			"config": ".cz-config.cjs"
-		}
-	},
-	"dependencies": {
-		"@ark-ui/solid": "^2.2.0",
-		"@eslint/js": "^9.3.0",
-		"@floating-ui/dom": "^1.6.5",
-		"@prisma/client": "^5.14.0",
-		"@radix-ui/colors": "^3.0.0",
-		"@sinclair/typebox": "^0.32.30",
-		"@solid-primitives/destructure": "^0.1.17",
-		"@solidjs/meta": "^0.29.4",
-		"@solidjs/router": "^0.13.3",
-		"@solidjs/start": "1.0.0",
-		"fp-ts": "^2.16.6",
-		"globals": "^15.3.0",
-		"lucide-solid": "^0.373.0",
-		"ramda": "^0.29.1",
-		"solid-floating-ui": "^0.3.1",
-		"solid-js": "^1.8.17",
-		"solid-popper": "^0.3.0",
-		"solid-radix-icons": "^1.0.0",
-		"ts-pattern": "^5.1.2",
-		"vinxi": "^0.3.11"
-	},
-	"devDependencies": {
-		"@babel/eslint-parser": "^7.24.5",
-		"@solidjs/testing-library": "^0.8.8",
-		"@testing-library/jest-dom": "^6.4.5",
-		"@testing-library/user-event": "^14.5.2",
-		"@types/bun": "latest",
-		"@types/ramda": "^0.29.12",
-		"@typescript-eslint/eslint-plugin": "^7.10.0",
-		"@typescript-eslint/parser": "^7.10.0",
-		"autoprefixer": "^10.4.19",
-		"babel-preset-solid": "^1.8.17",
-		"commitizen": "^4.3.0",
-		"cz-customizable": "git+https://github.com/Huliiiiii/cz-customizable.git",
-		"daisyui": "^4.11.1",
-		"eslint": "^8.57.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-solid": "^0.13.2",
-		"jsdom": "^24.1.0",
-		"postcss": "^8.4.38",
-		"prettier": "3.2.4",
-		"prettier-plugin-tailwindcss": "^0.5.14",
-		"prisma": "^5.14.0",
-		"tailwindcss": "^3.4.3",
-		"typescript": "^5.5.0-dev.20240523",
-		"typescript-eslint": "^7.10.0",
-		"vite-tsconfig-paths": "^4.3.2",
-		"vitest": "^1.6.0"
-	},
-	"engines": {
-		"node": ">=18",
-		"bun": "latest"
-	},
-	"name": "@touhouclouddb/web",
-	"scripts": {
-		"build": "vinxi build",
-		"dev": "vinxi dev",
-		"dev-bun": "bunx --bun vinxi dev",
-		"start": "vinxi start",
-		"version": "vinxi version",
-		"format": "prettier --write . ",
-		"lint": "eslint ./src",
-		"test-dom": "bun vitest run",
-		"test-bun": "bun test ./test/util/*",
-		"test": "bun run test-bun && bun run test-dom",
-		"commit": "bun run format && bun run lint && git cz",
-		"initdb": "bunx prisma migrate dev --name init",
-		"updb": "prisma migrate dev && prisma db push"
-	},
-	"type": "module",
-	"module": "index.ts"
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-customizable"
+    },
+    "cz-customizable": {
+      "config": ".cz-config.cjs"
+    }
+  },
+  "dependencies": {
+    "@ark-ui/solid": "^2.2.0",
+    "@eslint/js": "^9.4.0",
+    "@floating-ui/dom": "^1.6.5",
+    "@prisma/client": "^5.14.0",
+    "@radix-ui/colors": "^3.0.0",
+    "@sinclair/typebox": "^0.32.31",
+    "@solid-primitives/destructure": "^0.1.17",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.13.5",
+    "@solidjs/start": "1.0.0",
+    "effect": "^3.2.7",
+    "fp-ts": "^2.16.6",
+    "globals": "^15.3.0",
+    "lucide-solid": "^0.373.0",
+    "ramda": "^0.29.1",
+    "solid-floating-ui": "^0.3.1",
+    "solid-js": "^1.8.17",
+    "solid-popper": "^0.3.0",
+    "solid-radix-icons": "^1.0.0",
+    "ts-pattern": "^5.1.2",
+    "vinxi": "^0.3.11"
+  },
+  "devDependencies": {
+    "@babel/eslint-parser": "^7.24.6",
+    "@solidjs/testing-library": "^0.8.8",
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/bun": "latest",
+    "@types/ramda": "^0.29.12",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "autoprefixer": "^10.4.19",
+    "babel-preset-solid": "^1.8.17",
+    "commitizen": "^4.3.0",
+    "cz-customizable": "git+https://github.com/Huliiiiii/cz-customizable.git",
+    "daisyui": "^4.11.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-solid": "^0.13.2",
+    "jsdom": "^24.1.0",
+    "postcss": "^8.4.38",
+    "prettier": "3.2.4",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "prisma": "^5.14.0",
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.5.0-dev.20240601",
+    "typescript-eslint": "^7.11.0",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^1.6.0"
+  },
+  "engines": {
+    "node": ">=18",
+    "bun": "latest"
+  },
+  "name": "@touhouclouddb/web",
+  "scripts": {
+    "build": "vinxi build",
+    "dev": "vinxi dev",
+    "dev-bun": "bunx --bun vinxi dev",
+    "start": "vinxi start",
+    "version": "vinxi version",
+    "format": "prettier --write . ",
+    "lint": "eslint ./src",
+    "test-dom": "bun vitest run",
+    "test-bun": "bun test ./test/util/*",
+    "test": "bun run test-bun && bun run test-dom",
+    "commit": "bun run format && bun run lint && git cz",
+    "initdb": "bunx prisma migrate dev --name init",
+    "updb": "prisma migrate dev && prisma db push"
+  },
+  "type": "module",
+  "module": "index.ts"
 }
