@@ -17,12 +17,11 @@ export function ShowPortal<
 	ref?:
 		| (S extends true ? SVGGElement : HTMLDivElement)
 		| ((
-				el: (T extends true
-					? {
-							readonly shadowRoot: ShadowRoot
-						}
-					: // 原文： {}
-						Record<string, never>) &
+				el: (T extends true ?
+					{
+						readonly shadowRoot: ShadowRoot
+					}
+				:	NonNullable<unknown>) & // 原文： {}
 					(S extends true ? SVGGElement : HTMLDivElement)
 		  ) => void)
 }): JSX.Element {

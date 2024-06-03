@@ -3,10 +3,13 @@ import { HttpStatusCode } from "@solidjs/start"
 
 export default function NotFound() {
 	return (
-		<main class="flex h-full w-full items-center justify-center bg-white">
+		<main class="w-[64rem] py-32">
 			<Title>Not Found</Title>
 			<HttpStatusCode code={404} />
-			<div>404 Not Found</div>
+			<img
+				src="/img/status_code/404.png"
+				alt="404 Not Found"
+			/>
 		</main>
 	)
 }

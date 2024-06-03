@@ -2,9 +2,9 @@ import { MetaProvider, Title } from "@solidjs/meta"
 import { Router } from "@solidjs/router"
 import { FileRoutes } from "@solidjs/start/router"
 import { Suspense, createResource } from "solid-js"
+import Header from "~/component/header/header"
 import "./app.css"
 import { AppStateProvider, AppTheme, devAppState } from "./state/app.state"
-import Header from "~/component/header/header"
 import { getCookieTheme } from "./state/theme"
 
 function App() {

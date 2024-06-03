@@ -1,19 +1,26 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import globals from "globals"
 import pluginJs from "@eslint/js"
-import tseslint from "typescript-eslint"
-import solid from "eslint-plugin-solid/configs/typescript.js"
 import eslintConfigPrettier from "eslint-config-prettier"
+import a11y from "eslint-plugin-jsx-a11y"
+import solid from "eslint-plugin-solid/configs/typescript.js"
+import globals from "globals"
+import tseslint from "typescript-eslint"
 export default [
 	{
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
 			parserOptions: { project: true },
 		},
+		plugins: {
+			"jsx-a11y": a11y,
+		},
+		rules: a11y.configs.strict.rules,
 	},
 	pluginJs.configs.recommended,
 	...tseslint.configs.recommendedTypeChecked,
 	...tseslint.configs.stylisticTypeChecked,
+
 	solid,
 	eslintConfigPrettier,
 	{
@@ -38,6 +45,7 @@ export default [
 					html: "void", // "all" | "void" | "none"
 				},
 			],
+			"solid/prefer-for": "off",
 		},
 	},
 	{

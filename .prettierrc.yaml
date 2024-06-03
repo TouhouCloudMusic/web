@@ -1,5 +1,6 @@
 bracketSameLine: true
 endOfLine: lf
+experimentalTernaries: true
 htmlWhitespaceSensitivity: css
 insertPragma: false
 overrides:

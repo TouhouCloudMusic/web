@@ -1,4 +1,4 @@
-import { pipe } from "fp-ts/lib/function"
+"use server"
 import { usePrisma } from "../prisma_singleton"
 const prisma = usePrisma()
 
