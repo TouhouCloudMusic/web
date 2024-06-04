@@ -17,7 +17,7 @@ export async function findReleaseByID(id: number | bigint) {
 			artist: {
 				include: {
 					artist: true,
-				}
+				},
 			},
 			tracklist: {
 				include: {
@@ -29,5 +29,3 @@ export async function findReleaseByID(id: number | bigint) {
 	})
 	return res
 }
-
-console.log(await findReleaseByID(1));

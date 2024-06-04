@@ -35,7 +35,6 @@ export default function ReleasePage() {
 	return (
 		<Suspense>
 			<main>
-				<a href="/release/2">foo</a>
 				<div>Title: {data()?.title}</div>
 				<div class="flex">
 					<p>Artist: </p>

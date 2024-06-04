@@ -153,7 +153,7 @@ await prisma.song.update({
 		credits: {
 			create: {
 				artist_id: 4,
-				roles: { connect: { id:3 } },
+				roles: { connect: { id: 3 } },
 			},
 		},
 	},
@@ -166,7 +166,7 @@ await prisma.song.update({
 		credits: {
 			create: {
 				artist_id: 5,
-				roles: { connect: { id:4 } },
+				roles: { connect: { id: 4 } },
 			},
 		},
 	},

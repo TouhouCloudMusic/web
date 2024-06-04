@@ -53,9 +53,9 @@ export function SongInfo() {
 								<li>
 									<p>
 										<a href="">{song()}</a>
-										{index !== originalSong().length - 1
-											? ", "
-											: ""}
+										{index !== originalSong().length - 1 ?
+											", "
+										:	""}
 									</p>
 								</li>
 							)}

@@ -75,4 +75,5 @@ function createSongController(
 	return songController
 }
 
-export const [SongDataProvider, useSongData] = createProvider(createSongController)
+export const [SongDataProvider, useSongData] =
+	createProvider(createSongController)

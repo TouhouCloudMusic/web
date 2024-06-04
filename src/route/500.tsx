@@ -6,7 +6,10 @@ export default function InternalServerError() {
 		<main class="w-[64rem] py-32">
 			<Title>Internal Server Error</Title>
 			<HttpStatusCode code={500} />
-			<img src="/img/status_code/500.png" alt="500 Internal Server Error" />
+			<img
+				src="/img/status_code/500.png"
+				alt="500 Internal Server Error"
+			/>
 		</main>
 	)
 }

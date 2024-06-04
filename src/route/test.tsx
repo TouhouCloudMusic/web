@@ -1,12 +1,5 @@
 import { createAsync } from "@solidjs/router"
-import {
-	Show,
-	Suspense,
-	createEffect,
-	createResource,
-	on,
-	onMount,
-} from "solid-js"
+import { Show, Suspense, createEffect, createResource, on, onMount } from "solid-js"
 import {
 	findArtistWithAlias,
 	findArtistMember,

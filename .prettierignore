@@ -7,3 +7,5 @@ dist
 node_modules
 public
 src/assets
+
+src/style/shadow/shadow_default.css
