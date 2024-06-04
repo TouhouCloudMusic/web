@@ -4,18 +4,22 @@
 	} */
 
 	.link {
-		@apply transition-all
-		text-blue-700
-		hover:underline;
-		text-decoration: solid none currentColor;
+		@apply text-blue-700
+		hover:decoration-current;
+		text-decoration: solid underline transparent;
 		text-underline-offset: 3px;
+		transition-property: all;
+		/* transition-timing-function: cubic-bezier(0.1, 0.7, 0, 0); */
+		transition-duration: 150ms;
 	}
 
 	.link_gray {
-		@apply transition-all
-		text-gray-700
-		hover:underline;
-		text-decoration: solid none currentColor;
+		@apply text-gray-700
+		hover:decoration-current;
+		text-decoration: solid underline transparent;
 		text-underline-offset: 3px;
+		transition-property: all;
+		/* transition-timing-function: cubic-bezier(0, 0, 0.6, 0.9); */
+		transition-duration: 150ms;
 	}
 }
