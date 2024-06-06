@@ -39,8 +39,7 @@ export function UserActionComp() {
 													color="transparent"
 												/>
 											}>
-											<Match
-												when={context().isHighlighted}>
+											<Match when={context().isHighlighted}>
 												<StarIcon
 													fill="orange"
 													color="transparent"

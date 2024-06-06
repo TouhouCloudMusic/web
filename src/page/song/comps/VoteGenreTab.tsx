@@ -116,9 +116,7 @@ export function VoteGenreTab(props: {
 													{(item, index) => (
 														<li>
 															<a>{`User ${index}`}</a>
-															{index !== 4 ?
-																", "
-															:	""}
+															{index !== 4 ? ", " : ""}
 														</li>
 													)}
 												</Index>

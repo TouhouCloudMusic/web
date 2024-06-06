@@ -13,8 +13,7 @@ export function AltVerComp() {
 							" mx-2 my-1 flex justify-between bg-white p-2 py-3"
 						}>
 						<div>
-							<a href="">{version.title} </a>in{" "}
-							<a href="">{version.album}</a> -{" "}
+							<a href="">{version.title} </a>in <a href="">{version.album}</a> -{" "}
 							<a href="">{version.albumArtist}</a>
 						</div>
 						<p class="text-gray-500">{version.type}</p>

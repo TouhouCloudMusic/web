@@ -23,6 +23,5 @@ quoteProps: as-needed
 requirePragma: false
 semi: false
 singleAttributePerLine: true
-tabWidth: 4
 trailingComma: es5
 useTabs: true

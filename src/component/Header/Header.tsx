@@ -1,7 +1,7 @@
 import { Show } from "solid-js"
-import style from "./header.module.css"
 import { useAppState } from "~/state/app.state"
 import { ThemeButton } from "../themeButton"
+import style from "./header.module.css"
 export default function Header() {
 	const appState = useAppState()
 	const navLinkClass =
@@ -60,7 +60,6 @@ export default function Header() {
 									class="h-9 place-content-center rounded-md bg-green-600 px-2.5 text-center text-white hover:bg-green-600/80 active:bg-green-700/90"
 									onClick={() => {
 										appState.devLogIn()
-										console.log(appState.user())
 									}}>
 									<span class="mx-auto">登录/注册</span>
 								</button>
