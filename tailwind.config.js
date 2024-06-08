@@ -4,13 +4,7 @@ export default {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	darkMode: ["selector", '[data-mode="dark"]'],
 	theme: {
-		borderWidth: {
-			none: "0px",
-			sm: "0.0625rem",
-			md: "0.125rem",
-			lg: "0.25rem",
-			xl: "0.375rem",
-		},
+
 		colors: {
 			inherit: "inherit",
 			current: "currentColor",
