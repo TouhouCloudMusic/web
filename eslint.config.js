@@ -27,6 +27,8 @@ export default [
 		rules: {
 			"@typescript-eslint/no-unused-vars": "warn",
 			"@typescript-eslint/array-type": "off",
+			"@typescript-eslint/consistent-type-definitions": "off",
+			"@typescript-eslint/no-empty-interface": "off",
 			"@typescript-eslint/no-misused-promises": [
 				"error",
 				{
@@ -46,6 +48,7 @@ export default [
 				},
 			],
 			"solid/prefer-for": "off",
+			"jsx-a11y/label-has-associated-control": "off",
 		},
 	},
 	{
