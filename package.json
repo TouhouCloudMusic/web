@@ -11,6 +11,7 @@
     "@ark-ui/solid": "^3.2.1",
     "@eslint/js": "^9.4.0",
     "@floating-ui/dom": "^1.6.5",
+    "@modular-forms/solid": "^0.21.0",
     "@prisma/client": "^5.15.0",
     "@sinclair/typebox": "^0.32.31",
     "@solid-primitives/destructure": "^0.1.17",
@@ -26,7 +27,9 @@
     "solid-js": "^1.8.17",
     "solid-popper": "^0.3.0",
     "solid-radix-icons": "^1.0.0",
+    "tailwind-merge": "^2.3.0",
     "ts-pattern": "^5.1.2",
+    "valibot": "^0.31.0",
     "vinxi": "^0.3.11"
   },
   "devDependencies": {
