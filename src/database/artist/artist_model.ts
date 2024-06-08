@@ -1,5 +1,8 @@
 "use server"
 import { usePrisma } from "~/database/prisma_singleton"
+
+export type ArtistType = "Person" | "Group"
+
 export async function findArtistWithAlias() {
 	try {
 		const prisma = usePrisma()
