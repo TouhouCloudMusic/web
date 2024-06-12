@@ -50,7 +50,7 @@ export default function Header() {
 						<a class={navLinkClass}>占位符</a>
 					</li>
 					<li class="size-8">
-						<ThemeButton class="rounded-full size-full" />
+						<ThemeButton class="size-full rounded-full" />
 					</li>
 					<li class={style["avatarWrapper"]}>
 						<Show

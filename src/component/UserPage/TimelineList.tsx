@@ -39,7 +39,7 @@ export default function TimelineList() {
 												封面
 											</a>
 										</div>
-										<p class=" mx-2 text-sm italic text-gray-600">
+										<p class="mx-2 text-sm italic text-gray-600">
 											<a
 												href={`/${item().target_type}/${item().target_id}`}
 												class="blue_link">

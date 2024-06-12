@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge"
 import { ButtonAttributes } from ".."
 interface HighlightButtonAttributes extends ButtonAttributes {}
 
-const twClass =`
+const twClass = `
 	rounded transition-all shadow-[var(--shadow-2)]
 	text-main font-medium
 	bg-gray-1000 hover:bg-gray-1000/85 active:bg-gray-1000/80

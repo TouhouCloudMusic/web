@@ -1,5 +1,3 @@
-import Borderless from "./comp/borderless"
-import Highlight from "./comp/highlight"
-import Warning from "./comp/warning"
-
-export { Borderless, Highlight, Warning }
+export { default as Borderless } from "./comp/borderless"
+export { default as Highlight } from "./comp/highlight"
+export { default as Warning } from "./comp/warning"

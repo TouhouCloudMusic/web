@@ -4,7 +4,6 @@ export default {
 	content: ["./src/**/*.{js,jsx,ts,tsx}"],
 	darkMode: ["selector", '[data-mode="dark"]'],
 	theme: {
-
 		colors: {
 			inherit: "inherit",
 			current: "currentColor",

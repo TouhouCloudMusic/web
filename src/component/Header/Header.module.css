@@ -1,5 +1,5 @@
 header {
-	@apply z-[1] box-border flex w-full justify-center shadow text-gray-1000;
+	@apply z-[1] box-border flex w-full justify-center text-gray-1000 shadow;
 }
 
 nav {
@@ -49,7 +49,7 @@ nav > ul > li {
 }
 
 .avatarWrapper {
-	@apply justify-center ml-2;
+	@apply ml-2 justify-center;
 }
 
 .avatar {

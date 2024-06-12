@@ -4,13 +4,13 @@ import { ThemeButton } from "~/component/themeButton"
 import { A } from "@solidjs/router"
 export default function () {
 	return (
-		<main class="flex flex-col items-center justify-center place-content-center">
+		<main class="flex flex-col place-content-center items-center justify-center">
 			<Title>Theme</Title>
 			<div class="my-4">
 				<ColorPanel />
 			</div>
 			<div
-				class="grid h-auto grid-flow-col gap-3 py-4 w-fit "
+				class="grid h-auto w-fit grid-flow-col gap-3 py-4"
 				style={{
 					"grid-template-columns": "repeat(8, 1fr)",
 					"grid-template-rows": "repeat(12, 1fr)",
@@ -60,7 +60,7 @@ function ColorPanel() {
 			<For each={colors}>
 				{(color) => (
 					<>
-						<div class="my-2 grid grid-flow-col grid-cols-12 grid-rows-1 size-fit gap-2 rounded-md">
+						<div class="my-2 grid size-fit grid-flow-col grid-cols-12 grid-rows-1 gap-2 rounded-md">
 							<div
 								class="place-content-center text-center"
 								style={{
@@ -90,19 +90,19 @@ function ColorPanel() {
 function Buttons() {
 	return (
 		<>
-			<div class="items-center text-center font-bold row-span-12 grid-rows-subgrid grid">
+			<div class="row-span-12 grid grid-rows-subgrid items-center text-center font-bold">
 				<div>Button</div>
 			</div>
 			<ThemeButton />
-			<button class=" button px-3 py-1">Borderless</button>
-			<button class=" border_button">With Border</button>
+			<button class="button px-3 py-1">Borderless</button>
+			<button class="border_button">With Border</button>
 			<button
 				class="button"
 				disabled>
 				Disabled
 			</button>
-			<button class=" highlight_button">Highlight</button>
-			<button class=" warning_button">Warning</button>
+			<button class="highlight_button">Highlight</button>
+			<button class="warning_button">Warning</button>
 		</>
 	)
 }
@@ -111,7 +111,7 @@ function Links() {
 	const linkClass = "place-content-center text-center"
 	return (
 		<>
-			<div class="items-center text-center font-bold row-span-12 grid-rows-subgrid grid">
+			<div class="row-span-12 grid grid-rows-subgrid items-center text-center font-bold">
 				<div id="link">Link</div>
 			</div>
 

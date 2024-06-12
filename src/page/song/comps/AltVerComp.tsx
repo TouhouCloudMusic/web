@@ -29,12 +29,10 @@ export function AltVerComp() {
 				<p class="gray-link-sm">view main song</p>
 			</div>
 			<ul
-				class={`${style.altVerWrapper}
-						flex w-auto flex-col flex-nowrap bg-gray-200 pt-1`}>
+				class={`${style.altVerWrapper} flex w-auto flex-col flex-nowrap bg-gray-200 pt-1`}>
 				<AltVerList />
 				<div
-					class={`${style.altVerBottomButton}
-						mt-1.5 items-center bg-blue-500 p-0 text-center hover:bg-blue-600`}>
+					class={`${style.altVerBottomButton} mt-1.5 items-center bg-blue-500 p-0 text-center hover:bg-blue-600`}>
 					<button class="my-1 text-white">Show All</button>
 				</div>
 			</ul>
