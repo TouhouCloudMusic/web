@@ -77,7 +77,7 @@
     "format": "prettier --write . ",
     "lint": "eslint ./src",
     "test-dom": "bun vitest run",
-    "test-bun": "bun test ./test/util/*",
+    "test-bun": "bun test ./test/**/*.test.ts",
     "test": "bun run test-bun && bun run test-dom",
     "commit": "bun run format && bun run lint && git cz",
     "initdb": "bunx prisma migrate dev --name init",
