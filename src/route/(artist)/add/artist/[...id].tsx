@@ -3,7 +3,7 @@ import {
 	FieldArray,
 	Form,
 	getValues,
-	setValues,
+	setValues
 } from "@modular-forms/solid"
 import {
 	Params,
@@ -28,15 +28,16 @@ import {
 import { Cross1Icon } from "solid-radix-icons"
 import { Button } from "~/component/button"
 import { FormComp } from "~/component/form"
-import { ArtistType } from "~/database/artist/artist_model"
 import {
-	findArtistByID
+	ArtistDataByID,
+	findArtistByID,
 } from "~/database/artist/find_artist_by_id"
 import { useContextUnsave } from "~/lib/context/use_context_save"
 import { NotFoundError } from "~/lib/error/errors"
 import { isEmptyOrValidID } from "~/lib/validate/validate_params"
 import { createController } from "./controller"
-import { ArtistForm, MemberListItem } from "./type"
+import { ArtistForm } from "./type"
+import { initFormStore_Member } from "./utils"
 
 const getArtistDataByID_EditPage = cache(async function (params: Params) {
 	return await pipe(
@@ -70,9 +71,8 @@ const getArtistDataByID_EditPage = cache(async function (params: Params) {
 
 const submitAction = action(
 	// eslint-disable-next-line @typescript-eslint/require-await
-	async (formData: ArtistForm) => {
+	async (formData: ArtistForm, initData: ArtistDataByID | undefined) => {
 		console.log(formData)
-		console.log("AAA")
 
 		// createOrUpdateArtist(formData, initData)
 		console.log("Ok")
@@ -111,51 +111,51 @@ function Main() {
 				id: data()?.id.toString(),
 				name: data()?.name,
 				type: data()?.type,
-				member:
-					data()?.type === "Person" ?
-						data()?.member_of.map(
-							(a): MemberListItem =>
-								a.group?.id ?
-									{
-										artist_id: a.group.id.toString(),
-										// groupMemberID: a.id.toString(),
-										type: a.group.type,
-										name: a.group.name,
-										isString: false,
-									}
-								:	{
-										artist_id: "",
-										// groupMemberID: a.id.toString(),
-										type: "Group" as ArtistType,
-										name: a.name ?? "",
-										isString: true,
-									}
-						)
-					:	data()?.members.map(
-							(a): MemberListItem =>
-								a.artist?.id ?
-									{
-										artist_id: a.artist.id.toString(),
-										// groupMemberID: a.id.toString(),
-										type: a.artist.type,
-										name: a.artist.name,
-										isString: false,
-									}
-								:	{
-										artist_id: "",
-										// groupMemberID: a.id.toString(),
-										type: "Person" as ArtistType,
-										name: a.name ?? "",
-										isString: true,
-									}
-						),
+				member: initFormStore_Member(initData),
+					// data()?.type === "Person" ?
+					// 	data()?.member_of.map(
+					// 		(a): MemberListItem =>
+					// 			a.group?.id ?
+					// 				{
+					// 					artist_id: a.group.id.toString(),
+					// 					group_member_id: a.id.toString(),
+					// 					type: a.group.type,
+					// 					name: a.group.name,
+					// 					isString: false,
+					// 				}
+					// 			:	{
+					// 					artist_id: "",
+					// 					group_member_id: a.id.toString(),
+					// 					type: "Group" as ArtistType,
+					// 					name: a.name ?? "",
+					// 					isString: true,
+					// 				}
+					// 	)
+					// :	data()?.members.map(
+					// 		(a): MemberListItem =>
+					// 			a.artist?.id ?
+					// 				{
+					// 					artist_id: a.artist.id.toString(),
+					// 					group_member_id: a.id.toString(),
+					// 					type: a.artist.type,
+					// 					name: a.artist.name,
+					// 					isString: false,
+					// 				}
+					// 			:	{
+					// 					artist_id: "",
+					// 					group_member_id: a.id.toString(),
+					// 					type: "Person" as ArtistType,
+					// 					name: a.name ?? "",
+					// 					isString: true,
+					// 				}
+					// 	),
 			})
 		}
 	})
 	return (
 		<Form
 			of={formStore}
-			onSubmit={action}
+			onSubmit={(v) => action(v, data())}
 			method="post"
 			class="flex flex-col gap-2">
 			<Field
@@ -187,6 +187,7 @@ function Main() {
 				onClick={() => console.log(getValues(formStore))}>
 				Log
 			</Button.Highlight>
+			<div>{formStore.response.message}</div>
 		</Form>
 		// <Form
 		// 	onSubmit={action}
@@ -392,15 +393,16 @@ function Member() {
 													</>
 												)}
 											</Field>
-											{/* <Field
+											<Field
 												of={formStore}
-												name={`member.${index()}.groupMemberID`}>
+												name={`member.${index()}.isString`}
+												type="boolean">
 												{(field, props) => (
 													<>
 														<input
 															{...props}
-															type="text"
-															value={field.value}
+															type="checkbox"
+															checked={field.value}
 															hidden
 														/>
 														{field.error && (
@@ -408,11 +410,13 @@ function Member() {
 														)}
 													</>
 												)}
-											</Field> */}
+											</Field>
 										</>
 									)}
 								</For>
-								{fieldArray.error && <FormComp.ErrorText text={fieldArray.error} />}
+								{fieldArray.error && (
+									<FormComp.ErrorText text={fieldArray.error} />
+								)}
 							</>
 						)}
 					</FieldArray>

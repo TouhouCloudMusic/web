@@ -1,5 +1,4 @@
-import * as v from "valibot";
-
+import * as v from "valibot"
 
 export const ArtistFormSchema = v.object({
 	id: v.string(),
@@ -12,30 +11,17 @@ export const ArtistFormSchema = v.object({
 		v.string("Artist type is required"),
 		v.picklist(["Person", "Group"], "Invalid artist type")
 	),
-	member: v.array(
-		v.union([
+	member: v.optional(
+		v.array(
 			v.object({
-				artist_id: v.pipe(
-					v.string(),
-					v.minLength(1, "Linked member needs an ID")
-				),
+				artist_id: v.string(),
 				type: v.picklist(["Person", "Group"], "Invalid artist type"),
-				name: v.pipe(
-					v.string(),
-					v.maxLength(0, "Linked member dosen't need a name")
-				),
-				isString: v.literal(false),
+				name: v.string(),
+				isString: v.boolean(),
+				group_member_id: v.string(),
 			}),
-			v.object({
-				artist_id: v.pipe(
-					v.string(),
-					v.maxLength(0, "Text member dosen't need an ID")
-				),
-				type: v.picklist(["Person", "Group"], "Invalid artist type"),
-				name: v.pipe(v.string(), v.minLength(1, "Text member needs a name")),
-				isString: v.literal(true),
-			}),
-		]),
-		"Invalid artist"
+			"Invalid artist"
+		),
+		[]
 	),
 })
