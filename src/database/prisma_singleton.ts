@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client"
 function prismaSigleton() {
 	return new PrismaClient({
 		datasourceUrl: import.meta.env.VITE_DATABASE_URL,
+		log: ["info", "warn", "error"],
 	})
 }
 

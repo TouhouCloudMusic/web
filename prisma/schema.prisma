@@ -37,9 +37,6 @@ model Artist {
   as_alias            ArtistAlias?       @relation(fields: [as_alias_id], references: [id])
   as_alias_id         BigInt?
   //
-  member_of           Artist[]           @relation("artist_member_relation")
-  members             Artist[]           @relation("artist_member_relation")
-  //
   release             ReleaseArtist[]
   release_credit      ReleaseCredit[]
   release_tracklist   ReleaseTracklist[]
@@ -49,8 +46,13 @@ model Artist {
   //
   created_at          DateTime           @default(now())
   updated_at          DateTime           @default(now()) @updatedAt
+  //
+  as_group_id         BigInt?
+  members             GroupMember[]      @relation("members")
+  member_of           GroupMember[]      @relation("member_of")
 
   @@index([as_alias_id])
+  @@index([as_group_id])
   @@map("artist")
 }
 
@@ -64,6 +66,21 @@ model ArtistAlias {
   alias_of     Artist[] @relation("artist_alias")
 
   @@map("artist_alias")
+}
+
+model GroupMember {
+  id         BigInt  @id @default(autoincrement())
+  name       String? @db.VarChar(64)
+  artist     Artist? @relation(name: "member_of", fields: [artist_id], references: [id])
+  artist_id  BigInt?
+  group      Artist? @relation(name: "members", fields: [group_id], references: [id])
+  group_id   BigInt?
+  join_year  Int?    @db.Year
+  leave_year Int?    @db.Year
+
+  @@index([artist_id])
+  @@index([group_id])
+  @@map("group_member")
 }
 
 model Release {
@@ -96,6 +113,8 @@ model ReleaseType {
   id      BigInt    @id @default(autoincrement())
   name    String    @db.VarChar(32)
   release Release[]
+
+  @@map("release_type")
 }
 
 model ReleaseArtist {

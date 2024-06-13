@@ -85,15 +85,12 @@ export default function ReleasePage() {
 						<For each={data()?.tracklist}>
 							{(track) => (
 								<li
-									class="grid "
+									class="grid"
 									style={{
 										"grid-template-columns": "auto 1fr",
 									}}>
 									<div class="grid grid-cols-2 text-center">
-										<p class="">
-											{track?.track_num ??
-												track.track_order}
-										</p>
+										<p class="">{track?.track_num ?? track.track_order}</p>
 										<p> - </p>
 									</div>
 									<a

@@ -6,14 +6,30 @@ import { usePrisma } from "../prisma_singleton"
 const prisma = usePrisma()
 
 export type ArtistDataByID = Awaited<ReturnType<typeof find>>
-const find = async (id: number) => {
+const find = async (id: bigint) => {
 	const res = await prisma.artist.findUnique({
 		where: {
 			id: id,
 		},
 		include: {
-			member_of: true,
-			members: true,
+			member_of: {
+				select: {
+					id: true,
+					name: true,
+					group: true,
+					join_year: true,
+					leave_year: true,
+				},
+			},
+			members: {
+				select: {
+					id: true,
+					name: true,
+					artist: true,
+					join_year: true,
+					leave_year: true,
+				},
+			},
 			release: {
 				include: {
 					release: true,
@@ -31,16 +47,7 @@ const find = async (id: number) => {
 	return res
 }
 
-export async function findArtistByID(id: number) {
-	// try {
-	// 	throw new Error("bar")
-	// 	return await find(id)
-	// } catch (err) {
-	// 	if (err instanceof Error) return err
-	// 	if (typeof err === "string") return new Error(err)
-	// 	else return new Error("unknown error")
-	// }
-
+export async function findArtistByID(id: bigint) {
 	return await pipe(
 		taskEither.tryCatch(
 			() => find(id),

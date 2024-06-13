@@ -18,6 +18,7 @@ const find = async (keyword: string, type?: ArtistType) => {
 		select: {
 			id: true,
 			name: true,
+			type: true,
 		},
 	})
 	return res
