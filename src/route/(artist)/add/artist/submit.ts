@@ -1,11 +1,7 @@
-import { either } from "fp-ts"
-
-import { pipe } from "fp-ts/lib/function"
+import { action } from "@solidjs/router"
 import { ArtistDataByID } from "~/database/artist/find_artist_by_id"
 import { usePrisma } from "~/database/prisma_singleton"
-import { stringToBigInt } from "~/lib/convert/string_to_bigint"
 import { ArtistForm } from "./type"
-import { action } from "@solidjs/router"
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function createOrUpdateArtist(
@@ -16,13 +12,65 @@ export async function createOrUpdateArtist(
 	const prisma = usePrisma()
 	const artistID = BigInt(formData.id)
 	// 创建新艺术家
-	if (formData.id === "") {
-		return console.log("WIP")
+	if (!initData) {
+		await prisma.artist.create({
+			data: {
+				name: formData.name,
+				type: formData.type,
+				member_of:
+					formData.type === "Person" ?
+						{
+							createMany: {
+								data:
+									formData.member?.map((member) => {
+										if (member.isString) {
+											if (!member.name) throw new Error("Member missing name")
+											return {
+												name: member.name,
+											}
+										} else
+											return {
+												group_id: BigInt(member.artist_id),
+											}
+									}) ?? [],
+							},
+						}
+					:	undefined,
+				members:
+					formData.type === "Group" ?
+						{
+							createMany: {
+								data:
+									formData.member?.map((member) => {
+										if (member.isString) {
+											if (!member.name) throw new Error("Member missing name")
+											return {
+												name: member.name,
+											}
+										} else
+											return {
+												artist_id: BigInt(member.artist_id),
+											}
+									}) ?? [],
+							},
+						}
+					:	undefined,
+			},
+		})
 	}
 	// 更新现有艺术家
 	else {
+		const artistTypeChanged = initData.type !== formData.type
+		if (artistTypeChanged) {
+			// 改变艺术家类型，删除现有成员
+			await prisma.groupMember.deleteMany({
+				where: {
+					artist_id: artistID,
+				},
+			})
+		}
 		if (formData.type === "Person") {
-			if (initData) {
+			if (!artistTypeChanged) {
 				// 删除已移除的成员
 				const oldMemberIDList = initData.member_of.map((member) => member.id)
 				const newMemberIDList =
@@ -76,7 +124,7 @@ export async function createOrUpdateArtist(
 			})
 		}
 		if (formData.type === "Group") {
-			if (initData) {
+			if (!artistTypeChanged) {
 				// 删除已移除的成员
 				const oldMemberIDList = initData.members.map((member) => member.id)
 				const newMemberIDList =

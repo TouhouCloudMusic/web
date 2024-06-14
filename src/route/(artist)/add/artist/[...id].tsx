@@ -372,7 +372,7 @@ function Member() {
 					placeholder="Search artist"
 					class="px-1"
 					onInput={(e) => member.serach(e.currentTarget.value)}
-					disabled={type.value !== "Group" && type.value !== "Person"}
+					disabled={type.value === undefined}
 				/>
 				<div class="relative">
 					<div class="absolute w-full">

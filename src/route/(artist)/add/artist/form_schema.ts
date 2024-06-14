@@ -7,10 +7,7 @@ export const ArtistFormSchema = v.object({
 		v.nonEmpty("Artist name is required"),
 		v.maxLength(64, "Artist name is too long")
 	),
-	type: v.pipe(
-		v.string("Artist type is required"),
-		v.picklist(["Person", "Group"], "Invalid artist type")
-	),
+	type: v.picklist(["Person", "Group"], "Invalid artist type"),
 	member: v.optional(
 		v.array(
 			v.object({
