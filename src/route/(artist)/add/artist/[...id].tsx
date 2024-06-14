@@ -3,11 +3,10 @@ import {
 	FieldArray,
 	Form,
 	getValues,
-	setValues
+	setValues,
 } from "@modular-forms/solid"
 import {
 	Params,
-	action,
 	cache,
 	createAsync,
 	redirect,
@@ -27,17 +26,14 @@ import {
 } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
 import { Button } from "~/component/button"
-import { FormComp } from "~/component/form"
-import {
-	ArtistDataByID,
-	findArtistByID,
-} from "~/database/artist/find_artist_by_id"
+import { FormUI } from "~/component/form/ui"
+import { findArtistByID } from "~/database/artist/find_artist_by_id"
 import { useContextUnsave } from "~/lib/context/use_context_save"
 import { NotFoundError } from "~/lib/error/errors"
 import { isEmptyOrValidID } from "~/lib/validate/validate_params"
 import { createController } from "./controller"
-import { ArtistForm } from "./type"
 import { initFormStore_Member } from "./utils"
+import { submitAction } from "./submit"
 
 const getArtistDataByID_EditPage = cache(async function (params: Params) {
 	return await pipe(
@@ -68,17 +64,6 @@ const getArtistDataByID_EditPage = cache(async function (params: Params) {
 		)
 	)
 }, `artist_by_id_edit`)
-
-const submitAction = action(
-	// eslint-disable-next-line @typescript-eslint/require-await
-	async (formData: ArtistForm, initData: ArtistDataByID | undefined) => {
-		console.log(formData)
-
-		// createOrUpdateArtist(formData, initData)
-		console.log("Ok")
-	},
-	"add_artist"
-)
 
 const h4Class = `text-[1.1rem] font-semibold`
 
@@ -112,43 +97,6 @@ function Main() {
 				name: data()?.name,
 				type: data()?.type,
 				member: initFormStore_Member(initData),
-					// data()?.type === "Person" ?
-					// 	data()?.member_of.map(
-					// 		(a): MemberListItem =>
-					// 			a.group?.id ?
-					// 				{
-					// 					artist_id: a.group.id.toString(),
-					// 					group_member_id: a.id.toString(),
-					// 					type: a.group.type,
-					// 					name: a.group.name,
-					// 					isString: false,
-					// 				}
-					// 			:	{
-					// 					artist_id: "",
-					// 					group_member_id: a.id.toString(),
-					// 					type: "Group" as ArtistType,
-					// 					name: a.name ?? "",
-					// 					isString: true,
-					// 				}
-					// 	)
-					// :	data()?.members.map(
-					// 		(a): MemberListItem =>
-					// 			a.artist?.id ?
-					// 				{
-					// 					artist_id: a.artist.id.toString(),
-					// 					group_member_id: a.id.toString(),
-					// 					type: a.artist.type,
-					// 					name: a.artist.name,
-					// 					isString: false,
-					// 				}
-					// 			:	{
-					// 					artist_id: "",
-					// 					group_member_id: a.id.toString(),
-					// 					type: "Person" as ArtistType,
-					// 					name: a.name ?? "",
-					// 					isString: true,
-					// 				}
-					// 	),
 			})
 		}
 	})
@@ -176,74 +124,21 @@ function Main() {
 			<Name />
 			<Type />
 			<Member />
-			<Button.Highlight
-				type="submit"
-				class="w-1/3 self-start">
-				Submit
-			</Button.Highlight>
-			<Button.Highlight
-				type="button"
-				class="w-1/3 self-start"
-				onClick={() => console.log(getValues(formStore))}>
-				Log
-			</Button.Highlight>
+			<div class="flex w-full flex-row place-content-around">
+				<Button.Highlight
+					type="submit"
+					class="w-1/4 self-start py-1">
+					Submit
+				</Button.Highlight>
+				<Button.Borderless
+					type="button"
+					class="w-1/4 self-start py-1"
+					onClick={() => console.log(getValues(formStore))}>
+					Log
+				</Button.Borderless>
+			</div>
 			<div>{formStore.response.message}</div>
 		</Form>
-		// <Form
-		// 	onSubmit={action}
-		// 	class="flex flex-col gap-2">
-		// 	<div class="flex flex-col">
-		// 		<Field name="name">
-		// 			{(field, props) => (
-		// 				<>
-		// 					<label for="name">Name</label>
-		// 					<input
-		// 						{...props}
-		// 						type="text"
-		// 						required
-		// 					/>
-		// 					{field.error && <FormComp.ErrorText text={field.error} />}
-		// 				</>
-		// 			)}
-		// 		</Field>
-		// 	</div>
-
-		// 	<div class="flex flex-col">
-		// 		<h4>Artist Type</h4>
-		// 		<Field name="type">
-		// 			{(field, props) => (
-		// 				<>
-		// 					<div class="flex">
-		// 						<input
-		// 							{...props}
-		// 							type="radio"
-		// 							id="artist_type_person"
-		// 							value="Person"
-		// 						/>
-		// 						<label for="artist_type_person">Person</label>
-		// 					</div>
-		// 					<div class="flex">
-		// 						<input
-		// 							{...props}
-		// 							type="radio"
-		// 							id="artist_type_group"
-		// 							value="Group">
-		// 							Group
-		// 						</input>
-		// 						<label for="artist_type_group">Group</label>
-		// 					</div>
-		// 					{field.error && <FormComp.ErrorText text={field.error} />}
-		// 				</>
-		// 			)}
-		// 		</Field>
-		// 	</div>
-		// 	<Member />
-		// 	<Button.Highlight
-		// 		type="submit"
-		// 		class="w-1/3 self-start">
-		// 		Submit
-		// 	</Button.Highlight>
-		// </Form>
 	)
 }
 function Name() {
@@ -270,7 +165,7 @@ function Name() {
 						value={artistData() !== undefined ? artistData()?.name : undefined}
 						required
 					/>
-					{field.error && <FormComp.ErrorText text={field.error} />}
+					{field.error && <FormUI.ErrorText text={field.error} />}
 				</div>
 			)}
 		</Field>
@@ -310,7 +205,7 @@ function Type() {
 							</input>
 							<label for="artist_type_group">Group</label>
 						</div>
-						{field.error && <FormComp.ErrorText text={field.error} />}
+						{field.error && <FormUI.ErrorText text={field.error} />}
 					</>
 				)}
 			</Field>
@@ -320,107 +215,154 @@ function Type() {
 
 function Member() {
 	const { formStore, type, member } = EditArtistPageController()
+	function AddStringInputButton() {
+		return (
+			<Button.Borderless
+				type="button"
+				onClick={() => member.addStringInput()}
+				class="mx-1 px-1 text-sm text-gray-700">
+				add string input
+			</Button.Borderless>
+		)
+	}
 	return (
 		<div class="flex min-h-64 gap-2">
 			<div class="flex w-64 flex-col">
 				<h4 class={h4Class}>
 					<Switch>
-						<Match when={type.value === "Person"}>Member of</Match>
-						<Match when={type.value === "Group"}>Members</Match>
+						<Match when={type.value === "Person"}>
+							<div class="flex flex-row place-content-between">
+								<p>Member of</p>
+								<AddStringInputButton />
+							</div>
+						</Match>
+						<Match when={type.value === "Group"}>
+							<div class="flex flex-row place-content-between">
+								<p>Members</p>
+								<AddStringInputButton />
+							</div>
+						</Match>
 						<Match when={type.value === undefined}>
 							<span class="text-sm">Please Select Artist Type</span>
 						</Match>
 					</Switch>
 				</h4>
-				<ul class="flex flex-col gap-2">
-					<FieldArray
-						of={formStore}
-						name="member">
-						{(fieldArray) => (
-							<>
-								<For each={fieldArray.items}>
-									{(_, index) => (
-										<>
-											<Field
-												of={formStore}
-												name={`member.${index()}.artist_id`}>
-												{(field, props) => (
-													<>
-														<input
-															{...props}
-															type="text"
-															value={field.value}
-															hidden
-														/>
-														{field.error && (
-															<FormComp.ErrorText text={field.error} />
+				<FieldArray
+					of={formStore}
+					name="member">
+					{(fieldArray) => (
+						<ul class="flex flex-col gap-2">
+							<For each={fieldArray.items}>
+								{(_, index) => (
+									<>
+										<Field
+											of={formStore}
+											name={`member.${index()}.artist_id`}>
+											{(field, props) => (
+												<>
+													<input
+														{...props}
+														type="text"
+														value={field.value}
+														hidden
+													/>
+													{field.error && (
+														<FormUI.ErrorText text={field.error} />
+													)}
+												</>
+											)}
+										</Field>
+										<Field
+											of={formStore}
+											name={`member.${index()}.group_member_id`}>
+											{(field, props) => (
+												<>
+													<input
+														{...props}
+														type="text"
+														value={field.value}
+														hidden
+													/>
+													{field.error && (
+														<FormUI.ErrorText text={field.error} />
+													)}
+												</>
+											)}
+										</Field>
+										<Field
+											of={formStore}
+											name={`member.${index()}.name`}>
+											{(nameField, nameProps) => (
+												<li class="shadow-2 flex place-content-between gap-2 rounded bg-highlight p-2">
+													<Field
+														of={formStore}
+														name={`member.${index()}.isString`}
+														type="boolean">
+														{(isStringField, isStringProps) => (
+															<>
+																<input
+																	{...isStringProps}
+																	type="checkbox"
+																	checked={isStringField.value}
+																	hidden
+																/>
+																{isStringField.error && (
+																	<FormUI.ErrorText
+																		text={isStringField.error}
+																	/>
+																)}
+																<Switch>
+																	<Match when={isStringField.value === false}>
+																		<p>{nameField.value}</p>
+																	</Match>
+																	<Match when={isStringField.value === true}>
+																		<input
+																			{...nameProps}
+																			type="text"
+																			class={`rounded border border-gray-300 px-1 flex-1 min-w-0`}
+																			value={nameField.value}
+																		/>
+																	</Match>
+																</Switch>
+															</>
 														)}
-													</>
-												)}
-											</Field>
-											<Field
-												of={formStore}
-												name={`member.${index()}.name`}>
-												{(field) => (
-													<li class="shadow-2 flex place-content-between gap-2 rounded bg-highlight p-2">
-														<p>{field.value}</p>
-														<Button.Warning
-															type="button"
-															class="flex h-6 w-6 place-content-center text-sm"
-															onClick={() => member.remove(index())}>
-															<Cross1Icon class="bold size-4 place-self-center stroke-white" />
-														</Button.Warning>
-														{field.error && (
-															<FormComp.ErrorText text={field.error} />
-														)}
-													</li>
-												)}
-											</Field>
-											<Field
-												of={formStore}
-												name={`member.${index()}.type`}>
-												{(field, props) => (
-													<>
-														<input
-															{...props}
-															type="text"
-															value={field.value}
-															hidden
-														/>
-														{field.error && (
-															<FormComp.ErrorText text={field.error} />
-														)}
-													</>
-												)}
-											</Field>
-											<Field
-												of={formStore}
-												name={`member.${index()}.isString`}
-												type="boolean">
-												{(field, props) => (
-													<>
-														<input
-															{...props}
-															type="checkbox"
-															checked={field.value}
-															hidden
-														/>
-														{field.error && (
-															<FormComp.ErrorText text={field.error} />
-														)}
-													</>
-												)}
-											</Field>
-										</>
-									)}
-								</For>
-								{fieldArray.error && (
-									<FormComp.ErrorText text={fieldArray.error} />
+													</Field>
+													<Button.Warning
+														type="button"
+														class="flex min-h-6 min-w-6 place-content-center text-sm flex-initial "
+														onClick={() => member.remove(index())}>
+														<Cross1Icon class="bold size-4 place-self-center stroke-white" />
+													</Button.Warning>
+													{nameField.error && (
+														<FormUI.ErrorText text={nameField.error} />
+													)}
+												</li>
+											)}
+										</Field>
+										<Field
+											of={formStore}
+											name={`member.${index()}.type`}>
+											{(field, props) => (
+												<>
+													<input
+														{...props}
+														type="text"
+														value={field.value}
+														hidden
+													/>
+													{field.error && (
+														<FormUI.ErrorText text={field.error} />
+													)}
+												</>
+											)}
+										</Field>
+									</>
 								)}
-							</>
-						)}
-					</FieldArray>
-				</ul>
+							</For>
+							{fieldArray.error && <FormUI.ErrorText text={fieldArray.error} />}
+						</ul>
+					)}
+				</FieldArray>
 			</div>
 
 			<div class="flex flex-col">

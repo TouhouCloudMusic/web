@@ -5,36 +5,34 @@ import { ArtistForm } from "./type"
 type MemberArtist = ArtistDataByID["members"][number]
 type MemberGroup = ArtistDataByID["member_of"][number]
 type Result = NonNullable<ArtistForm["member"]>[number]
-
 export function initFormStore_Member(data: ArtistDataByID): Result[] {
 	return data.type === "Person" ?
-			data.member_of.map((a) => {
-				if (a.group?.id) {
-					return artistToLinkedMember(a, data.type)
+			data.member_of.map((m) => {
+				if (m.group?.id) {
+					return {
+						artist_id: m.group.id.toString(),
+						group_member_id: m.id.toString(),
+						type: inferMemberType(data.type),
+						name: m.group.name,
+						isString: false,
+					}
 				} else {
-					return artistToTextMember(a, data.type)
+					return artistToTextMember(m, data.type)
 				}
 			})
-		:	data.members.map((a) => {
-				if (a.artist?.id) {
-					return artistToLinkedMember(a, data.type)
+		:	data.members.map((m) => {
+				if (m.artist?.id) {
+					return {
+						artist_id: m.artist.id.toString(),
+						group_member_id: m.id.toString(),
+						type: inferMemberType(data.type),
+						name: m.artist.name,
+						isString: false,
+					}
 				} else {
-					return artistToTextMember(a, data.type)
+					return artistToTextMember(m, data.type)
 				}
 			})
-}
-
-function artistToLinkedMember(
-	memberArtist: MemberArtist | MemberGroup,
-	artistType: ArtistType
-): Result {
-	return {
-		artist_id: memberArtist.id.toString(),
-		group_member_id: memberArtist.id.toString(),
-		type: artistType === "Group" ? "Person" : "Group",
-		name: memberArtist.name ?? "",
-		isString: false,
-	}
 }
 
 function artistToTextMember(
@@ -44,8 +42,12 @@ function artistToTextMember(
 	return {
 		artist_id: "",
 		group_member_id: memberArtist.id.toString(),
-		type: artistType === "Group" ? "Person" : "Group",
+		type: inferMemberType(artistType),
 		name: memberArtist.name ?? "",
 		isString: true,
 	}
+}
+
+function inferMemberType(type: ArtistType) {
+	return type === "Person" ? "Group" : "Person"
 }

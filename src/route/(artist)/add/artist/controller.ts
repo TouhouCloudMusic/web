@@ -16,7 +16,7 @@ import {
 	findArtistByKeyword,
 } from "~/database/artist/find_artist_by_keyword"
 import { ArtistFormSchema } from "./form_schema"
-import { ArtistForm, MemberList } from "./type"
+import { ArtistForm, MemberList, MemberListItem } from "./type"
 
 export function createController() {
 	const [artistData, setArtistData] = createSignal<ArtistDataByID>()
@@ -52,11 +52,12 @@ export function createController() {
 		searchResult: memberSearchResult,
 
 		add: (input: { id: bigint; name: string; type: ArtistType }) => {
-			const artist = {
+			const artist: MemberListItem = {
 				artist_id: input.id.toString(),
 				name: input.name,
 				type: input.type,
 				isString: false,
+				group_member_id: "",
 			}
 			const memberList = getValues(formStore, "member")
 			if (artist.artist_id === memberList.find((a) => a?.artist_id)) return
@@ -73,6 +74,7 @@ export function createController() {
 					type: artistType() === "Person" ? "Group" : "Person",
 					name: "",
 					isString: true,
+					group_member_id: "",
 				},
 			})
 		},
