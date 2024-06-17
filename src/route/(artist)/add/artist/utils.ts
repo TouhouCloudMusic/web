@@ -10,11 +10,13 @@ export function initFormStore_Member(data: ArtistDataByID): Result[] {
 			data.member_of.map((m) => {
 				if (m.group?.id) {
 					return {
-						artist_id: m.group.id.toString(),
-						group_member_id: m.id.toString(),
+						artistID: m.group.id.toString(),
+						groupMemberID: m.id.toString(),
 						type: inferMemberType(data.type),
 						name: m.group.name,
-						isString: false,
+						isText: false,
+						joinYear: m.join_year ,
+						leaveYear: m.leave_year,
 					}
 				} else {
 					return artistToTextMember(m, data.type)
@@ -23,11 +25,13 @@ export function initFormStore_Member(data: ArtistDataByID): Result[] {
 		:	data.members.map((m) => {
 				if (m.artist?.id) {
 					return {
-						artist_id: m.artist.id.toString(),
-						group_member_id: m.id.toString(),
+						artistID: m.artist.id.toString(),
+						groupMemberID: m.id.toString(),
 						type: inferMemberType(data.type),
 						name: m.artist.name,
-						isString: false,
+						isText: false,
+						joinYear: m.join_year ,
+						leaveYear: m.leave_year,
 					}
 				} else {
 					return artistToTextMember(m, data.type)
@@ -40,11 +44,11 @@ function artistToTextMember(
 	artistType: ArtistType
 ): Result {
 	return {
-		artist_id: "",
-		group_member_id: memberArtist.id.toString(),
+		artistID: "",
+		groupMemberID: memberArtist.id.toString(),
 		type: inferMemberType(artistType),
 		name: memberArtist.name ?? "",
-		isString: true,
+		isText: true,
 	}
 }
 

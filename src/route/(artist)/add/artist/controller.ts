@@ -17,12 +17,27 @@ import {
 } from "~/database/artist/find_artist_by_keyword"
 import { ArtistFormSchema } from "./form_schema"
 import { ArtistForm, MemberList, MemberListItem } from "./type"
+import * as R from "ramda"
+import { Nullable } from "vitest"
 
 export function createController() {
 	const [artistData, setArtistData] = createSignal<ArtistDataByID>()
 	const formStore = createFormStore<ArtistForm>({
 		validate: valiForm(ArtistFormSchema),
 	})
+	const [oldValue, setOldValue] = createSignal<Nullable<Partial<ArtistForm>>>()
+	const [formErrorMsg, setFormErrorMsg] = createSignal<string>()
+	const formController = {
+		oldValue,
+		setOldValue,
+		get changed() {
+			return !R.equals(oldValue(), getValues(formStore))
+		},
+		get errMsg() {
+			return formErrorMsg()
+		},
+		setErrMsg: setFormErrorMsg,
+	}
 	// type
 	const [artistType, setArtistType] = createSignal<ArtistType>()
 
@@ -49,36 +64,40 @@ export function createController() {
 	const [memberListCache, setMemberListCache] = createSignal<MemberList>()
 
 	const memberController = {
-		searchResult: memberSearchResult,
+		get searchResult() {
+			return memberSearchResult()
+		},
 
 		add: (input: { id: bigint; name: string; type: ArtistType }) => {
 			const artist: MemberListItem = {
-				artist_id: input.id.toString(),
+				artistID: input.id.toString(),
 				name: input.name,
 				type: input.type,
-				isString: false,
-				group_member_id: "",
+				isText: false,
+				groupMemberID: "",
+				joinYear: null,
+				leaveYear: null,
 			}
 			const memberList = getValues(formStore, "member")
-			if (artist.artist_id === memberList.find((a) => a?.artist_id)) return
+			if (memberList.find((a) => a?.artistID === artist.artistID)) return
 			if (artist.type === artistType()) return
 			insert(formStore, "member", {
 				value: artist,
 			})
 		},
-
 		addStringInput: () => {
 			insert(formStore, "member", {
 				value: {
-					artist_id: "",
+					artistID: "",
 					type: artistType() === "Person" ? "Group" : "Person",
 					name: "",
-					isString: true,
-					group_member_id: "",
+					isText: true,
+					groupMemberID: "",
+					joinYear: null,
+					leaveYear: null,
 				},
 			})
 		},
-
 		remove: (index: number) => {
 			remove(formStore, "member", {
 				at: index,
@@ -109,6 +128,7 @@ export function createController() {
 		artistData,
 		setArtistData,
 		formStore,
+		form: formController,
 		type: typeController,
 		member: memberController,
 	}

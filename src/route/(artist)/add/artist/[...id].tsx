@@ -2,6 +2,7 @@ import {
 	Field,
 	FieldArray,
 	Form,
+	getError,
 	getValues,
 	setValues,
 } from "@modular-forms/solid"
@@ -20,23 +21,26 @@ import {
 	Index,
 	Match,
 	Show,
+	Suspense,
 	Switch,
 	createContext,
+	createMemo,
 	onMount,
 } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
 import { Button } from "~/component/button"
 import { FormUI } from "~/component/form/ui"
 import { findArtistByID } from "~/database/artist/find_artist_by_id"
-import { useContextUnsave } from "~/lib/context/use_context_save"
+import { useContextUnsave } from "~/lib/context/use_context_unsave"
 import { NotFoundError } from "~/lib/error/errors"
 import { isEmptyOrValidID } from "~/lib/validate/validate_params"
 import { createController } from "./controller"
 import { initFormStore_Member } from "./utils"
 import { submitAction } from "./submit"
+import { notNullString } from "~/lib/validate/not_empty_string"
 
 const getArtistDataByID_EditPage = cache(async function (params: Params) {
-	return await pipe(
+	const res = await pipe(
 		params,
 		isEmptyOrValidID,
 		either.match(
@@ -63,47 +67,56 @@ const getArtistDataByID_EditPage = cache(async function (params: Params) {
 			}
 		)
 	)
+	return res
 }, `artist_by_id_edit`)
 
 const h4Class = `text-[1.1rem] font-semibold`
 
 const EditArtistPageContext =
 	createContext<ReturnType<typeof createController>>()
-const EditArtistPageController = useContextUnsave(EditArtistPageContext)
+const useEditArtistPageController = useContextUnsave(EditArtistPageContext)
 
 export default function EditArtistPage() {
 	const controller = createController()
 	return (
-		<Show when={controller}>
+		<Suspense fallback={<div>Loading...</div>}>
 			<EditArtistPageContext.Provider value={controller}>
 				<Main />
 			</EditArtistPageContext.Provider>
-		</Show>
+		</Suspense>
 	)
 }
 
 function Main() {
 	const data = createAsync(() => getArtistDataByID_EditPage(useParams()))
-	const { artistData, setArtistData, formStore, type } =
-		EditArtistPageController()
+
+	const { artistData, setArtistData, formStore, type, form } =
+		useEditArtistPageController()
 	const action = useAction(submitAction)
 	onMount(() => {
 		const initData = data()
 		if (initData) {
 			setArtistData(initData)
 			type.setType(initData.type)
-			setValues(formStore, {
-				id: data()?.id.toString(),
-				name: data()?.name,
-				type: data()?.type,
+			const initFormValue = {
+				id: initData?.id.toString(),
+				name: initData?.name,
+				type: initData?.type,
 				member: initFormStore_Member(initData),
-			})
+			}
+			setValues(formStore, initFormValue)
+			form.setOldValue(initFormValue)
 		}
 	})
 	return (
 		<Form
 			of={formStore}
-			onSubmit={(v) => action(v, data())}
+			onSubmit={(v) => {
+				if (!form.changed) {
+					return form.setErrMsg("No changes")
+				}
+				return action(v, artistData())
+			}}
 			method="post"
 			class="flex flex-col gap-2">
 			<Field
@@ -130,19 +143,25 @@ function Main() {
 					class="w-1/4 self-start py-1">
 					Submit
 				</Button.Highlight>
-				<Button.Borderless
-					type="button"
-					class="w-1/4 self-start py-1"
-					onClick={() => console.log(getValues(formStore))}>
-					Log
-				</Button.Borderless>
+				<Show when={import.meta.env.DEV}>
+					<Button.Borderless
+						type="button"
+						class="w-1/4 self-start py-1"
+						onClick={() => {
+							console.log("form store: ", getValues(formStore))
+							console.log("form changed: ", form.changed)
+						}}>
+						Log
+					</Button.Borderless>
+				</Show>
 			</div>
-			<div>{formStore.response.message}</div>
+			<FormUI.ErrorText text={form.errMsg} />
+			<FormUI.ErrorText text={formStore.response.message} />
 		</Form>
 	)
 }
 function Name() {
-	const { artistData, formStore } = EditArtistPageController()
+	const { artistData, formStore } = useEditArtistPageController()
 	return (
 		<Field
 			of={formStore}
@@ -173,7 +192,7 @@ function Name() {
 }
 
 function Type() {
-	const { artistData, formStore, type } = EditArtistPageController()
+	const { artistData, formStore, type } = useEditArtistPageController()
 	return (
 		<div class="flex flex-col">
 			<h4 class={h4Class}>Artist Type</h4>
@@ -214,7 +233,7 @@ function Type() {
 }
 
 function Member() {
-	const { formStore, type, member } = EditArtistPageController()
+	const { formStore, type, member } = useEditArtistPageController()
 	function AddStringInputButton() {
 		return (
 			<Button.Borderless
@@ -253,111 +272,7 @@ function Member() {
 					{(fieldArray) => (
 						<ul class="flex flex-col gap-2">
 							<For each={fieldArray.items}>
-								{(_, index) => (
-									<>
-										<Field
-											of={formStore}
-											name={`member.${index()}.artist_id`}>
-											{(field, props) => (
-												<>
-													<input
-														{...props}
-														type="text"
-														value={field.value}
-														hidden
-													/>
-													{field.error && (
-														<FormUI.ErrorText text={field.error} />
-													)}
-												</>
-											)}
-										</Field>
-										<Field
-											of={formStore}
-											name={`member.${index()}.group_member_id`}>
-											{(field, props) => (
-												<>
-													<input
-														{...props}
-														type="text"
-														value={field.value}
-														hidden
-													/>
-													{field.error && (
-														<FormUI.ErrorText text={field.error} />
-													)}
-												</>
-											)}
-										</Field>
-										<Field
-											of={formStore}
-											name={`member.${index()}.name`}>
-											{(nameField, nameProps) => (
-												<li class="shadow-2 flex place-content-between gap-2 rounded bg-highlight p-2">
-													<Field
-														of={formStore}
-														name={`member.${index()}.isString`}
-														type="boolean">
-														{(isStringField, isStringProps) => (
-															<>
-																<input
-																	{...isStringProps}
-																	type="checkbox"
-																	checked={isStringField.value}
-																	hidden
-																/>
-																{isStringField.error && (
-																	<FormUI.ErrorText
-																		text={isStringField.error}
-																	/>
-																)}
-																<Switch>
-																	<Match when={isStringField.value === false}>
-																		<p>{nameField.value}</p>
-																	</Match>
-																	<Match when={isStringField.value === true}>
-																		<input
-																			{...nameProps}
-																			type="text"
-																			class={`rounded border border-gray-300 px-1 flex-1 min-w-0`}
-																			value={nameField.value}
-																		/>
-																	</Match>
-																</Switch>
-															</>
-														)}
-													</Field>
-													<Button.Warning
-														type="button"
-														class="flex min-h-6 min-w-6 place-content-center text-sm flex-initial "
-														onClick={() => member.remove(index())}>
-														<Cross1Icon class="bold size-4 place-self-center stroke-white" />
-													</Button.Warning>
-													{nameField.error && (
-														<FormUI.ErrorText text={nameField.error} />
-													)}
-												</li>
-											)}
-										</Field>
-										<Field
-											of={formStore}
-											name={`member.${index()}.type`}>
-											{(field, props) => (
-												<>
-													<input
-														{...props}
-														type="text"
-														value={field.value}
-														hidden
-													/>
-													{field.error && (
-														<FormUI.ErrorText text={field.error} />
-													)}
-												</>
-											)}
-										</Field>
-									</>
-								)}
+								{(_, index) => <FieldArrayItem index={index} />}
 							</For>
 							{fieldArray.error && <FormUI.ErrorText text={fieldArray.error} />}
 						</ul>
@@ -376,7 +291,7 @@ function Member() {
 				/>
 				<div class="relative">
 					<div class="absolute w-full">
-						<Index each={member.searchResult()}>
+						<Index each={member.searchResult}>
 							{(artist) => (
 								<button
 									type="button"
@@ -390,5 +305,170 @@ function Member() {
 				</div>
 			</div>
 		</div>
+	)
+}
+
+function FieldArrayItem(props: { index: () => number }) {
+	const { formStore, member } = useEditArtistPageController()
+
+	return (
+		<li>
+			<Field
+				of={formStore}
+				name={`member.${props.index()}.name`}>
+				{(nameField, nameProps) => (
+					<Field
+						of={formStore}
+						name={`member.${props.index()}.isText`}
+						type="boolean">
+						{(isTextField, isTextProps) => (
+							<div class="flex w-full flex-row place-content-between gap-2 rounded-md border-[0.1rem] bg-white p-2">
+								<div class="grid w-full grid-cols-1 gap-1">
+									<input
+										{...isTextProps}
+										type="checkbox"
+										checked={isTextField.value}
+										hidden
+									/>
+									<Show
+										when={isTextField.value === true}
+										fallback={<p>{nameField.value}</p>}>
+										<input
+											{...nameProps}
+											type="text"
+											class={`min-w-0 flex-1 rounded border-[0.1rem] border-gray-300 px-1`}
+											value={nameField.value}
+											placeholder="Enter artist name"
+										/>
+									</Show>
+									<div class="flex w-full gap-1">
+										<Field
+											of={formStore}
+											name={`member.${props.index()}.joinYear`}
+											type="number">
+											{(joinYearField, joinYearProps) => (
+												<input
+													{...joinYearProps}
+													type="number"
+													min="-1"
+													max={new Date().getFullYear()}
+													value={joinYearField.value ?? undefined}
+													class="no_spinner w-1/2 rounded border-[0.1rem] border-gray-300 px-1"
+													placeholder="Join year"
+												/>
+											)}
+										</Field>
+										<Field
+											of={formStore}
+											name={`member.${props.index()}.leaveYear`}
+											type="number">
+											{(leaveYearField, leaveYearProps) => (
+												<input
+													{...leaveYearProps}
+													type="number"
+													min="-1"
+													max={new Date().getFullYear()}
+													value={leaveYearField.value ?? undefined}
+													class="no_spinner w-1/2 rounded border-[0.1rem] px-1"
+													placeholder="Leave year"
+												/>
+											)}
+										</Field>
+									</div>
+									<FieldArrayItemError index={props.index} />
+								</div>
+								<Button.Warning
+									type="button"
+									class="flex min-h-6 min-w-6 flex-initial place-content-center text-sm"
+									onClick={() => member.remove(props.index())}>
+									<Cross1Icon class="bold size-4 place-self-center stroke-white" />
+								</Button.Warning>
+							</div>
+						)}
+					</Field>
+				)}
+			</Field>
+			<div class="invisible">
+				<Field
+					of={formStore}
+					name={`member.${props.index()}.artistID`}>
+					{(field, props) => (
+						<>
+							<input
+								{...props}
+								type="text"
+								value={field.value}
+								hidden
+							/>
+						</>
+					)}
+				</Field>
+				<Field
+					of={formStore}
+					name={`member.${props.index()}.groupMemberID`}>
+					{(field, props) => (
+						<>
+							<input
+								{...props}
+								type="text"
+								value={field.value}
+								hidden
+							/>
+						</>
+					)}
+				</Field>
+				<Field
+					of={formStore}
+					name={`member.${props.index()}.type`}>
+					{(field, props) => (
+						<>
+							<input
+								{...props}
+								type="text"
+								value={field.value}
+								hidden
+							/>
+						</>
+					)}
+				</Field>
+
+			</div>
+		</li>
+	)
+}
+
+function FieldArrayItemError(props: { index: () => number }) {
+	const { formStore } = useEditArtistPageController()
+	const nameFieldErr = createMemo(() =>
+		getError(formStore, `member.${props.index()}.name`)
+	)
+	const isTextFieldErr = createMemo(() =>
+		getError(formStore, `member.${props.index()}.isText`)
+	)
+	const joinYearFieldErr = createMemo(() =>
+		getError(formStore, `member.${props.index()}.joinYear`)
+	)
+	const leaveYearFieldErr = createMemo(() =>
+		getError(formStore, `member.${props.index()}.leaveYear`)
+	)
+	return (
+		<>
+			<FormUI.ErrorText
+				showWhen={notNullString(nameFieldErr())}
+				text={`Error in name field:\n${nameFieldErr()}`}
+			/>
+			<FormUI.ErrorText
+				showWhen={notNullString(isTextFieldErr())}
+				text={`Error in isText field:\n${isTextFieldErr()}`}
+			/>
+			<FormUI.ErrorText
+				showWhen={notNullString(joinYearFieldErr())}
+				text={`Error in join year field:\n${joinYearFieldErr()}`}
+			/>
+			<FormUI.ErrorText
+				showWhen={notNullString(leaveYearFieldErr())}
+				text={`Error in leave year field:\n${leaveYearFieldErr()}`}
+			/>
+		</>
 	)
 }
