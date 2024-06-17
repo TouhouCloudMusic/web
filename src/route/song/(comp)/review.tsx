@@ -1,6 +1,6 @@
 import { For, Index } from "solid-js"
-import { RatingStatic } from "~/component/RatingStatic"
-import { useSongData } from "../song.state"
+import { RatingStatic } from "~/component/static_rating"
+import { useSongData } from "../controller"
 export function ReviewComp() {
 	const { reviews } = useSongData()
 	return (

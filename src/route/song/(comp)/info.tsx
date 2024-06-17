@@ -1,10 +1,11 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { autoUpdate, offset, shift } from "@floating-ui/dom"
 import { useFloating } from "solid-floating-ui"
 import { Index, Show, createSignal } from "solid-js"
-import { VoteGenreTab } from "./VoteGenreTab"
-import { useSongData } from "../song.state"
+import { VoteGenreTab } from "./vote_genre_tab"
+import { useSongData } from "../controller"
 import { ShowPortal } from "~/util/ShowPortal"
-import style from "../SongPage.module.css"
+import style from "../song_page.module.css"
 export function SongInfo() {
 	const { artist, duration, originalSong, ratings, rank, genres } =
 		useSongData()
@@ -33,19 +34,19 @@ export function SongInfo() {
 			<ShowPortal when={show()}>
 				<VoteGenreTab {...voteTabAttributes} />
 			</ShowPortal>
-			<div class={style.infoRow}>
+			<div class={style["infoRow"]}>
 				<p class="">Artist</p>
 				<p>
 					<a href="">{artist()}</a>
 				</p>
 			</div>
-			<div class={style.infoRow}>
+			<div class={style["infoRow"]}>
 				<p class="">Duration</p>
 				<p>{duration()}</p>
 			</div>
 			<Show when={originalSong()}>
 				{" "}
-				<div class={style.infoRow}>
+				<div class={style["infoRow"]}>
 					<p class="">Original Song</p>
 					<ul class="">
 						<Index each={originalSong()}>
@@ -61,20 +62,20 @@ export function SongInfo() {
 					</ul>
 				</div>
 			</Show>
-			<div class={style.infoRow}>
+			<div class={style["infoRow"]}>
 				<p>Ratings</p>
 				<p>
 					{ratings.value()} / 5.00 from {ratings.count()} ratings
 				</p>
 			</div>
-			<div class={style.infoRow}>
+			<div class={style["infoRow"]}>
 				<p>Ranked</p>
 				<p>
 					#{rank.thisYear()} for <a href="">2024</a>, #{rank.overAll()}{" "}
 					<a href="">overall</a>
 				</p>
 			</div>
-			<div class={style.infoRow}>
+			<div class={style["infoRow"]}>
 				<p>Genres</p>
 				<ul class="flex content-center">
 					<Show
@@ -93,12 +94,12 @@ export function SongInfo() {
 				<p>
 					<button
 						onClick={() => setShow(true)}
-						class={style.vote}>
+						class={style["vote"]}>
 						vote
 					</button>
 				</p>
 			</div>
-			<div class={style.infoRow}>
+			<div class={style["infoRow"]}>
 				<p>Descriptors</p>
 				<ul class="flex">
 					<li class="">
@@ -112,7 +113,7 @@ export function SongInfo() {
 				<p>
 					<button
 						onClick={() => setShow(true)}
-						class={style.vote}>
+						class={style["vote"]}>
 						vote
 					</button>
 				</p>

@@ -1,9 +1,9 @@
 import { Index, Match, Switch } from "solid-js"
-import { useUserData } from "./UserDataProvider"
-import { ReviewAction } from "./user.data"
+import { useUserController } from "../controller"
+import { ReviewAction } from "../user"
 ;``
 export default function TimelineList() {
-	const userData = useUserData()
+	const userData = useUserController()
 	return (
 		<ul class="flex flex-col-reverse">
 			<Index each={userData.timeline}>

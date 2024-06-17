@@ -1,5 +1,5 @@
-import { useSongData } from "../song.state"
-import style from "../SongPage.module.css"
+import { useSongData } from "../controller"
+import style from "../song_page.module.css"
 export function AltVerComp() {
 	const { altVers } = useSongData()
 

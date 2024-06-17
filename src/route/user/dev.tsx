@@ -1,7 +1,8 @@
+import TimelineList from "./(comp)/time_line"
+import { UserDataProvider } from "./controller"
+import { testUserPageData } from "./user_test_data"
 import style from "./user_page.module.css"
-import { UserDataProvider } from "~/component/UserPage/UserDataProvider"
-import { testUserPageData } from "~/component/UserPage/user.test.data"
-import TimelineList from "~/component/UserPage/TimelineList"
+
 export default function UserPage() {
 	style && true
 	return (

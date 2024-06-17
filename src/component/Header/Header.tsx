@@ -1,6 +1,6 @@
 import { Show } from "solid-js"
 import { useAppState } from "~/state/app.state"
-import { ThemeButton } from "../themeButton"
+import { ThemeButton } from "~/component/theme_button"
 import style from "./header.module.css"
 export default function Header() {
 	const appState = useAppState()
