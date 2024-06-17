@@ -27,3 +27,7 @@ gitignore
 # System Files
 .DS_Store
 Thumbs.db
+
+# Edge DB
+dbschema/edgeql-js
+dbschema/interfaces.ts

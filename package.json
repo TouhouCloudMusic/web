@@ -83,8 +83,7 @@
     "test-bun": "bun test ./test/**/*.test.ts",
     "test": "bun run test-bun && bun run test-dom",
     "commit": "bun run format && bun run lint && git cz",
-    "initdb": "bunx prisma migrate dev --name init",
-    "updb": "prisma migrate dev && prisma db push"
+    "migrate": "edgedb migrate && bunx @edgedb/generate interfaces && bunx @edgedb/generate edgeql-js --target esm"
   },
   "type": "module",
   "module": "index.ts"

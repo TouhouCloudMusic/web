@@ -8,14 +8,16 @@ import globals from "globals"
 import tslint from "typescript-eslint"
 export default [
 	{
-		ignores: [".cz-config.cjs", ".output/", ".vinxi/"],
+		ignores: [".cz-config.cjs", ".output/**", ".vinxi/**", "dbschema/**"],
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
 			parserOptions: { project: true },
 		},
 		plugins: {
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			"jsx-a11y": jsx_a11y,
 		},
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
 		rules: jsx_a11y.configs.strict.rules,
 	},
 	eslint.configs.recommended,
