@@ -16,9 +16,7 @@ export function createProvider<T extends object, U>(
 		const [state, setState] = createStore(props.defaultState)
 		const controller = createController(state, setState)
 		return (
-			<Context.Provider value={controller}>
-				{props.children}
-			</Context.Provider>
+			<Context.Provider value={controller}>{props.children}</Context.Provider>
 		)
 	}
 	return [Provider, () => useContext(Context)!]
@@ -35,9 +33,7 @@ export function createProviderC<T extends object, U>(
 		const [state, setState] = createStore(props.defaultState)
 		const controller = new controllerClass(state, setState)
 		return (
-			<Context.Provider value={controller}>
-				{props.children}
-			</Context.Provider>
+			<Context.Provider value={controller}>{props.children}</Context.Provider>
 		)
 	}
 	return [Provider, () => useContext(Context)!]
