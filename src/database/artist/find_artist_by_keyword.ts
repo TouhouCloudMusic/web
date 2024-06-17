@@ -11,7 +11,7 @@ const find = async (keyword: string, type?: ArtistType) => {
 	const res = await prisma.artist.findMany({
 		where: {
 			name: {
-				startsWith: keyword,
+				contains: keyword,
 			},
 			type: type,
 		},

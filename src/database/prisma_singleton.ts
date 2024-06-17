@@ -4,12 +4,12 @@ import { PrismaClient } from "@prisma/client"
 function prismaSigleton() {
 	return new PrismaClient({
 		datasourceUrl: import.meta.env.VITE_DATABASE_URL,
-		log: ["info", "warn", "error"],
+		log: ["query", "info", "warn", "error"],
 	})
 }
 
 declare const globalThis: {
-	prismaGlobal: ReturnType<typeof prismaSigleton>
+	prismaGlobal?: ReturnType<typeof prismaSigleton>
 } & typeof global
 
 const prisma = globalThis.prismaGlobal ?? prismaSigleton()
