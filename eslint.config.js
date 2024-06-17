@@ -38,7 +38,9 @@ export default [
 					},
 				},
 			],
+			"@typescript-eslint/no-non-null-assertion": "off",
 			"@typescript-eslint/no-unused-vars": "warn",
+			"@typescript-eslint/only-throw-error": "off",
 			"@typescript-eslint/restrict-template-expressions": [
 				"error",
 				{ allowNumber: true },
