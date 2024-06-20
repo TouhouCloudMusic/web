@@ -2,7 +2,7 @@
 import eslint from "@eslint/js"
 import eslintConfigPrettier from "eslint-config-prettier"
 // @ts-expect-error
-import jsx_a11y from "eslint-plugin-jsx-a11y"
+import jsxA11y from "eslint-plugin-jsx-a11y"
 import solid from "eslint-plugin-solid"
 import globals from "globals"
 import tslint from "typescript-eslint"
@@ -13,16 +13,11 @@ export default [
 			globals: { ...globals.browser, ...globals.node },
 			parserOptions: { project: true },
 		},
-		plugins: {
-			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-			"jsx-a11y": jsx_a11y,
-		},
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-		rules: jsx_a11y.configs.strict.rules,
 	},
 	eslint.configs.recommended,
 	...tslint.configs.strictTypeChecked,
 	...tslint.configs.stylisticTypeChecked,
+	jsxA11y.flatConfigs.recommended,
 	solid.configs["flat/typescript"],
 	eslintConfigPrettier,
 	{
