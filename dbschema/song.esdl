@@ -3,6 +3,6 @@ module default {
 		required title: str;
 		required multi artist: Artist;
 		duration: duration;
-		language: Util::Language
+		language: Util::Language;
 	}
 }
