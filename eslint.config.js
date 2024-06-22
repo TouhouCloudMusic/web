@@ -1,25 +1,27 @@
 // @ts-check
 import eslint from "@eslint/js"
 import eslintConfigPrettier from "eslint-config-prettier"
-// @ts-expect-error
+// @ts-ingnore
 import jsxA11y from "eslint-plugin-jsx-a11y"
 import solid from "eslint-plugin-solid"
 import globals from "globals"
 import tslint from "typescript-eslint"
 export default [
 	{
-		ignores: [".cz-config.cjs", ".output/**", ".vinxi/**", "dbschema/**"],
+		ignores: [".cz-config.cjs", ".output/**", ".vinxi/**"],
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
-			parserOptions: { project: true },
+			parserOptions: {
+				project: ["./tsconfig.json", "./packages/*/tsconfig.json"],
+			},
 		},
 	},
 	eslint.configs.recommended,
 	...tslint.configs.strictTypeChecked,
 	...tslint.configs.stylisticTypeChecked,
-	jsxA11y.flatConfigs.recommended,
-	solid.configs["flat/typescript"],
+
 	eslintConfigPrettier,
+	// base
 	{
 		rules: {
 			"@typescript-eslint/array-type": "off",
@@ -42,6 +44,15 @@ export default [
 				"error",
 				{ allowNumber: true },
 			],
+		},
+	},
+	// jsx
+	{
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+		...jsxA11y.flatConfigs.recommended,
+		...solid.configs["flat/typescript"],
+		files: ["./packages/web/src/**/*.{jsx,tsx}"],
+		rules: {
 			"solid/self-closing-comp": [
 				"warn",
 				{

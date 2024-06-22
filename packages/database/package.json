@@ -6,7 +6,11 @@
     "prettier": "^3.3.2"
   },
   "peerDependencies": {
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "edgedb": "latest"
   },
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "generate": "@edgedb/generate interfaces && @edgedb/generate edgeql-js --target esm"
+  }
 }

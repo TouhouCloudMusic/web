@@ -1,16 +1,5 @@
-# Outputs
-.netlify
-.output
-.solid
-.vercel
-.vinxi
-
-dist
-netlify
-
 # Environment
-# .env
-# .env*.local
+.env.local
 
 # Dependencies
 node_modules
@@ -23,11 +12,8 @@ node_modules
 
 # Temp
 gitignore
+.eslintcache
 
 # System Files
 .DS_Store
 Thumbs.db
-
-# Edge DB
-dbschema/edgeql-js
-dbschema/interfaces.ts
