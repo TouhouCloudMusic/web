@@ -1,2 +1,2 @@
-import e from "./dbschema/edgeql-js"
+import e from "./edgeql-js"
 export default e

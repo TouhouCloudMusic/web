@@ -43,7 +43,7 @@ function ColorPanel() {
 	return (
 		<div class="grid-row-10 grid grid-flow-row gap-2">
 			<div class="grid size-fit grid-cols-3 gap-2">
-				<div class="place-content-center text-center text-gray-1000">Bg</div>
+				<div class="text-gray-1000 place-content-center text-center">Bg</div>
 				<div
 					style={{
 						...colorItemStyle,

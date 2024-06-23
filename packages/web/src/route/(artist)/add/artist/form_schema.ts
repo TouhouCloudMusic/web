@@ -1,8 +1,11 @@
 import * as v from "valibot"
 
-const artistTypeSchema = v.picklist(["Person", "Group"], "Invalid artist type")
+export const artistTypeSchema = v.picklist(
+	["Person", "Group"],
+	"Invalid artist type"
+)
 
-const yearSchema = v.nullable(
+export const yearSchema = v.optional(
 	v.union(
 		[
 			v.pipe(
@@ -23,15 +26,14 @@ export const ArtistFormSchema = v.object({
 		v.nonEmpty("Artist name is required"),
 		v.maxLength(64, "Artist name is too long")
 	),
-	type: artistTypeSchema,
+	artist_type: artistTypeSchema,
 	member: v.optional(
 		v.array(
 			v.object({
-				artistID: v.string(),
-				groupMemberID: v.string(),
+				app_id: v.string(),
 				name: v.pipe(v.string(), v.minLength(1, "Artist name is required")),
-				type: artistTypeSchema,
-				isText: v.boolean(),
+				artist_type: artistTypeSchema,
+				isStr: v.boolean(),
 				joinYear: yearSchema,
 				leaveYear: yearSchema,
 			}),

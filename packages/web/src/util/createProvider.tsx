@@ -1,5 +1,3 @@
-/* eslint-disable solid/components-return-once */
-/* eslint-disable solid/reactivity */
 import { createContext, useContext, type JSXElement } from "solid-js"
 import { createStore, type SetStoreFunction } from "solid-js/store"
 

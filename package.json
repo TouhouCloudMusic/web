@@ -4,8 +4,8 @@
     "packages/*"
   ],
   "scripts": {
-    "format": "prettier --write . ",
-    "lint": "eslint --cache",
+    "format": "prettier --write .",
     "commit": "bun run format && bun run lint && git cz"
-  }
+  },
+  "type": "module"
 }

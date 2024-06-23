@@ -43,6 +43,7 @@ module Artist {
 		overloaded multi alias: Person;
 
 		multi _member_of := (.<_members[is Artist::Group]);
+		# multi _member_of2: `Group`;
 		multi _str_member_of: str;
 
 	}
@@ -52,9 +53,9 @@ module Artist {
 		overloaded multi alias: `Group`;
 
 		multi _members: Person {
-			constraint exclusive;
 			join_year: int16;
 			leave_year: int16;
+			on target delete allow
 		};
 		multi _str_members: str;
 	}

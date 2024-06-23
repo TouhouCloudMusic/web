@@ -1,161 +1,89 @@
-import { ArtistDataByID } from "~/database/artist/find_artist_by_id"
 import { ArtistForm } from "./type"
-
+import * as v from "valibot"
+import { ArtistFormSchema } from "./form_schema"
+import { client } from "~/database/edgedb"
+import e from "@touhouclouddb/database"
+import { isEmptyArrayOrNone } from "~/lib/validate/array"
+import { ArtistByID } from "~/database/artist/find_artist_by_id"
 
 export async function createOrUpdateArtist(
 	formData: ArtistForm,
-	initData: ArtistDataByID | undefined
+	initData?: ArtistByID
 ) {
 	"use server"
 	v.parse(ArtistFormSchema, formData)
-	const prisma = usePrisma()
-	const artistID = BigInt(formData.id)
-	// 创建新艺术家
+	const textMembers = formData.member?.filter((m) => m.isStr)
+	const hasTextMembers = !isEmptyArrayOrNone(textMembers)
+	const linkedMembers = formData.member?.filter((m) => !m.isStr)
+	const hasLinkedMembers = !isEmptyArrayOrNone(linkedMembers)
 	if (!initData) {
-		const memberData: Prisma.GroupMemberCreateManyInput[] =
-			formData.member?.map(
-				(member) =>
-					({
-						...(member.isText ?
-							{
-								name: member.name,
-							}
-						:	{
-								[formData.type === "Person" ? "group_id" : "artist_id"]: BigInt(
-									member.artistID
-								),
-							}),
-						join_year: member.joinYear,
-						leave_year: member.leaveYear,
-					}) as Prisma.GroupMemberCreateManyInput
-			) ?? []
-
-		await prisma.artist.create({
-			data: {
+		if (formData.artist_type === "Person") {
+			const insertQuery = e.insert(e.Artist.Person, {
 				name: formData.name,
-				type: formData.type,
-				...(memberData.length > 0 && {
-					[formData.type === "Person" ? "member_of" : "members"]: {
-						createMany: { data: memberData },
-					},
-				}),
-			},
-		})
-	}
-	// 更新现有艺术家
-	else {
-		const oldMemberList =
-			initData[formData.type === "Person" ? "member_of" : "members"]
-
-		const oldMemberIDList = oldMemberList.map((member) => member.id)
-
-		const updateMemberArr = formData.member
-			?.filter((member) => member.groupMemberID !== "")
-			.filter((member) =>
-				oldMemberIDList.includes(BigInt(member.groupMemberID))
-			)
-			.filter(
-				(member) =>
-					member.joinYear !==
-						oldMemberList.find((m) => m.id === BigInt(member.groupMemberID))
-							?.join_year ||
-					member.leaveYear !==
-						oldMemberList.find((m) => m.id === BigInt(member.groupMemberID))
-							?.leave_year
-			)
-			.map((member) => ({
-				where: {
-					id: BigInt(member.groupMemberID),
-				} as Prisma.GroupMemberWhereUniqueInput,
-				data: {
-					join_year: member.joinYear,
-					leave_year: member.leaveYear,
-				},
-			}))
-
-		const newMemberIDList =
-			formData.member?.map((member) => BigInt(member.groupMemberID)) ?? []
-
-		// 添加新成员
-		const newGroupMembers = formData.member?.filter(
-			(member) => member.groupMemberID === ""
-		)
-
-		const createMemberDataArr: Prisma.GroupMemberCreateManyInput[] = []
-		newGroupMembers?.map((member) => {
-			createMemberDataArr.push({
-				...(member.isText ?
-					{ name: member.name }
-				:	{
-						[formData.type === "Person" ? "group_id" : "artist_id"]: BigInt(
-							member.artistID
-						),
-					}),
-				join_year: member.joinYear,
-				leave_year: member.leaveYear,
+				_str_member_of: formData.member
+					?.filter((m) => m.isStr)
+					.map((m) => m.name),
 			})
-		})
+			if (hasLinkedMembers) {
+				const members = linkedMembers.map((m) => ({
+					app_id: Number(m.app_id),
+				}))
 
-		interface UpdateData_Member {
-			deleteMany?: Prisma.GroupMemberScalarWhereInput
-			createMany?: Prisma.GroupMemberCreateManyArtistInputEnvelope
-		}
-
-		const deletedMembers = oldMemberIDList.filter(
-			(id) => !newMemberIDList.includes(id)
-		)
-
-		const artistNameChanged = formData.name !== initData.name
-		const artistTypeChanged = initData.type !== formData.type
-		const deletedSomeMember = deletedMembers.length > 0
-		const updatedSomeMember = updateMemberArr !== undefined
-		const createdSomeMember = createMemberDataArr.length > 0
-		const memberListChanged =
-			artistTypeChanged ||
-			deletedSomeMember ||
-			updatedSomeMember ||
-			createdSomeMember
-
-		const updateData = {
-			...(artistNameChanged && { name: formData.name }),
-			...(artistTypeChanged && { type: formData.type }),
-			...(memberListChanged &&
-				({
-					[formData.type === "Group" ? "members" : "member_of"]: {
-						...((artistTypeChanged || deletedSomeMember) && {
-							deleteMany:
-								artistTypeChanged ?
-									({
-										OR: [{ group_id: artistID }, { artist_id: artistID }],
-									} as Prisma.GroupMemberScalarWhereInput)
-								:	({
-										id: {
-											in: deletedMembers,
+				await client.transaction(async (tx) => {
+					const insertRes = await insertQuery.run(tx)
+					const newArtist = e.select(e.Artist.Person, () => ({
+						filter_single: {
+							id: insertRes.id,
+						},
+					}))
+					const updateMemberQuery = e.params(
+						{
+							groups: e.array(
+								e.tuple({
+									app_id: e.int64,
+								})
+							),
+						},
+						(args) =>
+							e.for(e.array_unpack(args.groups), (group) =>
+								e.update(e.Artist.Group, () => ({
+									filter_single: {
+										app_id: group.app_id,
+									},
+									set: {
+										_members: {
+											"+=": newArtist,
 										},
-									} as Prisma.GroupMemberScalarWhereInput),
-						}),
-						...(createdSomeMember && {
-							createMany: {
-								data: createMemberDataArr,
-							} as Prisma.GroupMemberCreateManyArtistInputEnvelope,
-						}),
-					},
-				} as { [key in "members" | "member_of"]?: UpdateData_Member })),
-		}
-		const sessionArray = []
-		// TODO: raw sql
-		updateMemberArr?.map((update) => {
-			sessionArray.push(prisma.groupMember.update(update))
-		})
-		sessionArray.push(
-			prisma.artist.update({
-				where: {
-					id: artistID,
-				},
-				data: updateData,
+									},
+								}))
+							)
+					)
+					await updateMemberQuery.run(tx, {
+						groups: members,
+					})
+				})
+			}
+		} else {
+			e.insert(e.Artist.Group, {
+				name: formData.name,
+				_str_members:
+					hasTextMembers ?
+						formData.member?.filter((m) => m.isStr).map((m) => m.name)
+					:	undefined,
+				_members:
+					hasLinkedMembers ?
+						e.select(e.detached(e.Artist.Person), (person) => ({
+							filter: e.op(
+								person.app_id,
+								"in",
+								e.set(...linkedMembers.map((m) => e.int64(m.app_id)))
+							),
+						}))
+					:	undefined,
 			})
-		)
-		await prisma.$transaction(sessionArray)
+		}
+	} else {
+		console.log("WIP")
 	}
 	return 0
 }

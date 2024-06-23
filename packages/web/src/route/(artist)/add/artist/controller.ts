@@ -6,28 +6,18 @@ import {
 	setValues,
 	valiForm,
 } from "@modular-forms/solid"
-import { either } from "fp-ts"
-import { pipe } from "fp-ts/lib/function"
-import { createSignal } from "solid-js"
-import { ArtistDataByID } from "~/database/artist/find_artist_by_id"
-import {
-	ArtistDataByKeyword,
-	findArtistByKeyword,
-} from "~/database/artist/find_artist_by_keyword"
-import { ArtistFormSchema } from "./form_schema"
-import {
-	ArtistForm,
-	ArtistData_EditPage,
-	MemberList,
-	MemberListItem,
-} from "./type"
 import * as R from "ramda"
+import { createSignal } from "solid-js"
 import { Nullable } from "vitest"
-import { e } from "~/database/edgedb"
 import { ArtistType } from "~/database/artist/type"
+import { isEmptyArray, isNotEmptyArray } from "~/lib/validate/array"
+import { ArtistFormSchema } from "./form_schema"
+import { ArtistForm, MemberList, MemberListItem } from "./type"
+import { ArtistByID } from "~/database/artist/find_artist_by_id"
+import { findArtistByKeyword_EditArtistPage } from "./db"
 
 export function createController() {
-	const [artistData, setArtistData] = createSignal<ArtistDataByID>()
+	const [artistData, setArtistData] = createSignal<ArtistByID>()
 	const formStore = createFormStore<ArtistForm>({
 		validate: valiForm(ArtistFormSchema),
 	})
@@ -65,8 +55,14 @@ export function createController() {
 		toGroup: () => setArtistTypeWithSwapMemberListCache("Group"),
 	}
 	// member
+	type MemberSearchResult = {
+		id?: string
+		app_id: string
+		name: string
+		artist_type: ArtistType
+	}
 	const [memberSearchResult, setMemberSearchResult] =
-		createSignal<ArtistDataByKeyword>()
+		createSignal<MemberSearchResult[]>()
 	const [memberListCache, setMemberListCache] = createSignal<MemberList>()
 
 	const memberController = {
@@ -74,36 +70,32 @@ export function createController() {
 			return memberSearchResult()
 		},
 
-		add: (input: { id: bigint; name: string; type: ArtistType }) => {
+		add: (input: MemberSearchResult) => {
 			const artist: MemberListItem = {
-				artistID: input.id.toString(),
+				app_id: input.app_id.toString(),
 				name: input.name,
-				type: input.type,
-				isText: false,
-				groupMemberID: "",
-				joinYear: null,
-				leaveYear: null,
+				artist_type: input.artist_type,
+				isStr: false,
 			}
 			const memberList = getValues(formStore, "member")
-			if (memberList.find((a) => a?.artistID === artist.artistID)) return
-			if (artist.type === artistType()) return
+			if (memberList.find((a) => a?.app_id === artist.app_id)) return
+			if (artist.artist_type === artistType()) return
 			insert(formStore, "member", {
 				value: artist,
 			})
 		},
+
 		addStringInput: () => {
 			insert(formStore, "member", {
 				value: {
-					artistID: "",
-					type: artistType() === "Person" ? "Group" : "Person",
+					app_id: "",
+					artist_type: artistType() === "Person" ? "Group" : "Person",
 					name: "",
-					isText: true,
-					groupMemberID: "",
-					joinYear: null,
-					leaveYear: null,
+					isStr: true,
 				},
 			})
 		},
+
 		remove: (index: number) => {
 			remove(formStore, "member", {
 				at: index,
@@ -112,22 +104,24 @@ export function createController() {
 
 		serach: async (keyword: string) => {
 			if (keyword.length < 3) {
-				return setMemberSearchResult(undefined)
-			} else
-				return pipe(
-					await findArtistByKeyword(
-						keyword,
-						artistType() === "Person" ? "Group" : "Person"
-					),
-					either.match(
-						(err) => {
-							throw err
-						},
-						(data) => {
-							setMemberSearchResult(data)
-						}
+				setMemberSearchResult(undefined)
+			} else {
+				const type = artistType()!
+				const res = await findArtistByKeyword_EditArtistPage(keyword, type)
+				console.log(res)
+
+				if (isEmptyArray(res)) {
+					setMemberSearchResult(undefined)
+				} else {
+					setMemberSearchResult(
+						res.map((a) => ({
+							app_id: a.app_id.toString(),
+							name: a.name,
+							artist_type: a.artist_type,
+						}))
 					)
-				)
+				}
+			}
 		},
 	}
 	return {

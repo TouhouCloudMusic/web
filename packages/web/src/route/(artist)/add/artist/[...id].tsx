@@ -6,8 +6,15 @@ import {
 	getValues,
 	setValues,
 } from "@modular-forms/solid"
-import { createAsync, useAction, useParams } from "@solidjs/router"
 import {
+	Params,
+	cache,
+	createAsync,
+	useAction,
+	useParams,
+} from "@solidjs/router"
+import {
+	Accessor,
 	For,
 	Index,
 	Match,
@@ -24,31 +31,36 @@ import { FormUI } from "~/component/form/ui"
 import { useContextUnsave } from "~/lib/context/use_context_unsave"
 import { notNullString } from "~/lib/validate/not_empty_string"
 import { createController } from "./controller"
-import { getArtistDataByID_EditPage } from "./init_data"
-import { submitAction } from "./submit"
-import { initFormStore_Member } from "./utils"
+import { getData } from "./init_data"
 import { h4Class } from "./style"
+import { submitAction } from "./submit"
+import { validateAndThrowRedirect } from "~/lib/validate/throw_redirect"
+import { isEmptyOrValidID } from "~/lib/validate/validate_params"
+import { initFormStore_Member } from "./utils"
 
 const EditArtistPageContext =
 	createContext<ReturnType<typeof createController>>()
-const useEditArtistPageController = useContextUnsave(EditArtistPageContext)
+const useController = useContextUnsave(EditArtistPageContext)
+
+const getArtistDataByID_EditPage = cache(async function (params: Params) {
+	const id = validateAndThrowRedirect(isEmptyOrValidID, params)
+	if (!id) return
+	return await getData(id)
+}, `artist_by_id_edit`)
 
 export default function EditArtistPage() {
 	const controller = createController()
 	return (
-		<Suspense fallback={<div>Loading...</div>}>
-			<EditArtistPageContext.Provider value={controller}>
-				<Main />
-			</EditArtistPageContext.Provider>
-		</Suspense>
+		<EditArtistPageContext.Provider value={controller}>
+			<Main />
+		</EditArtistPageContext.Provider>
 	)
 }
 
 function Main() {
 	const data = createAsync(() => getArtistDataByID_EditPage(useParams()))
 
-	const { artistData, setArtistData, formStore, type, form } =
-		useEditArtistPageController()
+	const { artistData, setArtistData, formStore, type, form } = useController()
 	const action = useAction(submitAction)
 	onMount(() => {
 		const initData = data()
@@ -65,6 +77,7 @@ function Main() {
 			form.setOldValue(initFormValue)
 		}
 	})
+
 	return (
 		<Form
 			of={formStore}
@@ -72,7 +85,7 @@ function Main() {
 				if (!form.changed) {
 					return form.setErrMsg("No changes")
 				}
-				return action(v, artistData())
+				action(v, undefined)
 			}}
 			method="post"
 			class="flex flex-col gap-2">
@@ -105,8 +118,11 @@ function Main() {
 						type="button"
 						class="w-1/4 self-start py-1"
 						onClick={() => {
-							console.log("form store: ", getValues(formStore))
-							console.log("form changed: ", form.changed)
+							console.log("123")
+
+							// console.log("form store: ", getValues(formStore))
+							// console.log("form changed: ", form.changed)
+							console.log(type.value)
 						}}>
 						Log
 					</Button.Borderless>
@@ -118,7 +134,7 @@ function Main() {
 	)
 }
 function Name() {
-	const { artistData, formStore } = useEditArtistPageController()
+	const { artistData, formStore } = useController()
 	return (
 		<Field
 			of={formStore}
@@ -149,13 +165,13 @@ function Name() {
 }
 
 function Type() {
-	const { artistData, formStore, type } = useEditArtistPageController()
+	const { artistData, formStore, type } = useController()
 	return (
 		<div class="flex flex-col">
 			<h4 class={h4Class}>Artist Type</h4>
 			<Field
 				of={formStore}
-				name="type">
+				name="artist_type">
 				{(field, props) => (
 					<>
 						<div class="flex">
@@ -164,7 +180,7 @@ function Type() {
 								type="radio"
 								id="artist_type_person"
 								value="Person"
-								checked={artistData()?.type === "Person"}
+								checked={artistData()?.artist_type === "Person"}
 								onChange={() => type.toPerson()}
 							/>
 							<label for="artist_type_person">Person</label>
@@ -175,7 +191,7 @@ function Type() {
 								type="radio"
 								id="artist_type_group"
 								value="Group"
-								checked={artistData()?.type === "Group"}
+								checked={artistData()?.artist_type === "Group"}
 								onChange={() => type.toGroup()}>
 								Group
 							</input>
@@ -190,7 +206,7 @@ function Type() {
 }
 
 function Member() {
-	const { formStore, type, member } = useEditArtistPageController()
+	const { formStore, type, member } = useController()
 	function AddStringInputButton() {
 		return (
 			<Button.Borderless
@@ -266,7 +282,7 @@ function Member() {
 }
 
 function FieldArrayItem(props: { index: () => number }) {
-	const { formStore, member } = useEditArtistPageController()
+	const { formStore, member } = useController()
 
 	return (
 		<li>
@@ -276,7 +292,7 @@ function FieldArrayItem(props: { index: () => number }) {
 				{(nameField, nameProps) => (
 					<Field
 						of={formStore}
-						name={`member.${props.index()}.isText`}
+						name={`member.${props.index()}.isStr`}
 						type="boolean">
 						{(isTextField, isTextProps) => (
 							<div class="flex w-full flex-row place-content-between gap-2 rounded-md border-[0.1rem] bg-white p-2">
@@ -332,7 +348,7 @@ function FieldArrayItem(props: { index: () => number }) {
 											)}
 										</Field>
 									</div>
-									<FieldArrayItemError index={props.index} />
+									<FormFieldError index={props.index} />
 								</div>
 								<Button.Warning
 									type="button"
@@ -345,61 +361,18 @@ function FieldArrayItem(props: { index: () => number }) {
 					</Field>
 				)}
 			</Field>
-			<div class="invisible">
-				<Field
-					of={formStore}
-					name={`member.${props.index()}.artistID`}>
-					{(field, props) => (
-						<>
-							<input
-								{...props}
-								type="text"
-								value={field.value}
-								hidden
-							/>
-						</>
-					)}
-				</Field>
-				<Field
-					of={formStore}
-					name={`member.${props.index()}.groupMemberID`}>
-					{(field, props) => (
-						<>
-							<input
-								{...props}
-								type="text"
-								value={field.value}
-								hidden
-							/>
-						</>
-					)}
-				</Field>
-				<Field
-					of={formStore}
-					name={`member.${props.index()}.type`}>
-					{(field, props) => (
-						<>
-							<input
-								{...props}
-								type="text"
-								value={field.value}
-								hidden
-							/>
-						</>
-					)}
-				</Field>
-			</div>
+			<InvisibleField index={props.index} />
 		</li>
 	)
 }
 
-function FieldArrayItemError(props: { index: () => number }) {
-	const { formStore } = useEditArtistPageController()
+function FormFieldError(props: { index: () => number }) {
+	const { formStore } = useController()
 	const nameFieldErr = createMemo(() =>
 		getError(formStore, `member.${props.index()}.name`)
 	)
 	const isTextFieldErr = createMemo(() =>
-		getError(formStore, `member.${props.index()}.isText`)
+		getError(formStore, `member.${props.index()}.isStr`)
 	)
 	const joinYearFieldErr = createMemo(() =>
 		getError(formStore, `member.${props.index()}.joinYear`)
@@ -426,5 +399,41 @@ function FieldArrayItemError(props: { index: () => number }) {
 				text={`Error in leave year field:\n${leaveYearFieldErr()}`}
 			/>
 		</>
+	)
+}
+
+function InvisibleField(props: { index: Accessor<number> }) {
+	const { formStore } = useController()
+	return (
+		<div class="invisible">
+			<Field
+				of={formStore}
+				name={`member.${props.index()}.app_id`}>
+				{(field, props) => (
+					<>
+						<input
+							{...props}
+							type="text"
+							value={field.value}
+							hidden
+						/>
+					</>
+				)}
+			</Field>
+			<Field
+				of={formStore}
+				name={`member.${props.index()}.artist_type`}>
+				{(field, props) => (
+					<>
+						<input
+							{...props}
+							type="text"
+							value={field.value}
+							hidden
+						/>
+					</>
+				)}
+			</Field>
+		</div>
 	)
 }

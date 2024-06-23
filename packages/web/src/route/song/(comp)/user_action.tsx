@@ -1,6 +1,6 @@
 import { Accessor, Index, Match, Setter, Switch, createSignal } from "solid-js"
 import { RatingGroup } from "@ark-ui/solid"
-import { StarIcon } from "lucide-solid"
+import { StarIcon } from "solid-radix-icons"
 
 export function UserActionComp() {
 	const itemClass =

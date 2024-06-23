@@ -1,18 +1,18 @@
-import { ArtistType } from "@prisma/client"
-import { ArtistDataByID } from "~/database/artist/find_artist_by_id"
+import { ArtistByID } from "~/database/artist/find_artist_by_id"
 import { ArtistForm } from "./type"
+import { ArtistType } from "~/database/artist/type"
 
-type MemberArtist = ArtistDataByID["members"][number]
-type MemberGroup = ArtistDataByID["member_of"][number]
+type MemberArtist = ArtistByID["members"][number]
+type MemberGroup = ArtistByID["member_of"][number]
 type Result = NonNullable<ArtistForm["member"]>[number]
-export function initFormStore_Member(data: ArtistDataByID): Result[] {
+export function initFormStore_Member(data: ArtistByID): Result[] {
 	return data.type === "Person" ?
 			data.member_of.map((m) => {
 				if (m.group?.id) {
 					return {
 						artistID: m.group.id.toString(),
 						groupMemberID: m.id.toString(),
-						type: inferMemberType(data.type),
+						type: reverseArtistType(data.type),
 						name: m.group.name,
 						isText: false,
 						joinYear: m.join_year,
@@ -27,7 +27,7 @@ export function initFormStore_Member(data: ArtistDataByID): Result[] {
 					return {
 						artistID: m.artist.id.toString(),
 						groupMemberID: m.id.toString(),
-						type: inferMemberType(data.type),
+						type: reverseArtistType(data.type),
 						name: m.artist.name,
 						isText: false,
 						joinYear: m.join_year,
@@ -44,14 +44,13 @@ function artistToTextMember(
 	artistType: ArtistType
 ): Result {
 	return {
-		artistID: "",
-		groupMemberID: memberArtist.id.toString(),
-		type: inferMemberType(artistType),
+		app_id: "",
+		artist_type: reverseArtistType(artistType),
 		name: memberArtist.name ?? "",
-		isText: true,
+		isStr: true,
 	}
 }
 
-function inferMemberType(type: ArtistType) {
+function reverseArtistType(type: ArtistType) {
 	return type === "Person" ? "Group" : "Person"
 }

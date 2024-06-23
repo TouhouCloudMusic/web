@@ -1,7 +1,7 @@
 import { Index, Match, Switch } from "solid-js"
 import { useUserController } from "../controller"
 import { ReviewAction } from "../user"
-;``
+
 export default function TimelineList() {
 	const userData = useUserController()
 	return (

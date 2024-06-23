@@ -4,7 +4,7 @@ import { pipe } from "fp-ts/lib/function"
 
 export function validateAndThrowRedirect<T, U>(
 	validateFn: (x: T) => either.Either<Error, U>,
-	x: T,
+	x: T
 ) {
 	return pipe(
 		x,

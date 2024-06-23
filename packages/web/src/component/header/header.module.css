@@ -1,5 +1,5 @@
 header {
-	@apply z-[1] box-border flex w-full justify-center text-gray-1000 shadow;
+	@apply text-gray-1000 z-[1] box-border flex w-full justify-center shadow;
 }
 
 nav {

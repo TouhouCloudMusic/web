@@ -1,58 +1,61 @@
-// @ts-check
 import eslint from "@eslint/js"
 import eslintConfigPrettier from "eslint-config-prettier"
-// @ts-ingnore
 import jsxA11y from "eslint-plugin-jsx-a11y"
 import solid from "eslint-plugin-solid"
 import globals from "globals"
 import tslint from "typescript-eslint"
+
+const typeScriptRules = {
+	"@typescript-eslint/array-type": "off",
+	"@typescript-eslint/ban-ts-comment": "off",
+	"@typescript-eslint/consistent-type-definitions": "off",
+	"@typescript-eslint/no-confusing-void-expression": "off",
+	"@typescript-eslint/no-empty-interface": "off",
+	"@typescript-eslint/no-misused-promises": [
+		"error",
+		{
+			checksVoidReturn: {
+				attributes: false,
+			},
+		},
+	],
+	"@typescript-eslint/no-non-null-assertion": "off",
+	"@typescript-eslint/no-unused-vars": "warn",
+	"@typescript-eslint/only-throw-error": "off",
+	"@typescript-eslint/restrict-template-expressions": [
+		"error",
+		{ allowNumber: true },
+	],
+}
+/**
+ * @type {import('eslint').Linter.FlatConfig[]}
+ */
 export default [
 	{
-		ignores: [".cz-config.cjs", ".output/**", ".vinxi/**"],
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node },
 			parserOptions: {
-				project: ["./tsconfig.json", "./packages/*/tsconfig.json"],
+				project: ["./tsconfig.json"],
 			},
 		},
 	},
 	eslint.configs.recommended,
+	eslintConfigPrettier,
 	...tslint.configs.strictTypeChecked,
 	...tslint.configs.stylisticTypeChecked,
-
-	eslintConfigPrettier,
-	// base
+	// typescript
 	{
-		rules: {
-			"@typescript-eslint/array-type": "off",
-			"@typescript-eslint/ban-ts-comment": "off",
-			"@typescript-eslint/consistent-type-definitions": "off",
-			"@typescript-eslint/no-confusing-void-expression": "off",
-			"@typescript-eslint/no-empty-interface": "off",
-			"@typescript-eslint/no-misused-promises": [
-				"error",
-				{
-					checksVoidReturn: {
-						attributes: false,
-					},
-				},
-			],
-			"@typescript-eslint/no-non-null-assertion": "off",
-			"@typescript-eslint/no-unused-vars": "warn",
-			"@typescript-eslint/only-throw-error": "off",
-			"@typescript-eslint/restrict-template-expressions": [
-				"error",
-				{ allowNumber: true },
-			],
-		},
+		files: ["src/**/*.ts"],
+		rules: typeScriptRules,
 	},
 	// jsx
 	{
+		files: ["src/**/*.tsx"],
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 		...jsxA11y.flatConfigs.recommended,
 		...solid.configs["flat/typescript"],
-		files: ["./packages/web/src/**/*.{jsx,tsx}"],
 		rules: {
+			...typeScriptRules,
 			"solid/self-closing-comp": [
 				"warn",
 				{
@@ -71,5 +74,8 @@ export default [
 			 * */
 			"jsx-a11y/label-has-associated-control": "off",
 		},
+	},
+	{
+		ignores: [".cz-config.cjs", ".output/", ".vinxi/"],
 	},
 ]

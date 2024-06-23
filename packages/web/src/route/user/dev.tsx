@@ -1,10 +1,8 @@
 import TimelineList from "./(comp)/time_line"
 import { UserDataProvider } from "./controller"
 import { testUserPageData } from "./user_test_data"
-import style from "./user_page.module.css"
 
 export default function UserPage() {
-	style && true
 	return (
 		<UserDataProvider defaultState={testUserPageData}>
 			<main>

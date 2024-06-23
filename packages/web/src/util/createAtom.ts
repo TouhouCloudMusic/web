@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-
 import { Setter, SignalOptions, createSignal } from "solid-js"
 
 export type Atom<T> = (...args: [] | Parameters<Setter<T>>) => T

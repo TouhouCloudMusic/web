@@ -1,5 +1,5 @@
-import { StarIcon } from "lucide-solid"
 import { Index, Match, Show, Switch } from "solid-js"
+import { StarIcon } from "solid-radix-icons"
 
 export function RatingStatic(props: { rating: number }) {
 	// const starLeftClass = "mask mask-star-2 mask-half-1 bg-gray-500";
