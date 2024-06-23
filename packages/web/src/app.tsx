@@ -23,7 +23,7 @@ function App() {
 }
 
 export default () => {
-	const [serverTheme] = createResource(() => getCookieTheme() ?? AppTheme.light)
+	const [serverTheme] = createResource(() => getCookieTheme())
 	const initTheme = parseInt(serverTheme()?.toString() ?? "0", 10)
 	return (
 		// <Suspense fallback={<div>Loading...</div>}>
@@ -37,7 +37,7 @@ export default () => {
 					fallback={(e: Error) => (
 						<>
 							{/* <Header /> */}
-							<ErrorPage msg={`${e?.stack}`} />
+							<ErrorPage msg={`${e.stack}`} />
 						</>
 					)}>
 					<App />

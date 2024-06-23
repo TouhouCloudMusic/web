@@ -40,7 +40,7 @@ export function initFormStore_Member(data: ArtistByID): Result[] {
 }
 
 function artistToTextMember(
-	memberArtist: MemberArtist | MemberGroup,
+	memberArtist: MemberArtist  ,
 	artistType: ArtistType
 ): Result {
 	return {

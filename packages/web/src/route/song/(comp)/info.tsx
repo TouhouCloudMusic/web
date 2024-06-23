@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { autoUpdate, offset, shift } from "@floating-ui/dom"
 import { useFloating } from "solid-floating-ui"
 import { Index, Show, createSignal } from "solid-js"

@@ -3,8 +3,7 @@ import {
 	FieldArray,
 	Form,
 	getError,
-	getValues,
-	setValues,
+	setValues
 } from "@modular-forms/solid"
 import {
 	Params,
@@ -19,23 +18,22 @@ import {
 	Index,
 	Match,
 	Show,
-	Suspense,
 	Switch,
 	createContext,
 	createMemo,
-	onMount,
+	onMount
 } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
 import { Button } from "~/component/button"
 import { FormUI } from "~/component/form/ui"
 import { useContextUnsave } from "~/lib/context/use_context_unsave"
 import { notNullString } from "~/lib/validate/not_empty_string"
+import { validateAndThrowRedirect } from "~/lib/validate/throw_redirect"
+import { isEmptyOrValidID } from "~/lib/validate/validate_params"
 import { createController } from "./controller"
 import { getData } from "./init_data"
 import { h4Class } from "./style"
 import { submitAction } from "./submit"
-import { validateAndThrowRedirect } from "~/lib/validate/throw_redirect"
-import { isEmptyOrValidID } from "~/lib/validate/validate_params"
 import { initFormStore_Member } from "./utils"
 
 const EditArtistPageContext =
@@ -85,7 +83,7 @@ function Main() {
 				if (!form.changed) {
 					return form.setErrMsg("No changes")
 				}
-				action(v, undefined)
+				return action(v, data())
 			}}
 			method="post"
 			class="flex flex-col gap-2">

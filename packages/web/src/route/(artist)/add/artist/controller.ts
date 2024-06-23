@@ -9,12 +9,12 @@ import {
 import * as R from "ramda"
 import { createSignal } from "solid-js"
 import { Nullable } from "vitest"
+import { ArtistByID } from "~/database/artist/find_artist_by_id"
 import { ArtistType } from "~/database/artist/type"
-import { isEmptyArray, isNotEmptyArray } from "~/lib/validate/array"
+import { isEmptyArray } from "~/lib/validate/array"
+import { findArtistByKeyword_EditArtistPage } from "./db"
 import { ArtistFormSchema } from "./form_schema"
 import { ArtistForm, MemberList, MemberListItem } from "./type"
-import { ArtistByID } from "~/database/artist/find_artist_by_id"
-import { findArtistByKeyword_EditArtistPage } from "./db"
 
 export function createController() {
 	const [artistData, setArtistData] = createSignal<ArtistByID>()

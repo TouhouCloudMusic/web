@@ -6,7 +6,7 @@ export default function TimelineList() {
 	const userData = useUserController()
 	return (
 		<ul class="flex flex-col-reverse">
-			<Index each={userData.timeline}>
+			<Index each={userData.timeline()}>
 				{(item) => (
 					<li class="border-sm my-1 rounded border-gray-300 px-3 py-2">
 						<div class="my-2 flex justify-between pr-2">

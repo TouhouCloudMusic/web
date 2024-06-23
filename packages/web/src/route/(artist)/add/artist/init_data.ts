@@ -1,8 +1,6 @@
-import { Params, cache, redirect } from "@solidjs/router"
+import { redirect } from "@solidjs/router"
 import e from "@touhouclouddb/database"
 import { client } from "~/database/edgedb"
-import { validateAndThrowRedirect } from "~/lib/validate/throw_redirect"
-import { isEmptyOrValidID } from "~/lib/validate/validate_params"
 
 async function find(id: bigint | number) {
 	"use server"

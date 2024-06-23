@@ -22,6 +22,10 @@ const typeScriptRules = {
 	"@typescript-eslint/no-non-null-assertion": "off",
 	"@typescript-eslint/no-unused-vars": "warn",
 	"@typescript-eslint/only-throw-error": "off",
+	"@typescript-eslint/restrict-plus-operands": [
+		"error",
+		{ allowNumberAndString: true },
+	],
 	"@typescript-eslint/restrict-template-expressions": [
 		"error",
 		{ allowNumber: true },

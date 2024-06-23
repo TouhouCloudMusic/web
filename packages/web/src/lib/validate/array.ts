@@ -5,5 +5,5 @@ export function isEmptyArray<T>(arr: T[]): arr is [] {
 export function isEmptyArrayOrNone<T>(
 	arr: T[] | null | undefined
 ): arr is [] | null | undefined {
-	return !arr || !arr.length || !arr[0]
+	return !arr?.length || !arr[0]
 }
