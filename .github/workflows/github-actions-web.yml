@@ -1,15 +1,22 @@
 name: GitHub Actions
-run-name: TODO 🚀
+run-name: web
 on:
   push:
     branches:
       - main
+    paths:
+      - "packages/web/**"
   pull_request:
     branches:
       - main
+    paths:
+      - "packages/web/**"
 jobs:
-  TODO_Name:
+  web:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/web
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -21,10 +28,10 @@ jobs:
         run: bun install
 
       - name: Prettier check
-        run: bun run prettier --check ./src
+        run: bun run prettier --check .
 
       - name: Lint check
-        run: bun run eslint ./src
+        run: bun run lint
 
       - name: Run Test
         run: bun run test
