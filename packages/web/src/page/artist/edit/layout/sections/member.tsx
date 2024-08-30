@@ -109,9 +109,9 @@ function MemberField(props: { index: () => number }) {
 		<li>
 			<div class="flex w-full flex-row place-content-between gap-2 rounded-md border-[0.1rem] bg-white p-2">
 				<div class="grid w-full grid-cols-1 gap-1">
-					<MemberName index={props.index} />
+					<MemberName index={props.index()} />
 					<div class="flex w-full gap-1">
-						<MemberYears index={props.index} />
+						<MemberYears index={props.index()} />
 					</div>
 					<Errors index={props.index} />
 				</div>
@@ -127,7 +127,7 @@ function MemberField(props: { index: () => number }) {
 					}}
 				/>
 			</div>
-			<MemberID index={props.index} />
+			<MemberID index={props.index()} />
 		</li>
 	)
 }
@@ -136,11 +136,11 @@ function MemberName(props: IndexComponentProps) {
 	const { formStore, Field } = useController()
 
 	const is_str = () =>
-		getValue(formStore, `member.${props.index()}.is_str`, {
+		getValue(formStore, `member.${props.index}.is_str`, {
 			shouldActive: false,
 		})
 	return (
-		<Field name={`member.${props.index()}.name`}>
+		<Field name={`member.${props.index}.name`}>
 			{(nameField, nameProps) => (
 				<Show
 					when={is_str()}
@@ -180,7 +180,7 @@ function MemberYears(props: IndexComponentProps) {
 	return (
 		<>
 			<Field
-				name={`member.${props.index()}.join_year`}
+				name={`member.${props.index}.join_year`}
 				type="number">
 				{(joinYearField, joinYearProps) => (
 					<input
@@ -190,7 +190,7 @@ function MemberYears(props: IndexComponentProps) {
 						max={thisYear}
 						value={joinYearField.value ?? undefined}
 						onInput={(e) =>
-							yearFieldOnInput(e, `member.${props.index()}.join_year`)
+							yearFieldOnInput(e, `member.${props.index}.join_year`)
 						}
 						class={twMerge(Style.input, "no_spinner flex-1")}
 						placeholder="Join year"
@@ -198,7 +198,7 @@ function MemberYears(props: IndexComponentProps) {
 				)}
 			</Field>
 			<Field
-				name={`member.${props.index()}.leave_year`}
+				name={`member.${props.index}.leave_year`}
 				type="number">
 				{(leaveYearField, leaveYearProps) => (
 					<input
@@ -207,7 +207,7 @@ function MemberYears(props: IndexComponentProps) {
 						min="-1"
 						max={thisYear}
 						onInput={(e) =>
-							yearFieldOnInput(e, `member.${props.index()}.leave_year`)
+							yearFieldOnInput(e, `member.${props.index}.leave_year`)
 						}
 						value={leaveYearField.value ?? undefined}
 						class={twMerge(Style.input, "no_spinner flex-1")}
@@ -222,7 +222,7 @@ function MemberYears(props: IndexComponentProps) {
 function MemberID(props: IndexComponentProps) {
 	const { Field } = useController()
 	return (
-		<Field name={`member.${props.index()}.id`}>
+		<Field name={`member.${props.index}.id`}>
 			{(field, props) => (
 				<>
 					<input
