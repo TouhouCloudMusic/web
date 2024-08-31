@@ -21,6 +21,11 @@ export default defineConfig({
 				headless: true,
 			},
 			include: ["test/dom/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+			includeSource: ["src/**/*.{ts,tsx}"],
+			globalSetup: ["./test/setup_vitest.ts"],
+		},
+		define: {
+			"import.meta.vitest": "undefined",
 		},
 	},
 	routeDir: "./route",
