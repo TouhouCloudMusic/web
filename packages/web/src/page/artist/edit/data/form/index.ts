@@ -9,16 +9,21 @@ export const ArtistNameSchema = v.pipe(
 	v.maxLength(128, "Artist name is too long")
 )
 
-export const LocalizedNameSchema = v.object({
-	lang: LocalizedLanguageSchema,
-	name: ArtistNameSchema,
-})
+export const LocalizedNameSchema = v.optional(
+	v.array(
+		v.object({
+			lang: LocalizedLanguageSchema,
+			name: ArtistNameSchema,
+		})
+	)
+)
 
 export const ArtistTypeSchema = v.picklist(
 	["Person", "Group"],
 	"Invalid artist type"
 )
 
+export type YearSchema = v.InferInput<typeof YearSchema>
 export const YearSchema = v.union(
 	[
 		v.pipe(v.number(), v.minValue(-1), v.maxValue(new Date().getFullYear())),

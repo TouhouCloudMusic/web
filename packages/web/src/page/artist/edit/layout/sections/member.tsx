@@ -159,13 +159,8 @@ function MemberName(props: IndexComponentProps) {
 	)
 }
 
-type event = InputEvent & {
-	currentTarget: HTMLInputElement
-	target: HTMLInputElement
-}
-
 function MemberYears(props: IndexComponentProps) {
-	const { formStore, Field } = useController()
+	const { Field } = useController()
 
 	const thisYear = new Date().getFullYear()
 

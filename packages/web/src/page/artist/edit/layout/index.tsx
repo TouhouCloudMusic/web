@@ -20,6 +20,7 @@ import { type ArtistFormSchema } from "../data/form/index.ts"
 import { Aliases } from "./sections/alias.tsx"
 import { ArtistType } from "./sections/artist_type.tsx"
 import { ID } from "./sections/id.tsx"
+import { LocalizedName } from "./sections/localized_name.tsx"
 import { MemberList } from "./sections/member.tsx"
 import { Name } from "./sections/name.tsx"
 
@@ -67,6 +68,7 @@ function Main() {
 				class="flex w-2/3 flex-col gap-2">
 				<ID />
 				<Name />
+				<LocalizedName />
 				<ArtistType />
 				<Aliases />
 				<MemberList />
