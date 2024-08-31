@@ -1,4 +1,4 @@
-import { getError, getValue, setValue } from "@modular-forms/solid"
+import { getError, getValue, setValue, toCustom } from "@modular-forms/solid"
 import { For, Index, Match, Show, Switch, createMemo } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
@@ -10,6 +10,7 @@ import { useController } from "../../context.tsx"
 import { AddStringInputButton } from "./components/add_str_input_button.tsx"
 import { DeleteButton } from "./components/delete_button.tsx"
 
+import { type YearSchema } from "../../data/form/index.ts"
 import * as Style from "../style.ts"
 
 export function MemberList() {
@@ -48,7 +49,7 @@ export function MemberList() {
 								<For each={fieldArray.items}>
 									{(_, index) => (
 										<li>
-											<MemberField index={index} />
+											<MemberField index={index()} />
 										</li>
 									)}
 								</For>
@@ -102,16 +103,16 @@ function SearchTab() {
 	)
 }
 
-function MemberField(props: { index: () => number }) {
+function MemberField(props: IndexComponentProps) {
 	const { member } = useController()
 
 	return (
 		<li>
 			<div class="flex w-full flex-row place-content-between gap-2 rounded-md border-[0.1rem] bg-white p-2">
 				<div class="grid w-full grid-cols-1 gap-1">
-					<MemberName index={props.index()} />
+					<MemberName index={props.index} />
 					<div class="flex w-full gap-1">
-						<MemberYears index={props.index()} />
+						<MemberYears index={props.index} />
 					</div>
 					<Errors index={props.index} />
 				</div>
@@ -120,14 +121,14 @@ function MemberField(props: { index: () => number }) {
 						type: "button",
 						class:
 							"flex min-h-6 min-w-6 flex-initial place-content-center text-sm",
-						onClick: () => member.remove(props.index()),
+						onClick: () => member.remove(props.index),
 					}}
 					iconProps={{
 						class: "bold size-4 place-self-center stroke-white",
 					}}
 				/>
 			</div>
-			<MemberID index={props.index()} />
+			<MemberID index={props.index} />
 		</li>
 	)
 }
@@ -167,21 +168,24 @@ function MemberYears(props: IndexComponentProps) {
 	const { formStore, Field } = useController()
 
 	const thisYear = new Date().getFullYear()
-	function yearFieldOnInput(
-		e: event,
-		fieldName: `member.${number}.${"join_year" | "leave_year"}`
-	) {
-		const target = e.target
-		if (Number(target.value) >= thisYear) {
-			target.value = String(thisYear)
-		}
-		setValue(formStore, fieldName, Number(target.value))
-	}
+
+	const transformYear = toCustom<YearSchema>(
+		(v, e) => {
+			if (Number(e.currentTarget.value) > thisYear) {
+				e.currentTarget.value = String(thisYear)
+				v = thisYear
+			}
+			return v
+		},
+		{ on: "input" }
+	)
+
 	return (
 		<>
 			<Field
 				name={`member.${props.index}.join_year`}
-				type="number">
+				type="number"
+				transform={transformYear}>
 				{(joinYearField, joinYearProps) => (
 					<input
 						{...joinYearProps}
@@ -189,9 +193,6 @@ function MemberYears(props: IndexComponentProps) {
 						min="-1"
 						max={thisYear}
 						value={joinYearField.value ?? undefined}
-						onInput={(e) =>
-							yearFieldOnInput(e, `member.${props.index}.join_year`)
-						}
 						class={twMerge(Style.input, "no_spinner flex-1")}
 						placeholder="Join year"
 					/>
@@ -199,16 +200,14 @@ function MemberYears(props: IndexComponentProps) {
 			</Field>
 			<Field
 				name={`member.${props.index}.leave_year`}
-				type="number">
+				type="number"
+				transform={transformYear}>
 				{(leaveYearField, leaveYearProps) => (
 					<input
 						{...leaveYearProps}
 						type="number"
 						min="-1"
 						max={thisYear}
-						onInput={(e) =>
-							yearFieldOnInput(e, `member.${props.index}.leave_year`)
-						}
 						value={leaveYearField.value ?? undefined}
 						class={twMerge(Style.input, "no_spinner flex-1")}
 						placeholder="Leave year"
@@ -238,19 +237,19 @@ function MemberID(props: IndexComponentProps) {
 	)
 }
 
-function Errors(props: { index: () => number }) {
+function Errors(props: IndexComponentProps) {
 	const { formStore } = useController()
 	const nameFieldErr = createMemo(() =>
-		getError(formStore, `member.${props.index()}.name`)
+		getError(formStore, `member.${props.index}.name`)
 	)
 	const isTextFieldErr = createMemo(() =>
-		getError(formStore, `member.${props.index()}.is_str`)
+		getError(formStore, `member.${props.index}.is_str`)
 	)
 	const joinYearFieldErr = createMemo(() =>
-		getError(formStore, `member.${props.index()}.join_year`)
+		getError(formStore, `member.${props.index}.join_year`)
 	)
 	const leaveYearFieldErr = createMemo(() =>
-		getError(formStore, `member.${props.index()}.leave_year`)
+		getError(formStore, `member.${props.index}.leave_year`)
 	)
 	return (
 		<>
