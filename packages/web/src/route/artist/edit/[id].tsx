@@ -1,6 +1,6 @@
 import { Navigate, useParams, type RouteDefinition } from "@solidjs/router"
 import { useQueryClient } from "@tanstack/solid-query"
-import { createEffect, Suspense } from "solid-js"
+import { createEffect, on, Suspense } from "solid-js"
 import { preloadLocale } from "~/lib/data/preload"
 import { Query } from "~/page/artist/edit/data"
 import { ArtistFormLayout } from "~/page/artist/edit/layout"
@@ -21,12 +21,17 @@ export default function EditArtistPage() {
 	const id = () => useParams()["id"]
 	const dataQuery = Query.fetchData(id)
 
-	createEffect(() => {
-		if (dataQuery.isSuccess && dataQuery.data === null) {
-			Navigate({
-				href: "/404",
-			})
-		}
-	})
+	createEffect(
+		on(
+			() => dataQuery.data,
+			(data) => {
+				if (!data) {
+					Navigate({
+						href: "/404",
+					})
+				}
+			}
+		)
+	)
 	return <ArtistFormLayout dataQuery={dataQuery} />
 }
