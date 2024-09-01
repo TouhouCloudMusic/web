@@ -9,10 +9,10 @@ export const ArtistNameSchema = v.pipe(
 	v.maxLength(128, "Artist name is too long")
 )
 
-export const LocalizedNameSchema = v.optional(
+export const LocalizedNameSchema = v.nullish(
 	v.array(
 		v.object({
-			lang: LocalizedLanguageSchema,
+			language: LocalizedLanguageSchema,
 			name: ArtistNameSchema,
 		})
 	)
@@ -32,6 +32,7 @@ export const YearSchema = v.union(
 	"Invalid year"
 )
 
+export type AliasSchema = v.InferInput<typeof AliasSchema>
 export const AliasSchema = v.object({
 	id: OptionalIDSchema,
 	name: ArtistNameSchema,

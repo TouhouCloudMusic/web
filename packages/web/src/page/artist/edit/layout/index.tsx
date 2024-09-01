@@ -25,7 +25,7 @@ import { MemberList } from "./sections/member.tsx"
 import { Name } from "./sections/name.tsx"
 
 export function ArtistFormLayout(props: {
-	dataQuery?: CreateQueryResult<Nullable<ArtistByID>>
+	dataQuery?: CreateQueryResult<ArtistByID | null>
 }) {
 	const dictQuery = Query.fetchDict(useI18N().locale)
 
