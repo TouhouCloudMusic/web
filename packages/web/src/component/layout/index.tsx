@@ -1,23 +1,19 @@
-import { type ComponentProps, createMemo, splitProps } from "solid-js"
-import { Dynamic } from "solid-js/web"
+import { createMemo, splitProps } from "solid-js"
+import { Dynamic, type DynamicProps } from "solid-js/web"
 import { twMerge } from "tailwind-merge"
 
-export type StackProps<P = ComponentProps<"div" | "span">> = {
-	[K in keyof P]: P[K]
-} & {
-	as?: "div" | "span" | undefined
-}
+export type StackProps = Omit<DynamicProps<"div">, "component">
 
 export function VStack(props: StackProps) {
 	const twClass = createMemo(() => twMerge(props.class, "flex flex-col"))
 
-	const [, otherProps] = splitProps(props, ["class", "as"])
+	const [, otherProps] = splitProps(props, ["class"])
 
 	return (
 		<Dynamic
-			component={props.as ?? "div"}
-			class={twClass()}
 			{...otherProps}
+			component={"div"}
+			class={twClass()}
 		/>
 	)
 }
@@ -25,13 +21,13 @@ export function VStack(props: StackProps) {
 export function HStack(props: StackProps) {
 	const twClass = createMemo(() => twMerge(props.class, "flex flex-row"))
 
-	const [, otherProps] = splitProps(props, ["class", "as"])
+	const [, otherProps] = splitProps(props, ["class"])
 
 	return (
 		<Dynamic
-			component={props.as ?? "div"}
-			class={twClass()}
 			{...otherProps}
+			component={"div"}
+			class={twClass()}
 		/>
 	)
 }

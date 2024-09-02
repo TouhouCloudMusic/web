@@ -36,6 +36,7 @@
     "solid-js": "^1.8.22",
     "solid-popper": "^0.3.0",
     "solid-radix-icons": "^1.0.0",
+    "string-similarity-js": "^2.1.4",
     "tailwind-merge": "^2.5.2",
     "ts-pattern": "^5.3.1",
     "valibot": "0.41.0",
