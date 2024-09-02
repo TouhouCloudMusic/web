@@ -13,7 +13,7 @@
     "@edgedb/auth-core": "^0.2.1",
     "@floating-ui/dom": "^1.6.8",
     "@modular-forms/solid": "^0.22.1",
-    "@sinclair/typebox": "^0.32.35",
+    "@sinclair/typebox": "^0.33.7",
     "@solid-mediakit/auth": "^2.1.2",
     "@solid-primitives/destructure": "^0.1.17",
     "@solid-primitives/i18n": "^2.1.1",
