@@ -64,7 +64,7 @@
     "eslint-plugin-oxlint": "^0.5.0",
     "eslint-plugin-perfectionist": "^3.1.2",
     "eslint-plugin-solid": "^0.14.1",
-    "jsdom": "^24.1.1",
+    "jsdom": "^25.0.0",
     "lightningcss": "^1.25.1",
     "postcss": "^8.4.40",
     "prettier": "3.3.3",
