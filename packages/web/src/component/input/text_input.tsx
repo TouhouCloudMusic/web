@@ -1,12 +1,12 @@
 import { createMemo, splitProps, type JSX } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-// @tw
-const style = "rounded border-[0.1rem] border-gray-300 px-1 h-fit"
-
 export function TextInput(
 	props: Omit<JSX.InputHTMLAttributes<HTMLInputElement>, "type">
 ) {
+	// @tw
+	const style = "rounded border border-gray-500 pl-2 h-8"
+
 	const [, otherProps] = splitProps(props, ["class"])
 
 	const twClass = createMemo(() => twMerge(style, props.class))

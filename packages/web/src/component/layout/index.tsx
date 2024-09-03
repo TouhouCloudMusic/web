@@ -1,33 +1,37 @@
-import { createMemo, splitProps } from "solid-js"
-import { Dynamic, type DynamicProps } from "solid-js/web"
+import { createMemo, type JSX, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-export type StackProps = Omit<DynamicProps<"div">, "component">
-
-export function VStack(props: StackProps) {
+export function VStack(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	const twClass = createMemo(() => twMerge(props.class, "flex flex-col"))
 
 	const [, otherProps] = splitProps(props, ["class"])
 
 	return (
-		<Dynamic
+		<div
 			{...otherProps}
-			component={"div"}
-			class={twClass()}
-		/>
+			class={twClass()}></div>
 	)
 }
 
-export function HStack(props: StackProps) {
+export function HStack(props: JSX.HTMLAttributes<HTMLDivElement>) {
 	const twClass = createMemo(() => twMerge(props.class, "flex flex-row"))
 
 	const [, otherProps] = splitProps(props, ["class"])
 
 	return (
-		<Dynamic
+		<div
 			{...otherProps}
-			component={"div"}
-			class={twClass()}
-		/>
+			class={twClass()}></div>
+	)
+}
+
+export function Card(props: JSX.HTMLAttributes<HTMLDivElement>) {
+	const twClass = createMemo(() =>
+		twMerge("shadow-2 rounded bg-white p-2", props.class)
+	)
+	return (
+		<div
+			{...props}
+			class={twClass()}></div>
 	)
 }
