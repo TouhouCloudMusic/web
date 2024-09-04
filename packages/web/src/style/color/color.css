@@ -1,18 +1,16 @@
 @layer base {
 	html,
 	html[data-mode="light"] {
-		/* THCDB Light color palette */
-
 		/* gray */
 		--gray-50: #f3f4f6;
 		--gray-100: #e8e9ed;
-		--gray-200: #dbe0e6;
-		--gray-300: #b2bac3;
+		--gray-200: #dddfe4;
+		--gray-300: #bcc3cd;
 		--gray-400: #9ba4ae;
 		--gray-500: #848b97;
 		--gray-600: #696f7b;
 		--gray-700: #585f6e;
-		--gray-800: #444a58;
+		--gray-800: #454a55;
 		--gray-900: #2f3640;
 		--gray-1000: #212325;
 
@@ -20,22 +18,22 @@
 		--reimu-50: #fef2f2;
 		--reimu-100: #ffe4e4;
 		--reimu-200: #ffd6d5;
-		--reimu-300: #ff9f9e;
-		--reimu-400: #fe7875;
-		--reimu-500: #ea5554;
-		--reimu-600: #c13c3d;
-		--reimu-700: #ac2c2d;
-		--reimu-800: #862221;
-		--reimu-900: #67090e;
-		--reimu-1000: #460a0a;
+		--reimu-300: #ffacab;
+		--reimu-400: #ff7774;
+		--reimu-500: #ee5051;
+		--reimu-600: #cb2b33;
+		--reimu-700: #a53735;
+		--reimu-800: #822825;
+		--reimu-900: #5f1a18;
+		--reimu-1000: #400003;
 
 		/* marisa */
 		--marisa-50: #f7f4e0;
 		--marisa-100: #f1ecba;
 		--marisa-200: #f1e192;
-		--marisa-300: #d7b64b;
+		--marisa-300: #dfbe54;
 		--marisa-400: #c89c1b;
-		--marisa-500: #b57f00;
+		--marisa-500: #b47f09;
 		--marisa-600: #956300;
 		--marisa-700: #83530a;
 		--marisa-800: #694000;
@@ -44,32 +42,32 @@
 
 		/* green */
 		--green-50: #e9f6ed;
-		--green-100: #d1f2d8;
-		--green-200: #adefbc;
-		--green-300: #5fce7d;
-		--green-400: #3eb862;
-		--green-500: #249e48;
-		--green-600: #1a7f37;
-		--green-700: #1e6c32;
+		--green-100: #ccf4d4;
+		--green-200: #a5f1b7;
+		--green-300: #60d982;
+		--green-400: #1bb957;
+		--green-500: #169f44;
+		--green-600: #007f31;
+		--green-700: #156d2f;
 		--green-800: #105625;
 		--green-900: #003d16;
 		--green-1000: #002d11;
 
 		/* blue */
-		--blue-50: #f0f8fe;
-		--blue-100: #d7edff;
-		--blue-200: #c6e4fd;
-		--blue-300: #6fc0ff;
+		--blue-50: #eff8ff;
+		--blue-100: #d8edfc;
+		--blue-200: #c4e4ff;
+		--blue-300: #85c9ff;
 		--blue-400: #00aafd;
-		--blue-500: #138af4;
-		--blue-600: #0969da;
-		--blue-700: #155ab9;
+		--blue-500: #1888ff;
+		--blue-600: #0068dd;
+		--blue-700: #005cb5;
 		--blue-800: #104694;
-		--blue-900: #0a3069;
-		--blue-1000: #07234e;
+		--blue-900: #032f6f;
+		--blue-1000: #052350;
 
 		--bg-primary: #ffffff;
-		--bg-secondary: #f3f4f6;
+		--bg-secondary: var(--gray-50);
 	}
 	html[data-mode="dark"] {
 		/* THCDB Dark color palette */

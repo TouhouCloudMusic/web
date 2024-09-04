@@ -108,6 +108,11 @@ export default {
 				"monospace",
 			],
 		},
+		extend: {
+			borderColor: {
+				DEFAULT: "var(--gray-300)",
+			},
+		},
 	},
 	plugins: [],
 }

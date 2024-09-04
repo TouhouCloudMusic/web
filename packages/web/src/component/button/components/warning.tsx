@@ -9,7 +9,7 @@ import {
 const twClass = `
 	shadow-[var(--shadow-2]
 	text-white
-	bg-red-800 hover:bg-red-700 active:bg-red-600
+	bg-reimu-800 hover:bg-reimu-700 active:bg-reimu-600
 	`
 
 export default function WarningButton(props: ButtonAttributes) {
