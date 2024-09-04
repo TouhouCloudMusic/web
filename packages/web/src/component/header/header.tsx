@@ -1,165 +1,68 @@
-import { Menu } from "@ark-ui/solid"
-import { Index, Show, Suspense } from "solid-js"
-import { ThemeButton } from "~/component/theme_button"
-import { clientAuthHelper } from "~/database/client"
-import { type AppLocale, useI18N } from "~/state/i18n"
-import { useUser } from "~/state/user"
-import { Button } from "../button"
-import { VTIconLanguages } from "../icons/vue_theme/language"
-import style from "./header.module.css"
+import { repeat } from "ramda"
+import { createSignal, Match, Switch } from "solid-js"
+import { HamburgerMenuIcon } from "solid-radix-icons"
+import { Button } from "../button/index.ts"
+import {
+	BellAlertIcon,
+	BellIcon,
+	BellSlashIcon,
+} from "../icons/heroicons/24/outline.tsx"
+import { ThemeButton } from "../theme_button.tsx"
 
-export default function Header() {
-	const userController = useUser()
-	const navLinkClass =
-		"button !rounded-full mx-0 my-2 px-1 py-1 text-nowrap w-20 text-center"
-	return (
-		<header>
-			<nav>
-				<ul>
-					<li class={style["logo"]}>
-						<a href="/">
-							<strong>LOGO</strong>
-						</a>
-					</li>
-					<li>
-						<a class={navLinkClass}>music</a>
-					</li>
-					<li>
-						<a class={navLinkClass}>genres</a>
-					</li>
-					<li>
-						<a class={navLinkClass}>charts</a>
-					</li>
-					<li>
-						<a class={navLinkClass}>lists</a>
-					</li>
-					<li>
-						<a class={navLinkClass}>forums</a>
-					</li>
-					<li>
-						<input
-							type="text"
-							placeholder="Search"
-							class={style["search_input"]}
-						/>
-					</li>
-					<li>
-						<a
-							href="/"
-							class={navLinkClass}>
-							占位符
-						</a>
-					</li>
-					<li>
-						<a
-							href="/"
-							class={navLinkClass}>
-							占位符
-						</a>
-					</li>
+const placeholders = repeat(["placeholder"], 5)
 
-					<li class="mx-1 size-8">
-						<ThemeButton class="size-7 rounded-full" />
-					</li>
-					<li class="mx-1 size-8">
-						<Language />
-					</li>
+// @tw
+const badgeClass =
+	"rounded border text-gray-600 size-7 flex place-items-center place-content-center"
 
-					<Show
-						when={userController.isSignedIn()}
-						fallback={
-							<>
-								<li class="mx-1 min-w-fit">
-									<a
-										href={clientAuthHelper.getBuiltinUIUrl()}
-										target="_self">
-										<Button.Highlight class="shadow-4 mx-auto px-3 py-0.5">
-											Sign In
-										</Button.Highlight>
-									</a>
-								</li>
-								<li class="mx-1 min-w-fit">
-									<a
-										href={clientAuthHelper.getBuiltinUISignUpUrl()}
-										target="_self">
-										<Button.Highlight class="shadow-4 mx-auto px-3 py-0.5">
-											Sign Up
-										</Button.Highlight>
-									</a>
-								</li>
-							</>
-						}>
-						<li class={style["avatarWrapper"]}>
-							<div class="flex">
-								<div
-									class={style["avatar"]}
-									onClick={() => userController.signOut()}>
-									<p class="text-xs text-gray-100">头像</p>
-								</div>
-							</div>
-						</li>
-					</Show>
-				</ul>
-			</nav>
-		</header>
-	)
+const enum NotificationState {
+	None,
+	Unread,
+	Muted,
 }
 
-function Language() {
-	const locales: Record<AppLocale, string> = {
-		en: "English",
-		"zh-Hans": "简体中文",
-	} as const
-	const i18n = useI18N()
+const iconSize = {
+	width: 16,
+	height: 16,
+}
+
+export function Header() {
+	const [notificationState] = createSignal(NotificationState.None)
 
 	return (
-		<Suspense>
-			<Menu.Root
-				onSelect={(field) => {
-					i18n.setLocale(field.value as unknown as AppLocale)
-				}}
-				positioning={{
-					placement: "bottom",
-					offset: { mainAxis: 4 },
-				}}
-				loopFocus>
-				<Menu.Trigger
-					asChild={(props) => (
-						<Button.Borderless
-							{...props()}
-							class="flex size-7 place-content-center items-center rounded-full">
-							<VTIconLanguages />
-						</Button.Borderless>
-					)}
-				/>
-				<Menu.Positioner>
-					<Menu.Content class="focus-visible:outline-none">
-						<div class="shadow-2 bg-primary flex size-fit flex-col gap-1 rounded border-gray-300 p-1 transition-all">
-							{/* TODO: UX */}
-							<Index each={Object.entries(locales) as [AppLocale, string][]}>
-								{(locale) => (
-									<Menu.Item
-										value={locale()[0]}
-										closeOnSelect
-										// disabled={i18n.locale() === locale()[0]}
-										asChild={(props) => (
-											<Button.Borderless
-												{...props()}
-												class={
-													`data-[highlighted]:text-gray-1000 size-full px-2 py-1 text-start text-[14px] font-normal text-gray-900 outline-none hover:bg-gray-100 data-[highlighted]:bg-gray-200`
-													// +
-													// `aria-disabled:shadow-1 aria-disabled:text-gray-1000 aria-disabled:bg-gray-200 aria-disabled:font-medium`
-												}>
-												{locale()[1]}
-											</Button.Borderless>
-										)}
-									/>
-								)}
-							</Index>
-						</div>
-					</Menu.Content>
-				</Menu.Positioner>
-			</Menu.Root>
-		</Suspense>
+		<header class="bg-primary box-content h-10 content-center items-center px-4 py-2">
+			<div class="my-auto flex h-8 items-center justify-between">
+				{/* Left */}
+				<div class="flex items-center">
+					<button class={badgeClass}>
+						<HamburgerMenuIcon {...iconSize} />
+					</button>
+					<a
+						href="/"
+						class="mx-4 size-8 place-content-center rounded-full bg-gray-300 text-center text-[0.5rem] text-white">
+						LOGO
+					</a>
+				</div>
+				{/* Right	*/}
+				<div class="ml-4 flex items-center gap-2 md:ml-6">
+					<ThemeButton class={badgeClass} />
+					<Button.Borderless
+						type="button"
+						class={badgeClass}>
+						<Switch>
+							<Match when={notificationState() === NotificationState.None}>
+								<BellIcon {...iconSize} />
+							</Match>
+							<Match when={notificationState() === NotificationState.Unread}>
+								<BellAlertIcon {...iconSize} />
+							</Match>
+							<Match when={notificationState() === NotificationState.Muted}>
+								<BellSlashIcon {...iconSize} />
+							</Match>
+						</Switch>
+					</Button.Borderless>
+				</div>
+			</div>
+		</header>
 	)
 }
