@@ -23,8 +23,6 @@ export default function HighlightButton(props: HighlightButtonAttributes) {
 	return (
 		<button
 			{...otherProps}
-			class={className()}>
-			{props.children}
-		</button>
+			class={className()}></button>
 	)
 }
