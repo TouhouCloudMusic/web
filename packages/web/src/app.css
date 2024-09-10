@@ -5,7 +5,7 @@
 
 html {
 	color: hsl(var(--gray-1000));
-	background-color: hsl(var(--bg-primary));
+	background-color: hsl(var(--primary));
 	white-space: break-spaces;
 	font-family:
 		"Geist",
@@ -21,6 +21,10 @@ html {
 		"Open Sans",
 		"Helvetica Neue",
 		sans-serif;
+}
+
+html[data-mode="dark"] {
+	color: white;
 }
 
 body {

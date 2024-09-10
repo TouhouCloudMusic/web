@@ -14,8 +14,8 @@ export default {
 			transparent: "transparent",
 			black: "#000",
 			white: "#fff",
-			primary: "hsl(var(--bg-primary))",
-			secondary: "hsl(var(--gray-100))",
+			primary: "hsl(var(--primary))",
+			secondary: "hsl(var(--secondary))",
 			gray: {
 				100: "hsl(var(--gray-100))",
 				200: "hsl(var(--gray-200))",
