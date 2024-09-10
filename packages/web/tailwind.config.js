@@ -135,6 +135,11 @@ export default {
 			borderColor: {
 				DEFAULT: "hsl(var(--gray-300))",
 			},
+			gap: {
+				128: "32rem",
+				160: "40rem",
+				192: "48rem",
+			},
 		},
 	},
 	plugins: [],
