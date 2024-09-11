@@ -1,7 +1,7 @@
 import { repeat } from "ramda"
 import { createSignal, Match, Switch } from "solid-js"
 import { HamburgerMenuIcon } from "solid-radix-icons"
-import { Button } from "../button/index.ts"
+import { TertiaryButton } from "~/component/button/index.tsx"
 import {
 	BellAlertIcon,
 	BellIcon,
@@ -46,7 +46,7 @@ export function Header() {
 				{/* Right	*/}
 				<div class="ml-4 flex items-center gap-2 md:ml-6">
 					<ThemeButton class={badgeClass} />
-					<Button.Borderless
+					<TertiaryButton
 						type="button"
 						class={badgeClass}>
 						<Switch>
@@ -60,7 +60,7 @@ export function Header() {
 								<BellSlashIcon {...iconSize} />
 							</Match>
 						</Switch>
-					</Button.Borderless>
+					</TertiaryButton>
 				</div>
 			</div>
 		</header>
