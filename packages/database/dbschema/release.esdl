@@ -1,29 +1,34 @@
 module default {
 	type Release extending util::WithCreateAndUpdateTime, auth::RegularEntity {
-		required title: str;
-		index pg::spgist on (.title);
-
-		localized_title: array<tuple<language: lang::Language, title: str>>;
-
-		required type: release::Type {
-			default := release::Type.Album
-		};
 
 		required app_id: release::SeqID {
 			constraint exclusive;
 			default := std::sequence_next(introspect release::SeqID);
 		}
 
-		catalog_num: str {
-			constraint max_len_value(32);
-		};
+		required title: str;
+		index pg::spgist on (.title);
+
+		localized_title: array<tuple<language: lang::Language, title: str>>;
+
+		required type: release::Type;
+
+		catalog_num: str;
 
 		credit_name: str;
 
-
 		release_date: datetime;
-		release_date_visibility: date::Visibility {
-			default := date::Visibility.Full;
+		release_date_mask: date::FormatMask {
+			default := date::FormatMask.Full;
+		}
+
+		recording_date_start: datetime;
+		recording_date_start_mask: date::FormatMask {
+			default := date::FormatMask.Full;
+		}
+		recording_date_end: datetime;
+		recording_date_end_mask: date::FormatMask {
+			default := date::FormatMask.Full;
 		}
 
 		total_disc: int16;
@@ -34,6 +39,8 @@ module default {
 			credit_name: str;
 			separator: str;
 		};
+
+		multi track: release::Track;
 	}
 }
 
@@ -46,24 +53,27 @@ module release {
 		`Single`
 	>;
 
-	type Tracklist {
+	type Track {
 		required order: int16;
+
 		track_num: str;
 
 		credit: TrackCredit {
 			constraint exclusive;
 		}
 
-		artist: default::Artist;
-		release: default::Release {
+		required release := (.<track[is Release]);
+
+		multi artist: default::Artist {
 			constraint exclusive;
 		};
-		song: default::Song {
+
+		required song: default::Song {
 			constraint exclusive;
 		};
 	}
 
 	type TrackCredit extending music::Credit {
-		track := (.<credit[is Tracklist]);
+		track := (.<credit[is Track]);
 	}
 }

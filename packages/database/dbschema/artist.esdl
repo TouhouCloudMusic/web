@@ -2,6 +2,12 @@ module default {
 	type Artist extending
 		auth::RegularEntity,
 		util::WithCreateAndUpdateTime {
+
+		required app_id: artist::SeqID {
+			constraint exclusive;
+			default := std::sequence_next(introspect artist::SeqID);
+		}
+
 		required name: str;
 		index pg::spgist on (.name);
 
@@ -9,25 +15,29 @@ module default {
 
 		required artist_type: artist::ArtistType;
 
-		required app_id: artist::SeqID {
-			constraint exclusive;
-			default := std::sequence_next(introspect artist::SeqID);
-		}
-
+		# date of born/formed and date of died/disbanded
 		date_of_start: datetime;
+		date_of_start_mask: date::FormatMask;
 		date_of_end: datetime;
+		date_of_end_mask: date::FormatMask;
 
+		# aliases
 		multi alias: Artist {
 			constraint exclusive;
+			constraint expression on (@target != @source);
 		};
 		str_alias: array<std::str>;
 
-		multi member_of := (.<members[is default::Artist]);
 		multi members: Artist {
 			join_year: int16;
 			leave_year: int16;
-			on target delete allow
+
+			constraint exclusive;
+			constraint expression on (@target != @source);
+			on target delete allow;
 		};
+		multi member_of := (.<members[is default::Artist]);
+
 		str_member: array<tuple<name: str, join_year: str, leave_year: str>>;
 
 		multi release := (.<artist[is Release]);
