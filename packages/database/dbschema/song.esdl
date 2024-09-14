@@ -1,5 +1,9 @@
 module default {
-	type Song extending util::WithCreateAndUpdateTime, auth::RegularEntity {
+	type Song extending
+		auth::RegularEntity,
+		user::CustomTaggable,
+		util::WithCreateAndUpdateTime
+	{
 			required app_id: release::SeqID {
 			constraint exclusive;
 			default := std::sequence_next(introspect song::SeqID);

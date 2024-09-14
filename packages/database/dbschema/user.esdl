@@ -13,7 +13,7 @@ module default {
 
 		required name: str;
 		email: str {
-			constraint exclusive
+			constraint exclusive;
 		}
 
 		required role: user::Role {
@@ -27,4 +27,15 @@ module user {
 		Admin,
 		Regular,
 	>;
+
+	abstract type CustomTaggable {
+		multi custom_tag: CustomTag;
+	}
+
+	type CustomTag {
+		required user: User;
+		required name: str;
+
+		multi target := (.<custom_tag[is CustomTaggable]);
+	}
 }

@@ -1,22 +1,25 @@
 module default {
-	type Release extending util::WithCreateAndUpdateTime, auth::RegularEntity {
+	type Release extending
+		auth::RegularEntity,
+		user::CustomTaggable,
+		util::WithCreateAndUpdateTime
+	{
 
 		required app_id: release::SeqID {
 			constraint exclusive;
 			default := std::sequence_next(introspect release::SeqID);
+			readonly := true;
 		}
 
+		# Title
 		required title: str;
 		index pg::spgist on (.title);
-
 		localized_title: array<tuple<language: lang::Language, title: str>>;
 
+		# Type
 		required type: release::Type;
 
-		catalog_num: str;
-
-		credit_name: str;
-
+		# Release and Recording Date
 		release_date: datetime;
 		release_date_mask: date::FormatMask {
 			default := date::FormatMask.Full;
@@ -31,16 +34,26 @@ module default {
 			default := date::FormatMask.Full;
 		}
 
+		multi track: release::Track;
+
+		# Other Info
+		catalog_num: str;
 		total_disc: int16;
 		multi language: lang::Language;
 
+		# Links
+		## Credit Artists
+		credit_name: str;
 		required multi artist: Artist {
 			constraint exclusive;
 			credit_name: str;
 			separator: str;
 		};
 
-		multi track: release::Track;
+		## Labels
+		multi label: Label {
+			constraint exclusive;
+		}
 	}
 }
 
