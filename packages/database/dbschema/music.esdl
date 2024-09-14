@@ -23,8 +23,13 @@ module music {
 	}
 
 	abstract type Credit {
-		artist: default::Artist;
-		role: Role;
+		artist: default::Artist {
+			on target delete delete source;
+		}
+
+		role: Role {
+			on target delete delete source;
+		}
 	}
 
 	type Vote {
@@ -36,7 +41,10 @@ module music {
 	}
 
 	abstract type Votable {
-		multi vote: Vote;
+		multi vote: Vote {
+			on target delete allow;
+			}
+		}
 	}
 
 	scalar type DescriptorSeqID extending sequence;
@@ -57,6 +65,7 @@ module music {
 			inherit_ancestor: bool {
 				default := true;
 			}
+			on target delete allow;
 		};
 		chilren := (.<parents[is Descriptor]);
 	}
@@ -79,6 +88,7 @@ module music {
 			inherit_ancestor: bool {
 				default := true;
 			}
+			on target delete allow;
 		};
 		chilren := (.<parents[is Genre]);
 	}

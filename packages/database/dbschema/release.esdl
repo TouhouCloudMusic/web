@@ -34,7 +34,9 @@ module default {
 			default := date::FormatMask.Full;
 		}
 
-		multi track: release::Track;
+		multi track: release::Track {
+			on target delete allow;
+		};
 
 		# Other Info
 		catalog_num: str;
@@ -48,11 +50,13 @@ module default {
 			constraint exclusive;
 			credit_name: str;
 			separator: str;
-		};
+			on target delete allow;
+		}
 
 		## Labels
 		multi label: Label {
 			constraint exclusive;
+			on target delete allow;
 		}
 	}
 }
@@ -71,18 +75,21 @@ module release {
 
 		track_num: str;
 
-		credit: TrackCredit {
+		multi credit: TrackCredit {
 			constraint exclusive;
+			on target delete allow;
 		}
 
 		required release := (.<track[is Release]);
 
 		multi artist: default::Artist {
 			constraint exclusive;
+			on target delete allow;
 		};
 
 		required song: default::Song {
 			constraint exclusive;
+			on target delete allow;
 		};
 	}
 

@@ -6,6 +6,7 @@ module default {
 		required app_id: artist::SeqID {
 			constraint exclusive;
 			default := std::sequence_next(introspect artist::SeqID);
+			readonly := true;
 		}
 
 		required name: str;
@@ -25,12 +26,12 @@ module default {
 		multi alias: Artist {
 			constraint exclusive;
 			constraint expression on (@target != @source);
+			on target delete allow;
 		};
 		str_alias: array<std::str>;
 
 		multi members: Artist {
-			join_year: int16;
-			leave_year: int16;
+			multi active_year: range<int16>
 
 			constraint exclusive;
 			constraint expression on (@target != @source);

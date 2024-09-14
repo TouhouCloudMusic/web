@@ -9,6 +9,7 @@ module default {
 
 		multi founder: Artist {
 			constraint exclusive;
+			on target delete allow;
 		}
 
 		founded_date: cal::local_date;

@@ -19,6 +19,11 @@ module default {
 		required role: user::Role {
 			default := user::Role.Regular;
 		}
+
+		required join_at: datetime {
+			readonly := true;
+			default := std::datetime_current();
+		}
 	}
 }
 

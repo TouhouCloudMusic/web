@@ -16,7 +16,8 @@ module default {
 
 		required multi artist: Artist {
 			constraint exclusive;
-		};
+			on target delete allow;
+		}
 
 		multi track := (.<song[is release::Track]);
 
