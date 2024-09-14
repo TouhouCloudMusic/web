@@ -16,9 +16,9 @@ module default {
 		required artist_type: artist::ArtistType;
 
 		# date of born/formed and date of died/disbanded
-		date_of_start: datetime;
+		date_of_start: cal::local_date;
 		date_of_start_mask: date::FormatMask;
-		date_of_end: datetime;
+		date_of_end: cal::local_date;
 		date_of_end_mask: date::FormatMask;
 
 		# aliases

@@ -20,16 +20,16 @@ module default {
 		required type: release::Type;
 
 		# Release and Recording Date
-		release_date: datetime;
+		release_date: cal::local_date;
 		release_date_mask: date::FormatMask {
 			default := date::FormatMask.Full;
 		}
 
-		recording_date_start: datetime;
+		recording_date_start: cal::local_date;
 		recording_date_start_mask: date::FormatMask {
 			default := date::FormatMask.Full;
 		}
-		recording_date_end: datetime;
+		recording_date_end: cal::local_date;
 		recording_date_end_mask: date::FormatMask {
 			default := date::FormatMask.Full;
 		}

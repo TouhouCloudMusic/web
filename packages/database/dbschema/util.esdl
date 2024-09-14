@@ -1,13 +1,13 @@
 module util {
 	abstract type WithCreateTime {
-		created_at: datetime {
+		created_at: cal::local_date {
 			rewrite insert using (datetime_of_statement());
 			readonly := true;
 		}
 	};
 
 	abstract type WithUpdateTime {
-		updated_at: datetime {
+		updated_at: cal::local_date {
 			rewrite insert, update using (datetime_of_statement());
 		}
 	};

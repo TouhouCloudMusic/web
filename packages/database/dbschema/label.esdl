@@ -11,8 +11,8 @@ module default {
 			constraint exclusive;
 		}
 
-		founded_date: datetime;
-		dissolved_date: datetime;
+		founded_date: cal::local_date;
+		dissolved_date: cal::local_date;
 	}
 }
 
