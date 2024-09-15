@@ -35,8 +35,7 @@ module default {
 		str_alias: array<std::str>;
 
 		multi members: Artist {
-			multi active_year: range<int16>
-
+			active_year: array<range<int32>>;
 			constraint exclusive;
 			constraint expression on (@target != @source);
 			on target delete allow;

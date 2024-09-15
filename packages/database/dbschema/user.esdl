@@ -41,7 +41,7 @@ module user {
 	}
 
 	type CustomTag {
-		required user: User;
+		required user: default::User;
 		required name: str;
 
 		multi target := (.<custom_tag[is CustomTaggable]);

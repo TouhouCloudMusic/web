@@ -1,6 +1,9 @@
 module music {
 	scalar type RoleSeqID extending sequence;
-	type Role extending util::WithCreateAndUpdateTime, auth::RegularEntity {
+	type Role extending
+	auth::RegularEntity,
+	util::WithCreateAndUpdateTime
+	{
 
 		required app_id: RoleSeqID {
 			readonly := true;
@@ -33,17 +36,16 @@ module music {
 	}
 
 	type Vote {
-		required voter: User;
+		required voter: default::User;
 		required target: Votable;
 		required vote_tier: float32;
 
-		constraint exclusive on (.voter, .target);
+		constraint exclusive on ((.voter, .target));
 	}
 
 	abstract type Votable {
 		multi vote: Vote {
 			on target delete allow;
-			}
 		}
 	}
 

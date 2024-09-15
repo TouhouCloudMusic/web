@@ -34,9 +34,7 @@ module default {
 			default := date::FormatMask.Full;
 		}
 
-		multi track: release::Track {
-			on target delete allow;
-		};
+		multi track: release::Track;
 
 		# Other Info
 		catalog_num: str;
@@ -80,7 +78,7 @@ module release {
 			on target delete allow;
 		}
 
-		required release := (.<track[is Release]);
+		release := (.<track[is default::Release]);
 
 		multi artist: default::Artist {
 			constraint exclusive;
