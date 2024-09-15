@@ -12,7 +12,9 @@ module music {
 		}
 
 		required name: str;
-		localized_name: array<tuple<language: lang::Language, name: str>>;
+		multi alias: tuple<language: lang::Language, name: array<str>> {
+			constraint exclusive;
+		};
 
 		desc_short: str;
 		desc_long: str;
