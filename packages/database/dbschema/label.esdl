@@ -14,6 +14,9 @@ module default {
 
 		founded_date: cal::local_date;
 		dissolved_date: cal::local_date;
+
+		founded_location: tuple<country: str, province:str, city: str>;
+		dissolved_location: tuple<country: str, province:str, city: str>;
 	}
 }
 

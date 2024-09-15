@@ -22,6 +22,10 @@ module default {
 		date_of_end: cal::local_date;
 		date_of_end_mask: date::FormatMask;
 
+		start_location: tuple<country: str, province:str, city: str>;
+		current_location: tuple<country: str, province:str, city: str>;
+		end_location: tuple<country: str, province:str, city: str>;
+
 		# aliases
 		multi alias: Artist {
 			constraint exclusive;
