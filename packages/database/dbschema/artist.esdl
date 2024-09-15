@@ -40,7 +40,7 @@ module default {
 			active_year: multirange<int32>;
 			constraint exclusive;
 			constraint expression on (@target != @source) {
-				errmessage := "Artists can't be members of their own";
+				errmessage := "Artist can't be members of their own";
 			};
 			on target delete allow;
 		};
