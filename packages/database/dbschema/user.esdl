@@ -20,13 +20,8 @@ module default {
 			default := user::Role.Regular;
 		}
 
-		required join_at: datetime {
-			readonly := true;
-			default := std::datetime_current();
-		}
-
-		origin_location: tuple<country: str, province:str, city: str>;
-		current_location: tuple<country: str, province:str, city: str>;
+		origin_location: tuple<country: str, province: str, city: str>;
+		current_location: tuple<country: str, province: str, city: str>;
 	}
 }
 

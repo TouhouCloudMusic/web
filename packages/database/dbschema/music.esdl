@@ -17,20 +17,16 @@ module music {
 		desc_short: str;
 		desc_long: str;
 
-		multi parents: Role {
-			inherit_ancestor: bool {
-				default := true;
-			}
-		};
+		multi parents: Role;
 		chilren := (.<parents[is Role]);
 	}
 
 	abstract type Credit {
-		artist: default::Artist {
+		required artist: default::Artist {
 			on target delete delete source;
 		}
 
-		role: Role {
+		multi role: Role {
 			on target delete delete source;
 		}
 	}

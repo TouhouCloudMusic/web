@@ -1,7 +1,8 @@
 module default {
 	type Artist extending
 		auth::RegularEntity,
-		util::WithCreateAndUpdateTime {
+		util::WithCreateAndUpdateTime
+	{
 
 		required app_id: artist::SeqID {
 			constraint exclusive;
@@ -10,7 +11,6 @@ module default {
 		}
 
 		required name: str;
-		index pg::spgist on (.name);
 
 		localized_name: array<tuple<language: lang::Language, name: str>>;
 
@@ -29,18 +29,22 @@ module default {
 		# aliases
 		multi alias: Artist {
 			constraint exclusive;
-			constraint expression on (@target != @source);
+			constraint expression on (@target != @source) {
+				errmessage := "Alias cannot be itself";
+			};
 			on target delete allow;
 		};
 		str_alias: array<std::str>;
 
 		multi members: Artist {
-			active_year: array<range<int32>>;
+			active_year: multirange<int32>;
 			constraint exclusive;
-			constraint expression on (@target != @source);
+			constraint expression on (@target != @source) {
+				errmessage := "Artists can't be members of their own";
+			};
 			on target delete allow;
 		};
-		multi member_of := (.<members[is default::Artist]);
+		multi member_of := (.<members[is Artist]);
 
 		str_member: array<tuple<name: str, join_year: str, leave_year: str>>;
 
