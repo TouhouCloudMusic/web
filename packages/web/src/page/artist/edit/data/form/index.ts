@@ -44,8 +44,9 @@ export const MemberSchema = v.object(
 		id: OptionalIDSchema,
 		name: ArtistNameSchema,
 		is_str: v.optional(v.boolean()),
-		join_year: YearSchema,
-		leave_year: YearSchema,
+		active_year: v.nullish(
+			v.array(v.tuple([v.nullable(v.number()), v.nullable(v.number())]))
+		),
 	},
 	"Invalid artist"
 )
