@@ -2,16 +2,22 @@ import * as Option from "fp-ts/Option"
 
 interface Member {
 	name: string
-	active_year?: [number | null, number | null][] | null | undefined
+	active_year?:
+		| {
+				lower?: number | null | undefined
+				upper?: number | null | undefined
+		  }[]
+		| null
+		| undefined
 }
 
 export function sortMemberList<T extends Member>(
 	memberList: T[]
 ): Option.Option<T[]> {
-	const get_join_year = (m: T) => m.active_year?.[0][0]
+	const get_join_year = (m: T) => m.active_year?.[0].lower
 	const get_leave_year = (m: T): number | null => {
 		if (!m.active_year) return null
-		else return m.active_year[m.active_year.length - 1][1]
+		else return m.active_year[m.active_year.length - 1].upper ?? null
 	}
 
 	const compareFn = (a: T, b: T) => {

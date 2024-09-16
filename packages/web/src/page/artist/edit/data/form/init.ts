@@ -87,9 +87,10 @@ function mapMember(
 							id: m.id,
 							name: m.name,
 							is_str: false,
-							active_year: m["@active_year"]
-								?.toJSON()
-								.map((r) => [r.lower, r.upper]),
+							active_year: m["@active_year"]?.toJSON().map((r) => ({
+								lower: r.lower,
+								upper: r.upper,
+							})),
 						}) satisfies MemberSchema
 				)
 			)
@@ -106,9 +107,10 @@ function mapStrMember(
 						({
 							name: m.name,
 							is_str: true,
-							active_year: m.active_year
-								.toJSON()
-								.map((r) => [r.lower, r.upper]),
+							active_year: m.active_year.toJSON().map((r) => ({
+								lower: r.lower,
+								upper: r.upper,
+							})),
 						}) satisfies MemberSchema
 				)
 			)
