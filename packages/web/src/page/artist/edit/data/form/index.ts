@@ -1,6 +1,7 @@
 import * as v from "valibot"
 import { OptionalIDSchema } from "~/lib/form/schema/id"
 import { LocalizedLanguageSchema } from "~/lib/form/schema/language.ts"
+import { LocationSchema } from "~/lib/form/schema/location.ts"
 
 export const ArtistNameSchema = v.pipe(
 	v.string(),
@@ -24,12 +25,8 @@ export const ArtistTypeSchema = v.picklist(
 )
 
 export type YearSchema = v.InferInput<typeof YearSchema>
-export const YearSchema = v.union(
-	[
-		v.pipe(v.number(), v.minValue(-1), v.maxValue(new Date().getFullYear())),
-		v.null(),
-	],
-	"Invalid year"
+export const YearSchema = v.nullish(
+	v.pipe(v.number(), v.minValue(-1), v.maxValue(new Date().getFullYear()))
 )
 
 export type AliasSchema = v.InferInput<typeof AliasSchema>
@@ -59,10 +56,19 @@ export const MemberListSchema = v.optional(v.array(MemberSchema))
 export type ArtistFormSchema = v.InferInput<typeof ArtistFormSchema>
 export const ArtistFormSchema = v.object({
 	id: OptionalIDSchema,
+	// basic info
 	name: ArtistNameSchema,
 	localized_name: LocalizedNameSchema,
-	alias: AliasListSchema,
 	artist_type: ArtistTypeSchema,
+	// date
+	date_of_start: YearSchema,
+	date_of_end: YearSchema,
+	// location
+	start_location: v.optional(LocationSchema),
+	current_location: v.optional(LocationSchema),
+	end_location: v.optional(LocationSchema),
+	// links
+	alias: AliasListSchema,
 	member: MemberListSchema,
 })
 
