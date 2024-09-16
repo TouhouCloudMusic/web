@@ -2,12 +2,14 @@ import { getErrors, getValues, type SubmitHandler } from "@modular-forms/solid"
 import { useAction, useNavigate } from "@solidjs/router"
 import { useQueryClient, type CreateQueryResult } from "@tanstack/solid-query"
 import { Show } from "solid-js"
+import { ArrowLeftIcon } from "solid-radix-icons"
 
 import { PrimaryButton, TertiaryButton } from "~/component/button"
 import { FormUI } from "~/component/form/ui"
 import { useI18N } from "~/state/i18n"
 
 import { ControllerContext, useController } from "../context.tsx"
+import { type ArtistFormSchema } from "../data/form/index.ts"
 import {
 	createController,
 	Query,
@@ -15,7 +17,6 @@ import {
 	type ArtistByID,
 } from "../data/index.ts"
 
-import { type ArtistFormSchema } from "../data/form/index.ts"
 import { Aliases } from "./sections/alias.tsx"
 import { ArtistType } from "./sections/artist_type.tsx"
 import { ID } from "./sections/id.tsx"
@@ -47,10 +48,7 @@ function Main() {
 	const navigate = useNavigate()
 
 	const handleSubmit: SubmitHandler<ArtistFormSchema> = async (formData) => {
-		if (!form.changed) {
-			form.setErrMsg("No changes")
-			return
-		}
+		if (!form.changed) return form.setErrMsg("No changes")
 
 		const res = await action(formData, dataQuery?.data)
 		void queryClient.invalidateQueries({
@@ -60,31 +58,57 @@ function Main() {
 	}
 
 	return (
-		<main class="flex w-full place-content-center">
-			<Form
-				aria-label="Artist form"
-				onSubmit={handleSubmit}
-				method="post"
-				class="flex w-2/3 flex-col gap-2">
-				<ID />
-				<Name />
-				<LocalizedName />
-				<ArtistType />
-				<Aliases />
-				<MemberList />
-				<div class="flex w-full flex-row place-content-around">
-					<PrimaryButton
-						type="submit"
-						class="w-1/4 self-start py-1">
-						{t.submit()}
-					</PrimaryButton>
-					<Show when={import.meta.env.DEV}>
-						<LogBtn />
-					</Show>
+		<main class="flex bg-slate-100">
+			<div class="mx-auto min-w-fit max-w-72 border-x bg-white">
+				<div class="flex h-16 items-center">
+					<a
+						href={dataQuery ? `/artist/${dataQuery.data?.id}` : "/artists"}
+						class="mx-4 text-slate-600">
+						<ArrowLeftIcon
+							width={24}
+							height={24}
+						/>
+					</a>
+					<h1 class="font-['Inter'] text-2xl font-light">
+						<Show
+							when={dataQuery}
+							fallback={"New Artist"}>
+							{"Editing: "}
+							<a href={["/artist", dataQuery?.data?.id].join("/")}>
+								{dataQuery?.data?.name}
+							</a>
+						</Show>
+					</h1>
 				</div>
-				<FormUI.ErrorText text={form.errMsg} />
-				<FormUI.ErrorText text={formStore.response.message} />
-			</Form>
+				<div class="grid grid-cols-[1fr_auto] *:pb-16">
+					{/* Menu */}
+					<div class="w-56 bg-slate-200"></div>
+					<Form
+						aria-label="Artist form"
+						onSubmit={handleSubmit}
+						method="post"
+						class="flex w-fit flex-col gap-8 border-t-2 border-slate-200 px-6 pt-4">
+						<ID />
+						<Name />
+						<LocalizedName />
+						<ArtistType />
+						<Aliases />
+						<MemberList />
+						<div class="flex w-full flex-row place-content-around">
+							<PrimaryButton
+								type="submit"
+								class="w-1/4 self-start py-1">
+								{t.submit()}
+							</PrimaryButton>
+							<Show when={import.meta.env.DEV}>
+								<LogBtn />
+							</Show>
+						</div>
+						<FormUI.ErrorText text={form.errMsg} />
+						<FormUI.ErrorText text={formStore.response.message} />
+					</Form>
+				</div>
+			</div>
 		</main>
 	)
 }
