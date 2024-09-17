@@ -43,7 +43,7 @@ select {
 	transition: none !important;
 }
 
-:focus-visible {
+/* :focus-visible {
 	outline-style: auto;
 	outline-width: 1px;
-}
+} */

@@ -1,7 +1,7 @@
 import { getErrors, getValues, type SubmitHandler } from "@modular-forms/solid"
 import { useAction, useNavigate } from "@solidjs/router"
 import { useQueryClient, type CreateQueryResult } from "@tanstack/solid-query"
-import { Show } from "solid-js"
+import { For, Show } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
 
 import { PrimaryButton, TertiaryButton } from "~/component/button"
@@ -58,12 +58,12 @@ function Main() {
 	}
 
 	return (
-		<main class="flex bg-slate-100">
-			<div class="mx-auto min-w-fit max-w-72 border-x bg-white">
-				<div class="flex h-16 items-center">
+		<main class="flex bg-slate-100 dark:bg-slate-900">
+			<div class="bg-primary mx-auto min-w-full max-w-7xl md:min-w-[60%] md:border-x">
+				<div class="flex h-16 w-56 items-center justify-evenly">
 					<a
 						href={dataQuery ? `/artist/${dataQuery.data?.id}` : "/artists"}
-						class="mx-4 text-slate-600">
+						class="text-slate-600">
 						<ArrowLeftIcon
 							width={24}
 							height={24}
@@ -80,23 +80,33 @@ function Main() {
 						</Show>
 					</h1>
 				</div>
-				<div class="grid grid-cols-[1fr_auto] *:pb-16">
-					{/* Menu */}
-					<div class="w-56 bg-slate-200"></div>
+
+				<div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
+					{/* Side Bar */}
+					<div class="dark:bg-slate-1100 col-start-1 hidden w-56 bg-slate-200 pb-16 md:block"></div>
 					<Form
 						aria-label="Artist form"
 						onSubmit={handleSubmit}
 						method="post"
-						class="flex w-fit flex-col gap-8 border-t-2 border-slate-200 px-6 pt-4">
+						class="flex w-full flex-col gap-8 border-t-2 border-slate-200 px-6 pb-16 pt-4">
 						<ID />
-						<Name />
-						<LocalizedName />
+
+						<div class="grid grid-cols-1 gap-4 gap-y-8 md:grid-cols-6">
+							<div class="md:col-span-4">
+								<Name />
+							</div>
+							<div class="col-span-full">
+								<LocalizedName />
+							</div>
+						</div>
 						<ArtistType />
 						<Aliases />
 						<MemberList />
+
 						<div class="flex w-full flex-row place-content-around">
 							<PrimaryButton
 								type="submit"
+								color="reimu"
 								class="w-1/4 self-start py-1">
 								{t.submit()}
 							</PrimaryButton>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /** @type {import('tailwindcss').Config} */
 export default {
 	content: [
@@ -102,8 +103,11 @@ export default {
 			},
 		},
 		extend: {
+			aria: {
+				invalid: `invalid="true"`,
+			},
 			borderColor: {
-				DEFAULT: "hsl(var(--gray-300))",
+				DEFAULT: "hsl(var(--slate-300))",
 			},
 			gap: {
 				128: "32rem",
@@ -132,5 +136,5 @@ export default {
 			},
 		},
 	},
-	plugins: [],
+	plugins: [require("@tailwindcss/forms")],
 }

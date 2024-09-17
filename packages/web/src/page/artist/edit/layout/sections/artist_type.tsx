@@ -1,19 +1,21 @@
+import { TextField } from "~/component/form/field.tsx"
 import { FormUI } from "~/component/form/ui"
 import { useController } from "../../context.tsx"
-import * as Style from "../style.ts"
 
 export function ArtistType() {
 	const { t, Field } = useController()
 	return (
-		<div class="flex flex-col">
-			<h4 class={Style.label}>{t.artist_type()}</h4>
-			<div class="h-12 w-24">
+		<TextField>
+			<TextField.Label>{t.artist_type()}</TextField.Label>
+			<div class="mt-2">
 				<Field name="artist_type">
 					{(field, props) => (
 						<>
 							<div class="flex">
 								<input
 									{...props}
+									data-slot="input"
+									required
 									type="radio"
 									id="artist_type_person"
 									value="Person"
@@ -24,6 +26,8 @@ export function ArtistType() {
 							<div class="flex">
 								<input
 									{...props}
+									required
+									data-slot="input"
 									type="radio"
 									id="artist_type_group"
 									value="Group"
@@ -36,6 +40,6 @@ export function ArtistType() {
 					)}
 				</Field>
 			</div>
-		</div>
+		</TextField>
 	)
 }
