@@ -126,7 +126,8 @@ SecondaryButton.styleRecord = {
 	gray:
 		// @tw
 		`
-		bg-gray-100
+		bg-primary
+		ring-2 ring-inset ring-slate-200
 		text-gray-700	hover:bg-gray-200 active:bg-gray-300 disabled:bg-gray-400
 		dark:hover:bg-gray-100/90 dark:active:bg-gray-100/80
 		`,

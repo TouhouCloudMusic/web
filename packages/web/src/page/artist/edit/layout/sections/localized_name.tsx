@@ -1,23 +1,46 @@
 import { Fieldset } from "@ark-ui/solid"
 import { Combobox } from "@kobalte/core/combobox"
-import { Field, insert, remove, setValue } from "@modular-forms/solid"
+import {
+	Dialog,
+	type DialogTriggerOptions,
+	type DialogTriggerRenderProps,
+} from "@kobalte/core/dialog"
+import { type PolymorphicCallbackProps } from "@kobalte/core/polymorphic"
+import { insert, remove, reset, setValue } from "@modular-forms/solid"
 import { type lang } from "@touhouclouddb/database/interfaces"
 import { For } from "solid-js"
-import { CaretSortIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
+import {
+	CaretSortIcon,
+	Cross1Icon,
+	PlusIcon,
+	ResetIcon,
+} from "solid-radix-icons"
 import { stringSimilarity } from "string-similarity-js"
 import { twMerge } from "tailwind-merge"
-import { TertiaryButton } from "~/component/button/index.tsx"
+import {
+	type ButtonProps,
+	PrimaryButton,
+	SecondaryButton,
+	TertiaryButton,
+} from "~/component/button/index.tsx"
 import { Combobox as ComboboxStyle } from "~/component/combobox.tsx"
-import { TextField } from "~/component/form/field.tsx"
+import { TextField } from "~/component/form/index.tsx"
+import { ArrowPathIcon } from "~/component/icons/heroicons/24/outline.tsx"
 import { Card } from "~/component/layout/index.tsx"
 import { localizedLanguageArray } from "~/lib/form/schema/language.ts"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
-import { useController } from "../../context.tsx"
+import { useController } from "../context.tsx"
 
 const fieldLayoutClass = "row-span-2 grid grid-rows-subgrid"
 
 export function LocalizedName() {
 	const { FieldArray, formStore } = useController()
+
+	const insertItem = () =>
+		insert(formStore, "localized_name", {
+			// @ts-expect-error
+			value: {},
+		})
 
 	const removeItem = (index: number) => {
 		remove(formStore, "localized_name", {
@@ -35,32 +58,38 @@ export function LocalizedName() {
 					name={fieldArray.name}
 					invalid={fieldArray.error.length > 0}
 					class="flex flex-col">
-					<div class="flex items-end justify-between">
+					<div class="flex items-end justify-between [&_svg]:size-[15px]">
 						<Fieldset.Legend class={TextField.Label.className}>
 							Localized Name
 						</Fieldset.Legend>
-						<TertiaryButton
-							onClick={() =>
-								insert(formStore, "localized_name", {
-									// @ts-expect-error
-									value: {},
-								})
-							}
-							size="xs"
-							class="mr-0.5 aspect-square h-full p-1.5">
-							<PlusIcon />
-						</TertiaryButton>
+						<div>
+							<ResetFieldDialogTrigger />
+							<TertiaryButton
+								size="xs"
+								onClick={insertItem}
+								class="mr-0.5 aspect-square h-full p-1.5"
+								aria-label={`Insert new item to ${fieldArray.name.replace("_", " ")}`}>
+								<PlusIcon />
+							</TertiaryButton>
+						</div>
 					</div>
 
-					<ul class="mt-2 flex flex-col gap-2">
-						<For each={fieldArray.items}>
+					<ul class="bg-secondary [&_li]:bg-primary mt-2 flex min-h-32 flex-col gap-2 rounded-md p-2">
+						<For
+							each={fieldArray.items}
+							fallback={
+								<span class="m-auto text-slate-600">
+									Click "+" to add Input
+								</span>
+							}>
 							{(_, index) => (
-								<li class="grid grid-cols-[1fr_auto_auto] gap-x-2">
+								<li class="grid grid-cols-[1fr_auto_auto] gap-x-2 rounded-md p-2">
 									<NameField index={index()} />
 									<LanguageField index={index()} />
 									<TertiaryButton
 										class="aspect-square p-0"
-										onClick={() => removeItem(index())}>
+										onClick={() => removeItem(index())}
+										aria-label={`remove localized name at ${index()}`}>
 										<Cross1Icon class="m-auto" />
 									</TertiaryButton>
 								</li>
@@ -71,6 +100,52 @@ export function LocalizedName() {
 				</Fieldset.Root>
 			)}
 		</FieldArray>
+	)
+}
+
+function ResetFieldDialogTrigger() {
+	const { formStore } = useController()
+
+	const resetField = () => {
+		reset(formStore, "localized_name")
+	}
+
+	return (
+		<Dialog>
+			<Dialog.Trigger
+				size="xs"
+				class="mr-0.5 aspect-square h-full p-1.5"
+				aria-label="Reset localized name field to initial state"
+				as={TertiaryButton}>
+				<ArrowPathIcon />
+			</Dialog.Trigger>
+			<Dialog.Portal>
+				<Dialog.Overlay class="bg-slate-1000/5 fixed inset-0 z-50 flex place-content-center" />
+				<div class="fixed inset-0 z-50 flex place-content-center">
+					<Dialog.Content class="bg-primary z-50 m-auto grid h-fit grid-cols-3 gap-x-2 gap-y-6 rounded-md p-4 shadow-md shadow-gray-300">
+						<Dialog.Title class="col-span-full font-medium">
+							Reset field?
+						</Dialog.Title>
+						<div class="col-span-2 col-start-2 grid grid-cols-subgrid">
+							<Dialog.CloseButton
+								class="shadow-sm shadow-slate-200"
+								color="warning"
+								size="sm"
+								onClick={resetField}
+								as={SecondaryButton}>
+								Reset
+							</Dialog.CloseButton>
+							<Dialog.CloseButton
+								class=""
+								size="sm"
+								as={PrimaryButton}>
+								No
+							</Dialog.CloseButton>
+						</div>
+					</Dialog.Content>
+				</div>
+			</Dialog.Portal>
+		</Dialog>
 	)
 }
 

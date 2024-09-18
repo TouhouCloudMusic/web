@@ -4,7 +4,7 @@ import { TertiaryButton } from "~/component/button"
 export function AddStringInputButton(props: {
 	onClick?: JSX.EventHandlerUnion<HTMLButtonElement, MouseEvent> | undefined
 	label: string
-	class: string
+	class?: string
 }) {
 	return (
 		<TertiaryButton

@@ -1,14 +1,13 @@
 import { getErrors, getValues, type SubmitHandler } from "@modular-forms/solid"
 import { useAction, useNavigate } from "@solidjs/router"
 import { useQueryClient, type CreateQueryResult } from "@tanstack/solid-query"
-import { For, Show } from "solid-js"
+import { Show } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
 
 import { PrimaryButton, TertiaryButton } from "~/component/button"
 import { FormUI } from "~/component/form/ui"
 import { useI18N } from "~/state/i18n"
 
-import { ControllerContext, useController } from "../context.tsx"
 import { type ArtistFormSchema } from "../data/form/index.ts"
 import {
 	createController,
@@ -16,7 +15,9 @@ import {
 	SubmitAction,
 	type ArtistByID,
 } from "../data/index.ts"
+import { ControllerContext, useController } from "./context.tsx"
 
+import { FieldSet } from "~/component/form/index.tsx"
 import { Aliases } from "./sections/alias.tsx"
 import { ArtistType } from "./sections/artist_type.tsx"
 import { ID } from "./sections/id.tsx"
@@ -91,15 +92,19 @@ function Main() {
 						class="flex w-full flex-col gap-8 border-t-2 border-slate-200 px-6 pb-16 pt-4">
 						<ID />
 
-						<div class="grid grid-cols-1 gap-4 gap-y-8 md:grid-cols-6">
-							<div class="md:col-span-4">
-								<Name />
-							</div>
-							<div class="col-span-full">
-								<LocalizedName />
+						<div class={FieldSet.className}>
+							<div class="grid grid-cols-1 gap-4 gap-y-8 md:grid-cols-6">
+								<div class="md:col-span-4">
+									<Name />
+								</div>
+								<div class="col-span-full">
+									<ArtistType />
+								</div>
+								<div class="col-span-full">
+									<LocalizedName />
+								</div>
 							</div>
 						</div>
-						<ArtistType />
 						<Aliases />
 						<MemberList />
 

@@ -1,45 +1,60 @@
-import { TextField } from "~/component/form/field.tsx"
-import { FormUI } from "~/component/form/ui"
-import { useController } from "../../context.tsx"
+import {
+	Asterisk,
+	ErrorMessage,
+	Label,
+	RadioGroup,
+} from "~/component/form/index.tsx"
+import { useController } from "../context.tsx"
 
 export function ArtistType() {
 	const { t, Field } = useController()
 	return (
-		<TextField>
-			<TextField.Label>{t.artist_type()}</TextField.Label>
-			<div class="mt-2">
+		<fieldset>
+			<legend
+				class={`${Label.className} ${Asterisk.className} after:content-['_*']`}>
+				{t.artist_type()}
+			</legend>
+			<div class={RadioGroup.Container.className}>
 				<Field name="artist_type">
 					{(field, props) => (
 						<>
-							<div class="flex">
+							<div class={RadioGroup.Item.className}>
 								<input
 									{...props}
-									data-slot="input"
 									required
 									type="radio"
-									id="artist_type_person"
 									value="Person"
+									data-slot="input"
+									id="artist_type_person"
+									class={RadioGroup.Item.Input.className}
 									checked={field.value === "Person"}
 								/>
-								<label for="artist_type_person">{t.person()}</label>
+								<RadioGroup.ItemLabel for="artist_type_person">
+									{t.person()}
+								</RadioGroup.ItemLabel>
 							</div>
-							<div class="flex">
+							<div class={RadioGroup.Item.className}>
 								<input
 									{...props}
 									required
-									data-slot="input"
 									type="radio"
-									id="artist_type_group"
 									value="Group"
+									data-slot="input"
+									id="artist_type_group"
+									class={RadioGroup.Item.Input.className}
 									checked={field.value === "Group"}
 								/>
-								<label for="artist_type_group">{t.group()}</label>
+								<RadioGroup.ItemLabel for="artist_type_group">
+									{t.group()}
+								</RadioGroup.ItemLabel>
 							</div>
-							{field.error && <FormUI.ErrorText text={field.error} />}
+							{field.error && (
+								<span class={ErrorMessage.className}>{field.error}</span>
+							)}
 						</>
 					)}
 				</Field>
 			</div>
-		</TextField>
+		</fieldset>
 	)
 }

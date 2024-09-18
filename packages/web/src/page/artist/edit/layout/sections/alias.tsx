@@ -6,11 +6,13 @@ import { twMerge } from "tailwind-merge"
 import { FormUI } from "~/component/form/ui/index.tsx"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
 
-import { useController } from "../../context.tsx"
 import { type ArtistByKeyword } from "../../data/index.ts"
+import { useController } from "../context.tsx"
 import { AddStringInputButton } from "./components/add_str_input_button.tsx"
 import { DeleteButton } from "./components/delete_button.tsx"
 
+import { PlusIcon } from "solid-radix-icons"
+import { TertiaryButton } from "~/component/button/index.tsx"
 import * as Style from "../style.ts"
 
 export function Aliases() {
@@ -32,12 +34,11 @@ export function Aliases() {
 						</Switch>
 					</h4>
 					<Show when={!artistType.isNone}>
-						<AddStringInputButton
-							onClick={() => {
-								alias.addStrInput()
-							}}
-							label={t.add_string_input()}
-						/>
+						<TertiaryButton
+							class="aspect-square"
+							onClick={() => alias.addStrInput()}>
+							<PlusIcon />
+						</TertiaryButton>
 					</Show>
 				</div>
 				<ul class="flex flex-col gap-1">
@@ -59,7 +60,6 @@ export function Aliases() {
 					</FieldArray>
 				</ul>
 			</div>
-			<SearchTab />
 		</div>
 	)
 }
@@ -88,15 +88,8 @@ function Alias(props: IndexComponentProps) {
 				)}
 			</Field>
 			<DeleteButton
-				buttonProps={{
-					type: "button",
-					class:
-						"flex min-h-6 min-w-6 h-6 w-6 flex-initial text-sm self-center",
-					onClick: () => alias.remove(props.index),
-				}}
-				iconProps={{
-					class: "bold size-4 place-self-center stroke-white",
-				}}
+				class={"flex h-6 min-h-6 w-6 min-w-6 flex-initial self-center text-sm"}
+				onClick={() => alias.remove(props.index)}
 			/>
 		</div>
 	)
