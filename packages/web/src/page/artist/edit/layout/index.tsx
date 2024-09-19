@@ -20,6 +20,7 @@ import { ControllerContext, useController } from "./context.tsx"
 import { FieldSet } from "~/component/form/index.tsx"
 import { Aliases } from "./sections/alias.tsx"
 import { ArtistType } from "./sections/artist_type.tsx"
+import { DateField } from "./sections/date.tsx"
 import { ID } from "./sections/id.tsx"
 import { LocalizedName } from "./sections/localized_name.tsx"
 import { MemberList } from "./sections/member.tsx"
@@ -84,7 +85,7 @@ function Main() {
 
 				<div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
 					{/* Side Bar */}
-					<div class="dark:bg-slate-1100 col-start-1 hidden w-56 bg-slate-200 pb-16 md:block"></div>
+					<aside class="dark:bg-slate-1100 col-start-1 hidden w-56 bg-slate-200 pb-16 md:block"></aside>
 					<Form
 						aria-label="Artist form"
 						onSubmit={handleSubmit}
@@ -102,6 +103,9 @@ function Main() {
 								</div>
 								<div class="col-span-full">
 									<LocalizedName />
+								</div>
+								<div class="col-span-full">
+									<DateField />
 								</div>
 							</div>
 						</div>

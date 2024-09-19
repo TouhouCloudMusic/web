@@ -8,7 +8,7 @@ export function ID() {
 				<>
 					<input
 						{...props}
-						type="text"
+						type="hidden"
 						value={field.value}
 						hidden
 					/>

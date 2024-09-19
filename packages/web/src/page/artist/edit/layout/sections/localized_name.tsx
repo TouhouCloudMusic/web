@@ -1,24 +1,13 @@
 import { Fieldset } from "@ark-ui/solid"
 import { Combobox } from "@kobalte/core/combobox"
-import {
-	Dialog,
-	type DialogTriggerOptions,
-	type DialogTriggerRenderProps,
-} from "@kobalte/core/dialog"
-import { type PolymorphicCallbackProps } from "@kobalte/core/polymorphic"
+import { Dialog } from "@kobalte/core/dialog"
 import { insert, remove, reset, setValue } from "@modular-forms/solid"
 import { type lang } from "@touhouclouddb/database/interfaces"
 import { For } from "solid-js"
-import {
-	CaretSortIcon,
-	Cross1Icon,
-	PlusIcon,
-	ResetIcon,
-} from "solid-radix-icons"
+import { CaretSortIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { stringSimilarity } from "string-similarity-js"
 import { twMerge } from "tailwind-merge"
 import {
-	type ButtonProps,
 	PrimaryButton,
 	SecondaryButton,
 	TertiaryButton,
@@ -111,7 +100,7 @@ function ResetFieldDialogTrigger() {
 	}
 
 	return (
-		<Dialog>
+		<Dialog modal={false}>
 			<Dialog.Trigger
 				size="xs"
 				class="mr-0.5 aspect-square h-full p-1.5"
@@ -120,15 +109,18 @@ function ResetFieldDialogTrigger() {
 				<ArrowPathIcon />
 			</Dialog.Trigger>
 			<Dialog.Portal>
-				<Dialog.Overlay class="bg-slate-1000/5 fixed inset-0 z-50 flex place-content-center" />
+				<Dialog.Overlay class="fixed inset-0 z-50 flex place-content-center bg-slate-900/10" />
 				<div class="fixed inset-0 z-50 flex place-content-center">
-					<Dialog.Content class="bg-primary z-50 m-auto grid h-fit grid-cols-3 gap-x-2 gap-y-6 rounded-md p-4 shadow-md shadow-gray-300">
+					<Dialog.Content class="bg-primary z-50 m-auto grid size-fit grid-cols-3 gap-x-2 rounded-md p-4 shadow-md shadow-gray-200">
 						<Dialog.Title class="col-span-full font-medium">
 							Reset field?
 						</Dialog.Title>
-						<div class="col-span-2 col-start-2 grid grid-cols-subgrid">
+						<Dialog.Description class="col-span-full mt-2 pr-2 text-sm text-gray-800">
+							This will reset localized name field to its initial state.
+						</Dialog.Description>
+						<div class="col-span-2 col-start-2 mt-6 grid grid-cols-subgrid">
 							<Dialog.CloseButton
-								class="shadow-sm shadow-slate-200"
+								class=""
 								color="warning"
 								size="sm"
 								onClick={resetField}

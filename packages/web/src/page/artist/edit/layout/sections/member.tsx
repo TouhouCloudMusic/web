@@ -8,7 +8,7 @@ import { FormUI } from "~/component/form/ui"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
 import { notNullString } from "~/lib/validate/not_empty_string.ts"
 
-import { type YearSchema } from "../../data/form/index.ts"
+import { type OptionalYearSchema } from "../../data/form/index.ts"
 import { useController } from "../context.tsx"
 import * as Style from "../style.ts"
 import { DeleteButton } from "./components/delete_button.tsx"

@@ -24,8 +24,8 @@ export const ArtistTypeSchema = v.picklist(
 	"Invalid artist type"
 )
 
-export type YearSchema = v.InferInput<typeof YearSchema>
-export const YearSchema = v.nullish(
+export type OptionalYearSchema = v.InferInput<typeof OptionalYearSchema>
+export const OptionalYearSchema = v.nullish(
 	v.pipe(v.number(), v.minValue(-1), v.maxValue(new Date().getFullYear()))
 )
 
@@ -47,8 +47,8 @@ export const MemberSchema = v.object(
 		active_year: v.optional(
 			v.array(
 				v.object({
-					lower: YearSchema,
-					upper: YearSchema,
+					lower: OptionalYearSchema,
+					upper: OptionalYearSchema,
 				})
 			)
 		),
@@ -67,8 +67,8 @@ export const ArtistFormSchema = v.object({
 	localized_name: LocalizedNameSchema,
 	artist_type: ArtistTypeSchema,
 	// date
-	date_of_start: YearSchema,
-	date_of_end: YearSchema,
+	date_of_start: v.pipe(v.date(), v.maxValue(new Date())),
+	date_of_end: v.pipe(v.date(), v.maxValue(new Date())),
 	// location
 	start_location: v.optional(LocationSchema),
 	current_location: v.optional(LocationSchema),

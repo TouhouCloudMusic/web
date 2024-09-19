@@ -59,16 +59,15 @@ export function PrimaryButton(props: ButtonProps) {
 	const finalProps = propPreprocessor(props, () =>
 		PrimaryButton.getStyle(props.color ?? "gray")
 	)
-
 	return <button {...finalProps}></button>
 }
+// @tw
+PrimaryButton.baseStyle = `shadow text-primary`
 PrimaryButton.styleRecord = {
 	gray:
 		// @tw
 		`
-		dark:text-gray-1200
 		bg-gray-1200 hover:bg-gray-1000 active:bg-gray-900 disabled:bg-gray-800
-		dark:bg-white dark:hover:bg-gray-100 dark:active:bg-gray-200 dark:disabled:bg-gray-400
 		`,
 	blue:
 		// @tw
@@ -103,7 +102,6 @@ PrimaryButton.styleRecord = {
 			dark:bg-slate-500 dark:hover:bg-slate-600 dark:active:bg-slate-700 dark:disabled:bg-slate-600`,
 } as Record<ValidColor, string>
 
-PrimaryButton.baseStyle = `shadow-2 text-white`
 PrimaryButton.getStyle = (color: ExtendValidColor) =>
 	PrimaryButton.baseStyle.concat(
 		getVariantStyle(color, PrimaryButton.styleRecord)
@@ -111,7 +109,7 @@ PrimaryButton.getStyle = (color: ExtendValidColor) =>
 
 export function SecondaryButton(props: ButtonProps) {
 	// @tw
-	const baseStyle = " "
+	const baseStyle = "shadow-sm shadow-gray-100"
 
 	const finalProps = propPreprocessor(props, () =>
 		baseStyle.concat(
@@ -141,10 +139,8 @@ SecondaryButton.styleRecord = {
 	reimu:
 		// @tw
 		`
-		shadow-reimu-300
 		text-reimu-700
-		bg-reimu-100 hover:bg-reimu-1000/85 active:bg-reimu-1000/80
-		dark:hover:bg-reimu-1000/90 dark:active:bg-reimu-1000/80
+		bg-reimu-100 hover:bg-reimu-200 active:bg-reimu-300
 		`,
 	marisa:
 		// @tw
