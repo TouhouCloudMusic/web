@@ -8,7 +8,6 @@ import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
 
 import { type ArtistByKeyword } from "../../data/index.ts"
 import { useController } from "../context.tsx"
-import { AddStringInputButton } from "./components/add_str_input_button.tsx"
 import { DeleteButton } from "./components/delete_button.tsx"
 
 import { PlusIcon } from "solid-radix-icons"
@@ -16,7 +15,7 @@ import { TertiaryButton } from "~/component/button/index.tsx"
 import * as Style from "../style.ts"
 
 export function Aliases() {
-	const { artistType, alias, t, FieldArray, dataQuery } = useController()
+	const { artistType, alias, FieldArray, dataQuery } = useController()
 
 	return (
 		<div class={Style.alias.layout}>

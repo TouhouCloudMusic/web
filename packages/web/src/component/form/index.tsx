@@ -53,14 +53,15 @@ FieldSet.className = "border-b border-slate-300 pb-12"
 
 const _Label = {
 	// @tw
-	className: `font-[Inter] font-medium leading-6 ${RequiredAsteriskClassName}`,
+	className: `font-inter font-medium leading-6 ${RequiredAsteriskClassName}`,
 }
 
 export { _Label as Label }
 
 export const Legend = {
-	className: "font-[Inter] font-semibold leading-6 text-slate-900",
+	className: "font-inter text-base font-semibold leading-7 text-gray-900",
 }
+FieldSet.Legend = Legend
 
 const _ErrMsg = {
 	className: "text-reimu-700 text-sm",
@@ -70,7 +71,8 @@ export { _ErrMsg as ErrorMessage }
 
 const _Input = {
 	className: [
-		"py-1 pl-3 ",
+		// @tw
+		"py-1.5 pl-3",
 		// @tw
 		"block border-0 bg-transparent rounded-md text-gray-900 placeholder:text-slate-400 sm:text-sm sm:leading-6 ",
 	].join(" "),
@@ -166,7 +168,7 @@ function Input<T extends ValidComponent = "input">(
 	)
 }
 
-Input.className = Form.Input.className
+Input.className = _Input.className
 TextField.Input = Input
 TextField.InputContainer = {
 	className:

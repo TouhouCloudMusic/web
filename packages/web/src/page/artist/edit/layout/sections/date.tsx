@@ -1,36 +1,72 @@
-import { getValue, setValue } from "@modular-forms/solid"
-import { ArkErrors, type } from "arktype"
+import { getError, setValue } from "@modular-forms/solid"
 import dayjs from "dayjs"
 import { list } from "radash"
 import {
 	createEffect,
+	createMemo,
 	createSignal,
 	For,
 	Index,
 	JSX,
+	on,
 	Setter,
 	Show,
 } from "solid-js"
+import { twMerge } from "tailwind-merge"
+import { ErrorMessage, Label, TextField } from "~/component/form/index.tsx"
+import { DateMask } from "~/lib/form/schema/database.ts"
 import { CURRENT_YEAR } from "~/lib/global_constant.ts"
 import { useController } from "../context.tsx"
 
 export function DateField() {
-	const { artistType, formStore, Field } = useController()
+	const { artistType, formStore } = useController()
 
-	const startDateLabel = () =>
-		artistType.isGroup ? "Formed Date" : "Birth Date"
+	const startDateLabel = () => {
+		const formedDate = "Formed Date"
+		const birthDate = "Birth Date"
+		return (
+			artistType.isNone ? `${formedDate} / ${birthDate}`
+			: artistType.isGroup ? formedDate
+			: birthDate
+		)
+	}
+
 	const startDateFieldName = () =>
-		artistType.isGroup ? "formed_date" : "birth_date"
+		artistType.isNone ? "please_select_artist_type"
+		: artistType.isGroup ? "formed_date"
+		: "birth_date"
 
-	const endDateLabel = () =>
-		artistType.isGroup ? "Disbanded Date" : "Death Date"
+	const endDateLabel = () => {
+		const disbandedDate = "Disbanded Date"
+		const deathDate = "Death Date"
+		return (
+			artistType.isNone ? `${disbandedDate} / ${deathDate}`
+			: artistType.isGroup ? disbandedDate
+			: deathDate
+		)
+	}
 
 	const endDateFieldName = () =>
-		artistType.isGroup ? "disbanded_date" : "death_date"
+		artistType.isNone ? "please_select_artist_type"
+		: artistType.isGroup ? "disbanded_date"
+		: "death_date"
+
+	const subField = [
+		{
+			label: startDateLabel,
+			name: startDateFieldName,
+			fieldName: "date_of_start",
+		},
+		{
+			label: endDateLabel,
+			name: endDateFieldName,
+			fieldName: "date_of_end",
+		},
+	] as const
 
 	return (
-		<section>
-			<h2>
+		<section class="flex flex-col gap-y-6">
+			{/* <h2 class={`${Legend.className} mb-8`}>
 				<Show
 					when={artistType.isNone}
 					fallback={
@@ -40,107 +76,119 @@ export function DateField() {
 					}>
 					Please Select Artist Type
 				</Show>
-			</h2>
-			<For
-				each={
-					[
-						{
-							label: startDateLabel,
-							name: startDateFieldName,
-							fieldName: "date_of_start",
-						},
-						{
-							label: endDateLabel,
-							name: endDateFieldName,
-							fieldName: "date_of_end",
-						},
-					] as const
-				}>
+			</h2> */}
+			<For each={subField}>
 				{(fieldSet) => {
 					const [year, setYear] = createSignal<number>()
 					const [month, setMonth] = createSignal<number>()
 					const [day, setDay] = createSignal<number>()
 
-					const [dayList, setDayList] = createSignal<number[]>([])
+					const daysInMonth = createMemo(() =>
+						year() && month() ?
+							list(1, dayjs(`${year()}-${month()}`).daysInMonth())
+						:	[]
+					)
+
+					const dateMask = createMemo<DateMask | undefined>(() =>
+						day() ? "YMD"
+						: month() ? "YM"
+						: year() ? "Y"
+						: undefined
+					)
+
+					createEffect(
+						on([year, month, day], () => {
+							if (!month()) {
+								setDay()
+								return
+							}
+
+							if (year()) {
+								setValue(
+									formStore,
+									fieldSet.fieldName,
+									new Date(year()!, month() ? month()! - 0 : 0, day() ?? 0)
+								)
+							} else {
+								setMonth()
+								setDay()
+								setValue(formStore, fieldSet.fieldName, null)
+							}
+						})
+					)
 
 					createEffect(() => {
-						if (year() && month()) {
-							setDayList(list(1, dayjs(`${year()}-${month()}`).daysInMonth()))
-						}
-						if (year()) {
-							setValue(
-								formStore,
-								fieldSet.fieldName,
-								new Date(year()!, month() ? month()! - 1 : 0, day() ?? 0)
-							)
-						}
+						setValue(formStore, `${fieldSet.fieldName}_mask`, dateMask())
 					})
 
-					const parseInput =
-						(
-							setFn: Setter<number | undefined>
-						): JSX.ChangeEventHandlerUnion<
-							HTMLInputElement | HTMLSelectElement,
-							Event
-						> =>
-						(e) => {
-							const parseResult = type.number(Number(e.target.value))
-							if (parseResult instanceof ArkErrors) return setFn()
-							else setFn(parseResult)
-						}
+					const parseInput = (
+						setFn: Setter<number | undefined>
+					): JSX.ChangeEventHandler<HTMLSelectElement, Event> => {
+						return (e) =>
+							setFn(e.target.value === "" ? undefined : Number(e.target.value))
+					}
+
+					const selectClassName = twMerge(
+						TextField.InputContainer.className,
+						TextField.Input.className
+					)
+
+					const fieldError = createMemo(() =>
+						getError(formStore, fieldSet.fieldName)
+					)
 
 					return (
 						<fieldset
 							name={fieldSet.name()}
-							class="grid grid-cols-3 [&_label]:row-start-1">
-							<legend>{fieldSet.label()}</legend>
-							<Field
-								name={fieldSet.fieldName}
-								type="Date">
-								{(field, props) => {
-									const value = () =>
-										field.value ? dayjs(field.value).format("YYYY-MM-DD") : ""
-									return (
-										<input
-											{...props}
-											type="date"
-											hidden
-											value={value()}
-										/>
-									)
-								}}
-							</Field>
+							class="grid grid-cols-3 gap-x-4 font-[Inter] [&_label]:row-start-1 [&_label]:text-sm [&_label]:text-slate-800 [&_select]:mt-2">
+							<legend class={`${Label.className} mb-6`}>
+								{fieldSet.label()}
+							</legend>
+
 							<label for={`${fieldSet.name()}_year`}>Year</label>
 							<select
 								name={`${fieldSet.name()}_year`}
+								class={selectClassName}
+								disabled={artistType.isNone}
 								onChange={parseInput(setYear)}>
 								<option></option>
-								<Index each={list(1900, CURRENT_YEAR).reverse()}>
+								<Index each={list(1800, CURRENT_YEAR).reverse()}>
 									{(year) => <option value={year()}>{year()}</option>}
 								</Index>
 							</select>
 
 							<label>Month</label>
 							<select
+								disabled={!year()}
 								name={`${fieldSet.name()}_month`}
+								class={selectClassName}
 								onChange={parseInput(setMonth)}>
-								<option value={0}></option>
-								<Index each={list(1, 12)}>
-									{(month) => <option value={month()}>{month()}</option>}
-								</Index>
+								<option onSelect={() => setMonth()}></option>
+
+								<Show when={year()}>
+									<Index each={list(1, 12)}>
+										{(month) => <option value={month()}>{month()}</option>}
+									</Index>
+								</Show>
 							</select>
 
 							<label for={`${fieldSet.name()}_day`}>Day</label>
 							<select
 								value={day()}
+								class={selectClassName}
 								onChange={parseInput(setDay)}
 								name={`${fieldSet.name()}_day`}
-								disabled={dayList().length === 0}>
-								<option></option>
-								<Index each={dayList()}>
-									{(day) => <option value={day()}>{day()}</option>}
-								</Index>
+								disabled={daysInMonth().length === 0}>
+								<option onSelect={() => setDay()}></option>
+
+								<Show when={month()}>
+									<Index each={daysInMonth()}>
+										{(day) => <option value={day()}>{day()}</option>}
+									</Index>
+								</Show>
 							</select>
+
+							<span class={ErrorMessage.className}>{fieldError()}</span>
 						</fieldset>
 					)
 				}}

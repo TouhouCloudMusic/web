@@ -115,6 +115,7 @@ export default {
 				192: "48rem",
 			},
 			fontFamily: {
+				inter: ["Inter", "sans-serif"],
 				sans: [
 					"Geist",
 					"ui-sans-serif",

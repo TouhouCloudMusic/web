@@ -31,7 +31,6 @@ function propPreprocessor(
 	props: ButtonProps,
 	variantStyle: () => string
 ): ButtonProps {
-	// @tw
 	const base = `rounded transition-all font-medium`
 
 	return mergeProps({ type: "button" as const }, props, {
@@ -54,14 +53,12 @@ function getVariantStyle(
 }
 
 export function PrimaryButton(props: ButtonProps) {
-	// @tw
-
 	const finalProps = propPreprocessor(props, () =>
 		PrimaryButton.getStyle(props.color ?? "gray")
 	)
 	return <button {...finalProps}></button>
 }
-// @tw
+
 PrimaryButton.baseStyle = `shadow text-primary`
 PrimaryButton.styleRecord = {
 	gray:
@@ -108,7 +105,6 @@ PrimaryButton.getStyle = (color: ExtendValidColor) =>
 	)
 
 export function SecondaryButton(props: ButtonProps) {
-	// @tw
 	const baseStyle = "shadow-sm shadow-gray-100"
 
 	const finalProps = propPreprocessor(props, () =>
@@ -164,7 +160,7 @@ SecondaryButton.styleRecord = {
 		dark:hover:bg-blue-1000/90 dark:active:bg-blue-1000/80
 		`,
 } as Record<ValidColor, string>
-
+twMerge("")
 export function TertiaryButton(props: ButtonProps) {
 	const finalProps = propPreprocessor(props, () =>
 		TertiaryButton.getStyle(props.color ?? "gray")

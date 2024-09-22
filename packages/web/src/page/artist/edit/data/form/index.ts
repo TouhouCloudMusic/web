@@ -1,4 +1,5 @@
 import * as v from "valibot"
+import { DateMask } from "~/lib/form/schema/database.ts"
 import { OptionalIDSchema } from "~/lib/form/schema/id"
 import { LocalizedLanguageSchema } from "~/lib/form/schema/language.ts"
 import { LocationSchema } from "~/lib/form/schema/location.ts"
@@ -67,8 +68,10 @@ export const ArtistFormSchema = v.object({
 	localized_name: LocalizedNameSchema,
 	artist_type: ArtistTypeSchema,
 	// date
-	date_of_start: v.pipe(v.date(), v.maxValue(new Date())),
-	date_of_end: v.pipe(v.date(), v.maxValue(new Date())),
+	date_of_start: v.nullable(v.pipe(v.date(), v.maxValue(new Date()))),
+	date_of_start_mask: v.optional(DateMask),
+	date_of_end: v.nullable(v.pipe(v.date(), v.maxValue(new Date()))),
+	date_of_end_mask: v.optional(DateMask),
 	// location
 	start_location: v.optional(LocationSchema),
 	current_location: v.optional(LocationSchema),

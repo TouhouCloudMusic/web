@@ -104,6 +104,10 @@ function Main() {
 								<div class="col-span-full">
 									<LocalizedName />
 								</div>
+							</div>
+						</div>
+						<div class={FieldSet.className}>
+							<div class="grid grid-cols-1 gap-4 gap-y-8 md:grid-cols-6">
 								<div class="col-span-full">
 									<DateField />
 								</div>
