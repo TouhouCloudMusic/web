@@ -13,7 +13,7 @@ import {
 	Show,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
-import { ErrorMessage, Label, TextField } from "~/component/form/index.tsx"
+import { ErrorMessage, Label, TextField } from "~/component/form"
 import { DateMask } from "~/lib/form/schema/database.ts"
 import { CURRENT_YEAR } from "~/lib/global_constant.ts"
 import { useController } from "../context.tsx"
@@ -134,14 +134,16 @@ export function DateField() {
 					)
 
 					const fieldError = createMemo(() =>
-						getError(formStore, fieldSet.fieldName)
+						getError(formStore, fieldSet.fieldName, {
+							shouldActive: false,
+						})
 					)
 
 					return (
 						<fieldset
 							name={fieldSet.name()}
 							class="grid grid-cols-3 gap-x-4 font-[Inter] [&_label]:row-start-1 [&_label]:text-sm [&_label]:text-slate-800 [&_select]:mt-2">
-							<legend class={`${Label.className} mb-6`}>
+							<legend class={`${Label.className} mb-4`}>
 								{fieldSet.label()}
 							</legend>
 
@@ -188,7 +190,12 @@ export function DateField() {
 								</Show>
 							</select>
 
-							<span class={ErrorMessage.className}>{fieldError()}</span>
+							<Show when={fieldError()?.length}>
+								<span
+									class={`${ErrorMessage.className} col-span-full mt-4 max-w-xl`}>
+									{fieldError()}
+								</span>
+							</Show>
 						</fieldset>
 					)
 				}}

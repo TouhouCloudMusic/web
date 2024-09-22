@@ -135,8 +135,8 @@ SecondaryButton.styleRecord = {
 	reimu:
 		// @tw
 		`
-		text-reimu-700
-		bg-reimu-100 hover:bg-reimu-200 active:bg-reimu-300
+		text-reimu-700 hover:text-white active:text-white
+		bg-gray-100 hover:bg-reimu-900 active:bg-reimu-1000
 		`,
 	marisa:
 		// @tw

@@ -1,9 +1,6 @@
-import {
-	Asterisk,
-	ErrorMessage,
-	Label,
-	RadioGroup,
-} from "~/component/form/index.tsx"
+import { RadioGroup } from "~/component/form"
+import { Asterisk } from "~/component/form/Asterisk.tsx"
+import { ErrorMessage, Label } from "~/component/form/base.tsx"
 import { useController } from "../context.tsx"
 
 export function ArtistType() {
@@ -48,9 +45,7 @@ export function ArtistType() {
 									{t.group()}
 								</RadioGroup.ItemLabel>
 							</div>
-							{field.error && (
-								<span class={ErrorMessage.className}>{field.error}</span>
-							)}
+							<ErrorMessage class="mt-4 block">{field.error}</ErrorMessage>
 						</>
 					)}
 				</Field>

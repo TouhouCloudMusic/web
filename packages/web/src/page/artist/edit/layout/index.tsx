@@ -17,7 +17,7 @@ import {
 } from "../data/index.ts"
 import { ControllerContext, useController } from "./context.tsx"
 
-import { FieldSet } from "~/component/form/index.tsx"
+import { FieldSet } from "~/component/form"
 import { Aliases } from "./sections/alias.tsx"
 import { ArtistType } from "./sections/artist_type.tsx"
 import { DateField } from "./sections/date.tsx"
@@ -104,6 +104,9 @@ function Main() {
 								<div class="col-span-full">
 									<LocalizedName />
 								</div>
+								<div class="col-span-full">
+									<Aliases />
+								</div>
 							</div>
 						</div>
 						<div class={FieldSet.className}>
@@ -113,7 +116,7 @@ function Main() {
 								</div>
 							</div>
 						</div>
-						<Aliases />
+
 						<MemberList />
 
 						<div class="flex w-full flex-row place-content-around">
@@ -127,7 +130,7 @@ function Main() {
 								<LogBtn />
 							</Show>
 						</div>
-						<FormUI.ErrorText text={form.errMsg} />
+						{/* <FormUI.ErrorText text={form.errMsg} /> */}
 						<FormUI.ErrorText text={formStore.response.message} />
 					</Form>
 				</div>

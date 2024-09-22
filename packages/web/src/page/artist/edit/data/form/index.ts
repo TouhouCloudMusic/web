@@ -22,7 +22,7 @@ export const LocalizedNameSchema = v.nullish(
 
 export const ArtistTypeSchema = v.picklist(
 	["Person", "Group"],
-	"Invalid artist type"
+	"Artist Type is Requried"
 )
 
 export type OptionalYearSchema = v.InferInput<typeof OptionalYearSchema>
@@ -68,9 +68,9 @@ export const ArtistFormSchema = v.object({
 	localized_name: LocalizedNameSchema,
 	artist_type: ArtistTypeSchema,
 	// date
-	date_of_start: v.nullable(v.pipe(v.date(), v.maxValue(new Date()))),
+	date_of_start: v.optional(v.pipe(v.date(), v.maxValue(new Date()))),
 	date_of_start_mask: v.optional(DateMask),
-	date_of_end: v.nullable(v.pipe(v.date(), v.maxValue(new Date()))),
+	date_of_end: v.optional(v.pipe(v.date(), v.maxValue(new Date()))),
 	date_of_end_mask: v.optional(DateMask),
 	// location
 	start_location: v.optional(LocationSchema),

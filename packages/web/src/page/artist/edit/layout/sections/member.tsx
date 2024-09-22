@@ -176,7 +176,7 @@ function ActiveYearArray(
 
 	const thisYear = new Date().getFullYear()
 
-	const transformYear = toCustom<YearSchema>(
+	const transformYear = toCustom<OptionalYearSchema>(
 		(v, e) => {
 			if (Number(e.currentTarget.value) > thisYear) {
 				e.currentTarget.value = String(thisYear)

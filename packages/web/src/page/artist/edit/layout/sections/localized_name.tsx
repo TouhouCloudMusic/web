@@ -1,23 +1,23 @@
 import { Fieldset } from "@ark-ui/solid"
 import { Combobox } from "@kobalte/core/combobox"
-import { Dialog } from "@kobalte/core/dialog"
 import { insert, remove, reset, setValue } from "@modular-forms/solid"
 import { type lang } from "@touhouclouddb/database/interfaces"
 import { For } from "solid-js"
 import { CaretSortIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { stringSimilarity } from "string-similarity-js"
 import { twMerge } from "tailwind-merge"
-import {
-	PrimaryButton,
-	SecondaryButton,
-	TertiaryButton,
-} from "~/component/button/index.tsx"
+
+import { TertiaryButton } from "~/component/button/index.tsx"
 import { Combobox as ComboboxStyle } from "~/component/combobox.tsx"
-import { TextField } from "~/component/form/index.tsx"
-import { ArrowPathIcon } from "~/component/icons/heroicons/24/outline.tsx"
+import {
+	FieldArray as _FieldArray,
+	ResetFieldDialogTrigger,
+	TextField,
+} from "~/component/form"
 import { Card } from "~/component/layout/index.tsx"
 import { localizedLanguageArray } from "~/lib/form/schema/language.ts"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
+
 import { useController } from "../context.tsx"
 
 const fieldLayoutClass = "row-span-2 grid grid-rows-subgrid"
@@ -37,6 +37,10 @@ export function LocalizedName() {
 		})
 	}
 
+	const resetField = () => {
+		reset(formStore, "localized_name")
+	}
+
 	return (
 		<FieldArray
 			name="localized_name"
@@ -52,7 +56,10 @@ export function LocalizedName() {
 							Localized Name
 						</Fieldset.Legend>
 						<div>
-							<ResetFieldDialogTrigger />
+							<ResetFieldDialogTrigger
+								fieldName={fieldArray.name}
+								onReset={resetField}
+							/>
 							<TertiaryButton
 								size="xs"
 								onClick={insertItem}
@@ -63,7 +70,7 @@ export function LocalizedName() {
 						</div>
 					</div>
 
-					<ul class="bg-secondary [&_li]:bg-primary mt-2 flex min-h-32 flex-col gap-2 rounded-md p-2">
+					<ul class={_FieldArray.container.className}>
 						<For
 							each={fieldArray.items}
 							fallback={
@@ -89,55 +96,6 @@ export function LocalizedName() {
 				</Fieldset.Root>
 			)}
 		</FieldArray>
-	)
-}
-
-function ResetFieldDialogTrigger() {
-	const { formStore } = useController()
-
-	const resetField = () => {
-		reset(formStore, "localized_name")
-	}
-
-	return (
-		<Dialog modal={false}>
-			<Dialog.Trigger
-				size="xs"
-				class="mr-0.5 aspect-square h-full p-1.5"
-				aria-label="Reset localized name field to initial state"
-				as={TertiaryButton}>
-				<ArrowPathIcon />
-			</Dialog.Trigger>
-			<Dialog.Portal>
-				<Dialog.Overlay class="fixed inset-0 z-50 flex place-content-center bg-slate-900/10" />
-				<div class="fixed inset-0 z-50 flex place-content-center">
-					<Dialog.Content class="bg-primary z-50 m-auto grid size-fit grid-cols-3 gap-x-2 rounded-md p-4 shadow-md shadow-gray-200">
-						<Dialog.Title class="col-span-full font-medium">
-							Reset field?
-						</Dialog.Title>
-						<Dialog.Description class="col-span-full mt-2 pr-2 text-sm text-gray-800">
-							This will reset localized name field to its initial state.
-						</Dialog.Description>
-						<div class="col-span-2 col-start-2 mt-6 grid grid-cols-subgrid">
-							<Dialog.CloseButton
-								class=""
-								color="warning"
-								size="sm"
-								onClick={resetField}
-								as={SecondaryButton}>
-								Reset
-							</Dialog.CloseButton>
-							<Dialog.CloseButton
-								class=""
-								size="sm"
-								as={PrimaryButton}>
-								No
-							</Dialog.CloseButton>
-						</div>
-					</Dialog.Content>
-				</div>
-			</Dialog.Portal>
-		</Dialog>
 	)
 }
 
