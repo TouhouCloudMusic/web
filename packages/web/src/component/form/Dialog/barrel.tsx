@@ -63,10 +63,13 @@ export const Content = <T extends ValidComponent = "div">(
 Content.className =
 	"bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-md ring-1 shadow-gray-300"
 
-export const CloseButton = (
-	props: PolymorphicProps<"button", DialogCloseButtonProps<"button">> &
-		ButtonProps
-) => {
+interface CloseButtonProps
+	extends Omit<
+			PolymorphicProps<"button", DialogCloseButtonProps<"button">>,
+			"color" | "type"
+		>,
+		ButtonProps {}
+export const CloseButton = (props: CloseButtonProps) => {
 	return (
 		<Dialog.CloseButton
 			{...props}
