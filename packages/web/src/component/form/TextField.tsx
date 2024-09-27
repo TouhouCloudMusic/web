@@ -70,13 +70,12 @@ function TextFieldInput<T extends ValidComponent = "input">(
 }
 
 // @tw
-TextFieldInput.className = Input.className
+TextFieldInput.className = twMerge(
+	Input.className,
+	"ring-1 rounded-md ring-inset focus-within:ring-inset focus-within:ring-reimu-700 aria-invalid:ring-2 aria-invalid:ring-reimu-700 has-[[aria-invalid]]:ring-2 has-[[aria-invalid]]:ring-reimu-700"
+)
+
 TextField.Input = TextFieldInput
-TextField.InputContainer = {
-	className:
-		// @tw
-		"ring-1 rounded-md ring-inset ring-slate-300 focus-within:ring-inset focus-within:ring-reimu-700 aria-invalid:ring-2 aria-invalid:ring-reimu-700 has-[[aria-invalid]]:ring-2 has-[[aria-invalid]]:ring-reimu-700",
-}
 
 function TextFieldErrorMessage<T extends ValidComponent = "div">(
 	props: PolymorphicProps<T, FormControlErrorMessageProps<T>>
