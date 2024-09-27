@@ -7,14 +7,14 @@ import {
 	createSignal,
 	For,
 	Index,
-	JSX,
+	type JSX,
 	on,
-	Setter,
+	type Setter,
 	Show,
 } from "solid-js"
-import { twMerge } from "tailwind-merge"
-import { ErrorMessage, Label, TextField } from "~/component/form"
-import { DateMask } from "~/lib/form/schema/database.ts"
+import { ErrorMessage, Label } from "~/component/form"
+import { Select } from "~/component/form/Select/index.tsx"
+import { type DateMask } from "~/lib/form/schema/database.ts"
 import { CURRENT_YEAR } from "~/lib/global_constant.ts"
 import { useController } from "../context.tsx"
 
@@ -112,7 +112,7 @@ export function DateField() {
 							} else {
 								setMonth()
 								setDay()
-								setValue(formStore, fieldSet.fieldName, null)
+								setValue(formStore, fieldSet.fieldName, undefined)
 							}
 						})
 					)
@@ -127,11 +127,6 @@ export function DateField() {
 						return (e) =>
 							setFn(e.target.value === "" ? undefined : Number(e.target.value))
 					}
-
-					const selectClassName = twMerge(
-						TextField.InputContainer.className,
-						TextField.Input.className
-					)
 
 					const fieldError = createMemo(() =>
 						getError(formStore, fieldSet.fieldName, {
@@ -150,7 +145,7 @@ export function DateField() {
 							<label for={`${fieldSet.name()}_year`}>Year</label>
 							<select
 								name={`${fieldSet.name()}_year`}
-								class={selectClassName}
+								class={Select.className}
 								disabled={artistType.isNone}
 								onChange={parseInput(setYear)}>
 								<option></option>
@@ -159,11 +154,11 @@ export function DateField() {
 								</Index>
 							</select>
 
-							<label>Month</label>
+							<label for={`${fieldSet.name()}_month`}>Month</label>
 							<select
 								disabled={!year()}
 								name={`${fieldSet.name()}_month`}
-								class={selectClassName}
+								class={Select.className}
 								onChange={parseInput(setMonth)}>
 								<option onSelect={() => setMonth()}></option>
 
@@ -177,7 +172,7 @@ export function DateField() {
 							<label for={`${fieldSet.name()}_day`}>Day</label>
 							<select
 								value={day()}
-								class={selectClassName}
+								class={Select.className}
 								onChange={parseInput(setDay)}
 								name={`${fieldSet.name()}_day`}
 								disabled={daysInMonth().length === 0}>
