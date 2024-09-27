@@ -1,8 +1,8 @@
 /* eslint-disable solid/reactivity */
+import { Button } from "@kobalte/core/Button"
 import { mergeProps, type JSX } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { type ValidColor } from "~/component/index.ts"
-
 /**
  * Note: 样式没做完
  */
@@ -37,7 +37,7 @@ function propPreprocessor(
 		get class() {
 			return twMerge(
 				base,
-				sizeRecord[props.size ?? "md"],
+				props.size ? sizeRecord[props.size] : undefined,
 				variantStyle(),
 				props.class
 			)
@@ -56,15 +56,15 @@ export function PrimaryButton(props: ButtonProps) {
 	const finalProps = propPreprocessor(props, () =>
 		PrimaryButton.getStyle(props.color ?? "gray")
 	)
-	return <button {...finalProps}></button>
+	return <Button {...finalProps} />
 }
 
-PrimaryButton.baseStyle = `shadow text-primary`
+PrimaryButton.baseStyle = `shadow text-bg-primary`
 PrimaryButton.styleRecord = {
 	gray:
 		// @tw
 		`
-		bg-gray-1200 hover:bg-gray-1000 active:bg-gray-900 disabled:bg-gray-800
+		bg-gray-1100 hover:bg-gray-1000 active:bg-gray-900 disabled:bg-gray-800
 		`,
 	blue:
 		// @tw
@@ -113,7 +113,7 @@ export function SecondaryButton(props: ButtonProps) {
 		)
 	)
 
-	return <button {...finalProps}></button>
+	return <Button {...finalProps} />
 }
 
 SecondaryButton.styleRecord = {
@@ -166,7 +166,7 @@ export function TertiaryButton(props: ButtonProps) {
 		TertiaryButton.getStyle(props.color ?? "gray")
 	)
 
-	return <button {...finalProps}></button>
+	return <Button {...finalProps} />
 }
 
 TertiaryButton.baseStyle = `
