@@ -2,19 +2,17 @@ import { getError, setValue } from "@modular-forms/solid"
 import dayjs from "dayjs"
 import { list } from "radash"
 import {
+	batch,
 	createEffect,
 	createMemo,
 	createSignal,
 	For,
 	Index,
 	type JSX,
-	on,
-	type Setter,
 	Show,
 } from "solid-js"
 import { ErrorMessage, Label } from "~/component/form"
 import { Select } from "~/component/form/Select/index.tsx"
-import { type DateMask } from "~/lib/form/schema/database.ts"
 import { CURRENT_YEAR } from "~/lib/global_constant.ts"
 import { useController } from "../context.tsx"
 
@@ -66,22 +64,40 @@ export function DateField() {
 
 	return (
 		<section class="flex flex-col gap-y-6">
-			{/* <h2 class={`${Legend.className} mb-8`}>
-				<Show
-					when={artistType.isNone}
-					fallback={
-						<>
-							{startDateLabel()} / {endDateLabel()}
-						</>
-					}>
-					Please Select Artist Type
-				</Show>
-			</h2> */}
 			<For each={subField}>
 				{(fieldSet) => {
-					const [year, setYear] = createSignal<number>()
-					const [month, setMonth] = createSignal<number>()
+					const [year, _setYear] = createSignal<number>()
+					const [month, _setMonth] = createSignal<number>()
 					const [day, setDay] = createSignal<number>()
+
+					const setYear = (x?: number) =>
+						batch(() => {
+							if (!x) {
+								_setYear()
+								_setMonth()
+								setDay()
+								return
+							}
+
+							setYear(x)
+						})
+
+					const setMonth = (x?: number) =>
+						batch(() => {
+							if (!x) {
+								_setMonth()
+								setDay()
+								return
+							}
+							setMonth(x)
+						})
+
+					const dateMask = createMemo(() =>
+						day() ? "YMD"
+						: month() ? "YM"
+						: year() ? "Y"
+						: undefined
+					)
 
 					const daysInMonth = createMemo(() =>
 						year() && month() ?
@@ -89,40 +105,22 @@ export function DateField() {
 						:	[]
 					)
 
-					const dateMask = createMemo<DateMask | undefined>(() =>
-						day() ? "YMD"
-						: month() ? "YM"
-						: year() ? "Y"
-						: undefined
-					)
-
-					createEffect(
-						on([year, month, day], () => {
-							if (!month()) {
-								setDay()
-								return
-							}
-
-							if (year()) {
-								setValue(
-									formStore,
-									fieldSet.fieldName,
-									new Date(year()!, month() ? month()! - 0 : 0, day() ?? 0)
-								)
-							} else {
-								setMonth()
-								setDay()
-								setValue(formStore, fieldSet.fieldName, undefined)
-							}
-						})
-					)
+					createEffect(() => {
+						if (year()) {
+							setValue(
+								formStore,
+								fieldSet.fieldName,
+								new Date(year()!, month() ? month()! - 1 : 0, day() ?? 1)
+							)
+						}
+					})
 
 					createEffect(() => {
 						setValue(formStore, `${fieldSet.fieldName}_mask`, dateMask())
 					})
 
 					const parseInput = (
-						setFn: Setter<number | undefined>
+						setFn: (x?: number) => unknown
 					): JSX.ChangeEventHandler<HTMLSelectElement, Event> => {
 						return (e) =>
 							setFn(e.target.value === "" ? undefined : Number(e.target.value))
@@ -160,7 +158,7 @@ export function DateField() {
 								name={`${fieldSet.name()}_month`}
 								class={Select.className}
 								onChange={parseInput(setMonth)}>
-								<option onSelect={() => setMonth()}></option>
+								<option></option>
 
 								<Show when={year()}>
 									<Index each={list(1, 12)}>
