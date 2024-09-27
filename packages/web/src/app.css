@@ -40,3 +40,7 @@ select {
 		background-color: hsl(var(--secondary));
 	}
 }
+
+.notransition * {
+	transition: none !important;
+}
