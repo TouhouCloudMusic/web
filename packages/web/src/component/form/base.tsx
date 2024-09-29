@@ -12,7 +12,7 @@ export const Legend = {
 
 export const ErrorMessage = (
 	props: Omit<JSX.HTMLAttributes<HTMLSpanElement>, "children"> & {
-		children?: string
+		children?: string | undefined
 	}
 ) => {
 	const className = createMemo(() =>
