@@ -1,2 +1,2 @@
-import { Elysia, t } from "elysia"
+import { Elysia } from "elysia"
 export const database_service = new Elysia({ name: "Service.Database" })

@@ -1,5 +1,6 @@
 import Elysia, { t } from "elysia"
 import { Schema } from "~/lib/schema"
+
 const artist_base_schema = t.Object({
 	id: Schema.id,
 	app_id: Schema.app_id,
@@ -57,7 +58,5 @@ export const artist_result_schema = t.Composite([
 export type ArtistResult = typeof artist_result_schema.static
 
 export const artist_model = new Elysia().model({
-	artist: t.Object({
-		data: artist_result_schema,
-	}),
+	"artist::findByID": Schema.ok(t.Array(artist_result_schema)),
 })

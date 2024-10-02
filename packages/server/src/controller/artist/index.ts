@@ -1,6 +1,6 @@
 import createClient, { Client } from "edgedb"
-import Elysia, { error, t } from "elysia"
-import { Result } from "~/lib/result"
+import Elysia, { t } from "elysia"
+import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
 import {
 	artist_model,
@@ -8,15 +8,8 @@ import {
 	ArtistResult,
 } from "~/model/artist"
 
-class ArtistController {
+class Artist {
 	constructor() {}
-
-	// add(artist: Omit<ArtistData, "id">) {
-	// 	this.data.push({
-	// 		app_id: this.auto_incre++,
-	// 		...artist,
-	// 	})
-	// }
 
 	async findByID(id: number, client?: Client) {
 		client = client ?? createClient()
@@ -24,74 +17,76 @@ class ArtistController {
 			`# edgeql
 			SELECT Artist {
 				**
-			} FILTER .app_id = ${id};
-			`
+			} FILTER .app_id = <int64>$id;
+			`,
+			{
+				id: id,
+			}
 		)) as ArtistResult
 	}
 
-	// remove(index: number) {
-	// 	this.data.splice(index, 1)
-	// }
-
-	// update(index: number, artist: Omit<ArtistData, "id">) {
-	// 	this.data[index] = {
-	// 		app_id: this.data[index].app_id,
-	// 		...artist,
-	// 	}
-	// }
+	async findByKeyword(keyword: string, client?: Client) {
+		client = client ?? createClient()
+		return (await client.query(
+			`# edgeql
+			WITH
+ 			  keyword := <str>$keyword
+			SELECT Artist {
+				**,
+			}
+			FILTER
+			  .name ILIKE '%' ++ keyword ++ '%'
+			OR
+			  .localized_name.name ILIKE '%' ++ keyword ++ '%'
+			`,
+			{
+				keyword: keyword,
+			}
+		)) as ArtistResult[]
+	}
 }
 
 export const artist_router = new Elysia({ prefix: "/artist" })
+	.use(artist_model)
+	.decorate("artist", new Artist())
+	.get(
+		"",
+		async ({ artist, query: { keyword } }) => {
+			const result = await artist.findByKeyword(keyword)
+			if (!result || result.length === 0) {
+				return Response.notFound("Artist Not Found")
+			} else return Response.ok(result)
+		},
+		{
+			query: t.Object({
+				keyword: t.String(),
+			}),
+			response: {
+				200: "artist::findByID",
+				404: Schema.err,
+			},
+		}
+	)
+	.group("/:id", (router) =>
+		router
+			.guard({
+				params: t.Object({
+					id: Schema.app_id,
+				}),
+			})
+			.get(
+				"",
+				async ({ artist, params: { id } }) => {
+					let res = await artist.findByID(id)
 
-	// .use(artist_model)
-	.decorate("controller", new ArtistController())
-	.onTransform(({ body, params, path, request: { method } }) => {
-		console.log(`${method} ${path}`, {
-			body,
-			params,
-		})
-	})
-	// .get("/", ({ controller }) => controller.data)
-	// .post("/", ({ controller, body: { data } }) => controller.add(data), {
-	// 	body: "artist",
-	// })
-	.group(
-		"/:id",
-		(router) =>
-			router
-				.guard({
-					params: t.Object({
-						id: Schema.app_id,
-					}),
-				})
-				.get(
-					"",
-					async ({ controller, params: { id } }) => {
-						let res = await controller.findByID(id)
-						if (res != null) return Result.ok(res)
-						else return Result.err(404, "Artist not found")
+					if (res != null) return Response.ok(res)
+					else return Response.err(404, "Artist not found")
+				},
+				{
+					response: {
+						200: Schema.ok(artist_result_schema),
+						404: Schema.err,
 					},
-					{
-						response: {
-							200: Schema.ok(artist_result_schema),
-							404: Schema.err,
-						},
-					}
-				)
-		// .delete("", ({ controller, params: { id }, error }) => {
-		// 	if (controller.data.findIndex((a) => a.app_id === id) !== undefined)
-		// 		return controller.remove(id - 1)
-		// 	else return error(422)
-		// })
-		// .post(
-		// 	"",
-		// 	({ controller, params: { id }, body: { data }, error }) => {
-		// 		if (controller.data.findIndex((a) => a.app_id === id) !== undefined)
-		// 			return controller.update(id - 1, data)
-		// 		else return error(422)
-		// 	},
-		// 	{
-		// 		body: "artist",
-		// 	}
-		// )
+				}
+			)
 	)
