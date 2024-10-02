@@ -13,40 +13,44 @@ const artist_base_schema = t.Object({
 			name: Schema.name,
 		})
 	),
-	date_of_start: t.Optional(
+	date_of_start: t.Nullable(
 		t.String({
 			format: "date",
 		})
 	),
-	date_of_start_mask: Schema.date_mask,
-	date_of_end: t.Optional(
+	date_of_start_mask: t.Nullable(Schema.date_mask),
+	date_of_end: t.Nullable(
 		t.String({
 			format: "date",
 		})
 	),
-	date_of_end_mask: Schema.date_mask,
-	start_location: t.Optional(Schema.location),
-	current_location: t.Optional(Schema.location),
-	end_location: t.Optional(Schema.location),
-	str_alias: t.Array(Schema.name),
+	date_of_end_mask: t.Nullable(Schema.date_mask),
+	start_location: t.Nullable(Schema.location),
+	current_location: t.Nullable(Schema.location),
+	end_location: t.Nullable(Schema.location),
+	str_alias: t.Nullable(t.Array(Schema.name)),
 })
 
 export const artist_result_schema = t.Composite([
 	artist_base_schema,
 	t.Object({
-		alias: artist_base_schema,
-		members: t.Composite([
-			t.Omit(artist_base_schema, ["artist_type"]),
-			t.Object({
-				artist_type: t.Literal("Person"),
-			}),
-		]),
-		member_of: t.Composite([
-			t.Omit(artist_base_schema, ["artist_type"]),
-			t.Object({
-				artist_type: t.Literal("Group"),
-			}),
-		]),
+		alias: t.Array(artist_base_schema),
+		members: t.Array(
+			t.Composite([
+				t.Omit(artist_base_schema, ["artist_type"]),
+				t.Object({
+					artist_type: t.Literal("Person"),
+				}),
+			])
+		),
+		member_of: t.Array(
+			t.Composite([
+				t.Omit(artist_base_schema, ["artist_type"]),
+				t.Object({
+					artist_type: t.Literal("Group"),
+				}),
+			])
+		),
 	}),
 ])
 
@@ -57,13 +61,3 @@ export const artist_model = new Elysia().model({
 		data: artist_result_schema,
 	}),
 })
-
-// function findArtistByAppID(id: number, client: Client) {
-// 	return client.querySingle(
-// 		`# edgeql
-// 		SELECT Artist {
-// 			**
-// 		} FILTER .app_id = ${id}
-// 		`
-// 	)
-// }
