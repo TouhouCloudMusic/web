@@ -1,19 +1,8 @@
 import { Elysia } from "elysia"
-import { auth_service } from "~/service/user"
-
-export const getUserId = new Elysia()
-	.use(auth_service)
-	.guard({
-		isSignIn: true,
-		cookie: "session",
-	})
-	.resolve(({ store: { session }, cookie: { token } }) => ({
-		username: session[token.value],
-	}))
-	.as("plugin")
+import { user_info } from "~/service/user"
 
 export const user_router = new Elysia({ prefix: "/user" })
-	.use(getUserId)
+	.use(user_info)
 	.put(
 		"/sign-up",
 		async ({ body: { username, password }, store, error }) => {

@@ -1,5 +1,6 @@
 import { opentelemetry } from "@elysiajs/opentelemetry"
 import swagger from "@elysiajs/swagger"
+import createClient from "edgedb"
 import { Elysia } from "elysia"
 import { artist_router } from "./controller/artist/index.js"
 import { user_router } from "./controller/user"

@@ -1,3 +1,4 @@
+import createClient from "edgedb"
 import { Elysia, t } from "elysia"
 export const auth_service = new Elysia({ name: "Service.Auth" })
 	.state({
@@ -43,3 +44,15 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
 			})
 		},
 	}))
+
+export const user_info = new Elysia()
+	.use(auth_service)
+	.guard({
+		isSignIn: true,
+		cookie: "session",
+	})
+	.resolve(({ store: { session }, cookie: { token } }) => ({
+		username: session[token.value],
+		edgedb_client: createClient(),
+	}))
+	.as("plugin")
