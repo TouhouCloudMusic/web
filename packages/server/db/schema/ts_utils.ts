@@ -1,0 +1,63 @@
+import { TableConfig } from "drizzle-orm"
+import {
+	integer,
+	PgTableWithColumns,
+	real,
+	serial,
+	timestamp,
+	varchar,
+} from "drizzle-orm/pg-core"
+import { artist } from "./artist"
+import { vote_level } from "./enum"
+import { music_role } from "./music"
+import { user } from "./user"
+
+export const created_at = {
+	created_at: timestamp("created_at", { precision: 6, withTimezone: true })
+		.notNull()
+		.defaultNow(),
+}
+
+export const updated_at = {
+	updated_at: timestamp("updated_at", { precision: 6, withTimezone: true })
+		.notNull()
+		.defaultNow(),
+}
+
+export const created_and_updated_at = {
+	...created_at,
+	...updated_at,
+}
+
+/**
+ *
+ * Automatically generated columns that credit table needs:
+ * - id
+ * - artist id
+ * - musci role id
+ * - display name
+ */
+export const credit_cons = () => ({
+	id: serial("id").primaryKey(),
+	artist_id: integer("artist_id")
+		.references(() => artist.id)
+		.notNull(),
+	role_id: integer("role_id")
+		.references(() => music_role.id)
+		.notNull(),
+	display_name: varchar("display_name", { length: 128 }),
+	...created_and_updated_at,
+})
+
+export const vote_cons = <T extends TableConfig>(
+	target: PgTableWithColumns<T>
+) => ({
+	voter_id: integer("voter_id")
+		.references(() => user.id)
+		.notNull(),
+	target_id: integer("target_id")
+		.references(() => target.id)
+		.notNull(),
+	vote_level: vote_level("vote_level").notNull(),
+	vote_value: real("vote_value").notNull(),
+})

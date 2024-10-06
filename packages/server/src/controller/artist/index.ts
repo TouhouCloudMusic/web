@@ -2,11 +2,7 @@ import createClient, { Client } from "edgedb"
 import Elysia, { t } from "elysia"
 import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
-import {
-	artist_model,
-	artist_result_schema,
-	ArtistResult,
-} from "~/model/artist"
+import { artist_model, ArtistResult } from "~/model/artist"
 
 class Artist {
 	constructor() {}
@@ -62,7 +58,7 @@ export const artist_router = new Elysia({ prefix: "/artist" })
 				keyword: t.String(),
 			}),
 			response: {
-				200: "artist::findByID",
+				200: "artist::find_by_keyword",
 				404: Schema.err,
 			},
 		}
@@ -80,11 +76,11 @@ export const artist_router = new Elysia({ prefix: "/artist" })
 					let res = await artist.findByID(id)
 
 					if (res != null) return Response.ok(res)
-					else return Response.err(404, "Artist not found")
+					else return Response.notFound("Artist not found")
 				},
 				{
 					response: {
-						200: Schema.ok(artist_result_schema),
+						200: "artist::find_by_id",
 						404: Schema.err,
 					},
 				}

@@ -58,5 +58,6 @@ export const artist_result_schema = t.Composite([
 export type ArtistResult = typeof artist_result_schema.static
 
 export const artist_model = new Elysia().model({
-	"artist::findByID": Schema.ok(t.Array(artist_result_schema)),
+	"artist::find_by_id": Schema.ok(artist_result_schema),
+	"artist::find_by_keyword": Schema.ok(t.Array(artist_result_schema)),
 })
