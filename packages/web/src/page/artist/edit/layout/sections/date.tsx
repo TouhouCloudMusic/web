@@ -2,19 +2,17 @@ import { getError, setValue } from "@modular-forms/solid"
 import dayjs from "dayjs"
 import { list } from "radash"
 import {
+	batch,
 	createEffect,
 	createMemo,
 	createSignal,
 	For,
 	Index,
-	JSX,
-	on,
-	Setter,
+	type JSX,
 	Show,
 } from "solid-js"
-import { twMerge } from "tailwind-merge"
-import { ErrorMessage, Label, TextField } from "~/component/form"
-import { DateMask } from "~/lib/form/schema/database.ts"
+import { ErrorMessage, Label } from "~/component/form"
+import { Select } from "~/component/form/Select/index.tsx"
 import { CURRENT_YEAR } from "~/lib/global_constant.ts"
 import { useController } from "../context.tsx"
 

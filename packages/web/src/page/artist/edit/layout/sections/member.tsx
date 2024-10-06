@@ -1,9 +1,9 @@
 import { getError, getValue, toCustom } from "@modular-forms/solid"
 import { For, Index, Match, Show, Switch, createMemo } from "solid-js"
-import { PlusIcon } from "solid-radix-icons"
+import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
-import { TertiaryButton } from "~/component/button/index.tsx"
+import { PrimaryButton, TertiaryButton } from "~/component/button/index.tsx"
 import { FormUI } from "~/component/form/ui"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
 import { notNullString } from "~/lib/validate/not_empty_string.ts"

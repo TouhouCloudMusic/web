@@ -5,7 +5,6 @@ import { Show } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
 
 import { PrimaryButton, TertiaryButton } from "~/component/button"
-import { FormUI } from "~/component/form/ui"
 import { useI18N } from "~/state/i18n"
 
 import { type ArtistFormSchema } from "../data/form/index.ts"

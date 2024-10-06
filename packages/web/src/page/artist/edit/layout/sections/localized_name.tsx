@@ -8,12 +8,12 @@ import { stringSimilarity } from "string-similarity-js"
 import { twMerge } from "tailwind-merge"
 
 import { TertiaryButton } from "~/component/button/index.tsx"
-import { Combobox as ComboboxStyle } from "~/component/combobox.tsx"
 import {
 	FieldArray as _FieldArray,
 	ResetFieldDialogTrigger,
 	TextField,
 } from "~/component/form"
+import { Combobox as ComboboxStyle } from "~/component/form/Combobox/index.tsx"
 import { Card } from "~/component/layout/index.tsx"
 import { localizedLanguageArray } from "~/lib/form/schema/language.ts"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"

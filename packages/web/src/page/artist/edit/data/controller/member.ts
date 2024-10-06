@@ -5,7 +5,6 @@ import {
 	insert,
 	remove,
 } from "@modular-forms/solid"
-import { type Accessor } from "solid-js"
 import { type SetStoreFunction } from "solid-js/store"
 import { isEmptyArray } from "~/lib/validate/array"
 import { type ControllerStore } from "."

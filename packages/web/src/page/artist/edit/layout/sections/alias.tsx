@@ -1,41 +1,51 @@
 import { getValue, insert, reset } from "@modular-forms/solid"
-import * as R from "radash"
-import { For, Index, Match, Show, Switch } from "solid-js"
+import { For, Match, Show, Switch } from "solid-js"
+import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
+import { PrimaryButton, TertiaryButton } from "~/component/button/index.tsx"
+import { Label } from "~/component/form/index.tsx"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
 
+import { repeat } from "ramda"
+import { SearchAndAddDialog } from "~/component/dialog/SearchAndAddDialog.tsx"
 import {
 	FieldArray as _FieldArray,
 	ErrorMessage,
 	ResetFieldDialogTrigger,
 } from "~/component/form/index.tsx"
-import { type ArtistByKeyword } from "../../data/index.ts"
+import { type AliasSchema } from "../../data/form/index.ts"
 import { useController } from "../context.tsx"
-import { DeleteButton } from "./components/delete_button.tsx"
-
-import { PlusIcon } from "solid-radix-icons"
-import { TertiaryButton } from "~/component/button/index.tsx"
-import { Label } from "~/component/form/index.tsx"
 import * as Style from "../style.ts"
 
+const fakeData = repeat(
+	{
+		name: "Foo",
+		is_str: false,
+	},
+	9
+)
+
 export function Aliases() {
-	const { artistType, alias, FieldArray, dataQuery, formStore } =
-		useController()
+	const { artistType, FieldArray, dataQuery, formStore } = useController()
 
 	return (
 		<FieldArray name="alias">
 			{(fieldArray) => {
-				const insertAlias = () =>
+				const insertAlias = (alias?: AliasSchema) =>
 					insert(formStore, fieldArray.name, {
 						// @ts-ignore
-						value: {},
+						value: {
+							name: alias?.name ?? "",
+							is_str: alias?.is_str ?? false,
+							id: alias?.id,
+						},
 					})
 
 				const resetField = () => reset(formStore, fieldArray.name)
 				return (
 					<div>
-						<div class="flex items-end justify-between [&_svg]:size-[15px]">
+						<div class="mr-0.5 flex items-end justify-between [&_svg]:size-[15px]">
 							<h4 class={Label.className}>
 								<Switch>
 									<Match when={dataQuery?.isLoading}>
