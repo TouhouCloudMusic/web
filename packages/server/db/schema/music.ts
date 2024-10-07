@@ -1,6 +1,5 @@
 import { pgEnum, pgTable, serial, text, varchar } from "drizzle-orm/pg-core"
-import { created_and_updated_at } from "./ts_utils"
-
+import { created_and_updated_at } from "./utils/created_and_updated_at"
 export type MusicRole = typeof music_role.$inferSelect
 export type NewMusicRole = typeof music_role.$inferInsert
 export const music_role = pgTable("music_role", {

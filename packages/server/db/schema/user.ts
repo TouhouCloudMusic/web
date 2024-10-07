@@ -1,6 +1,6 @@
 import { pgTable, serial, varchar } from "drizzle-orm/pg-core"
 import { location } from "./custom_type"
-import { created_and_updated_at } from "./ts_utils"
+import { created_and_updated_at } from "./utils/created_and_updated_at"
 
 export const user = pgTable("user", {
 	id: serial("id").primaryKey(),

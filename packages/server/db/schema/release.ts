@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm"
 import {
 	date,
 	integer,
@@ -8,12 +9,12 @@ import {
 	uniqueIndex,
 	varchar,
 } from "drizzle-orm/pg-core"
-import { t } from "elysia"
 import { artist } from "./artist"
 import { date_precision } from "./enum"
 import { localization_language } from "./lang"
 import { song } from "./song"
-import { created_and_updated_at, credit_cons } from "./ts_utils"
+import { created_and_updated_at } from "./utils/created_and_updated_at"
+import { credit_cons } from "./utils/vote"
 
 export const release_type = pgEnum("release_type", ["Album", "EP", "Single"])
 
@@ -36,7 +37,7 @@ export const release_localized_title = pgTable(
 	"release_localized_title",
 	{
 		release_id: integer("release_id")
-			.references(() => release.id)
+			.references(() => release.id, { onDelete: "cascade" })
 			.notNull(),
 		language: localization_language("language").notNull(),
 		title: varchar("title", { length: 128 }).notNull(),
@@ -44,14 +45,19 @@ export const release_localized_title = pgTable(
 	(t) => ({})
 )
 
+export const release_relation = relations(release, ({ many }) => ({
+	artist: many(release_artist),
+	localized_title: many(release_localized_title),
+}))
+
 export const release_artist = pgTable(
 	"release_artist",
 	{
 		release_id: integer("release_id")
-			.references(() => release.id)
+			.references(() => release.id, { onDelete: "cascade" })
 			.notNull(),
 		artist_id: integer("member_id")
-			.references(() => artist.id)
+			.references(() => artist.id, { onDelete: "cascade" })
 			.notNull(),
 	},
 	(t) => ({
@@ -59,14 +65,25 @@ export const release_artist = pgTable(
 	})
 )
 
+export const release_artist_relation = relations(release_artist, ({ one }) => ({
+	release: one(release, {
+		fields: [release_artist.release_id],
+		references: [release.id],
+	}),
+	artist: one(artist, {
+		fields: [release_artist.artist_id],
+		references: [artist.id],
+	}),
+}))
+
 export const release_label = pgTable(
 	"release_label",
 	{
 		release_id: integer("release_id")
-			.references(() => release.id)
+			.references(() => release.id, { onDelete: "cascade" })
 			.notNull(),
 		label_id: integer("label_id")
-			.references(() => artist.id)
+			.references(() => artist.id, { onDelete: "cascade" })
 			.notNull(),
 	},
 	(t) => ({
@@ -77,7 +94,7 @@ export const release_label = pgTable(
 export const release_track = pgTable("release_track", {
 	id: serial("id").primaryKey(),
 	release_id: integer("release_id")
-		.references(() => release.id)
+		.references(() => release.id, { onDelete: "cascade" })
 		.notNull(),
 	song_id: integer("song_id")
 		.references(() => song.id)
@@ -92,7 +109,7 @@ export const release_track_credit = pgTable(
 	{
 		...credit_cons(),
 		track_id: integer("track_id")
-			.references(() => release_track.id)
+			.references(() => release_track.id, { onDelete: "cascade" })
 			.notNull(),
 	},
 	(t) => ({
@@ -105,7 +122,7 @@ export const release_credit = pgTable(
 	{
 		...credit_cons(),
 		release_id: integer("release_id")
-			.references(() => release.id)
+			.references(() => release.id, { onDelete: "cascade" })
 			.notNull(),
 	},
 	(t) => ({

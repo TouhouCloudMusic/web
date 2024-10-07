@@ -7,27 +7,13 @@ import {
 	timestamp,
 	varchar,
 } from "drizzle-orm/pg-core"
-import { artist } from "./artist"
-import { vote_level } from "./enum"
-import { music_role } from "./music"
-import { user } from "./user"
+import { artist } from "../artist"
+import { vote_level } from "../enum"
+import { music_role } from "../music"
+import { user } from "../user"
+import { created_and_updated_at } from "./created_and_updated_at"
 
-export const created_at = {
-	created_at: timestamp("created_at", { precision: 6, withTimezone: true })
-		.notNull()
-		.defaultNow(),
-}
-
-export const updated_at = {
-	updated_at: timestamp("updated_at", { precision: 6, withTimezone: true })
-		.notNull()
-		.defaultNow(),
-}
-
-export const created_and_updated_at = {
-	...created_at,
-	...updated_at,
-}
+export type OmitCreatedAndUpdatedAt<T> = Omit<T, "created_at" | "updated_at">
 
 /**
  *
