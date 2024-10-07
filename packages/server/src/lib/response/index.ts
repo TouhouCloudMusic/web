@@ -16,4 +16,10 @@ export const Response = {
 			message: message ?? "404 Not Found",
 		})
 	},
+	internalServerError(message?: string) {
+		return error(500, {
+			state: "error",
+			message: message ?? "Internal Server Error",
+		})
+	},
 }
