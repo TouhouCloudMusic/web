@@ -20,8 +20,6 @@ import { created_and_updated_at } from "./utils/created_and_updated_at"
 export type ArtistType = (typeof artist_type_enum.enumValues)[number]
 export const artist_type_enum = pgEnum("artist_type", ["Person", "Group"])
 
-export type Artist = typeof artist.$inferSelect
-export type NewArtist = typeof artist.$inferInsert
 export const artist = pgTable("artist", {
 	id: serial("id").primaryKey(),
 	name: varchar("name", { length: 128 }).notNull(),
@@ -51,8 +49,6 @@ export const artist_relation = relations(artist, ({ one, many }) => ({
 	member_of: many(group_member, { relationName: "member_of" }),
 }))
 
-export type ArtistLocalizedName = typeof artist_localized_name.$inferSelect
-export type NewArtistLocalizedName = typeof artist_localized_name.$inferInsert
 export const artist_localized_name = pgTable(
 	"artist_localized_name",
 	{

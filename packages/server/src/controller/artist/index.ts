@@ -3,9 +3,11 @@ import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
 import { artist_model } from "~/model/artist"
 import { error_model } from "~/model/error"
+import { database_service } from "~/service/database"
 export const artist_router = new Elysia({ prefix: "/artist" })
 	.use(error_model)
 	.use(artist_model)
+
 	// .get(
 	// 	"",
 	// 	async ({ artist, query: { keyword } }) => {

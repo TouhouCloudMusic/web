@@ -1,22 +1,32 @@
-import { Artist as A, artist, NewArtist as NA } from "db/schema"
-import { artist_schema, new_artist_schema } from "db/type/typebox"
+import { artist, artist_localized_name } from "db/schema"
+import {
+	Artist,
+	artist_schema,
+	new_artist_schema,
+	NewArtist,
+} from "db/type/typebox"
 import Elysia from "elysia"
-import { db as _db, DB } from "~/lib/db_client.js"
 import { Schema } from "~/lib/schema"
-import { Entity } from ".."
+import { db as _db, DB } from "~/service/database"
+import { type Entity } from ".."
 
-class Artist implements Partial<Entity<A, NA>> {
+class ArtistModel implements Partial<Entity<Artist, NewArtist>> {
 	private db: DB
 	constructor(db?: DB) {
 		this.db = db ?? _db
 	}
 
-	findByID(id: number) {
-		return this.db.query.artist.findFirst({
+	async findByID(id: number) {
+		let res = await this.db.query.artist.findFirst({
 			where: (fields, op) => op.eq(fields.id, id),
 			with: {
 				alias_group: true,
-				localized_name: true,
+				localized_name: {
+					columns: {
+						language: true,
+						name: true,
+					},
+				},
 				members: {
 					with: {
 						member: true,
@@ -30,10 +40,24 @@ class Artist implements Partial<Entity<A, NA>> {
 				release: true,
 			},
 		})
+
+		return res
 	}
 
-	insert(data: NA) {
-		return this.db.insert(artist).values(data).returning()
+	async insert(data: NewArtist) {
+		let res = (await this.db.insert(artist).values(data).returning())[0]
+
+		if (data.localized_name) {
+			await this.db.insert(artist_localized_name).values(
+				data.localized_name.map(({ name, language }) => ({
+					name,
+					language,
+					artist_id: res.id,
+				}))
+			)
+		}
+
+		return (await this.findByID(res.id))!
 	}
 
 	// async findByKeyword(keyword: string, client?: DB) {
@@ -63,4 +87,4 @@ export const artist_model = new Elysia()
 		"artist::new": new_artist_schema,
 		// "artist::find_by_keyword": Schema.ok(t.Array(artist_schema)),
 	})
-	.decorate("artist", new Artist())
+	.decorate("artist", new ArtistModel())
