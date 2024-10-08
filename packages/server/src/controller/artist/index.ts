@@ -3,29 +3,33 @@ import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
 import { artist_model } from "~/model/artist"
 import { error_model } from "~/model/error"
-import { database_service } from "~/service/database"
-export const artist_router = new Elysia({ prefix: "/artist" })
+export const artist_controller = new Elysia({ prefix: "/artist" })
 	.use(error_model)
 	.use(artist_model)
-
-	// .get(
-	// 	"",
-	// 	async ({ artist, query: { keyword } }) => {
-	// 		const result = await artist.findByKeyword(keyword)
-	// 		if (!result || result.length === 0) {
-	// 			return Response.notFound("Artist Not Found")
-	// 		} else return Response.ok(result)
-	// 	},
-	// 	{
-	// 		query: t.Object({
-	// 			keyword: t.String(),
-	// 		}),
-	// 		response: {
-	// 			200: "artist::find_by_keyword",
-	// 			404: Schema.err,
-	// 		},
-	// 	}
-	// )
+	.get(
+		"",
+		async ({ artist, query: { keyword, limit } }) => {
+			let result = await artist.findByKeyword(keyword, limit)
+			if (result.length === 0) return Response.notFound("Artist Not Found")
+			return Response.ok(result)
+		},
+		{
+			query: t.Object({
+				keyword: t.String(),
+				limit: t.Optional(
+					t.Integer({
+						minimum: 1,
+						maximum: 100,
+						default: 10,
+					})
+				),
+			}),
+			response: {
+				200: "artist::find_by_keyword",
+				404: "error",
+			},
+		}
+	)
 	.post(
 		"",
 		async ({ artist, body }) => {
