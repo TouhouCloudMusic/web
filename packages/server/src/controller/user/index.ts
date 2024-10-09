@@ -1,83 +1,100 @@
+import dayjs from "dayjs"
 import { Elysia } from "elysia"
-import { user_info } from "~/service/user"
+import { user } from "~/database/schema"
+import { Response } from "~/lib/response"
+import { db } from "~/service/database"
+import { auth_service, user_info } from "~/service/user"
 
-export const user_router = new Elysia({ prefix: "/user" })
-	.use(user_info)
+export const user_controller = new Elysia({ prefix: "/user" })
+	.use(auth_service)
 	.put(
 		"/sign-up",
-		async ({ body: { username, password }, store, error }) => {
-			if (store.user[username])
-				return error(400, {
-					success: false,
-					message: "User already exists",
-				})
-
-			store.user[username] = await Bun.password.hash(password)
-
-			return {
-				success: true,
-				message: "User created",
-			}
+		async ({
+			Session,
+			body: { username, password },
+			store,
+			cookie: { token },
+		}) => {
+			let dupe = await db.query.user.findFirst({
+				where: (fields, op) => op.eq(fields.name, username),
+			})
+			if (dupe) return Response.err(409, "User already exists")
+			let new_user = (
+				await db
+					.insert(user)
+					.values({
+						name: username,
+						password: await Bun.password.hash(password),
+					})
+					.returning()
+			)[0]
+			if (!new_user) return Response.err(500, "Sign Up Failed")
+			store.user = new_user
+			let new_token = Session.generateSessionToken()
+			store.session = await Session.createSession(new_token, new_user.id)
+			token.set({
+				value: new_token,
+				maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
+			})
+			return Response.ok(["Hello,", new_user.name].join(" "))
 		},
 		{
-			body: "signIn",
+			body: "auth::sign_in",
 		}
 	)
 	.post(
 		"/sign-in",
 		async ({
-			store: { user, session },
-			error,
+			Session,
+			store,
 			body: { username, password },
 			cookie: { token },
 		}) => {
-			if (
-				!user[username] ||
-				!(await Bun.password.verify(password, user[username]))
-			)
-				return error(400, {
-					success: false,
-					message: "Invalid username or password",
+			if (user.name) return Response.err(403, "Already signed in")
+			let current_user = await Session.validateSessionToken(token.value)
+			if (!current_user) {
+				let user = await db.query.user.findFirst({
+					where: (fields, op) => op.eq(fields.name, username),
 				})
-
-			const key = crypto.getRandomValues(new Uint32Array(1))[0]
-			session[key] = username
-			token.value = key
-
-			return {
-				success: true,
-				message: `Signed in as ${username}`,
+				if (!user) return Response.err(404, "User not found")
+				if (!(await Bun.password.verify(password, user.password))) {
+					return Response.err(401, "Incorrect password")
+				}
+				store.user = user
+				let new_token = Session.generateSessionToken()
+				store.session = await Session.createSession(new_token, user.id)
+				token.set({
+					value: new_token,
+					maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
+				})
+				return Response.ok(["Hello,", user.name].join(" "))
 			}
 		},
 		{
-			body: "signIn",
-			cookie: "optionalSession",
+			body: "auth::sign_in",
+			cookie: "auth::optional_session",
 		}
 	)
+	.use(user_info)
 	.get(
 		"/sign-out",
-		({ cookie: { token } }) => {
+		async ({ cookie: { token }, Session }) => {
+			await Session.invalidateSession(token.value)
 			token.remove()
 
-			return {
-				success: true,
-				messaage: "Signed out",
-			}
+			return Response.ok("Signed out")
 		},
 		{
-			cookie: "optionalSession",
+			cookie: "auth::optional_session",
 		}
 	)
 	.get(
 		"/profile",
-		({ username }) => {
-			return {
-				success: true,
-				username,
-			}
+		({ store: { user } }) => {
+			return Response.ok(user)
 		},
 		{
 			isSignIn: true,
-			cookie: "session",
+			cookie: "auth::session",
 		}
 	)

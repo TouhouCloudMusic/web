@@ -1,47 +1,57 @@
-import createClient from "edgedb"
 import { Elysia, t } from "elysia"
+import { Session, User } from "~/database"
+import { SessionModel } from "./session"
 export const auth_service = new Elysia({ name: "Service.Auth" })
+	.decorate("Session", SessionModel)
 	.state({
-		user: {} as Record<string, string>,
-		session: {} as Record<number, string>,
+		user: {} as User,
+		session: {} as Session,
 	})
 	.model({
-		signIn: t.Object({
-			username: t.String({ minLength: 1 }),
-			password: t.String({ minLength: 8 }),
+		"auth::sign_in": t.Object({
+			username: t.String({
+				minLength: 1,
+				maxLength: 16,
+				pattern: "/^(?!.*[\\p{C}\\p{Z}])[\\p{L}\\p{N}\\p{S}_]+$/u",
+			}),
+			password: t.String({ minLength: 8, maxLength: 64 }),
 		}),
-		session: t.Cookie(
+		"auth::session": t.Cookie(
 			{
-				token: t.Number(),
+				token: t.String({
+					format: "uuid",
+				}),
 			},
 			{
-				secrets: "seia",
+				secrets: "阿巴阿巴",
 			}
 		),
 	})
 	.model((model) => ({
 		...model,
-		optionalSession: t.Optional(model.session),
+		"auth::optional_session": t.Optional(model["auth::session"]),
 	}))
 	.macro(({ onBeforeHandle }) => ({
 		isSignIn(enabled: true) {
 			if (!enabled) return
 
-			onBeforeHandle(({ error, cookie: { token }, store: { session } }) => {
-				if (!token.value)
-					return error(401, {
-						success: false,
-						message: "Unauthorized",
-					})
+			onBeforeHandle(
+				({ error, cookie: { token }, store: { session, user } }) => {
+					if (!token.value)
+						return error(401, {
+							success: false,
+							message: "Unauthorized",
+						})
 
-				const username = session[token.value as unknown as number]
+					const username = user.name
 
-				if (!username)
-					return error(401, {
-						success: false,
-						message: "Unauthorized",
-					})
-			})
+					if (!username)
+						return error(401, {
+							success: false,
+							message: "Unauthorized",
+						})
+				}
+			)
 		},
 	}))
 
@@ -49,10 +59,9 @@ export const user_info = new Elysia()
 	.use(auth_service)
 	.guard({
 		isSignIn: true,
-		cookie: "session",
+		cookie: "auth::session",
 	})
-	.resolve(({ store: { session }, cookie: { token } }) => ({
-		username: session[token.value],
-		edgedb_client: createClient(),
+	.resolve(({ store: { user } }) => ({
+		username: user.name,
 	}))
 	.as("plugin")
