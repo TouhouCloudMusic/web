@@ -47,14 +47,15 @@ export const artist_controller = new Elysia({ prefix: "/artist" })
 			body: "artist::new",
 		}
 	)
-	.group("/:id", (router) =>
-		router
-			.guard({
-				params: t.Object({
-					id: Schema.app_id,
-				}),
-			})
-			.get(
+	.group(
+		"/:id",
+		{
+			params: t.Object({
+				id: Schema.id,
+			}),
+		},
+		($) =>
+			$.get(
 				"",
 				async ({ artist, params: { id } }) => {
 					let res = await artist.findByID(id)

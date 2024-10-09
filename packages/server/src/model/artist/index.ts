@@ -10,8 +10,27 @@ import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
 import { type Entity } from ".."
 
+type With = Exclude<
+	Parameters<typeof _db.query.artist.findFirst>[0],
+	undefined
+>["with"]
+
+type UnprocessedArtist = Awaited<ReturnType<typeof simulate_find>>
+
+const simulate_find = () => _db.query.artist.findFirst({ with: result_shape })
+
 const result_shape = {
-	alias_group: true,
+	alias_group: {
+		columns: {},
+		with: {
+			artist: {
+				columns: {
+					id: true,
+					name: true,
+				},
+			},
+		},
+	},
 	localized_name: {
 		columns: {
 			language: true,
@@ -20,16 +39,53 @@ const result_shape = {
 	},
 	members: {
 		with: {
-			member: true,
+			member: {
+				columns: {
+					id: true,
+					name: true,
+				},
+			},
 		},
 	},
 	member_of: {
 		with: {
-			group: true,
+			group: {
+				columns: {
+					id: true,
+					name: true,
+				},
+			},
 		},
 	},
-	release: true,
-} as const
+	release: {
+		columns: {},
+		with: {
+			release: {
+				columns: {
+					id: true,
+					title: true,
+				},
+			},
+		},
+	},
+} satisfies With
+
+function processArtist<T extends UnprocessedArtist>(
+	artist: T
+): undefined extends T ? undefined : Artist {
+	// @ts-ignore
+	if (!artist) return undefined
+	// @ts-ignore
+	return {
+		...artist,
+		alias_group: undefined,
+		aliases:
+			artist?.alias_group?.artist.filter(({ id }) => id !== artist?.id) ?? [],
+		release: artist.release.map((x) => x.release),
+		members: artist.members.map((x) => x.member),
+		member_of: artist.member_of.map((x) => x.group),
+	}
+}
 
 class ArtistModel implements Partial<Entity<Artist, NewArtist>> {
 	private db: DB
@@ -38,12 +94,12 @@ class ArtistModel implements Partial<Entity<Artist, NewArtist>> {
 	}
 
 	async findByID(id: number) {
-		let res = await this.db.query.artist.findFirst({
-			where: (fields, op) => op.eq(fields.id, id),
-			with: result_shape,
-		})
-
-		return res
+		return this.db.query.artist
+			.findFirst({
+				where: (fields, op) => op.eq(fields.id, id),
+				with: result_shape,
+			})
+			.then(processArtist)
 	}
 
 	async insert(data: NewArtist) {
@@ -67,11 +123,13 @@ class ArtistModel implements Partial<Entity<Artist, NewArtist>> {
 	}
 
 	async findByKeyword(keyword: string, limit = 10) {
-		return this.db.query.artist.findMany({
-			where: (fields, op) => op.ilike(fields.name, `%${keyword}%`),
-			limit,
-			with: result_shape,
-		})
+		return this.db.query.artist
+			.findMany({
+				where: (fields, op) => op.ilike(fields.name, `%${keyword}%`),
+				limit,
+				with: result_shape,
+			})
+			.then((x) => x.map(processArtist))
 	}
 }
 

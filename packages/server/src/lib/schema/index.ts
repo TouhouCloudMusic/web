@@ -11,13 +11,12 @@ const localized_langs = [
 const date_masks = ["Full", "YM", "Y"] as const satisfies date.FormatMask[]
 
 export const Schema = {
-	id: t.String({
-		format: "uuid",
-	}),
-	app_id: t.Number({
-		minimum: 1,
-		error: "Invalid ID",
-	}),
+	id: t.Number(
+		t.Integer({
+			minimum: 1,
+			error: "Invalid ID",
+		})
+	),
 	name: t.String({
 		minLength: 1,
 		maxLength: 127,
