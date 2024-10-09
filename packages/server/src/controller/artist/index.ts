@@ -15,8 +15,16 @@ export const artist_controller = new Elysia({ prefix: "/artist" })
 		},
 		{
 			query: t.Object({
-				keyword: t.String(),
-				limit: t.Optional(
+				keyword: t
+					.Transform(
+						t.String({
+							minLength: 1,
+							maxLength: 100,
+						})
+					)
+					.Decode((v) => v.trim())
+					.Encode((v) => v.trim()),
+				limit: t.Number(
 					t.Integer({
 						minimum: 1,
 						maximum: 100,
