@@ -1,4 +1,4 @@
-import { localization_language } from "db/schema"
+import { localization_language } from "~/database/schema"
 
 export type * from "../schema"
 export type * from "./typebox"

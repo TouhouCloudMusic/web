@@ -1,6 +1,6 @@
-import { artist, artist_localized_name } from "db/schema"
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
+import { artist, artist_localized_name } from "~/database/schema"
 
 // https://github.com/drizzle-team/drizzle-orm/issues/1810
 const text_alias_schema = t.Optional(

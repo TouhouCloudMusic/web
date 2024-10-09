@@ -1,11 +1,11 @@
-import { artist, artist_localized_name } from "db/schema"
+import Elysia, { t } from "elysia"
+import { artist, artist_localized_name } from "~/database/schema"
 import {
 	Artist,
 	artist_schema,
 	new_artist_schema,
 	NewArtist,
-} from "db/type/typebox"
-import Elysia, { t } from "elysia"
+} from "~/database/type/typebox"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
 import { type Entity } from ".."
@@ -14,7 +14,6 @@ type With = Exclude<
 	Parameters<typeof _db.query.artist.findFirst>[0],
 	undefined
 >["with"]
-
 type UnprocessedArtist = Awaited<ReturnType<typeof simulate_find>>
 
 const simulate_find = () => _db.query.artist.findFirst({ with: result_shape })
