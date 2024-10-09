@@ -1,11 +1,14 @@
-import Elysia, { t } from "elysia"
+import Elysia from "elysia"
 import { Response } from "~/lib/response"
-import { Schema } from "~/lib/schema"
 import { artist_model } from "~/model/artist"
 import { error_model } from "~/model/error"
+import { util_plugin } from "~/plugin"
+import { user_controller } from "../user"
 export const artist_controller = new Elysia({ prefix: "/artist" })
 	.use(error_model)
 	.use(artist_model)
+	.use(util_plugin)
+	.use(user_controller)
 	.get(
 		"",
 		async ({ artist, query: { keyword, limit } }) => {
@@ -14,24 +17,7 @@ export const artist_controller = new Elysia({ prefix: "/artist" })
 			return Response.ok(result)
 		},
 		{
-			query: t.Object({
-				keyword: t
-					.Transform(
-						t.String({
-							minLength: 1,
-							maxLength: 100,
-						})
-					)
-					.Decode((v) => v.trim())
-					.Encode((v) => v.trim()),
-				limit: t.Number(
-					t.Integer({
-						minimum: 1,
-						maximum: 100,
-						default: 10,
-					})
-				),
-			}),
+			query: "query:keyword_with_limit",
 			response: {
 				200: "artist::find_by_keyword",
 				404: "error",
@@ -50,9 +36,7 @@ export const artist_controller = new Elysia({ prefix: "/artist" })
 	.group(
 		"/:id",
 		{
-			params: t.Object({
-				id: Schema.id,
-			}),
+			params: "params:id",
 		},
 		($) =>
 			$.get(
