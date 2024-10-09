@@ -8,7 +8,8 @@
     "start": "./server",
     "generate": "bunx drizzle-kit generate",
     "migrate": "bun ./src/database/migrate.ts",
-    "drop": "bunx drizzle-kit drop"
+    "drop": "bunx drizzle-kit drop",
+    "format": "bunx prettier --write ."
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
