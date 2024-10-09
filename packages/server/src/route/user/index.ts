@@ -5,7 +5,7 @@ import { Response } from "~/lib/response"
 import { db } from "~/service/database"
 import { auth_service, user_info } from "~/service/user"
 
-export const user_controller = new Elysia({ prefix: "/user" })
+export const user_router = new Elysia({ prefix: "/user" })
 	.use(auth_service)
 	.put(
 		"/sign-up",

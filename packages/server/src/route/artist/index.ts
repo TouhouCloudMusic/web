@@ -3,12 +3,12 @@ import { Response } from "~/lib/response"
 import { artist_model } from "~/model/artist"
 import { error_model } from "~/model/error"
 import { util_plugin } from "~/plugin"
-import { user_controller } from "../user"
-export const artist_controller = new Elysia({ prefix: "/artist" })
+import { user_router } from "../user"
+export const artist_router = new Elysia({ prefix: "/artist" })
 	.use(error_model)
 	.use(artist_model)
 	.use(util_plugin)
-	.use(user_controller)
+	.use(user_router)
 	.get(
 		"",
 		async ({ artist, query: { keyword, limit } }) => {
