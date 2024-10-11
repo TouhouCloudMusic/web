@@ -1,15 +1,13 @@
 import { eq } from "drizzle-orm"
-import { Session, User } from "~/database"
+import { Micro } from "effect"
+import type { Session, User } from "~/database"
 import { session as session_table } from "~/database/schema"
+import { db } from "~/service/database"
 
-import { db } from "../database"
+const FailedToCreateSessionErrMsg = "Failed to create session" as const
+const FailedToDeleteSessionMsg = "Failed to delete session" as const
 export type SessionToken = string & { type: "SessionToken" }
-
-export type SessionValidationResult = { session: Session; user: User } | null
-
 export class SessionModel {
-	constructor() {}
-
 	static generateSessionToken(): SessionToken {
 		return crypto.randomUUID() as SessionToken
 	}
@@ -27,9 +25,18 @@ export class SessionModel {
 		return new_session
 	}
 
-	static async validateSessionToken(
+	static createSessionMicro({ user }: { user: { id: number } }) {
+		return Micro.tryPromise({
+			try: () => this.createSession(this.generateSessionToken(), user.id),
+			catch: () => FailedToCreateSessionErrMsg,
+		})
+	}
+
+	static async validateToken({
+		token,
+	}: {
 		token: string
-	): Promise<SessionValidationResult> {
+	}): Promise<{ session: Session; user: User } | null> {
 		const result = await db.query.session.findFirst({
 			where: (field, op) => op.eq(field.id, token),
 			with: { user: true },
@@ -56,5 +63,27 @@ export class SessionModel {
 
 	static async invalidateSession(token: string): Promise<void> {
 		await db.delete(session_table).where(eq(session_table.id, token))
+	}
+}
+
+abstract class SessionError {
+	static FailedToCreateSession() {
+		return new FailedToCreateSessionError()
+	}
+
+	static FailedToDeleteSession() {
+		return new FailedToDeleteSessionError()
+	}
+}
+
+class FailedToCreateSessionError extends Error {
+	constructor() {
+		super(FailedToCreateSessionErrMsg)
+	}
+}
+
+class FailedToDeleteSessionError extends Error {
+	constructor() {
+		super(FailedToDeleteSessionMsg)
 	}
 }
