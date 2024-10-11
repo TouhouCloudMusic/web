@@ -1,8 +1,7 @@
 import { Elysia, t } from "elysia"
 import { Session, User } from "~/database"
-import { SessionModel } from "./session"
+import { SessionModel } from "../../model/user/session"
 export const auth_service = new Elysia({ name: "Service.Auth" })
-	.decorate("Session", SessionModel)
 	.state({
 		user: {} as User,
 		session: {} as Session,
@@ -37,19 +36,21 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
 
 			onBeforeHandle(
 				({ error, cookie: { token }, store: { session, user } }) => {
-					if (!token.value)
+					if (!token.value) {
 						return error(401, {
 							success: false,
 							message: "Unauthorized",
 						})
+					}
 
 					const username = user.name
 
-					if (!username)
+					if (!username) {
 						return error(401, {
 							success: false,
 							message: "Unauthorized",
 						})
+					}
 				}
 			)
 		},
@@ -59,7 +60,6 @@ export const user_info = new Elysia()
 	.use(auth_service)
 	.guard({
 		isSignIn: true,
-		cookie: "auth::session",
 	})
 	.resolve(({ store: { user } }) => ({
 		username: user.name,

@@ -8,7 +8,7 @@ import {
 } from "~/database/type/typebox"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
-import { type Entity } from ".."
+import { type Model } from ".."
 
 type With = Exclude<
 	Parameters<typeof _db.query.artist.findFirst>[0],
@@ -86,7 +86,7 @@ function processArtist<T extends UnprocessedArtist>(
 	}
 }
 
-class ArtistModel implements Partial<Entity<Artist, NewArtist>> {
+class ArtistModel implements Partial<Model<Artist, NewArtist>> {
 	private db: DB
 	constructor(db?: DB) {
 		this.db = db ?? _db

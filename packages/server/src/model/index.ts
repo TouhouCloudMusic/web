@@ -1,4 +1,4 @@
-export interface Entity<E, NE> {
+export interface Model<E, NE> {
 	findByID(id: number): Promise<E | undefined>
 	findByKeyword(keyword: string): Promise<E[]>
 	insert(data: NE): Promise<E>
