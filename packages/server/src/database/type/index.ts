@@ -4,4 +4,4 @@ export type * from "../schema"
 export type * from "./typebox"
 
 export type LocalizationLanguage =
-	(typeof localization_language.enumValues)[number]
+  (typeof localization_language.enumValues)[number]

@@ -8,13 +8,13 @@ const url = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`
 export type DB = typeof db
 
 export const db = await drizzle("postgres-js", {
-	connection: {
-		url: url,
-	},
-	schema,
-	logger: true,
+  connection: {
+    url: url,
+  },
+  schema,
+  logger: true,
 })
 
 export const database_service = new Elysia({
-	name: "Service.Database",
+  name: "Service.Database",
 }).decorate("db", () => db)

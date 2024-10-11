@@ -9,8 +9,8 @@ const host = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`
 console.log(`🐛 Migrating database "${host}`)
 
 const migrate_connection = postgres(
-	`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
-	{ max: 1, connect_timeout: 10000 }
+  `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`,
+  { max: 1, connect_timeout: 10000 },
 )
 
 await migrate(drizzle(migrate_connection), { migrationsFolder: "./drizzle" })
