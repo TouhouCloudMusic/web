@@ -1,6 +1,6 @@
-import { myM } from "@touhouclouddb/utils"
+import { myEffect } from "@touhouclouddb/utils"
 import dayjs from "dayjs"
-import { Micro as M } from "effect"
+import { Effect, Micro as M } from "effect"
 import { Elysia } from "elysia"
 import { Session, User } from "~/database"
 import { user } from "~/database/schema"
@@ -14,16 +14,16 @@ export const user_router = new Elysia()
   .post(
     "/sign-up",
     async ({ body: { username, password }, store, cookie: { token } }) => {
-      let task = UserModel.existMicro(username).pipe(
-        myM.flatMap((x) =>
+      let task = UserModel.existM(username).pipe(
+        myEffect.flatMap((x) =>
           !x ?
-            M.fail("User already exists" as const)
-          : UserModel.insertMicro({ name: username, password }),
+            Effect.fail("User already exists" as const)
+          : UserModel.insertM({ name: username, password }),
         ),
-        M.bindTo("user"),
-        myM.bind("session", SessionModel.createSessionMicro),
-        M.tap(setStore),
-        M.match({
+        Effect.bindTo("user"),
+        myEffect.bind("session", SessionModel.createSessionM),
+        Effect.tap(setStore),
+        Effect.match({
           onSuccess: ({ user }) => Response.hello(user.name),
           onFailure: (err) => {
             if (err === "User already exists") return Response.err(409, err)
@@ -32,7 +32,7 @@ export const user_router = new Elysia()
         }),
       )
 
-      return M.runPromise(task)
+      return Effect.runPromise(task)
 
       function setStore({ user, session }: { user: User; session: Session }) {
         return () => {

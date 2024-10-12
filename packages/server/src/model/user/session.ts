@@ -1,11 +1,22 @@
+import { io, myEffect } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
-import { Micro } from "effect"
+import { Effect, Either, flow, pipe } from "effect"
 import type { Session, User } from "~/database"
 import { session as session_table } from "~/database/schema"
 import { db } from "~/service/database"
 
-const FailedToCreateSessionErrMsg = "Failed to create session" as const
-const FailedToDeleteSessionMsg = "Failed to delete session" as const
+const SessionErrorMsg = {
+  FailedToCreateSession: "Failed to create session",
+  FailedToUpdateSession: "Failed to update session",
+  FailedToDeleteSession: "Failed to delete session",
+  FailedToFindSession: "Failed to find session",
+  SessionNotFound: "Session not found",
+} as const
+
+export type SessionValidateResult = {
+  session: Session
+  user: User
+}
 export type SessionToken = string & { type: "SessionToken" }
 export class SessionModel {
   static generateSessionToken(): SessionToken {
@@ -25,30 +36,68 @@ export class SessionModel {
     return new_session
   }
 
-  static createSessionMicro({ user }: { user: { id: number } }) {
-    return Micro.tryPromise({
-      try: () => this.createSession(this.generateSessionToken(), user.id),
-      catch: () => FailedToCreateSessionErrMsg,
+  static createSessionM({ user }: { user: { id: number } }) {
+    return Effect.tryPromise({
+      try: io.of(this.createSession(this.generateSessionToken(), user.id)),
+      catch: io.of(SessionErrorMsg.FailedToCreateSession),
     })
+  }
+
+  static async findSession(
+    token: string,
+  ): Promise<SessionValidateResult | undefined> {
+    return await db.query.session
+      .findFirst({
+        where: (field, op) => op.eq(field.id, token),
+        with: { user: true },
+      })
+      .then((x) => {
+        if (!x) return x
+        const { user, ...session } = x
+        return { user, session }
+      })
+  }
+
+  static findSessionM(token: string) {
+    return Effect.tryPromise({
+      try: io.of(this.findSession(token)),
+      catch: io.of(SessionErrorMsg.FailedToFindSession),
+    }).pipe(
+      Effect.map((x) =>
+        Either.fromNullable(x, () => SessionErrorMsg.SessionNotFound),
+      ),
+    )
+  }
+
+  static async updateSession(session: Session) {
+    return await db
+      .update(session_table)
+      .set(session)
+      .where(eq(session_table.id, session.id))
+  }
+
+  static updateSessionM(session: Session) {
+    return Effect.tryPromise({
+      try: () => this.updateSession(session),
+      catch: () => SessionErrorMsg.FailedToUpdateSession,
+    }).pipe(Effect.map(() => {}))
   }
 
   static async validateToken({
     token,
   }: {
     token: string
-  }): Promise<{ session: Session; user: User } | null> {
-    const result = await db.query.session.findFirst({
-      where: (field, op) => op.eq(field.id, token),
-      with: { user: true },
-    })
+  }): Promise<SessionValidateResult | null> {
+    const result = await this.findSession(token)
     if (!result) return null
 
-    const { user, ...session } = result
+    const { user, session } = result
 
     if (Date.now() >= session.expires_at.getTime()) {
-      await db.delete(session_table).where(eq(session_table.id, session.id))
+      await this.invalidateSession(token)
       return null
     }
+
     if (Date.now() >= session.expires_at.getTime() - 1000 * 60 * 60 * 24 * 15) {
       session.expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
       await db
@@ -61,29 +110,76 @@ export class SessionModel {
     return { session, user }
   }
 
+  static validateTokenM({ token }: { token: string }) {
+    return pipe(
+      token,
+      this.findSessionM,
+      myEffect.flatMap(
+        flow(
+          Either.map((result) => {
+            const replace_with = (ef: Effect.Effect<any, any, any>) =>
+              Effect.map(ef, () => result)
+
+            const on_expired = () =>
+              this.invalidateSessionM(token).pipe(replace_with)
+
+            const refresh_expires_at = () => {
+              session.expires_at = new Date(
+                Date.now() + 1000 * 60 * 60 * 24 * 30,
+              )
+              return this.updateSessionM(session).pipe(replace_with)
+            }
+
+            let { session } = result
+            let now = Date.now()
+            let expires_at = session.expires_at.getTime()
+            if (now >= expires_at) {
+              return on_expired()
+            }
+            if (now >= expires_at - 1000 * 60 * 60 * 24 * 15) {
+              return refresh_expires_at()
+            }
+            return Effect.succeed(result)
+          }),
+          Either.match({
+            onLeft: (x) => Effect.succeed(x),
+            onRight: (x) => x,
+          }),
+        ),
+      ),
+    )
+  }
+
   static async invalidateSession(token: string): Promise<void> {
     await db.delete(session_table).where(eq(session_table.id, token))
   }
-}
 
-abstract class SessionError {
-  static FailedToCreateSession() {
-    return new FailedToCreateSessionError()
-  }
-
-  static FailedToDeleteSession() {
-    return new FailedToDeleteSessionError()
+  static invalidateSessionM(token: string) {
+    return Effect.tryPromise({
+      try: () => this.invalidateSession(token),
+      catch: () => SessionErrorMsg.FailedToDeleteSession,
+    })
   }
 }
 
-class FailedToCreateSessionError extends Error {
-  constructor() {
-    super(FailedToCreateSessionErrMsg)
-  }
-}
+// abstract class SessionError {
+//   static FailedToCreateSession() {
+//     return new FailedToCreateSessionError()
+//   }
 
-class FailedToDeleteSessionError extends Error {
-  constructor() {
-    super(FailedToDeleteSessionMsg)
-  }
-}
+//   static FailedToDeleteSession() {
+//     return new FailedToDeleteSessionError()
+//   }
+// }
+
+// class FailedToCreateSessionError extends Error {
+//   constructor() {
+//     super(FAILED_TO_CREATE_SESSION_MSG)
+//   }
+// }
+
+// class FailedToDeleteSessionError extends Error {
+//   constructor() {
+//     super(FAILED_TO_DELETE_SESSION_MSG)
+//   }
+// }
