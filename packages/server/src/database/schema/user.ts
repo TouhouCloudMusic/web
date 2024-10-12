@@ -17,7 +17,7 @@ export const user = pgTable(
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 16 }).notNull(),
     email: varchar("email", { length: 128 }),
-    password: varchar("password", { length: 64 }).notNull(),
+    password: text().notNull(),
     location: location("location"),
     ...created_and_updated_at,
   },
@@ -26,15 +26,25 @@ export const user = pgTable(
   }),
 )
 
-export const session = pgTable("session", {
-  id: text().primaryKey(),
-  user_id: integer()
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  expires_at: timestamp().notNull(),
-})
+export const user_relations = relations(user, ({ one }) => ({
+  session: one(session),
+}))
 
-export const session_user = relations(session, ({ one }) => ({
+export const session = pgTable(
+  "session",
+  {
+    id: text().primaryKey(),
+    user_id: integer()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    expires_at: timestamp().notNull(),
+  },
+  (t) => ({
+    unq: uniqueIndex().on(t.user_id),
+  }),
+)
+
+export const session_relations = relations(session, ({ one }) => ({
   user: one(user, {
     fields: [session.user_id],
     references: [user.id],

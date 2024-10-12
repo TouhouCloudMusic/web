@@ -1,7 +1,6 @@
 import cors from "@elysiajs/cors"
 import { opentelemetry } from "@elysiajs/opentelemetry"
 import swagger from "@elysiajs/swagger"
-import createClient from "edgedb"
 import { Elysia } from "elysia"
 import { artist_router } from "./route/artist"
 import { user_router } from "./route/user"
@@ -26,6 +25,7 @@ const app = new Elysia()
   )
   .onError(({ error, code }) => {
     if (code === "NOT_FOUND") return "Not Found :("
+    console.log(error)
   })
   .get("/", () => "Hello Elysia")
   .use(user_router)

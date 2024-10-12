@@ -1,5 +1,6 @@
+import { HashedString } from "@touhouclouddb/utils"
 import { sql } from "drizzle-orm"
-import { Effect, Micro } from "effect"
+import { Effect, identity } from "effect"
 import type { NewUser } from "~/database"
 import { user } from "~/database/schema"
 import { db } from "~/service/database"
@@ -13,7 +14,7 @@ export abstract class UserModel {
 				WHERE ${user.name} = ${username}
 			) as is_exists;`)
 
-    return res[0].is_exists ? true : false
+    return res[0].is_exists
   }
 
   static existM(username: string) {
@@ -28,14 +29,21 @@ export abstract class UserModel {
   }
 
   static insertM(data: NewUser) {
-    return Micro.tryPromise({
+    return Effect.tryPromise({
       try: () => this.insert(data),
-      catch: () => "Insert user failed" as const,
-    })
+      catch: identity,
+    }).pipe(Effect.mapError(() => "Insert user failed" as const))
   }
   static async findByName(username: string) {
     return await db.query.user.findFirst({
       where: (fields, op) => op.eq(fields.name, username),
+    })
+  }
+
+  static async findByNameWithSession(username: string) {
+    return await db.query.user.findFirst({
+      where: (fields, op) => op.eq(fields.name, username),
+      with: { session: true },
     })
   }
 }

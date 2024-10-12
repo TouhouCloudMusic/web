@@ -1,6 +1,6 @@
 import { io, myEffect } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
-import { Effect, Either, flow, pipe } from "effect"
+import { Effect, Either, flow, identity, pipe } from "effect"
 import type { Session, User } from "~/database"
 import { session as session_table } from "~/database/schema"
 import { db } from "~/service/database"
@@ -38,9 +38,19 @@ export class SessionModel {
 
   static createSessionM({ user }: { user: { id: number } }) {
     return Effect.tryPromise({
-      try: io.of(this.createSession(this.generateSessionToken(), user.id)),
-      catch: io.of(SessionErrorMsg.FailedToCreateSession),
-    })
+      try: () =>
+        SessionModel.createSession(
+          SessionModel.generateSessionToken(),
+          user.id,
+        ),
+      catch: identity,
+    }).pipe(
+      Effect.mapError((x) => {
+        console.log(x)
+
+        return SessionErrorMsg.FailedToCreateSession
+      }),
+    )
   }
 
   static async findSession(
