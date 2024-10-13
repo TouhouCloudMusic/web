@@ -1,4 +1,4 @@
-import { io, myEffect } from "@touhouclouddb/utils"
+import { io, myEffect, toError } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import { Effect, Either, flow, identity, pipe } from "effect"
 import type { Session, User } from "~/database"
@@ -36,7 +36,7 @@ export class SessionModel {
     return new_session
   }
 
-  static createSessionM({ user }: { user: { id: number } }) {
+  static createSessionM(user: { id: number }) {
     return Effect.tryPromise({
       try: () =>
         SessionModel.createSession(
@@ -45,11 +45,9 @@ export class SessionModel {
         ),
       catch: identity,
     }).pipe(
-      Effect.mapError((x) => {
-        console.log(x)
-
-        return SessionErrorMsg.FailedToCreateSession
-      }),
+      Effect.mapError(
+        (e) => [SessionErrorMsg.FailedToCreateSession, toError(e)] as const,
+      ),
     )
   }
 

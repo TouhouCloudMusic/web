@@ -1,8 +1,34 @@
+import { toError } from "@touhouclouddb/utils"
 import { sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
-import type { NewUser } from "~/database"
+import type { NewUser, User } from "~/database"
 import { user } from "~/database/schema"
 import { db } from "~/service/database"
+import { OmitColumnFromSchema } from "../utils"
+
+type UserColumns = Exclude<
+  Parameters<typeof db.query.user.findFirst>[0],
+  undefined
+>["columns"]
+
+const RETURN_COLUMNS: OmitColumnFromSchema<User, UserColumns> = {
+  name: true,
+  email: true,
+  location: true,
+  created_at: true,
+  updated_at: true,
+} as const
+
+const RETURN_ON_INSERT = {
+  name: user.name,
+  email: user.email,
+  location: user.location,
+  created_at: user.created_at,
+  updated_at: user.updated_at,
+} as const satisfies Record<
+  keyof OmitColumnFromSchema<User, UserColumns>,
+  unknown
+>
 
 export abstract class UserModel {
   static async exist(username: string) {
@@ -19,7 +45,7 @@ export abstract class UserModel {
   static existM(username: string) {
     return Effect.tryPromise({
       try: () => this.exist(username),
-      catch: () => "Check user failed" as const,
+      catch: (e) => ["Check user failed", toError(e)] as const,
     })
   }
 
@@ -31,11 +57,13 @@ export abstract class UserModel {
     return Effect.tryPromise({
       try: () => this.insert(data),
       catch: identity,
-    }).pipe(Effect.mapError(() => "Insert user failed" as const))
+    }).pipe(Effect.mapError((e) => ["Insert user failed", toError(e)] as const))
   }
+
   static async findByName(username: string) {
     return await db.query.user.findFirst({
       where: (fields, op) => op.eq(fields.name, username),
+      columns: RETURN_COLUMNS,
     })
   }
 

@@ -1,32 +1,44 @@
 import { Elysia, t } from "elysia"
-import { Session, User } from "~/database"
+import { Session, User, user_schema } from "~/database"
+import { Schema } from "~/lib/schema"
+
+const COOKIE_OPTION = {
+  secrets: ["Hakurei Reimu", "Kirisame Marisa"],
+  path: "/" as const,
+  httpOnly: true as const,
+  sameSite: "lax" as const,
+}
+
 export const auth_service = new Elysia({ name: "Service.Auth" })
   .state({
     user: {} as User,
     session: {} as Session,
   })
   .model({
-    "auth::sign_in": t.Object({
+    "auth::sign": t.Object({
       username: t.RegExp(/^(?!.*[\p{C}\p{Z}])[\p{L}\p{N}\p{S}_]{1,16}$/u),
       password: t.String({ minLength: 8, maxLength: 64 }),
     }),
     "auth::session": t.Cookie(
       {
-        token: t.String({
-          format: "uuid",
-        }),
+        session_token: t.String(),
       },
       {
-        secrets: "阿巴阿巴",
+        ...COOKIE_OPTION,
+        sign: ["session_token"],
+      },
+    ),
+    "auth::optional_session": t.Cookie(
+      {
+        session_token: t.Optional(t.String()),
+      },
+      {
+        ...COOKIE_OPTION,
+        sign: ["token"],
       },
     ),
   })
-  .model((model) => {
-    return {
-      ...model,
-      "auth::optional_session": t.Partial(model["auth::session"]),
-    }
-  })
+
   .macro(({ onBeforeHandle }) => ({
     isSignIn(enabled: true) {
       if (!enabled) return

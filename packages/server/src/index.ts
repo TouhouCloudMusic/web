@@ -1,15 +1,14 @@
 import cors from "@elysiajs/cors"
-import { opentelemetry } from "@elysiajs/opentelemetry"
 import swagger from "@elysiajs/swagger"
 import { Elysia } from "elysia"
 import { artist_router } from "./route/artist"
 import { user_router } from "./route/user"
 
 const app = new Elysia()
-  .use(opentelemetry())
   .use(
     swagger({
       path: "/docs",
+      provider: "swagger-ui",
       documentation: {
         info: {
           title: "Touhou Cloud DB",

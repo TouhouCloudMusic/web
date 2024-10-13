@@ -1,8 +1,8 @@
 import { verify } from "@node-rs/argon2"
-import { hash, myEffect } from "@touhouclouddb/utils"
+import { hash } from "@touhouclouddb/utils"
 import dayjs from "dayjs"
 import { Effect } from "effect"
-import { Cookie, Elysia, } from "elysia"
+import { Cookie, Elysia } from "elysia"
 import { Session, User } from "~/database"
 import { Response } from "~/lib/response"
 import { UserModel } from "~/model/user"
@@ -13,7 +13,7 @@ function updateSessionState({
   user,
   session,
   store,
-  token,
+  session_token,
 }: {
   user: User
   session: Session
@@ -21,11 +21,11 @@ function updateSessionState({
     user: User
     session: Session
   }
-  token: Cookie<string | undefined>
+  session_token: Cookie<string | undefined>
 }) {
   store.user = user
   store.session = session
-  token.set({
+  session_token.set({
     value: session.id,
     maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
   })
@@ -35,22 +35,33 @@ export const user_router = new Elysia()
   .use(auth_service)
   .post(
     "/sign-up",
-    async ({ body: { username, password }, store, cookie: { token } }) => {
-      return UserModel.existM(username).pipe(
-        Effect.bindTo("exist"),
-        myEffect.flatMap((x) =>
-          x.exist ?
-            Effect.fail("User already exists" as const)
-          : Effect.succeed(x),
-        ),
-        Effect.bind("password", () => Effect.promise(() => hash(password))),
-        Effect.bind("user", ({ password }) =>
-          UserModel.insertM({ name: username, password: password }),
-        ),
-        myEffect.bind("session", SessionModel.createSessionM),
-        Effect.tap((info) => updateSessionState({ ...info, store, token })),
+    async ({
+      body: { username, password },
+      store,
+      cookie: { session_token },
+    }) => {
+      return Effect.gen(function* () {
+        const exist = yield* UserModel.existM(username)
+
+        yield* exist ?
+          Effect.fail("User already exists" as const)
+        : Effect.succeed(0)
+
+        const hashed_password = yield* Effect.promise(() => hash(password))
+
+        const user = yield* UserModel.insertM({
+          name: username,
+          password: hashed_password,
+        })
+
+        const session = yield* SessionModel.createSessionM(user)
+
+        updateSessionState({ user, session, store, session_token })
+
+        return user.name
+      }).pipe(
         Effect.match({
-          onSuccess: ({ user }) => Response.hello(user.name),
+          onSuccess: Response.hello,
           onFailure: (err) => {
             if (err === "User already exists") return Response.err(409, err)
             else return Response.err(500, err)
@@ -60,21 +71,27 @@ export const user_router = new Elysia()
       )
     },
     {
-      body: "auth::sign_in",
+      body: "auth::sign",
+      cookie: "auth::optional_session",
     },
   )
   .post(
     "/sign-in",
-    async ({ store, body: { username, password }, cookie: { token } }) => {
-      if (store.user.name && token)
+    async ({
+      store,
+      body: { username, password },
+      cookie: { session_token },
+    }) => {
+      if (store.user.name && session_token.value) {
         return Response.err(409, "Already signed in")
+      }
 
       const check_session_by_token =
-        token.value ?
+        session_token.value ?
           await SessionModel.validateToken({
-            token: token.value,
+            token: session_token.value,
           })
-        : undefined
+        : false
       if (check_session_by_token)
         return Response.hello(check_session_by_token.user.name)
 
@@ -87,9 +104,11 @@ export const user_router = new Elysia()
         return Response.err(401, "Incorrect password")
       }
 
-      let new_session = session
+      let new_session: Session
 
-      if (!(session as unknown as Nilable<Session>)) {
+      if (session) {
+        new_session = session
+      } else {
         new_session = await SessionModel.createSession(
           SessionModel.generateSessionToken(),
           user.id,
@@ -100,10 +119,10 @@ export const user_router = new Elysia()
         user,
         session: new_session,
         store,
-        token,
+        session_token,
       })
 
-      token.set({
+      session_token.set({
         value: new_session.id,
         maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
         sameSite: "lax",
@@ -113,30 +132,17 @@ export const user_router = new Elysia()
       return Response.hello(user.name)
     },
     {
-      body: "auth::sign_in",
+      body: "auth::sign",
       cookie: "auth::optional_session",
     },
   )
   .use(user_info)
-  .get(
-    "/sign-out",
-    async ({ cookie: { token } }) => {
-      await SessionModel.invalidateSession(token.value)
-      token.remove()
+  .get("/sign-out", async ({ cookie: { session_token } }) => {
+    await SessionModel.invalidateSession(session_token.value)
+    session_token.remove()
 
-      return Response.ok("Signed out")
-    },
-    // {
-    //   cookie: "auth::session",
-    // },
-  )
-  .get(
-    "/profile",
-    ({ store: { user } }) => {
-      return Response.ok(user)
-    },
-    {
-      isSignIn: true,
-      cookie: "auth::session",
-    },
-  )
+    return Response.ok("Signed out")
+  })
+  .get("/profile", ({ store: { user } }) => {
+    return Response.ok(user)
+  })
