@@ -2,14 +2,16 @@
   "name": "server",
   "version": "1.0.50",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts",
     "build": "bun build --compile --minify-whitespace --minify-identifiers --minify-syntax --target bun --outfile server ./src/index.ts",
-    "start": "./server",
-    "generate": "bunx drizzle-kit generate",
-    "migrate": "bun ./src/database/migrate.ts",
     "drop": "bunx drizzle-kit drop",
-    "fmt": "bunx prettier --write ."
+    "generate": "bunx drizzle-kit generate",
+    "dev": "bun run --watch src/index.ts",
+    "fix": "bunx oxlint --fix --fix-suggestions",
+    "fmt": "bunx prettier --write .",
+    "lint": "bunx oxlint",
+    "migrate": "bun ./src/database/migrate.ts",
+    "start": "./server",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
