@@ -2,10 +2,10 @@ import { relations } from "drizzle-orm"
 import {
   integer,
   pgTable,
-  serial,
   text,
   timestamp,
   uniqueIndex,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core"
 import { location } from "./custom_type"
@@ -14,7 +14,7 @@ import { created_and_updated_at } from "./utils/created_and_updated_at"
 export const user = pgTable(
   "user",
   {
-    id: serial("id").primaryKey(),
+    id: integer().primaryKey().generatedAlwaysAsIdentity(),
     name: varchar("name", { length: 16 }).notNull(),
     email: varchar("email", { length: 128 }),
     password: text().notNull(),
@@ -33,7 +33,7 @@ export const user_relations = relations(user, ({ one }) => ({
 export const session = pgTable(
   "session",
   {
-    id: text().primaryKey(),
+    id: uuid().primaryKey(),
     user_id: integer()
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),

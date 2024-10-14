@@ -1,11 +1,5 @@
 import { TableConfig } from "drizzle-orm"
-import {
-  integer,
-  PgTableWithColumns,
-  real,
-  serial,
-  varchar,
-} from "drizzle-orm/pg-core"
+import { integer, PgTableWithColumns, real, varchar } from "drizzle-orm/pg-core"
 import { artist } from "../artist"
 import { vote_level } from "../enum"
 import { music_role } from "../music"
@@ -22,7 +16,7 @@ export type OmitCreatedAndUpdatedAt<T> = Omit<T, "created_at" | "updated_at">
  * - display name
  */
 export const credit_cons = () => ({
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   artist_id: integer("artist_id")
     .references(() => artist.id)
     .notNull(),

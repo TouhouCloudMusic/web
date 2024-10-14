@@ -3,14 +3,13 @@ import {
   interval,
   pgTable,
   primaryKey,
-  serial,
   varchar,
 } from "drizzle-orm/pg-core"
 import { artist } from "./artist"
 import { localization_language } from "./lang"
 
 export const song = pgTable("song", {
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   title: varchar("title", { length: 128 }).notNull(),
   duration: interval("duration", { fields: "hour to second" }),
 })

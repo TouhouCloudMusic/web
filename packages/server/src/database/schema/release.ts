@@ -5,7 +5,6 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
-  serial,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
@@ -19,7 +18,7 @@ import { credit_cons } from "./utils/vote"
 export const release_type = pgEnum("release_type", ["Album", "EP", "Single"])
 
 export const release = pgTable("release", {
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   title: varchar("title", { length: 128 }).notNull(),
   catalog_number: varchar("catalog_number", { length: 16 }),
   recording_date_end_precision: date_precision("recording_date_end_prec"),
@@ -88,7 +87,7 @@ export const release_label = pgTable(
 )
 
 export const release_track = pgTable("release_track", {
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   release_id: integer("release_id")
     .references(() => release.id, { onDelete: "cascade" })
     .notNull(),

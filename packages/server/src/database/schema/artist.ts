@@ -1,4 +1,4 @@
-import { relations, } from "drizzle-orm"
+import { relations } from "drizzle-orm"
 import {
   date,
   index,
@@ -6,7 +6,6 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
-  serial,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
@@ -21,7 +20,7 @@ export type ArtistType = (typeof artist_type_enum.enumValues)[number]
 export const artist_type_enum = pgEnum("artist_type", ["Person", "Group"])
 
 export const artist = pgTable("artist", {
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 128 }).notNull(),
   artist_type: artist_type_enum("artist_type").notNull(),
   text_alias: varchar("text_alias", { length: 128 }).array(),
@@ -77,7 +76,7 @@ export const artist_localized_name_relation = relations(
 )
 
 export const alias_group = pgTable("alias_group", {
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
 })
 
 export const alias_group_relation = relations(alias_group, ({ many }) => ({

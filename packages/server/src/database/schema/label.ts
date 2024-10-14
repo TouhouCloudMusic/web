@@ -4,7 +4,6 @@ import {
   integer,
   pgTable,
   primaryKey,
-  serial,
   varchar,
 } from "drizzle-orm/pg-core"
 import { artist } from "./artist"
@@ -16,7 +15,7 @@ import { created_and_updated_at } from "./utils/created_and_updated_at"
 export type Label = typeof label.$inferSelect
 export type NewLabel = typeof label.$inferInsert
 export const label = pgTable("label", {
-  id: serial("id").primaryKey(),
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 128 }).notNull(),
   founded_date: date("founded_date"),
   founded_date_precision: date_precision("founded_date_prec"),
