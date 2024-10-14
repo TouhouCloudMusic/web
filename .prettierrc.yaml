@@ -3,18 +3,6 @@ semi: false
 singleAttributePerLine: true
 overrides:
   - files:
-      - "*.yaml"
-      - "*.yml"
-      - "*.md"
-    options:
-      tabWidth: 2
-      useTabs: false
-  - files:
-      - "package.json"
-    options:
-      tabWidth: 2
-      useTabs: false
-  - files:
       - "*.jsx"
       - "*.tsx"
     options:
