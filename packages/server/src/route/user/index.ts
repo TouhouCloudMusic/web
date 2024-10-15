@@ -92,8 +92,9 @@ export const user_router = new Elysia()
             token: session_token.value,
           })
         : false
-      if (check_session_by_token)
+      if (check_session_by_token) {
         return Response.hello(check_session_by_token.user.name)
+      }
 
       const result = await UserModel.findByNameWithSession(username)
       if (!result) return Response.err(404, "User not found")

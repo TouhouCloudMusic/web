@@ -1,8 +1,8 @@
 import { io, myEffect, toError } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import { Effect, Either, flow, identity, pipe } from "effect"
-import type { Session, User } from "~/database"
-import { session as session_table } from "~/database/schema"
+import { Session, User } from "~/database"
+import { session as session_table } from "~/database/migrate/schema"
 import { db } from "~/service/database"
 
 const SessionErrorMsg = {

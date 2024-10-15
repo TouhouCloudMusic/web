@@ -9,14 +9,11 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
+import { release_artist } from "~/database/migrate/schema"
+import { created_and_updated_at } from "~/database/utils/created_and_updated_at"
+import { location } from "../custom_type"
+import { date_precision, localization_language } from "../enums"
 
-import { location } from "./custom_type"
-import { date_precision } from "./enum"
-import { localization_language } from "./lang"
-import { release_artist } from "./release"
-import { created_and_updated_at } from "./utils/created_and_updated_at"
-
-export type ArtistType = (typeof artist_type_enum.enumValues)[number]
 export const artist_type_enum = pgEnum("artist_type", ["Person", "Group"])
 
 export const artist = pgTable("artist", {

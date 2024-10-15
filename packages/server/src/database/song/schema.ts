@@ -5,8 +5,8 @@ import {
   primaryKey,
   varchar,
 } from "drizzle-orm/pg-core"
-import { artist } from "./artist"
-import { localization_language } from "./lang"
+import { artist } from "../artist"
+import { localization_language } from "../enums"
 
 export const song = pgTable("song", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),

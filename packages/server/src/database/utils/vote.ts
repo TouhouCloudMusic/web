@@ -1,9 +1,9 @@
 import { TableConfig } from "drizzle-orm"
 import { integer, PgTableWithColumns, real, varchar } from "drizzle-orm/pg-core"
-import { artist } from "../artist"
-import { vote_level } from "../enum"
-import { music_role } from "../music"
-import { user } from "../user"
+import { artist } from "~/database/artist/schema"
+import { user } from "~/database/user/schema"
+import { vote_level } from "../enums"
+import { music_role } from "../music/schema"
 import { created_and_updated_at } from "./created_and_updated_at"
 
 export type OmitCreatedAndUpdatedAt<T> = Omit<T, "created_at" | "updated_at">

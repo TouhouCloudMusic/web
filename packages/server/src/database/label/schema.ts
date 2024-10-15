@@ -6,11 +6,11 @@ import {
   primaryKey,
   varchar,
 } from "drizzle-orm/pg-core"
-import { artist } from "./artist"
-import { location } from "./custom_type"
-import { date_precision } from "./enum"
-import { localization_language } from "./lang"
-import { created_and_updated_at } from "./utils/created_and_updated_at"
+import { location } from "../custom_type"
+import { date_precision, localization_language } from "../enums"
+
+import { artist } from "~/database/artist/schema"
+import { created_and_updated_at } from "../utils/created_and_updated_at"
 
 export type Label = typeof label.$inferSelect
 export type NewLabel = typeof label.$inferInsert

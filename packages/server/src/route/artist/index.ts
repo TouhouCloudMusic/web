@@ -1,13 +1,11 @@
-import Elysia from "elysia"
+import Elysia, { t } from "elysia"
 import { Response } from "~/lib/response"
+import { Schema } from "~/lib/schema"
 import { artist_model } from "~/model/artist"
-import { error_model } from "~/model/error"
-import { util_plugin } from "~/plugin"
 import { auth_service } from "~/service/user"
+
 export const artist_router = new Elysia({ prefix: "/artist" })
-  .use(error_model)
   .use(artist_model)
-  .use(util_plugin)
   .use(auth_service)
   .get(
     "",
@@ -17,10 +15,13 @@ export const artist_router = new Elysia({ prefix: "/artist" })
       return Response.ok(result)
     },
     {
-      query: "query:keyword_with_limit",
+      query: t.Object({
+        keyword: t.String({ maxLength: 32 }),
+        limit: t.Number({ minimum: 1, maximum: 100, default: 10 }),
+      }),
       response: {
         200: "artist::find_by_keyword",
-        404: "error",
+        404: Schema.err,
       },
     },
   )
@@ -36,7 +37,9 @@ export const artist_router = new Elysia({ prefix: "/artist" })
   .group(
     "/:id",
     {
-      params: "params:id",
+      params: t.Object({
+        id: t.Number({ minimum: 1 }),
+      }),
     },
     ($) =>
       $.get(
@@ -48,7 +51,7 @@ export const artist_router = new Elysia({ prefix: "/artist" })
         {
           response: {
             200: "artist::find_by_id",
-            404: "error",
+            404: Schema.err,
           },
         },
       ),

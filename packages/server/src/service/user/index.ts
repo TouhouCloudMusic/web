@@ -1,6 +1,5 @@
 import { Elysia, t } from "elysia"
-import { Session, User, user_schema } from "~/database"
-import { Schema } from "~/lib/schema"
+import { Session, User } from "~/database"
 
 const COOKIE_OPTION = {
   secrets: ["Hakurei Reimu", "Kirisame Marisa"],
@@ -38,7 +37,6 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
       },
     ),
   })
-
   .macro(({ onBeforeHandle }) => ({
     isSignIn(enabled: true) {
       if (!enabled) return

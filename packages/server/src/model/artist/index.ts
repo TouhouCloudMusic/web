@@ -1,24 +1,23 @@
+import { AsyncReturnType } from "@touhouclouddb/utils"
 import Elysia, { t } from "elysia"
-import { artist, artist_localized_name } from "~/database/schema"
 import {
   Artist,
   artist_schema,
   new_artist_schema,
   NewArtist,
-} from "~/database/type/typebox"
+} from "~/database/artist/typebox"
+import { artist, artist_localized_name } from "~/database/migrate/schema"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
-import { type Model } from ".."
 
-type With = Exclude<
-  Parameters<typeof _db.query.artist.findFirst>[0],
-  undefined
+type With = NonNullable<
+  Parameters<typeof _db.query.artist.findFirst>[0]
 >["with"]
-type UnprocessedArtist = Awaited<ReturnType<typeof simulate_find>>
+type UnprocessedArtist = AsyncReturnType<typeof simulate_find>
 
-const simulate_find = () => _db.query.artist.findFirst({ with: result_shape })
+const simulate_find = () => _db.query.artist.findFirst({ with: RETURN_WITH })
 
-const result_shape = {
+const RETURN_WITH = {
   alias_group: {
     columns: {},
     with: {
@@ -86,7 +85,7 @@ function processArtist<T extends UnprocessedArtist>(
   }
 }
 
-class ArtistModel implements Partial<Model<Artist, NewArtist>> {
+class ArtistModel {
   private db: DB
   constructor(db?: DB) {
     this.db = db ?? _db
@@ -96,7 +95,7 @@ class ArtistModel implements Partial<Model<Artist, NewArtist>> {
     return this.db.query.artist
       .findFirst({
         where: (fields, op) => op.eq(fields.id, id),
-        with: result_shape,
+        with: RETURN_WITH,
       })
       .then(processArtist)
   }
@@ -126,7 +125,7 @@ class ArtistModel implements Partial<Model<Artist, NewArtist>> {
       .findMany({
         where: (fields, op) => op.ilike(fields.name, `%${keyword}%`),
         limit,
-        with: result_shape,
+        with: RETURN_WITH,
       })
       .then((x) => x.map(processArtist))
   }

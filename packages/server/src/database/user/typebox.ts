@@ -1,7 +1,7 @@
 import { HashedString } from "@touhouclouddb/utils"
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
-import { session, user } from "~/database/schema"
+import { session, user } from "./schema"
 
 const _user_schema = createSelectSchema(user)
 export const user_schema = t.Omit(_user_schema, ["id", "password"])

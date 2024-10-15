@@ -1,1 +1,2 @@
-export * from "./type"
+export * from "./artist"
+export * from "./user"

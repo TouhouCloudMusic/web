@@ -1,8 +1,7 @@
 import { toError } from "@touhouclouddb/utils"
 import { sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
-import type { NewUser, User } from "~/database"
-import { user } from "~/database/schema"
+import { NewUser, user, User } from "~/database"
 import { db } from "~/service/database"
 import { OmitColumnFromSchema } from "../utils"
 

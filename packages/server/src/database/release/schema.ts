@@ -8,12 +8,11 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
-import { artist } from "./artist"
-import { date_precision } from "./enum"
-import { localization_language } from "./lang"
-import { song } from "./song"
-import { created_and_updated_at } from "./utils/created_and_updated_at"
-import { credit_cons } from "./utils/vote"
+import { artist } from "../artist"
+import { date_precision, localization_language } from "../enums"
+import { song } from "../song/schema"
+import { created_and_updated_at } from "../utils/created_and_updated_at"
+import { credit_cons } from "../utils/vote"
 
 export const release_type = pgEnum("release_type", ["Album", "EP", "Single"])
 

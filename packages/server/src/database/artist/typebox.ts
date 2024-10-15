@@ -1,8 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
-import { artist, artist_localized_name } from "~/database/schema"
+import { artist, artist_localized_name, artist_type_enum } from "./schema"
 
-export * from "./user"
+export type ArtistType = (typeof artist_type_enum.enumValues)[number]
 
 // https://github.com/drizzle-team/drizzle-orm/issues/1810
 const text_alias_schema = t.Optional(
