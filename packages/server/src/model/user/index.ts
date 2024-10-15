@@ -72,4 +72,11 @@ export abstract class UserModel {
       with: { session: true },
     })
   }
+
+  static findByNameWithSessionM(username: string) {
+    return Effect.tryPromise({
+      try: () => this.findByNameWithSession(username),
+      catch: (e) => ["Find user failed", toError(e)] as const,
+    })
+  }
 }

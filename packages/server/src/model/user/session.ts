@@ -1,16 +1,22 @@
-import { io, myEffect, toError } from "@touhouclouddb/utils"
+import { sha256 } from "@oslojs/crypto/sha2"
+import {
+  encodeBase32LowerCaseNoPadding,
+  encodeHexLowerCase,
+} from "@oslojs/encoding"
+import { toError } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
-import { Effect, Either, flow, identity, pipe } from "effect"
+import { Effect, Option, pipe } from "effect"
 import { Session, User } from "~/database"
 import { session as session_table } from "~/database/migrate/schema"
+import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
 
 const SessionErrorMsg = {
-  FailedToCreateSession: "Failed to create session",
-  FailedToUpdateSession: "Failed to update session",
-  FailedToDeleteSession: "Failed to delete session",
-  FailedToFindSession: "Failed to find session",
-  SessionNotFound: "Session not found",
+  CreateFailed: "Create session failed",
+  UpdateFailed: "Update session failed",
+  DeleteFailed: "Delete session failed",
+  FindFailed: "Find session failed",
+  NotFound: "Session not found",
 } as const
 
 export type SessionValidateResult = {
@@ -19,16 +25,20 @@ export type SessionValidateResult = {
 }
 export type SessionToken = string & { type: "SessionToken" }
 export class SessionModel {
-  static generateSessionToken(): SessionToken {
-    return crypto.randomUUID() as SessionToken
+  static generateToken(): SessionToken {
+    const bytes = new Uint8Array(32)
+    crypto.getRandomValues(bytes)
+    return encodeBase32LowerCaseNoPadding(bytes) as SessionToken
   }
 
   static async createSession(
-    token: SessionToken,
     user_id: number,
+    token: SessionToken = this.generateToken(),
   ): Promise<Session> {
+    const id = pipe(textEncoder.encode(token), sha256, encodeHexLowerCase)
+
     const new_session: Session = {
-      id: token,
+      id,
       user_id,
       expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     }
@@ -36,22 +46,14 @@ export class SessionModel {
     return new_session
   }
 
-  static createSessionM(user: { id: number }) {
+  static createSessionM(id: number, token?: SessionToken) {
     return Effect.tryPromise({
-      try: () =>
-        SessionModel.createSession(
-          SessionModel.generateSessionToken(),
-          user.id,
-        ),
-      catch: identity,
-    }).pipe(
-      Effect.mapError(
-        (e) => [SessionErrorMsg.FailedToCreateSession, toError(e)] as const,
-      ),
-    )
+      try: () => SessionModel.createSession(id, token),
+      catch: (e) => [SessionErrorMsg.CreateFailed, toError(e)] as const,
+    })
   }
 
-  static async findSession(
+  private static async findSession(
     token: string,
   ): Promise<SessionValidateResult | undefined> {
     return await db.query.session
@@ -66,15 +68,13 @@ export class SessionModel {
       })
   }
 
-  static findSessionM(token: string) {
+  private static findSessionM(token: string) {
+    const findSession = this.findSession.bind(this)
+
     return Effect.tryPromise({
-      try: io.of(this.findSession(token)),
-      catch: io.of(SessionErrorMsg.FailedToFindSession),
-    }).pipe(
-      Effect.map((x) =>
-        Either.fromNullable(x, () => SessionErrorMsg.SessionNotFound),
-      ),
-    )
+      try: () => findSession(token),
+      catch: (e) => [SessionErrorMsg.FindFailed, toError(e)] as const,
+    }).pipe(Effect.map((x) => Option.fromNullable(x)))
   }
 
   static async updateSession(session: Session) {
@@ -87,15 +87,13 @@ export class SessionModel {
   static updateSessionM(session: Session) {
     return Effect.tryPromise({
       try: () => this.updateSession(session),
-      catch: () => SessionErrorMsg.FailedToUpdateSession,
+      catch: () => SessionErrorMsg.UpdateFailed,
     }).pipe(Effect.map(() => {}))
   }
 
-  static async validateToken({
-    token,
-  }: {
-    token: string
-  }): Promise<SessionValidateResult | null> {
+  static async validateToken(
+    token: string,
+  ): Promise<SessionValidateResult | null> {
     const result = await this.findSession(token)
     if (!result) return null
 
@@ -115,47 +113,32 @@ export class SessionModel {
         })
         .where(eq(session_table.id, session.id))
     }
-    return { session, user }
+    return { user, session }
   }
 
   static validateTokenM({ token }: { token: string }) {
-    return pipe(
-      token,
-      this.findSessionM,
-      myEffect.flatMap(
-        flow(
-          Either.map((result) => {
-            const replace_with = (ef: Effect.Effect<any, any, any>) =>
-              Effect.map(ef, () => result)
+    const findSesion = this.findSessionM.bind(this)
+    const invalidateSession = this.invalidateSessionM.bind(this)
+    const updateSession = this.updateSessionM.bind(this)
+    return Effect.gen(function* () {
+      const result = yield* findSesion(token)
 
-            const on_expired = () =>
-              this.invalidateSessionM(token).pipe(replace_with)
+      if (Option.isNone(result)) return null
+      const { user, session } = result.value
 
-            const refresh_expires_at = () => {
-              session.expires_at = new Date(
-                Date.now() + 1000 * 60 * 60 * 24 * 30,
-              )
-              return this.updateSessionM(session).pipe(replace_with)
-            }
+      const expries_at = session.expires_at.getTime()
 
-            let { session } = result
-            let now = Date.now()
-            let expires_at = session.expires_at.getTime()
-            if (now >= expires_at) {
-              return on_expired()
-            }
-            if (now >= expires_at - 1000 * 60 * 60 * 24 * 15) {
-              return refresh_expires_at()
-            }
-            return Effect.succeed(result)
-          }),
-          Either.match({
-            onLeft: (x) => Effect.succeed(x),
-            onRight: (x) => x,
-          }),
-        ),
-      ),
-    )
+      if (Date.now() >= expries_at) {
+        yield* invalidateSession(token)
+        return null
+      }
+
+      if (Date.now() >= expries_at - 1000 * 60 * 60 * 24 * 15) {
+        session.expires_at = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+        yield* updateSession(session)
+      }
+      return { user, session }
+    })
   }
 
   static async invalidateSession(token: string): Promise<void> {
@@ -165,29 +148,7 @@ export class SessionModel {
   static invalidateSessionM(token: string) {
     return Effect.tryPromise({
       try: () => this.invalidateSession(token),
-      catch: () => SessionErrorMsg.FailedToDeleteSession,
+      catch: () => SessionErrorMsg.DeleteFailed,
     })
   }
 }
-
-// abstract class SessionError {
-//   static FailedToCreateSession() {
-//     return new FailedToCreateSessionError()
-//   }
-
-//   static FailedToDeleteSession() {
-//     return new FailedToDeleteSessionError()
-//   }
-// }
-
-// class FailedToCreateSessionError extends Error {
-//   constructor() {
-//     super(FAILED_TO_CREATE_SESSION_MSG)
-//   }
-// }
-
-// class FailedToDeleteSessionError extends Error {
-//   constructor() {
-//     super(FAILED_TO_DELETE_SESSION_MSG)
-//   }
-// }

@@ -5,7 +5,6 @@ import {
   text,
   timestamp,
   uniqueIndex,
-  uuid,
   varchar,
 } from "drizzle-orm/pg-core"
 import { location } from "../custom_type"
@@ -30,19 +29,14 @@ export const user_relations = relations(user, ({ one }) => ({
   session: one(session),
 }))
 
-export const session = pgTable(
-  "session",
-  {
-    id: uuid().primaryKey(),
-    user_id: integer()
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    expires_at: timestamp().notNull(),
-  },
-  (t) => ({
-    unq: uniqueIndex().on(t.user_id),
-  }),
-)
+export const session = pgTable("session", {
+  id: text().primaryKey(),
+  user_id: integer()
+    .notNull()
+    .unique()
+    .references(() => user.id, { onDelete: "cascade" }),
+  expires_at: timestamp({ withTimezone: true }).notNull(),
+})
 
 export const session_relations = relations(session, ({ one }) => ({
   user: one(user, {
