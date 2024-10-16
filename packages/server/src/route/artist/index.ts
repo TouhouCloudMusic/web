@@ -2,7 +2,7 @@ import Elysia, { t } from "elysia"
 import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
 import { artist_model } from "~/model/artist"
-import { auth_service } from "~/service/user"
+import { auth_service, logged_in_info } from "~/service/user"
 
 export const artist_router = new Elysia({ prefix: "/artist" })
   .use(artist_model)
@@ -23,15 +23,6 @@ export const artist_router = new Elysia({ prefix: "/artist" })
         200: "artist::find_by_keyword",
         404: Schema.err,
       },
-    },
-  )
-  .post(
-    "",
-    async ({ artist, body }) => {
-      return artist.insert(body)
-    },
-    {
-      body: "artist::new",
     },
   )
   .group(
@@ -55,4 +46,14 @@ export const artist_router = new Elysia({ prefix: "/artist" })
           },
         },
       ),
+  )
+  .use(logged_in_info)
+  .post(
+    "",
+    async ({ artist, body }) => {
+      return artist.insert(body)
+    },
+    {
+      body: "artist::new",
+    },
   )
