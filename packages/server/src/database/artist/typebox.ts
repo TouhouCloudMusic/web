@@ -30,16 +30,16 @@ const link_props = t.Object({
   release: t.Array(t.Object({ id: t.Number(), title: t.String() })),
 })
 export const artist_schema = t.Composite([gen_artist, link_props])
+export type Artist = typeof artist_schema.static
 
 const gen_new_artist = createInsertSchema(artist, {
   text_alias: text_alias_schema,
 })
-
 const new_link_props = t.Object({
   localized_name: t.Optional(t.Array(i18n_name_in)),
 })
-
-export const new_artist_schema = t.Composite([gen_new_artist, new_link_props])
-
-export type Artist = typeof artist_schema.static
+export const new_artist_schema = t.Composite([
+  t.Omit(gen_new_artist, ["id", "created_at", "updated_at"]),
+  new_link_props,
+])
 export type NewArtist = typeof new_artist_schema.static
