@@ -1,4 +1,5 @@
 import { AsyncReturnType } from "@touhouclouddb/utils"
+import { eq } from "drizzle-orm"
 import Elysia, { t } from "elysia"
 import {
   Artist,
@@ -70,7 +71,7 @@ const RETURN_WITH = {
 
 function processArtist<T extends UnprocessedArtist>(
   artist: T,
-): undefined extends T ? undefined : Artist {
+): T extends undefined ? undefined : Artist {
   // @ts-ignore
   if (!artist) return undefined
   // @ts-ignore
@@ -91,33 +92,13 @@ class ArtistModel {
     this.db = db ?? _db
   }
 
-  async findByID(id: number) {
+  async findByID(id: number): Promise<Artist | undefined> {
     return this.db.query.artist
       .findFirst({
         where: (fields, op) => op.eq(fields.id, id),
         with: RETURN_WITH,
       })
       .then(processArtist)
-  }
-
-  async insert(data: NewArtist) {
-    return this.db
-      .transaction(async (tx) => {
-        let res = (await tx.insert(artist).values(data).returning())[0]
-
-        if (data.localized_name) {
-          await tx.insert(artist_localized_name).values(
-            data.localized_name.map(({ name, language }) => ({
-              name,
-              language,
-              artist_id: res.id,
-            })),
-          )
-        }
-
-        return res
-      })
-      .then((res) => this.findByID(res.id)) as Promise<Artist>
   }
 
   async findByKeyword(keyword: string, limit = 10) {
@@ -129,12 +110,41 @@ class ArtistModel {
       })
       .then((x) => x.map(processArtist))
   }
+
+  async insert(data: NewArtist) {
+    return this.db
+      .transaction(async (tx) => {
+        const res = (await tx.insert(artist).values(data).returning())[0]
+
+        if (data.localized_name) {
+          await tx.insert(artist_localized_name).values(
+            data.localized_name.map(({ name, language }) => ({
+              name,
+              language,
+              artist_id: res.id,
+            })),
+          )
+        }
+        return res.id
+      })
+      .then((id) => this.findByID(id))
+  }
+
+  async update(artist_id: number, data: NewArtist) {
+    return this.db.transaction(async (tx) => {
+      return await tx
+        .update(artist)
+        .set(data)
+        .where(eq(artist.id, artist_id))
+        .returning()
+    })
+  }
 }
 
 export const artist_model = new Elysia()
   .model({
-    "artist::find_by_id": Schema.ok(artist_schema),
     "artist::new": new_artist_schema,
+    "artist::find_by_id": Schema.ok(artist_schema),
     "artist::find_by_keyword": Schema.ok(t.Array(artist_schema)),
   })
   .decorate("artist", new ArtistModel())

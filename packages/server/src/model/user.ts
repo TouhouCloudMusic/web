@@ -3,7 +3,7 @@ import { sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
 import { NewUser, user, User } from "~/database"
 import { db } from "~/service/database"
-import { OmitColumnFromSchema } from "../utils"
+import { OmitColumnFromSchema } from "./utils"
 
 type UserColumns = Exclude<
   Parameters<typeof db.query.user.findFirst>[0],

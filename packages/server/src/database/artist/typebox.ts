@@ -1,5 +1,6 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
+import { link_artist, link_release } from "../utils/link_schema"
 import { artist, artist_localized_name, artist_type_enum } from "./schema"
 
 export type ArtistType = (typeof artist_type_enum.enumValues)[number]
@@ -14,32 +15,38 @@ const text_alias_schema = t.Optional(
   ),
 )
 
-const i18n_name_in = createInsertSchema(artist_localized_name)
-const _i18n_name_out = createSelectSchema(artist_localized_name)
-const i18n_name_out = t.Omit(_i18n_name_out, ["artist_id"])
-
-const gen_artist = createSelectSchema(artist, {
-  text_alias: text_alias_schema,
-})
+const l10n_name = t.Omit(
+  // @ts-ignore
+  createInsertSchema(artist_localized_name),
+  ["artist_id"],
+)
 
 const link_props = t.Object({
-  aliases: t.Array(t.Object({ id: t.Number(), name: t.String() })),
-  localized_name: t.Optional(t.Array(i18n_name_out)),
-  members: t.Array(t.Object({ id: t.Number(), name: t.String() })),
-  member_of: t.Array(t.Object({ id: t.Number(), name: t.String() })),
-  release: t.Array(t.Object({ id: t.Number(), title: t.String() })),
+  aliases: t.Array(link_artist),
+  localized_name: t.Optional(t.Array(l10n_name)),
+  members: t.Array(link_artist),
+  member_of: t.Array(link_artist),
+  release: t.Array(link_release),
 })
-export const artist_schema = t.Composite([gen_artist, link_props])
+export const artist_schema = t.Composite([
+  // @ts-ignore
+  createSelectSchema(artist, {
+    text_alias: text_alias_schema,
+  }),
+  link_props,
+])
 export type Artist = typeof artist_schema.static
 
-const gen_new_artist = createInsertSchema(artist, {
-  text_alias: text_alias_schema,
-})
 const new_link_props = t.Object({
-  localized_name: t.Optional(t.Array(i18n_name_in)),
+  localized_name: t.Optional(t.Array(l10n_name)),
 })
 export const new_artist_schema = t.Composite([
-  t.Omit(gen_new_artist, ["id", "created_at", "updated_at"]),
+  t.Omit(
+    createInsertSchema(artist, {
+      text_alias: text_alias_schema,
+    }),
+    ["id", "created_at", "updated_at"],
+  ),
   new_link_props,
 ])
 export type NewArtist = typeof new_artist_schema.static

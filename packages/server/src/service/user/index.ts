@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { Cookie, Elysia, error, t } from "elysia"
 import { Session, User } from "~/database"
-import { SessionModel, SessionValidateResult } from "~/model/user/session"
+import { SessionModel, SessionValidateResult } from "~/model/session"
 
 const COOKIE_OPTION = {
   secrets: ["Hakurei Reimu", "Kirisame Marisa"],
@@ -73,7 +73,7 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
     },
   }))
 
-export const logged_in_info = new Elysia()
+export const auth_guard = new Elysia()
   .use(auth_service)
   .guard({
     isSignIn: true,

@@ -1,7 +1,7 @@
 import cors from "@elysiajs/cors"
 import swagger from "@elysiajs/swagger"
 import { Elysia } from "elysia"
-import { artist_router } from "./route/artist"
+import { api_router } from "./route"
 import { user_router } from "./route/user"
 
 const app = new Elysia()
@@ -28,7 +28,7 @@ const app = new Elysia()
   })
   .get("/", () => "Hello Elysia")
   .use(user_router)
-  .use(artist_router)
+  .use(api_router)
   .listen(process.env.PORT || 3456)
 
 console.log(

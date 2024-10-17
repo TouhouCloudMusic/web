@@ -2,11 +2,10 @@ import Elysia, { t } from "elysia"
 import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
 import { artist_model } from "~/model/artist"
-import { auth_service, logged_in_info } from "~/service/user"
+import { auth_guard } from "~/service/user"
 
 export const artist_router = new Elysia({ prefix: "/artist" })
   .use(artist_model)
-  .use(auth_service)
   .get(
     "",
     async ({ artist, query: { keyword, limit } }) => {
@@ -16,8 +15,8 @@ export const artist_router = new Elysia({ prefix: "/artist" })
     },
     {
       query: t.Object({
-        keyword: t.String({ maxLength: 32 }),
-        limit: t.Number({ minimum: 1, maximum: 100, default: 10 }),
+        keyword: Schema.keyword,
+        limit: Schema.limit(),
       }),
       response: {
         200: "artist::find_by_keyword",
@@ -29,25 +28,38 @@ export const artist_router = new Elysia({ prefix: "/artist" })
     "/:id",
     {
       params: t.Object({
-        id: t.Number({ minimum: 1 }),
+        id: Schema.id,
       }),
     },
-    ($) =>
-      $.get(
-        "",
-        async ({ artist, params: { id } }) => {
-          let res = await artist.findByID(id)
-          return !res ? Response.notFound("Artist Not Found") : Response.ok(res)
-        },
-        {
-          response: {
-            200: "artist::find_by_id",
-            404: Schema.err,
+    (router) =>
+      router
+        .get(
+          "",
+          async ({ artist, params: { id } }) => {
+            let res = await artist.findByID(id)
+            return !res ?
+                Response.notFound("Artist Not Found")
+              : Response.ok(res)
           },
-        },
-      ),
+          {
+            response: {
+              200: "artist::find_by_id",
+              404: Schema.err,
+            },
+          },
+        )
+        .use(auth_guard)
+        .post(
+          "",
+          async ({ artist, body, params: { id } }) => {
+            return artist.update(id, body)
+          },
+          {
+            body: "artist::new",
+          },
+        ),
   )
-  .use(logged_in_info)
+  .use(auth_guard)
   .post(
     "",
     async ({ artist, body }) => {

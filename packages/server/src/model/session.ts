@@ -31,7 +31,7 @@ export class SessionModel {
     return encodeBase32LowerCaseNoPadding(bytes) as SessionToken
   }
 
-  static async createSession(
+  static async create(
     user_id: number,
     token: SessionToken = this.generateToken(),
   ): Promise<Session> {
@@ -46,14 +46,14 @@ export class SessionModel {
     return new_session
   }
 
-  static createSessionM(id: number, token?: SessionToken) {
+  static createM(id: number, token?: SessionToken) {
     return Effect.tryPromise({
-      try: () => SessionModel.createSession(id, token),
+      try: () => SessionModel.create(id, token),
       catch: (e) => [SessionErrorMsg.CreateFailed, toError(e)] as const,
     })
   }
 
-  private static async findSession(
+  private static async findByToken(
     token: string,
   ): Promise<SessionValidateResult | undefined> {
     return await db.query.session
@@ -68,8 +68,8 @@ export class SessionModel {
       })
   }
 
-  private static findSessionM(token: string) {
-    const findSession = this.findSession.bind(this)
+  private static findByTokenM(token: string) {
+    const findSession = this.findByToken.bind(this)
 
     return Effect.tryPromise({
       try: () => findSession(token),
@@ -77,16 +77,16 @@ export class SessionModel {
     }).pipe(Effect.map((x) => Option.fromNullable(x)))
   }
 
-  static async updateSession(session: Session) {
+  static async update(session: Session) {
     return await db
       .update(session_table)
       .set(session)
       .where(eq(session_table.id, session.id))
   }
 
-  static updateSessionM(session: Session) {
+  static updateM(session: Session) {
     return Effect.tryPromise({
-      try: () => this.updateSession(session),
+      try: () => this.update(session),
       catch: () => SessionErrorMsg.UpdateFailed,
     }).pipe(Effect.map(() => {}))
   }
@@ -94,13 +94,13 @@ export class SessionModel {
   static async validateToken(
     token: string,
   ): Promise<SessionValidateResult | null> {
-    const result = await this.findSession(token)
+    const result = await this.findByToken(token)
     if (!result) return null
 
     const { user, session } = result
 
     if (Date.now() >= session.expires_at.getTime()) {
-      await this.invalidateSession(token)
+      await this.invalidate(token)
       return null
     }
 
@@ -117,9 +117,9 @@ export class SessionModel {
   }
 
   static validateTokenM({ token }: { token: string }) {
-    const findSesion = this.findSessionM.bind(this)
-    const invalidateSession = this.invalidateSessionM.bind(this)
-    const updateSession = this.updateSessionM.bind(this)
+    const findSesion = this.findByTokenM.bind(this)
+    const invalidateSession = this.invalidateM.bind(this)
+    const updateSession = this.updateM.bind(this)
     return Effect.gen(function* () {
       const result = yield* findSesion(token)
 
@@ -141,13 +141,13 @@ export class SessionModel {
     })
   }
 
-  static async invalidateSession(token: string): Promise<void> {
+  static async invalidate(token: string): Promise<void> {
     await db.delete(session_table).where(eq(session_table.id, token))
   }
 
-  static invalidateSessionM(token: string) {
+  static invalidateM(token: string) {
     return Effect.tryPromise({
-      try: () => this.invalidateSession(token),
+      try: () => this.invalidate(token),
       catch: () => SessionErrorMsg.DeleteFailed,
     })
   }

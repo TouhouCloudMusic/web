@@ -7,13 +7,9 @@ import { Elysia } from "elysia"
 import { user_schema } from "~/database/user/typebox"
 import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
+import { SessionModel } from "~/model/session"
 import { UserModel } from "~/model/user"
-import { SessionModel } from "~/model/user/session"
-import {
-  auth_service,
-  logged_in_info,
-  updateSessionState,
-} from "~/service/user"
+import { auth_guard, auth_service, updateSessionState } from "~/service/user"
 
 export const user_router = new Elysia()
   .use(auth_service)
@@ -38,7 +34,7 @@ export const user_router = new Elysia()
           password: hashed_password,
         })
 
-        const session = yield* SessionModel.createSessionM(user.id)
+        const session = yield* SessionModel.createM(user.id)
 
         updateSessionState({
           user: Value.Clean(user_schema, user),
@@ -97,8 +93,7 @@ export const user_router = new Elysia()
         )
         if (!right_pwd) yield* Effect.fail("Incorrect password" as const)
 
-        const new_session =
-          session ?? (yield* SessionModel.createSessionM(user.id))
+        const new_session = session ?? (yield* SessionModel.createM(user.id))
 
         return { user, session: new_session }
       }).pipe(
@@ -137,10 +132,10 @@ export const user_router = new Elysia()
       cookie: "auth::optional_session",
     },
   )
-  .use(logged_in_info)
+  .use(auth_guard)
   .get("/sign-out", async ({ cookie: { session_token } }) => {
     try {
-      await SessionModel.invalidateSession(session_token.value)
+      await SessionModel.invalidate(session_token.value)
     } catch (error) {
       return Response.err(500, error)
     }
