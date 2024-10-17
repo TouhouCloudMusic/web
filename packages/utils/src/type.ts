@@ -19,3 +19,14 @@ export type UnionToTuple<
 export type AsyncReturnType<T extends (...args: any) => Promise<any>> = Awaited<
   ReturnType<T>
 >
+
+export type LessThan<A extends number, B extends number, T extends any[] = []> =
+  T["length"] extends A ?
+    T["length"] extends B ?
+      false
+    : true
+  : T["length"] extends B ? false
+  : LessThan<A, B, [any, ...T]>
+
+export type Succ<N extends number, T extends any[] = []> =
+  T["length"] extends N ? [...T, any]["length"] : Succ<N, [any, ...T]>
