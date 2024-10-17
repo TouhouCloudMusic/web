@@ -30,7 +30,7 @@ export const label_localized_name = pgTable(
   "label_localized_name",
   {
     label_id: integer("label_id")
-      .references(() => artist.id)
+      .references(() => label.id)
       .notNull(),
     language: localization_language("language").notNull(),
     name: varchar("name", { length: 128 }).notNull(),
