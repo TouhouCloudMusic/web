@@ -1,5 +1,5 @@
 [install]
-registry = "https://registry.npmmirror.com"
+registry = "https://mirrors.huaweicloud.com/repository/npm/"
 
 [test]
 coverage = true
