@@ -7,7 +7,7 @@ import {
   new_artist_schema,
   NewArtist,
 } from "~/database/artist/typebox"
-import { artist, artist_localized_name } from "~/database/schema"
+import { artist, artist_translation_nam, e } from "~/database/schema"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
 
@@ -117,7 +117,7 @@ class ArtistModel {
         const res = (await tx.insert(artist).values(data).returning())[0]
 
         if (data.localized_name) {
-          await tx.insert(artist_localized_name).values(
+          await tx.insert(artist_translation_nam, e).values(
             data.localized_name.map(({ name, language }) => ({
               name,
               language,

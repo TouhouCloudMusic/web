@@ -6,13 +6,14 @@ import {
   pgEnum,
   pgTable,
   primaryKey,
+  smallint,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
 import { release_artist } from "~/database/schema"
 import { created_and_updated_at } from "~/database/utils/created_and_updated_at"
 import { location } from "../custom_type"
-import { date_precision, localization_language } from "../enums"
+import { date_precision } from "../enums"
 
 export const artist_type_enum = pgEnum("artist_type", ["Person", "Group"])
 
@@ -39,21 +40,21 @@ export const artist_relation = relations(artist, ({ one, many }) => ({
     fields: [artist.alias_group_id],
     references: [alias_group.id],
   }),
-  localized_name: many(artist_localized_name),
+  localized_name: many(artist_name_translation),
   release: many(release_artist),
   members: many(group_member, { relationName: "members" }),
   member_of: many(group_member, { relationName: "member_of" }),
 }))
 
-export const artist_localized_name = pgTable(
-  "artist_localized_name",
+export const artist_name_translation = pgTable(
+  "artist_name_translation",
   {
     artist_id: integer("artist_id")
       .references(() => artist.id, {
         onDelete: "cascade",
       })
       .notNull(),
-    language: localization_language("language").notNull(),
+    language: smallint("language").notNull(),
     name: varchar("name", { length: 128 }).notNull(),
   },
   (t) => ({
@@ -63,10 +64,10 @@ export const artist_localized_name = pgTable(
 )
 
 export const artist_localized_name_relation = relations(
-  artist_localized_name,
+  artist_name_translation,
   ({ one }) => ({
     artist: one(artist, {
-      fields: [artist_localized_name.artist_id],
+      fields: [artist_name_translation.artist_id],
       references: [artist.id],
     }),
   }),

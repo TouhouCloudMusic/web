@@ -2,19 +2,18 @@ import { relations } from "drizzle-orm"
 import {
   date,
   integer,
-  pgEnum,
   pgTable,
   primaryKey,
+  smallint,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
 import { artist } from "../artist"
-import { date_precision, localization_language } from "../enums"
+import { date_precision } from "../enums"
+import { release_type_table } from "../lookup_tables"
 import { song } from "../song/schema"
 import { created_and_updated_at } from "../utils/created_and_updated_at"
 import { credit_cons } from "../utils/vote"
-
-export const release_type = pgEnum("release_type", ["Album", "EP", "Single"])
 
 export const release = pgTable("release", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -26,22 +25,24 @@ export const release = pgTable("release", {
   recording_date_start: date("recording_date_start"),
   release_date_precision: date_precision("release_date_prec"),
   release_date: date("release_date"),
-  release_type: release_type("release_type").notNull(),
+  release_type: smallint()
+    .notNull()
+    .references(() => release_type_table.id),
   total_disc: integer("total_disc"),
   ...created_and_updated_at,
 })
 
-export const release_localized_title = pgTable("release_localized_title", {
+export const release_title_translation = pgTable("release_title_translation", {
   release_id: integer("release_id")
     .references(() => release.id, { onDelete: "cascade" })
     .notNull(),
-  language: localization_language("language").notNull(),
+  language: smallint().notNull(),
   title: varchar("title", { length: 128 }).notNull(),
 })
 
 export const release_relation = relations(release, ({ many }) => ({
   artist: many(release_artist),
-  localized_title: many(release_localized_title),
+  localized_title: many(release_title_translation),
 }))
 
 export const release_artist = pgTable(

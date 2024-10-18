@@ -1,43 +1,33 @@
 import {
+  index,
   integer,
   interval,
   pgTable,
   primaryKey,
+  smallint,
   varchar,
 } from "drizzle-orm/pg-core"
 import { artist } from "../artist"
-import { localization_language } from "../enums"
 
 export const song = pgTable("song", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
   title: varchar("title", { length: 128 }).notNull(),
+  languages: smallint().array().notNull(),
   duration: interval("duration", { fields: "hour to second" }),
 })
 
-export const song_localized_title = pgTable(
-  "song_localized_title",
+export const song_title_translation = pgTable(
+  "song_title_translation",
   {
     song_id: integer("song_id")
       .references(() => song.id)
       .notNull(),
-    language: localization_language("language").notNull(),
+    language: smallint().notNull(),
     title: varchar("title", { length: 128 }).notNull(),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.song_id, t.language] }),
-  }),
-)
-
-export const song_language = pgTable(
-  "song_language",
-  {
-    song_id: integer("song_id")
-      .references(() => song.id)
-      .notNull(),
-    language: localization_language("language").notNull(),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.song_id, t.language] }),
+    title_idx: index().on(t.title),
   }),
 )
 

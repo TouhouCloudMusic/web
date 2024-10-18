@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
 import { link_artist, link_release } from "../utils/link_schema"
-import { artist, artist_localized_name, artist_type_enum } from "./schema"
+import { artist, artist_translation_nam, artist_type_enum, e } from "./schema"
 
 export type ArtistType = (typeof artist_type_enum.enumValues)[number]
 
@@ -17,7 +17,7 @@ const text_alias_schema = t.Optional(
 
 const l10n_name = t.Omit(
   // @ts-ignore
-  createInsertSchema(artist_localized_name),
+  createInsertSchema(artist_translation_nam, e),
   ["artist_id"],
 )
 

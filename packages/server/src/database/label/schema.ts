@@ -4,10 +4,11 @@ import {
   integer,
   pgTable,
   primaryKey,
+  smallint,
   varchar,
 } from "drizzle-orm/pg-core"
 import { location } from "../custom_type"
-import { date_precision, localization_language } from "../enums"
+import { date_precision } from "../enums"
 
 import { artist } from "~/database/artist/schema"
 import { created_and_updated_at } from "../utils/created_and_updated_at"
@@ -26,13 +27,13 @@ export const label = pgTable("label", {
   ...created_and_updated_at,
 })
 
-export const label_localized_name = pgTable(
-  "label_localized_name",
+export const label_name_translation = pgTable(
+  "label_name_translation",
   {
     label_id: integer("label_id")
       .references(() => label.id)
       .notNull(),
-    language: localization_language("language").notNull(),
+    language: smallint().notNull(),
     name: varchar("name", { length: 128 }).notNull(),
   },
   (t) => ({
