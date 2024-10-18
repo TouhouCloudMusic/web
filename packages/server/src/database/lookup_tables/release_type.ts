@@ -3,3 +3,5 @@ export const RELEASE_TYPE = {
   EP: { id: 2, name: "EP" },
   Single: { id: 3, name: "Single" },
 } as const
+
+export const RELEASE_TYPE_ARRAY = ["Album", "EP", "Single"] as const

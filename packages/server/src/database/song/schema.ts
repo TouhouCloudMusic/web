@@ -1,20 +1,22 @@
 import {
   index,
   integer,
-  interval,
   pgTable,
   primaryKey,
   smallint,
   varchar,
 } from "drizzle-orm/pg-core"
 import { artist } from "../artist"
+import { created_and_updated_at } from "../utils/created_and_updated_at"
 
-export const song = pgTable("song", {
-  id: integer().primaryKey().generatedByDefaultAsIdentity(),
-  title: varchar("title", { length: 128 }).notNull(),
-  languages: smallint().array().notNull(),
-  duration: interval("duration", { fields: "hour to second" }),
-})
+export const song = pgTable("song", (t) => ({
+  id: t.integer().primaryKey().generatedByDefaultAsIdentity(),
+  title: t.text().notNull(),
+  languages: t.smallint().array(),
+  duration: t.interval("duration", { fields: "hour to second" }),
+  lyric: t.text(),
+  ...created_and_updated_at,
+}))
 
 export const song_title_translation = pgTable(
   "song_title_translation",

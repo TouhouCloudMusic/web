@@ -86,8 +86,8 @@ export const release_label = pgTable(
   }),
 )
 
-export const release_track = pgTable("release_track", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+export const release_track = pgTable("release_track", (t) => ({
+  id: integer().primaryKey().generatedByDefaultAsIdentity(),
   release_id: integer("release_id")
     .references(() => release.id, { onDelete: "cascade" })
     .notNull(),
@@ -97,20 +97,16 @@ export const release_track = pgTable("release_track", {
   track_order: integer("track_order").notNull(),
   track_number: varchar("track_number", { length: 4 }),
   overwrite_title: varchar("overwrite_title", { length: 128 }),
-})
+}))
 
-export const release_track_credit = pgTable(
-  "release_track_credit",
-  {
-    ...credit_cons(),
-    track_id: integer("track_id")
-      .references(() => release_track.id, { onDelete: "cascade" })
-      .notNull(),
-  },
-  (t) => ({
-    unq: uniqueIndex().on(t.artist_id, t.role_id, t.track_id),
-  }),
-)
+export const release_track_credit = pgTable("release_track_credit", {
+  release_track_id: integer("release_track_id")
+    .references(() => release_track.id, { onDelete: "cascade" })
+    .notNull(),
+  artist_id: integer("artist_id")
+    .references(() => artist.id)
+    .notNull(),
+})
 
 export const release_credit = pgTable(
   "release_credit",
@@ -119,6 +115,7 @@ export const release_credit = pgTable(
     release_id: integer("release_id")
       .references(() => release.id, { onDelete: "cascade" })
       .notNull(),
+    on: smallint().array(),
   },
   (t) => ({
     unq: uniqueIndex().on(t.artist_id, t.role_id, t.release_id),
