@@ -9,7 +9,7 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
-import { release_artist } from "~/database/migrate/schema"
+import { release_artist } from "~/database/schema"
 import { created_and_updated_at } from "~/database/utils/created_and_updated_at"
 import { location } from "../custom_type"
 import { date_precision, localization_language } from "../enums"

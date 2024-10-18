@@ -7,7 +7,7 @@ import {
   new_artist_schema,
   NewArtist,
 } from "~/database/artist/typebox"
-import { artist, artist_localized_name } from "~/database/migrate/schema"
+import { artist, artist_localized_name } from "~/database/schema"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
 

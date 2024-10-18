@@ -7,7 +7,7 @@ import { toError } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import { Effect, Option, pipe } from "effect"
 import { Session, User } from "~/database"
-import { session as session_table } from "~/database/migrate/schema"
+import { session as session_table } from "~/database/schema"
 import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
 

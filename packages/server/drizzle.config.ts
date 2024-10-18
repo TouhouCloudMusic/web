@@ -12,7 +12,7 @@ declare global {
 }
 
 export default defineConfig({
-  schema: ["./src/database/migrate/schema.ts"],
+  schema: ["./src/database/schema.ts"],
   out: "./drizzle",
   dialect: "postgresql", // 'postgresql' | 'mysql' | 'sqlite'
   dbCredentials: {
