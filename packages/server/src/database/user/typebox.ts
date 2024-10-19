@@ -4,7 +4,7 @@ import { t } from "elysia"
 import { session, user } from "./schema"
 
 const _user_schema = createSelectSchema(user)
-export const user_schema = t.Omit(_user_schema, ["id", "password"])
+export const user_schema = t.Omit(_user_schema, ["id", "password", "email"])
 export type User = typeof user_schema.static
 
 const _new_user_schema = createInsertSchema(user)

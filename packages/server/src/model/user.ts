@@ -12,7 +12,6 @@ type UserColumns = Exclude<
 
 const RETURN_COLUMNS: OmitColumnFromSchema<User, UserColumns> = {
   name: true,
-  email: true,
   location: true,
   created_at: true,
   updated_at: true,
@@ -20,7 +19,6 @@ const RETURN_COLUMNS: OmitColumnFromSchema<User, UserColumns> = {
 
 const RETURN_ON_INSERT = {
   name: user.name,
-  email: user.email,
   location: user.location,
   created_at: user.created_at,
   updated_at: user.updated_at,

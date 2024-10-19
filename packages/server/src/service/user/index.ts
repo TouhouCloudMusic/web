@@ -105,8 +105,7 @@ export function updateSessionState<U, S>({
   store.user = user
   store.session = session
   session_token.set({
-    // @ts-expect-error
-    value: session.id,
+    value: (session as Session).id,
     maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
   })
 }
