@@ -7,6 +7,7 @@ const COOKIE_OPTION = {
   secrets: ["Hakurei Reimu", "Kirisame Marisa"],
   path: "/" as const,
   httpOnly: true as const,
+  secure: import.meta.env.NODE_ENV === "production",
   sameSite: "lax" as const,
 }
 

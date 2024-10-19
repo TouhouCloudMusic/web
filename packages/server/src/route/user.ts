@@ -11,6 +11,7 @@ import { SessionModel } from "~/model/session"
 import { UserModel } from "~/model/user"
 import { auth_guard, auth_service, updateSessionState } from "~/service/user"
 
+const AUTH_FAILED_MSG = "Incorrect username or password" as const
 export const user_router = new Elysia()
   .use(auth_service)
   .post(
@@ -78,20 +79,17 @@ export const user_router = new Elysia()
               token: session_token.value,
             })
           : null
-        if (checked_session_by_token) {
-          const { user, session } = checked_session_by_token
-          return { user, session }
-        }
+        if (checked_session_by_token) return checked_session_by_token
 
         const user_with_session =
           yield* UserModel.findByNameWithSessionM(username)
-        if (!user_with_session) yield* Effect.fail("User not found" as const)
+        if (!user_with_session) yield* Effect.fail(AUTH_FAILED_MSG)
 
         const { session, ...user } = user_with_session!
         const right_pwd = yield* Effect.tryPromise(() =>
           verify(user.password, password),
         )
-        if (!right_pwd) yield* Effect.fail("Incorrect password" as const)
+        if (!right_pwd) yield* Effect.fail(AUTH_FAILED_MSG)
 
         const new_session = session ?? (yield* SessionModel.createM(user.id))
 
@@ -109,9 +107,7 @@ export const user_router = new Elysia()
           },
           onFailure: (err) => {
             switch (err) {
-              case "User not found":
-                return Response.err(404, err)
-              case "Incorrect password":
+              case AUTH_FAILED_MSG:
                 return Response.err(401, err)
               case "Update session failed":
               case "Delete session failed":
