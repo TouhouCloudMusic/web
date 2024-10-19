@@ -7,7 +7,7 @@ import {
   new_artist_schema,
   NewArtist,
 } from "~/database/artist/typebox"
-import { artist, artist_translation_nam, e } from "~/database/schema"
+import { artist, artist_name_translation } from "~/database/schema"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
 
@@ -111,13 +111,13 @@ class ArtistModel {
       .then((x) => x.map(processArtist))
   }
 
-  async insert(data: NewArtist) {
+  async create(data: NewArtist) {
     return this.db
       .transaction(async (tx) => {
         const res = (await tx.insert(artist).values(data).returning())[0]
 
         if (data.localized_name) {
-          await tx.insert(artist_translation_nam, e).values(
+          await tx.insert(artist_name_translation).values(
             data.localized_name.map(({ name, language }) => ({
               name,
               language,
@@ -147,4 +147,4 @@ export const artist_model = new Elysia()
     "artist::find_by_id": Schema.ok(artist_schema),
     "artist::find_by_keyword": Schema.ok(t.Array(artist_schema)),
   })
-  .decorate("artist", new ArtistModel())
+  .decorate("model", new ArtistModel())

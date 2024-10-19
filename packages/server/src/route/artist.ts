@@ -8,8 +8,8 @@ export const artist_router = new Elysia({ prefix: "/artist" })
   .use(artist_model)
   .get(
     "",
-    async ({ artist, query: { keyword, limit } }) => {
-      let result = await artist.findByKeyword(keyword, limit)
+    async ({ model, query: { keyword, limit } }) => {
+      let result = await model.findByKeyword(keyword, limit)
       if (result.length === 0) return Response.notFound("Artist Not Found")
       return Response.ok(result)
     },
@@ -35,8 +35,8 @@ export const artist_router = new Elysia({ prefix: "/artist" })
       router
         .get(
           "",
-          async ({ artist, params: { id } }) => {
-            let res = await artist.findByID(id)
+          async ({ model, params: { id } }) => {
+            let res = await model.findByID(id)
             return !res ?
                 Response.notFound("Artist Not Found")
               : Response.ok(res)
@@ -51,8 +51,8 @@ export const artist_router = new Elysia({ prefix: "/artist" })
         .use(auth_guard)
         .post(
           "",
-          async ({ artist, body, params: { id } }) => {
-            return artist.update(id, body)
+          async ({ model, body, params: { id } }) => {
+            return model.update(id, body)
           },
           {
             body: "artist::new",
@@ -62,8 +62,8 @@ export const artist_router = new Elysia({ prefix: "/artist" })
   .use(auth_guard)
   .post(
     "",
-    async ({ artist, body }) => {
-      return artist.insert(body)
+    async ({ model, body }) => {
+      return model.create(body)
     },
     {
       body: "artist::new",
