@@ -51,8 +51,12 @@ export const artist_router = new Elysia({ prefix: "/artist" })
         .use(auth_guard)
         .post(
           "",
-          async ({ model, body, params: { id } }) => {
-            return model.update(id, body)
+          async ({ model, body, params: { id }, store: { session } }) => {
+            return model.createPullRequest({
+              artist_data: body,
+              artist_id: id,
+              author_id: session.user_id,
+            })
           },
           {
             body: "artist::new",
