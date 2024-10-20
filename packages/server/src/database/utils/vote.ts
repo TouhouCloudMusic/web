@@ -3,7 +3,7 @@ import { integer, PgTableWithColumns, real, varchar } from "drizzle-orm/pg-core"
 import { artist } from "~/database/artist/schema"
 import { user } from "~/database/user/schema"
 import { vote_level } from "../enums"
-import { music_role } from "../music/schema"
+import { credit_role } from "../music/schema"
 import { created_and_updated_at } from "./created_and_updated_at"
 
 export type OmitCreatedAndUpdatedAt<T> = Omit<T, "created_at" | "updated_at">
@@ -21,7 +21,7 @@ export const credit_cons = () => ({
     .references(() => artist.id)
     .notNull(),
   role_id: integer("role_id")
-    .references(() => music_role.id)
+    .references(() => credit_role.id)
     .notNull(),
   display_name: varchar("display_name", { length: 128 }),
   ...created_and_updated_at,

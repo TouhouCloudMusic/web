@@ -40,14 +40,14 @@ export const artist_relation = relations(artist, ({ one, many }) => ({
     fields: [artist.alias_group_id],
     references: [alias_group.id],
   }),
-  localized_name: many(artist_name_translation),
+  localized_name: many(localized_name),
   release: many(release_artist),
   members: many(group_member, { relationName: "members" }),
   member_of: many(group_member, { relationName: "member_of" }),
 }))
 
-export const artist_name_translation = pgTable(
-  "artist_name_translation",
+export const localized_name = pgTable(
+  "artist_localized_name",
   {
     artist_id: integer("artist_id")
       .references(() => artist.id, {
@@ -64,10 +64,10 @@ export const artist_name_translation = pgTable(
 )
 
 export const artist_localized_name_relation = relations(
-  artist_name_translation,
+  localized_name,
   ({ one }) => ({
     artist: one(artist, {
-      fields: [artist_name_translation.artist_id],
+      fields: [localized_name.artist_id],
       references: [artist.id],
     }),
   }),

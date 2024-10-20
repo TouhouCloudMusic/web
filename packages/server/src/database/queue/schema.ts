@@ -14,11 +14,11 @@ export const queue_type = pgEnum("queue_type", ["Create", "Update", "Delete"])
 
 export const queue_status = pgEnum("queue_status", ["Open", "Closed", "Merged"])
 
-export const queue = pgTable("queue", (t) => ({
+export const queue_table = pgTable("queue", (t) => ({
   id: t.integer().primaryKey().generatedByDefaultAsIdentity(),
   entity_type: entity_type().notNull(),
   entity_id: t.integer().notNull(),
-  status: queue_status().notNull(),
+  status: queue_status().notNull().default("Open"),
   old_data: t.jsonb(),
   new_data: t.jsonb().notNull(),
   author: t

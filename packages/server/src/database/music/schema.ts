@@ -1,10 +1,10 @@
 import { integer, pgEnum, pgTable, text, varchar } from "drizzle-orm/pg-core"
 import { created_and_updated_at } from "../utils/created_and_updated_at"
 
-export type MusicRole = typeof music_role.$inferSelect
-export type NewMusicRole = typeof music_role.$inferInsert
+export type CreditRole = typeof credit_role.$inferSelect
+export type NewCreditRole = typeof credit_role.$inferInsert
 
-export const music_role = pgTable("music_role", {
+export const credit_role = pgTable("credit_role", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 128 }).notNull(),
   alias: varchar("alias", { length: 128 }).array(),
@@ -13,12 +13,12 @@ export const music_role = pgTable("music_role", {
   ...created_and_updated_at,
 })
 
-export const music_role_inheritance = pgTable("music_role_inheritance", {
+export const credit_role_inheritance = pgTable("credit_role_inheritance", {
   parent_id: integer("parent_id")
-    .references(() => music_role.id)
+    .references(() => credit_role.id)
     .notNull(),
   children_id: integer("children_id")
-    .references(() => music_role.id)
+    .references(() => credit_role.id)
     .notNull(),
 })
 

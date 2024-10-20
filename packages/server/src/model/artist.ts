@@ -7,9 +7,13 @@ import {
   new_artist_schema,
   NewArtist,
 } from "~/database/artist/typebox"
-import { artist, artist_name_translation } from "~/database/schema"
+import {
+  artist,
+  localized_name as localized_name_table,
+} from "~/database/schema"
 import { Schema } from "~/lib/schema"
 import { db as _db, DB } from "~/service/database"
+import { QueueModel } from "./queue"
 
 type With = NonNullable<
   Parameters<typeof _db.query.artist.findFirst>[0]
@@ -92,6 +96,11 @@ class ArtistModel {
     this.db = db ?? _db
   }
 
+  private $inner_queue_model?: QueueModel
+  private get queue_model() {
+    return (this.$inner_queue_model ??= new QueueModel(this.db))
+  }
+
   async findByID(id: number): Promise<Artist | undefined> {
     return this.db.query.artist
       .findFirst({
@@ -117,7 +126,7 @@ class ArtistModel {
         const res = (await tx.insert(artist).values(data).returning())[0]
 
         if (data.localized_name) {
-          await tx.insert(artist_name_translation).values(
+          await tx.insert(localized_name_table).values(
             data.localized_name.map(({ name, language }) => ({
               name,
               language,
@@ -130,13 +139,49 @@ class ArtistModel {
       .then((id) => this.findByID(id))
   }
 
+  async createPullRequest({
+    artist_data,
+    artist_id,
+    author_id,
+  }: {
+    artist_id: number
+    artist_data: NewArtist
+    author_id: number
+  }) {
+    const old_artist_data = await this.findByID(artist_id)
+    if (!old_artist_data) {
+      throw new Error(`artist ${artist_id} not found`)
+    }
+    return this.queue_model.create({
+      author: author_id,
+      entity_id: artist_id,
+      entity_type: "Artist",
+      new_data: artist_data,
+      old_data: old_artist_data,
+    })
+  }
+
   async update(artist_id: number, data: NewArtist) {
+    const { localized_name, ...artist_data } = data
     return this.db.transaction(async (tx) => {
-      return await tx
+      await tx
         .update(artist)
-        .set(data)
+        .set(artist_data)
         .where(eq(artist.id, artist_id))
         .returning()
+
+      if (localized_name && localized_name.length > 0) {
+        await tx
+          .delete(localized_name_table)
+          .where(eq(localized_name_table.artist_id, artist_id))
+        await tx.insert(localized_name_table).values(
+          localized_name.map(({ name, language }) => ({
+            name,
+            language,
+            artist_id,
+          })),
+        )
+      }
     })
   }
 }
