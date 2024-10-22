@@ -1,5 +1,6 @@
 export * from "./artist/schema"
 export * from "./enums"
+export * from "./image/schema"
 export * from "./label/schema"
 export * from "./lookup_tables"
 export * from "./music/schema"
