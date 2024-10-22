@@ -11,7 +11,8 @@
     "lint": "bunx oxlint",
     "migrate": "bun ./src/database/migrate/index.ts",
     "start": "./server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:init": "bun scripts/init_database.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
