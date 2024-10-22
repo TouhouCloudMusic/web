@@ -23,7 +23,9 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
   })
   .model({
     "auth::sign": t.Object({
-      username: t.RegExp(/^(?!.*[\p{C}\p{Z}])[\p{L}\p{N}\p{S}_]{1,16}$/u),
+      username: t.RegExp(/^(?!.*[\p{C}\p{Z}])[\p{L}\p{N}\p{S}_]{1,32}$/u, {
+        error: "Invalid username",
+      }),
       password: t.String({ minLength: 8, maxLength: 64 }),
     }),
     "auth::session": t.Cookie(
