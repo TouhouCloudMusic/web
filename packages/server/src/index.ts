@@ -1,10 +1,12 @@
 import cors from "@elysiajs/cors"
+import staticPlugin from "@elysiajs/static"
 import swagger from "@elysiajs/swagger"
 import { Elysia } from "elysia"
 import { api_router } from "./route"
 import { user_router } from "./route/user"
 
 const app = new Elysia()
+  .use(staticPlugin())
   .use(
     swagger({
       path: "/docs",
