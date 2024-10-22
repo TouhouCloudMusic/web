@@ -1,10 +1,21 @@
 import { HashedString } from "@touhouclouddb/utils"
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
+import { image_schema } from "../image/typebox"
 import { session, user } from "./schema"
 
-const _user_schema = createSelectSchema(user)
-export const user_schema = t.Omit(_user_schema, ["id", "password", "email"])
+const user_link_props = t.Object({
+  avatar: t.Optional(image_schema),
+})
+
+export const user_schema = t.Composite([
+  t.Omit(
+    // @ts-ignore
+    createSelectSchema(user),
+    ["id", "password", "email"],
+  ),
+  user_link_props,
+])
 export type User = typeof user_schema.static
 
 const _new_user_schema = createInsertSchema(user)

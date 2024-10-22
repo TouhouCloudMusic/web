@@ -3,17 +3,19 @@ import { Value } from "@sinclair/typebox/value"
 import { hash } from "@touhouclouddb/utils"
 import { Effect } from "effect"
 import { UnknownException } from "effect/Cause"
-import { Elysia } from "elysia"
+import { Elysia, t } from "elysia"
 import { user_schema } from "~/database/user/typebox"
 import { Response } from "~/lib/response"
 import { Schema } from "~/lib/schema"
+import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
-import { UserModel } from "~/model/user"
+import { user_model, UserModel } from "~/model/user"
 import { auth_guard, auth_service, updateSessionState } from "~/service/user"
 
 const AUTH_FAILED_MSG = "Incorrect username or password" as const
 export const user_router = new Elysia()
   .use(auth_service)
+  .use(user_model)
   .post(
     "/sign-up",
     async ({
@@ -58,6 +60,11 @@ export const user_router = new Elysia()
     },
     {
       body: "auth::sign",
+      response: {
+        200: Schema.ok(t.String()),
+        409: Schema.err,
+        500: Schema.err,
+      },
       cookie: "auth::optional_session",
     },
   )
@@ -66,30 +73,33 @@ export const user_router = new Elysia()
     async ({
       store,
       body: { username, password },
-      cookie: { session_token },
+      cookie: { session_token: token },
     }) => {
-      if (store.user?.name && session_token.value) {
-        return Response.err(409, "Already signed in")
-      }
+      if (token.value) return Response.err(409, "Already signed in")
 
       return Effect.gen(function* () {
-        const checked_session_by_token =
-          session_token.value ?
+        const validated_token =
+          token.value ?
             yield* SessionModel.validateTokenM({
-              token: session_token.value,
+              token: token.value,
             })
           : null
-        if (checked_session_by_token) return checked_session_by_token
+        if (validated_token) return validated_token
 
-        const user_with_session =
-          yield* UserModel.findByNameWithSessionM(username)
-        if (!user_with_session) yield* Effect.fail(AUTH_FAILED_MSG)
-
-        const { session, ...user } = user_with_session!
-        const right_pwd = yield* Effect.tryPromise(() =>
-          verify(user.password, password),
+        const { session, user } = yield* UserModel.findByNameWithSessionM(
+          username,
+        ).pipe(
+          Effect.flatMap((result) =>
+            result ? Effect.succeed(result) : Effect.fail(AUTH_FAILED_MSG),
+          ),
+          Effect.map(({ session, ...user }) => ({ session, user })),
         )
-        if (!right_pwd) yield* Effect.fail(AUTH_FAILED_MSG)
+
+        yield* Effect.tryPromise(() => verify(user.password, password)).pipe(
+          Effect.flatMap((x) =>
+            x ? Effect.succeed(0) : Effect.fail(AUTH_FAILED_MSG),
+          ),
+        )
 
         const new_session = session ?? (yield* SessionModel.createM(user.id))
 
@@ -101,7 +111,7 @@ export const user_router = new Elysia()
               user,
               session,
               store,
-              session_token,
+              session_token: token,
             })
             return Response.hello(user.name)
           },
@@ -146,5 +156,25 @@ export const user_router = new Elysia()
     },
     {
       response: Schema.ok(user_schema),
+    },
+  )
+  .post(
+    "/avatar",
+    async ({
+      store: {
+        session: { user_id },
+      },
+      body,
+    }) => {
+      const image_id = await new ImageModel().upload(user_id, body)
+      await UserModel.updateAvatar({
+        user_id,
+        image_id,
+      })
+      return Response.ok("OK")
+    },
+    {
+      body: "user::avatar",
+      response: Schema.ok(t.String()),
     },
   )

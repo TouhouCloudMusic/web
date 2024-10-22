@@ -5,5 +5,5 @@ export const id_model = new Elysia().model({
   id: Schema.id,
 })
 export type OmitColumnFromSchema<A, B> = {
-  [K in keyof A | keyof B]: true
+  [K in keyof A | keyof B]?: true
 }
