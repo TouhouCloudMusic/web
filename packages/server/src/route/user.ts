@@ -172,7 +172,7 @@ export const user_router = new Elysia()
       },
       body,
     }) => {
-      const image_id = await new ImageModel().upload(user_id, body)
+      const image_id = await new ImageModel().upload(user_id, body.data)
       await UserModel.updateAvatar({
         user_id,
         image_id,

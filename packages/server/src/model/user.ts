@@ -116,9 +116,11 @@ export abstract class UserModel {
 }
 
 export const user_model = new Elysia().decorate("model", UserModel).model({
-  "user::avatar": t.File({
-    maxSize: AVATAR_MAX_SIZE,
-    minSize: AVATAR_MIN_SIZE,
-    type: "image/*",
+  "user::avatar": t.Object({
+    data: t.File({
+      maxSize: AVATAR_MAX_SIZE,
+      minSize: AVATAR_MIN_SIZE,
+      type: "image/*",
+    }),
   }),
 })
