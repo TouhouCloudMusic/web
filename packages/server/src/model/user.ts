@@ -140,7 +140,7 @@ export const user_model = new Elysia().decorate("model", UserModel).model({
     data: t.File({
       maxSize: AVATAR_MAX_SIZE,
       minSize: AVATAR_MIN_SIZE,
-      type: ["image/*"],
+      type: ["image"],
     }),
   }),
   "user::profile": ResponseSchema.ok(user_profile_schema),
