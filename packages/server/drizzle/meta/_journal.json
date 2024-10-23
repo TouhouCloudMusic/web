@@ -15,6 +15,13 @@
       "when": 1729583464633,
       "tag": "0001_perpetual_ultron",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729650616791,
+      "tag": "0002_last_marvel_boy",
+      "breakpoints": true
     }
   ]
 }
