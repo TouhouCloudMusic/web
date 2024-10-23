@@ -41,4 +41,6 @@ yarn-error.log*
 package-lock.json
 **/*.bun
 
+public/image
+
 server.exe
