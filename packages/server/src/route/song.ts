@@ -2,7 +2,7 @@ import { toError } from "@touhouclouddb/utils"
 import Elysia, { t } from "elysia"
 import { new_song_schema, song_schema } from "~/database/song/typebox"
 import { Response } from "~/lib/response"
-import { Schema } from "~/lib/schema"
+import { ResponseSchema } from "~/lib/response/schema"
 import { SongModel } from "~/model/song"
 import { auth_guard } from "~/service/user"
 
@@ -12,7 +12,7 @@ export const song_router = new Elysia({ prefix: "/song" })
     "/:id",
     {
       params: t.Object({
-        id: Schema.id,
+        id: ResponseSchema.id,
       }),
     },
     (router) =>
@@ -25,8 +25,8 @@ export const song_router = new Elysia({ prefix: "/song" })
         },
         {
           response: {
-            200: Schema.ok(new_song_schema),
-            404: Schema.err,
+            200: ResponseSchema.ok(new_song_schema),
+            404: ResponseSchema.err,
           },
         },
       ),
@@ -45,8 +45,8 @@ export const song_router = new Elysia({ prefix: "/song" })
     {
       body: new_song_schema,
       response: {
-        200: Schema.ok(song_schema),
-        500: Schema.err,
+        200: ResponseSchema.ok(song_schema),
+        500: ResponseSchema.err,
       },
     },
   )

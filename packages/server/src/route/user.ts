@@ -6,7 +6,7 @@ import { UnknownException } from "effect/Cause"
 import { Elysia, t } from "elysia"
 import { user_schema } from "~/database/user/typebox"
 import { Response } from "~/lib/response"
-import { Schema } from "~/lib/schema"
+import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
 import { user_model, UserModel } from "~/model/user"
@@ -65,9 +65,9 @@ export const user_router = new Elysia()
     {
       body: "auth::sign",
       response: {
-        200: Schema.ok(t.String()),
-        409: Schema.err,
-        500: Schema.err,
+        200: ResponseSchema.ok(t.String()),
+        409: ResponseSchema.err,
+        500: ResponseSchema.err,
       },
       cookie: "auth::optional_session",
     },
@@ -125,12 +125,14 @@ export const user_router = new Elysia()
                 return Response.err(401, err)
               case "Update session failed":
               case "Delete session failed":
-                return Response.err(500, err)
+                return Response.internalServerError(err)
               default:
-                if (err instanceof UnknownException) {
-                  return Response.err(500, err.message)
-                }
-                return Response.err(500, `${err[0]}\n${err[1].message}`)
+                if (err instanceof UnknownException)
+                  return Response.internalServerError(err.message)
+                else
+                  return Response.internalServerError(
+                    `${err[0]}\n${err[1].message}`,
+                  )
             }
           },
         }),
@@ -159,7 +161,7 @@ export const user_router = new Elysia()
       return Response.ok(user)
     },
     {
-      response: Schema.ok(user_schema),
+      response: ResponseSchema.ok(user_schema),
     },
   )
   .post(
@@ -179,6 +181,6 @@ export const user_router = new Elysia()
     },
     {
       body: "user::avatar",
-      response: Schema.ok(t.String()),
+      response: ResponseSchema.ok(t.String()),
     },
   )

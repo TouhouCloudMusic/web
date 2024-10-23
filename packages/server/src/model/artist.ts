@@ -11,7 +11,7 @@ import {
   artist,
   localized_name as localized_name_table,
 } from "~/database/schema"
-import { Schema } from "~/lib/schema"
+import { ResponseSchema } from "~/lib/response/schema"
 import { db as _db, DB } from "~/service/database"
 import { QueueModel } from "./queue"
 
@@ -189,7 +189,7 @@ class ArtistModel {
 export const artist_model = new Elysia()
   .model({
     "artist::new": new_artist_schema,
-    "artist::find_by_id": Schema.ok(artist_schema),
-    "artist::find_by_keyword": Schema.ok(t.Array(artist_schema)),
+    "artist::find_by_id": ResponseSchema.ok(artist_schema),
+    "artist::find_by_keyword": ResponseSchema.ok(t.Array(artist_schema)),
   })
   .decorate("model", new ArtistModel())

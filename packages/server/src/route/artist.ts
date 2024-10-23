@@ -1,6 +1,6 @@
 import Elysia, { t } from "elysia"
 import { Response } from "~/lib/response"
-import { Schema } from "~/lib/schema"
+import { ResponseSchema } from "~/lib/response/schema"
 import { artist_model } from "~/model/artist"
 import { auth_guard } from "~/service/user"
 
@@ -15,12 +15,12 @@ export const artist_router = new Elysia({ prefix: "/artist" })
     },
     {
       query: t.Object({
-        keyword: Schema.keyword,
-        limit: Schema.limit(),
+        keyword: ResponseSchema.keyword,
+        limit: ResponseSchema.limit(),
       }),
       response: {
         200: "artist::find_by_keyword",
-        404: Schema.err,
+        404: ResponseSchema.err,
       },
     },
   )
@@ -28,7 +28,7 @@ export const artist_router = new Elysia({ prefix: "/artist" })
     "/:id",
     {
       params: t.Object({
-        id: Schema.id,
+        id: ResponseSchema.id,
       }),
     },
     (router) =>
@@ -44,7 +44,7 @@ export const artist_router = new Elysia({ prefix: "/artist" })
           {
             response: {
               200: "artist::find_by_id",
-              404: Schema.err,
+              404: ResponseSchema.err,
             },
           },
         )

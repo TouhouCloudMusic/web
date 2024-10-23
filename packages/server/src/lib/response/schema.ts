@@ -10,7 +10,7 @@ const localized_langs = [
 
 const date_masks = ["Full", "YM", "Y"] as const satisfies date.FormatMask[]
 
-class Schema {
+class ResponseSchema {
   constructor() {}
   id = t.Number(
     t.Integer({
@@ -74,6 +74,6 @@ class Schema {
   }
 }
 
-const schema = new Schema()
+const schema = new ResponseSchema()
 
-export { schema as Schema }
+export { schema as ResponseSchema }
