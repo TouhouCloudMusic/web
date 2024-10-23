@@ -45,6 +45,10 @@ export class ImageModel {
       .returning({
         filename: image_table.filename,
       })
+      .then((x) => {
+        if (!x.length) throw new Error("No such image")
+        return x
+      })
 
     await this.removeFile(filename)
   }
@@ -55,6 +59,10 @@ export class ImageModel {
       .where(eq(image_table.id, id))
       .returning({
         filename: image_table.filename,
+      })
+      .then((x) => {
+        if (!x.length) throw new Error("No such image")
+        return x
       })
 
     await this.removeFile(filename)
