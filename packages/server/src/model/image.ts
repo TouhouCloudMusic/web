@@ -26,16 +26,16 @@ export class ImageModel {
     const extension_name = image.name.split(".").pop()
     const image_hash = smartMd5(bytes)
     const file_name = `${image_hash}.${extension_name}`
-    const [{ image_id }] = await this.db
+    const [img] = await this.db
       .insert(image_table)
       .values({
         filename: file_name,
         uploaded_by: user_id,
       })
-      .returning({ image_id: image_table.id })
+      .returning()
     await this.writeFile(file_name, bytes)
 
-    return image_id
+    return img
   }
 
   async deleteByHash(image_hash: string) {

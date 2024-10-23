@@ -6,7 +6,12 @@ import { api_router } from "./route"
 import { user_router } from "./route/user"
 
 const app = new Elysia()
-  .use(staticPlugin())
+  .use(
+    staticPlugin({
+      prefix: "/",
+      staticLimit: 0,
+    }),
+  )
   .use(
     swagger({
       path: "/docs",

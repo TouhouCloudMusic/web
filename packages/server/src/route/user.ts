@@ -2,8 +2,10 @@ import { verify } from "@node-rs/argon2"
 import { hash } from "@touhouclouddb/utils"
 import { Effect } from "effect"
 import { UnknownException } from "effect/Cause"
+import { func } from "effect/FastCheck"
 import { Elysia, t } from "elysia"
-import { user_schema } from "~/database/user/typebox"
+import { User } from "~/database"
+import { UserLinks } from "~/database/user/typebox"
 import { Response } from "~/lib/response"
 import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
@@ -160,29 +162,59 @@ export const user_router = new Elysia()
   .get(
     "/profile",
     ({ store: { user } }) => {
-      return Response.ok(user)
+      const profile = {
+        ...user,
+        avatar: user?.avatar?.filename ?? null,
+      }
+      return Response.ok(profile)
     },
     {
-      response: ResponseSchema.ok(user_schema),
+      response: "user::profile",
     },
   )
-  .post(
-    "/avatar",
-    async ({
-      store: {
-        session: { user_id },
-      },
-      body,
-    }) => {
-      const image_id = await new ImageModel().upload(user_id, body.data)
-      await UserModel.updateAvatar({
-        user_id,
-        image_id,
-      })
-      return Response.ok("OK")
-    },
-    {
-      body: "user::avatar",
-      response: ResponseSchema.ok(t.String()),
-    },
+  .use(
+    new Elysia({ prefix: "/avatar" })
+      .use(auth_guard)
+      .use(user_model)
+      .post(
+        "",
+        async ({
+          store: {
+            user,
+            session: { user_id },
+          },
+          body,
+        }) => {
+          const image = await new ImageModel().upload(user_id, body.data)
+          await UserModel.updateAvatar({
+            user_id,
+            image_id: image.id,
+          })
+
+          user = Object.assign(user, {
+            avatar: image,
+            avatar_id: image.id,
+          })
+          return Response.ok("OK")
+        },
+        {
+          body: "user::avatar",
+          response: ResponseSchema.ok(t.String()),
+        },
+      )
+      .delete(
+        "",
+        async ({ store: { user } }) => {
+          await UserModel.removeAvatar(user)
+
+          user = Object.assign(user, {
+            avatar: null,
+            avatar_id: null,
+          })
+          return Response.ok("OK")
+        },
+        {
+          response: ResponseSchema.ok(t.String()),
+        },
+      ),
   )

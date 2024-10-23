@@ -59,7 +59,13 @@ export class SessionModel {
     return await db.query.session
       .findFirst({
         where: (field, op) => op.eq(field.id, token),
-        with: { user: true },
+        with: {
+          user: {
+            with: {
+              avatar: true,
+            },
+          },
+        },
       })
       .then((x) => {
         if (!x) return x

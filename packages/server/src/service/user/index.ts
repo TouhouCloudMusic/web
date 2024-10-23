@@ -1,8 +1,8 @@
 import dayjs from "dayjs"
 import { Cookie, Elysia, error, t } from "elysia"
-import { Session, User } from "~/database"
+import { Session } from "~/database"
+import { User, UserLinks } from "~/database/user/typebox"
 import { SessionModel, SessionValidateResult } from "~/model/session"
-import { UserProfile } from "~/model/user"
 
 const COOKIE_OPTION = {
   secrets: ["Hakurei Reimu", "Kirisame Marisa"],
@@ -19,7 +19,7 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
     user: undefined,
     session: undefined,
   } as {
-    user: User | undefined
+    user: (User & UserLinks) | undefined
     session: Session | undefined
   })
   .model({
@@ -87,19 +87,16 @@ export const auth_guard = new Elysia()
     user: store.user!,
     session: store.session!,
   }))
-  .resolve(({ store: { user } }) => ({
-    username: user.name,
-  }))
   .as("plugin")
 
-export function updateSessionState({
+export function updateSessionState<U, S>({
   user,
   session,
   store,
   session_token,
 }: {
-  user: UserProfile
-  session: Session
+  user: U extends User ? U : never
+  session: S extends Session ? S : never
   store: {
     user: unknown
     session: unknown

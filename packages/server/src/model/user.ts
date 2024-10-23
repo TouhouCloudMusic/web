@@ -1,37 +1,34 @@
-import { toError } from "@touhouclouddb/utils"
+import { AsyncReturnType, toError } from "@touhouclouddb/utils"
 import { eq, sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
 import Elysia, { t } from "elysia"
 import { NewUser, user } from "~/database"
-import { user_schema } from "~/database/user/typebox"
+import { User, user_schema } from "~/database/user/typebox"
 import { ResponseSchema } from "~/lib/response/schema"
 import { db } from "~/service/database"
 import { ImageModel } from "./image"
 import { OmitColumnFromSchema } from "./utils"
 
-const AVATAR_MIN_SIZE = "10k"
-const AVATAR_MAX_SIZE = "2m"
-export const user_profile_schema = t.Omit(user_schema, [
-  "id",
-  "password",
-  "email",
-  "avatar_id",
-])
-export type UserProfile = typeof user_profile_schema.static
+const AVATAR_MIN_SIZE = 10 * 1024 // 10kb
+const AVATAR_MAX_SIZE = 2 * 1024 * 1024 // 2mb
 
 type Parmas = Parameters<typeof db.query.user.findFirst>
 type UserColumns = Exclude<Parmas[0], undefined>["columns"]
 type With = NonNullable<Parmas[0]>["with"]
 
-const RETURN_COLUMNS = {
+export const USER_PROFILE_RETURN_COLUMNS = {
   name: true,
   location: true,
   created_at: true,
   updated_at: true,
-} as const satisfies OmitColumnFromSchema<UserProfile, UserColumns>
+} as const satisfies Partial<OmitColumnFromSchema<User, UserColumns>>
 
-const RETURN_WITH = {
-  avatar: true,
+export const USER_PROFILE_RETURN_WITH = {
+  avatar: {
+    columns: {
+      filename: true,
+    },
+  },
 } satisfies With
 
 const RETURN_ON_INSERT = {
@@ -39,9 +36,8 @@ const RETURN_ON_INSERT = {
   location: user.location,
   created_at: user.created_at,
   updated_at: user.updated_at,
-} as const satisfies Record<
-  keyof OmitColumnFromSchema<UserProfile, UserColumns>,
-  unknown
+} as const satisfies Partial<
+  Record<keyof OmitColumnFromSchema<User, UserColumns>, unknown>
 >
 
 export abstract class UserModel {
@@ -75,29 +71,37 @@ export abstract class UserModel {
   }
 
   static async findById(id: number) {
-    return db.query.user.findFirst({
-      where: (fields, op) => op.eq(fields.id, id),
-      columns: RETURN_COLUMNS,
-      with: RETURN_WITH,
-    })
+    return db.query.user
+      .findFirst({
+        where: (fields, op) => op.eq(fields.id, id),
+        with: {
+          avatar: true,
+        },
+      })
+      .then(flattenUserAvatar)
   }
   static findByIdM(id: number) {
     return Effect.tryPromise(() => this.findById(id))
   }
 
-  static async findByName(username: string) {
-    return await db.query.user.findFirst({
-      where: (fields, op) => op.eq(fields.name, username),
-      columns: RETURN_COLUMNS,
-      with: RETURN_WITH,
-    })
+  static async findByName(username: string): Promise<UserProfile | undefined> {
+    return await db.query.user
+      .findFirst({
+        where: (fields, op) => op.eq(fields.name, username),
+        with: {
+          avatar: true,
+        },
+      })
+      .then(flattenUserAvatar)
   }
 
   static async findByNameWithSession(username: string) {
-    return await db.query.user.findFirst({
-      where: (fields, op) => op.eq(fields.name, username),
-      with: { ...RETURN_WITH, session: true },
-    })
+    return await db.query.user
+      .findFirst({
+        where: (fields, op) => op.eq(fields.name, username),
+        with: { avatar: true, session: true },
+      })
+      .then(flattenUserAvatar)
   }
 
   static findByNameWithSessionM(username: string) {
@@ -133,15 +137,57 @@ export abstract class UserModel {
       .set({ avatar_id: image_id })
       .where(eq(user.id, user_id))
   }
+
+  static async removeAvatar(user: User) {
+    if (user.avatar_id) {
+      await new ImageModel().deleteByID(user.avatar_id)
+    } else {
+      throw new Error("User has no avatar")
+    }
+  }
 }
+
+export const user_profile_schema = t.Composite([
+  t.Omit(user_schema, ["id", "password", "email", "avatar_id"]),
+  t.Object({ avatar: t.Nullable(t.String()) }),
+])
+
+export type UserProfile = typeof user_profile_schema.static
 
 export const user_model = new Elysia().decorate("model", UserModel).model({
   "user::avatar": t.Object({
     data: t.File({
       maxSize: AVATAR_MAX_SIZE,
       minSize: AVATAR_MIN_SIZE,
-      type: ["image"],
+      type: "image",
+      error: (x) => {
+        const data = (x.value as any)?.data
+        if (data instanceof File) {
+          if (!data.type.startsWith("image")) return "Invalid file type"
+          return `File too ${data.size > AVATAR_MAX_SIZE ? "large" : "small"}`
+        }
+      },
     }),
   }),
   "user::profile": ResponseSchema.ok(user_profile_schema),
 })
+
+const sim_find = () =>
+  db.query.user.findFirst({
+    columns: USER_PROFILE_RETURN_COLUMNS,
+    with: USER_PROFILE_RETURN_WITH,
+  })
+
+type UnflattenedUser = AsyncReturnType<typeof sim_find>
+export function flattenUserAvatar<T extends UnflattenedUser>(
+  user: T,
+): T extends undefined ? undefined : T & { avatar: string | null } {
+  if (!user)
+    return user as unknown as T extends undefined ? undefined
+    : T & { avatar: string | null }
+  return {
+    ...user,
+    avatar: !user.avatar ? null : user.avatar.filename,
+  } satisfies UserProfile as unknown as T extends undefined ? undefined
+  : T & { avatar: string | null }
+}
