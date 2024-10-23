@@ -27,7 +27,10 @@ export const user = pgTable("user", {
 
 export const user_relations = relations(user, ({ one }) => ({
   session: one(session),
-  avatar: one(image_table),
+  avatar: one(image_table, {
+      fields: [user.avatar_id],
+      references: [image_table.id],
+  }),
 }))
 
 export const session = pgTable("session", {
