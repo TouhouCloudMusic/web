@@ -5,7 +5,7 @@ import { image_schema } from "../image/typebox"
 import { session, user } from "./schema"
 
 const user_link_props = t.Object({
-  avatar: t.Optional(image_schema),
+  avatar: t.Nullable(image_schema),
 })
 
 export const user_schema = t.Composite([
