@@ -3,16 +3,16 @@
   "version": "1.0.50",
   "scripts": {
     "build": "bun build --compile --minify-whitespace --minify-identifiers --minify-syntax --target bun --outfile server ./src/index.ts",
-    "drop": "bunx drizzle-kit drop",
-    "generate": "bunx drizzle-kit generate",
+    "db:drop": "bunx drizzle-kit drop",
+    "db:generate": "bunx drizzle-kit generate",
+    "db:init": "bun scripts/init_database.ts",
+    "db:migrate": "bun ./src/database/migrate/index.ts",
     "dev": "bun run --watch src/index.ts",
     "fix": "bunx oxlint --fix --fix-suggestions",
     "fmt": "bunx prettier --cache --write .",
     "lint": "bunx oxlint",
-    "migrate": "bun ./src/database/migrate/index.ts",
     "start": "./server",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "db:init": "bun scripts/init_database.ts"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
