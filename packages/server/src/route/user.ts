@@ -13,6 +13,8 @@ import { user_model, UserModel } from "~/model/user"
 import { auth_guard, auth_service, updateSessionState } from "~/service/user"
 
 const AUTH_FAILED_MSG = "Incorrect username or password" as const
+const ALREADY_SIGNED_IN = "Already signed in" as const
+const ALREADY_SIGNED_IN_RESPONSE = Response.err(409, ALREADY_SIGNED_IN)
 export const user_router = new Elysia()
   .use(auth_service)
   .use(user_model)
@@ -21,8 +23,10 @@ export const user_router = new Elysia()
     async ({
       body: { username, password },
       store,
-      cookie: { session_token },
+      cookie: { session_token: token },
     }) => {
+      if (token.value) return ALREADY_SIGNED_IN_RESPONSE
+
       return Effect.gen(function* () {
         const exist = yield* UserModel.existM(username)
 
@@ -43,7 +47,7 @@ export const user_router = new Elysia()
           user: Value.Clean(user_schema, user),
           session,
           store,
-          session_token,
+          session_token: token,
         })
 
         return user.name
@@ -75,7 +79,7 @@ export const user_router = new Elysia()
       body: { username, password },
       cookie: { session_token: token },
     }) => {
-      if (token.value) return Response.err(409, "Already signed in")
+      if (token.value) return ALREADY_SIGNED_IN_RESPONSE
 
       return Effect.gen(function* () {
         const validated_token =
