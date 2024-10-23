@@ -7,7 +7,7 @@
     "db:generate": "bunx drizzle-kit generate",
     "db:init": "bun scripts/init_database.ts",
     "db:migrate": "bun ./src/database/migrate/index.ts",
-    "dev": "bun run --watch src/index.ts",
+    "dev": "bun run --hot src/index.ts",
     "fix": "bunx oxlint --fix --fix-suggestions",
     "fmt": "bunx prettier --cache --write .",
     "lint": "bunx oxlint",
@@ -28,7 +28,8 @@
     "drizzle-typebox": "^0.1.1",
     "effect": "^3.9.1",
     "elysia": "1.1.21",
-    "postgres": "^3.4.4"
+    "postgres": "^3.4.4",
+    "radash": "^12.1.0"
   },
   "devDependencies": {
     "@types/bun": "latest",
