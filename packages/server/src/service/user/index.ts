@@ -2,6 +2,7 @@ import dayjs from "dayjs"
 import { Cookie, Elysia, error, t } from "elysia"
 import { Session, User } from "~/database"
 import { SessionModel, SessionValidateResult } from "~/model/session"
+import { UserProfile } from "~/model/user"
 
 const COOKIE_OPTION = {
   secrets: ["Hakurei Reimu", "Kirisame Marisa"],
@@ -91,14 +92,14 @@ export const auth_guard = new Elysia()
   }))
   .as("plugin")
 
-export function updateSessionState<U, S>({
+export function updateSessionState({
   user,
   session,
   store,
   session_token,
 }: {
-  user: User extends U ? U : never
-  session: Session extends S ? S : never
+  user: UserProfile
+  session: Session
   store: {
     user: unknown
     session: unknown

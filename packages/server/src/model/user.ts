@@ -2,12 +2,23 @@ import { toError } from "@touhouclouddb/utils"
 import { eq, sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
 import Elysia, { t } from "elysia"
-import { NewUser, user, User } from "~/database"
+import { NewUser, user } from "~/database"
+import { user_schema } from "~/database/user/typebox"
+import { ResponseSchema } from "~/lib/response/schema"
 import { db } from "~/service/database"
 import { ImageModel } from "./image"
 import { OmitColumnFromSchema } from "./utils"
+
 const AVATAR_MIN_SIZE = "10k"
 const AVATAR_MAX_SIZE = "2m"
+export const user_profile_schema = t.Omit(user_schema, [
+  "id",
+  "password",
+  "email",
+  "avatar_id",
+])
+export type UserProfile = typeof user_profile_schema.static
+
 type Parmas = Parameters<typeof db.query.user.findFirst>
 type UserColumns = Exclude<Parmas[0], undefined>["columns"]
 type With = NonNullable<Parmas[0]>["with"]
@@ -17,7 +28,7 @@ const RETURN_COLUMNS = {
   location: true,
   created_at: true,
   updated_at: true,
-} as const satisfies OmitColumnFromSchema<User, UserColumns>
+} as const satisfies OmitColumnFromSchema<UserProfile, UserColumns>
 
 const RETURN_WITH = {
   avatar: true,
@@ -28,10 +39,8 @@ const RETURN_ON_INSERT = {
   location: user.location,
   created_at: user.created_at,
   updated_at: user.updated_at,
-  avatar_id: user.avatar_id,
-  avatar: undefined,
 } as const satisfies Record<
-  keyof OmitColumnFromSchema<User, UserColumns>,
+  keyof OmitColumnFromSchema<UserProfile, UserColumns>,
   unknown
 >
 
@@ -55,7 +64,7 @@ export abstract class UserModel {
   }
 
   static async insert(data: NewUser) {
-    return (await db.insert(user).values(data).returning()).at(0)!
+    return (await db.insert(user).values(data).returning({ id: user.id }))[0]
   }
 
   static insertM(data: NewUser) {
@@ -63,6 +72,17 @@ export abstract class UserModel {
       try: () => this.insert(data),
       catch: identity,
     }).pipe(Effect.mapError((e) => ["Insert user failed", toError(e)] as const))
+  }
+
+  static async findById(id: number) {
+    return db.query.user.findFirst({
+      where: (fields, op) => op.eq(fields.id, id),
+      columns: RETURN_COLUMNS,
+      with: RETURN_WITH,
+    })
+  }
+  static findByIdM(id: number) {
+    return Effect.tryPromise(() => this.findById(id))
   }
 
   static async findByName(username: string) {
@@ -120,7 +140,8 @@ export const user_model = new Elysia().decorate("model", UserModel).model({
     data: t.File({
       maxSize: AVATAR_MAX_SIZE,
       minSize: AVATAR_MIN_SIZE,
-      type: "image/*",
+      type: ["image/*"],
     }),
   }),
+  "user::profile": ResponseSchema.ok(user_profile_schema),
 })

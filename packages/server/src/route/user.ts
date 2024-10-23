@@ -1,5 +1,4 @@
 import { verify } from "@node-rs/argon2"
-import { Value } from "@sinclair/typebox/value"
 import { hash } from "@touhouclouddb/utils"
 import { Effect } from "effect"
 import { UnknownException } from "effect/Cause"
@@ -36,15 +35,16 @@ export const user_router = new Elysia()
 
         const hashed_password = yield* Effect.promise(() => hash(password))
 
-        const user = yield* UserModel.insertM({
+        const { id } = yield* UserModel.insertM({
           name: username,
           password: hashed_password,
         })
 
-        const session = yield* SessionModel.createM(user.id)
+        const user = (yield* UserModel.findByIdM(id))!
+        const session = yield* SessionModel.createM(id)
 
         updateSessionState({
-          user: Value.Clean(user_schema, user),
+          user,
           session,
           store,
           session_token: token,
@@ -56,6 +56,8 @@ export const user_router = new Elysia()
           onSuccess: Response.hello,
           onFailure: (err) => {
             if (err === "User already exists") return Response.err(409, err)
+            if (err instanceof UnknownException)
+              return Response.err(500, err.message)
             else return Response.err(500, `${err[0]}\n${err[1]}`)
           },
         }),
