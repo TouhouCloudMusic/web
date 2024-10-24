@@ -3,17 +3,20 @@ import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
 import { mapValues } from "radash"
 import { image_schema } from "../image/typebox"
-import { session, user } from "./schema"
+import { role_table, session, user } from "./schema"
 
 export const user_schema = createSelectSchema(user)
+export const user_role_schema = createSelectSchema(role_table)
 export const user_links_schema = t.Object(
   mapValues(
     {
       avatar: image_schema,
+      role: user_role_schema,
     },
     t.Nullable,
   ),
 )
+
 export type User = typeof user_schema.static
 export type UserLinks = typeof user_links_schema.static
 
