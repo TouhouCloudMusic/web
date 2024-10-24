@@ -39,7 +39,7 @@ export const user_router = new Elysia()
 
         const hashed_password = yield* Effect.promise(() => hash(password))
 
-        const { id } = yield* UserModel.insertM({
+        const { id } = yield* UserModel.createM({
           name: username,
           password: hashed_password,
         })
@@ -59,10 +59,9 @@ export const user_router = new Elysia()
         Effect.match({
           onSuccess: Response.hello,
           onFailure: (err) => {
+            if (err instanceof UnknownException) throw err
             if (err === "User already exists") return Response.err(409, err)
-            if (err instanceof UnknownException)
-              return Response.err(500, err.message)
-            else return Response.err(500, `${err[0]}\n${err[1]}`)
+            else return Response.err(500, err)
           },
         }),
         Effect.runPromise,
@@ -87,7 +86,7 @@ export const user_router = new Elysia()
     }) => {
       if (token.value) return ALREADY_SIGNED_IN_RESPONSE
 
-      return Effect.gen(function* () {
+      const task = Effect.gen(function* () {
         const validated_token =
           token.value ?
             yield* SessionModel.validateTokenM({
@@ -129,21 +128,15 @@ export const user_router = new Elysia()
             switch (err) {
               case AUTH_FAILED_MSG:
                 return Response.err(401, err)
-              case "Update session failed":
-              case "Delete session failed":
-                return Response.internalServerError(err)
               default:
-                if (err instanceof UnknownException)
-                  return Response.internalServerError(err.message)
-                else
-                  return Response.internalServerError(
-                    `${err[0]}\n${err[1].message}`,
-                  )
+                if (err instanceof UnknownException) throw err
+                else return Response.internalServerError(err)
             }
           },
         }),
-        Effect.runPromise,
       )
+
+      return Effect.runPromise(task)
     },
     {
       body: "auth::sign",

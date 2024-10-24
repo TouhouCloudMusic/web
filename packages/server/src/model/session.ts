@@ -49,7 +49,10 @@ export class SessionModel {
   static createM(id: number, token?: SessionToken) {
     return Effect.tryPromise({
       try: () => SessionModel.create(id, token),
-      catch: (e) => [SessionErrorMsg.CreateFailed, toError(e)] as const,
+      catch(e) {
+        console.log(e)
+        return SessionErrorMsg.CreateFailed
+      },
     })
   }
 
@@ -79,7 +82,10 @@ export class SessionModel {
 
     return Effect.tryPromise({
       try: () => findSession(token),
-      catch: (e) => [SessionErrorMsg.FindFailed, toError(e)] as const,
+      catch(e) {
+        console.log(e)
+        return SessionErrorMsg.FindFailed
+      },
     }).pipe(Effect.map((x) => Option.fromNullable(x)))
   }
 
@@ -92,9 +98,9 @@ export class SessionModel {
 
   static updateM(session: Session) {
     return Effect.tryPromise({
-      try: () => this.update(session),
+      try: () => this.update(session) as unknown as Promise<void>,
       catch: () => SessionErrorMsg.UpdateFailed,
-    }).pipe(Effect.map(() => {}))
+    })
   }
 
   static async validateToken(

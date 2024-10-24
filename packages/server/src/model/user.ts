@@ -63,11 +63,14 @@ export abstract class UserModel {
   static existM(username: string) {
     return Effect.tryPromise({
       try: () => this.exist(username),
-      catch: (e) => ["Check user failed", toError(e)] as const,
+      catch(e) {
+        console.log(e)
+        return "Check user failed" as const
+      },
     })
   }
 
-  static async insert(data: NewUser) {
+  static async create(data: NewUser) {
     const new_user = (
       await db.insert(user).values(data).returning({ id: user.id })
     )[0]
@@ -78,11 +81,14 @@ export abstract class UserModel {
     return new_user
   }
 
-  static insertM(data: NewUser) {
+  static createM(data: NewUser) {
     return Effect.tryPromise({
-      try: () => this.insert(data),
-      catch: identity,
-    }).pipe(Effect.mapError((e) => ["Insert user failed", toError(e)] as const))
+      try: () => this.create(data),
+      catch(e) {
+        console.log(e)
+        return "Create user failed" as const
+      },
+    })
   }
 
   static async findById(id: number) {
@@ -118,7 +124,10 @@ export abstract class UserModel {
   static findByNameWithSessionM(username: string) {
     return Effect.tryPromise({
       try: () => this.findByNameWithSession(username),
-      catch: (e) => ["Find user failed", toError(e)] as const,
+      catch(e) {
+        console.log(e)
+        return "Find user failed" as const
+      },
     })
   }
 
@@ -193,15 +202,15 @@ function flattenUserAvatar<T extends UnflattenedUser>(
 
 export async function validateAvatar(avatar: File) {
   if (avatar.size > AVATAR_MAX_SIZE) {
-    return Either.left("Image too large")
+    return Either.left("Image too large" as const)
   }
 
   if (avatar.size < AVATAR_MIN_SIZE) {
-    return Either.left("Image too small")
+    return Either.left("Image too small" as const)
   }
 
   if (!VALID_IMAGE_TYPES.includes(avatar.type)) {
-    return Either.left("Invalid image type")
+    return Either.left("Invalid image type" as const)
   }
 
   const image = sharp(await avatar.arrayBuffer())
@@ -212,13 +221,13 @@ export async function validateAvatar(avatar: File) {
   const height = metadata.height
 
   if (!width || !height || width >= 512 || height >= 512) {
-    return Either.left("Image too large")
+    return Either.left("Image too large" as const)
   }
 
   const aspect_ratio = width / height
 
   if (!(Math.abs(aspect_ratio - 1) < 0.01)) {
-    return Either.left("Image not square")
+    return Either.left("Image not square" as const)
   }
 
   return Either.right(await image.toFormat(AVATAR_EXTENSION_NAME).toBuffer())
