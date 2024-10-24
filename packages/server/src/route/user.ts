@@ -1,6 +1,6 @@
 import { verify } from "@node-rs/argon2"
 import { hash } from "@touhouclouddb/utils"
-import { Effect } from "effect"
+import { Effect, Either } from "effect"
 import { UnknownException } from "effect/Cause"
 import { Elysia, error, redirect, t } from "elysia"
 import { Response } from "~/lib/response"
@@ -190,24 +190,34 @@ export const user_router = new Elysia()
           },
           body,
         }) => {
-          const avatar_buffer = await validateAvatar(body.data)
-          const bytes = new Uint8Array(avatar_buffer)
-          const image = await new ImageModel().upload(user_id, {
-            bytes,
-            extension_name: AVATAR_EXTENSION_NAME,
-          })
-          await UserModel.updateAvatar({
-            user_id,
-            image_id: image.id,
-          })
-          user.avatar = image
-          user.avatar_id = image.id
+          const validated_image = await validateAvatar(body.data)
+          return Either.match(validated_image, {
+            onLeft(left) {
+              return Response.err(400, left)
+            },
+            async onRight(right) {
+              const bytes = new Uint8Array(right)
+              const image = await new ImageModel().upload(user_id, {
+                bytes,
+                extension_name: AVATAR_EXTENSION_NAME,
+              })
+              await UserModel.updateAvatar({
+                user_id,
+                image_id: image.id,
+              })
+              user.avatar = image
+              user.avatar_id = image.id
 
-          return Response.ok("OK")
+              return Response.ok("OK")
+            },
+          })
         },
         {
           body: "user::avatar",
-          response: ResponseSchema.ok(t.String()),
+          response: {
+            200: ResponseSchema.ok(t.String()),
+            400: ResponseSchema.err,
+          },
         },
       )
       .delete(

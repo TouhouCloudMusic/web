@@ -1,6 +1,6 @@
 import { AsyncReturnType, toError } from "@touhouclouddb/utils"
 import { eq, sql } from "drizzle-orm"
-import { Effect, identity } from "effect"
+import { Effect, Either, identity } from "effect"
 import Elysia, { t } from "elysia"
 import sharp from "sharp"
 import { NewUser, user, user_role_table } from "~/database"
@@ -193,15 +193,15 @@ function flattenUserAvatar<T extends UnflattenedUser>(
 
 export async function validateAvatar(avatar: File) {
   if (avatar.size > AVATAR_MAX_SIZE) {
-    throw new Error("Image too large")
+    return Either.left("Image too large")
   }
 
   if (avatar.size < AVATAR_MIN_SIZE) {
-    throw new Error("Image too small")
+    return Either.left("Image too small")
   }
 
   if (!VALID_IMAGE_TYPES.includes(avatar.type)) {
-    throw new Error("Invalid image type")
+    return Either.left("Invalid image type")
   }
 
   const image = sharp(await avatar.arrayBuffer())
@@ -212,14 +212,14 @@ export async function validateAvatar(avatar: File) {
   const height = metadata.height
 
   if (!width || !height || width >= 512 || height >= 512) {
-    throw new Error("Invalid image size")
+    return Either.left("Image too large")
   }
 
   const aspect_ratio = width / height
 
   if (!(Math.abs(aspect_ratio - 1) < 0.01)) {
-    throw new Error("Image aspect ratio is invalid")
+    return Either.left("Image not square")
   }
 
-  return await image.toFormat(AVATAR_EXTENSION_NAME).toBuffer()
+  return Either.right(await image.toFormat(AVATAR_EXTENSION_NAME).toBuffer())
 }
