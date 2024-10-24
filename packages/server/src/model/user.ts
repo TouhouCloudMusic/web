@@ -1,11 +1,11 @@
-import { AsyncReturnType, toError } from "@touhouclouddb/utils"
+import { AsyncReturnType } from "@touhouclouddb/utils"
 import { eq, sql } from "drizzle-orm"
-import { Effect, Either, identity } from "effect"
+import { Effect, Either } from "effect"
 import Elysia, { t } from "elysia"
 import sharp from "sharp"
 import { NewUser, user, user_role_table } from "~/database"
 import { USER_ROLE } from "~/database/lookup_tables/role"
-import { User, user_schema } from "~/database/user/typebox"
+import { User, user_links_schema, user_schema } from "~/database/user/typebox"
 import { ResponseSchema } from "~/lib/response/schema"
 import { db } from "~/service/database"
 import { ImageModel } from "./image"
@@ -13,6 +13,8 @@ import { OmitColumnFromSchema } from "./utils"
 
 const AVATAR_MIN_SIZE = 10 * 1024 // 10kb
 const AVATAR_MAX_SIZE = 2 * 1024 * 1024 // 2mb
+const AVATAR_MAX_WIDTH = 512
+const AVATAR_MAX_HEIGHT = AVATAR_MAX_WIDTH
 export const AVATAR_EXTENSION_NAME = "jpeg"
 const VALID_IMAGE_TYPES = ["image/png", "image/jpeg"]
 type Parmas = Parameters<typeof db.query.user.findFirst>
@@ -26,7 +28,7 @@ const RETURN_COLUMNS = {
   updated_at: true,
 } as const satisfies Partial<OmitColumnFromSchema<User, UserColumns>>
 
-const RETURN_WITH = {
+export const USER_RETURN_WITH = {
   avatar: {
     columns: {
       filename: true,
@@ -71,14 +73,16 @@ export abstract class UserModel {
   }
 
   static async create(data: NewUser) {
-    const new_user = (
-      await db.insert(user).values(data).returning({ id: user.id })
-    )[0]
-    await db.insert(user_role_table).values({
-      user_id: new_user.id,
-      role_id: USER_ROLE.User.id,
+    return db.transaction(async (tx) => {
+      const new_user = (
+        await tx.insert(user).values(data).returning({ id: user.id })
+      )[0]
+      await tx.insert(user_role_table).values({
+        user_id: new_user.id,
+        role_id: USER_ROLE.User.id,
+      })
+      return new_user
     })
-    return new_user
   }
 
   static createM(data: NewUser) {
@@ -95,9 +99,9 @@ export abstract class UserModel {
     return db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.id, id),
-        with: RETURN_WITH,
+        with: USER_RETURN_WITH,
       })
-      .then(flattenUserAvatar)
+      .then(flattenUser)
   }
   static findByIdM(id: number) {
     return Effect.tryPromise(() => this.findById(id))
@@ -107,18 +111,18 @@ export abstract class UserModel {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),
-        with: RETURN_WITH,
+        with: USER_RETURN_WITH,
       })
-      .then(flattenUserAvatar)
+      .then((x) => flattenUser(x))
   }
 
   static async findByNameWithSession(username: string) {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),
-        with: { ...RETURN_WITH, session: true },
+        with: { ...USER_RETURN_WITH, session: true },
       })
-      .then(flattenUserAvatar)
+      .then(flattenUser)
   }
 
   static findByNameWithSessionM(username: string) {
@@ -169,7 +173,10 @@ export abstract class UserModel {
 
 export const user_profile_schema = t.Composite([
   t.Omit(user_schema, ["id", "password", "email", "avatar_id"]),
-  t.Object({ avatar: t.Nullable(t.String()) }),
+  t.Composite([
+    t.Omit(user_links_schema, ["avatar"]),
+    t.Object({ avatar: t.Nullable(t.String()) }),
+  ]),
 ])
 
 export type UserProfile = typeof user_profile_schema.static
@@ -184,19 +191,20 @@ export const user_model = new Elysia().decorate("model", UserModel).model({
 const sim_find = () =>
   db.query.user.findFirst({
     columns: RETURN_COLUMNS,
-    with: RETURN_WITH,
+    with: USER_RETURN_WITH,
   })
 
 type UnflattenedUser = AsyncReturnType<typeof sim_find>
-function flattenUserAvatar<T extends UnflattenedUser>(
+function flattenUser<T extends UnflattenedUser>(
   user: T,
-): T extends undefined ? undefined : T & { avatar: string | null } {
+): T extends undefined ? undefined : T & UserProfile {
   // @ts-expect-error
   if (!user) return user
   // @ts-expect-error
   return {
     ...user,
     avatar: !user.avatar ? null : user.avatar.filename,
+    role: user.role.map((x) => x.role),
   } satisfies UserProfile
 }
 
@@ -220,7 +228,12 @@ export async function validateAvatar(avatar: File) {
   const width = metadata.width
   const height = metadata.height
 
-  if (!width || !height || width >= 512 || height >= 512) {
+  if (
+    !width ||
+    !height ||
+    width > AVATAR_MAX_WIDTH ||
+    height > AVATAR_MAX_HEIGHT
+  ) {
     return Either.left("Image too large" as const)
   }
 

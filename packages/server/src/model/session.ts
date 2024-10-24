@@ -3,13 +3,14 @@ import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding"
-import { toError } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import { Effect, Option, pipe } from "effect"
 import { Session, User } from "~/database"
 import { session as session_table } from "~/database/schema"
+import { UserLinks } from "~/database/user/typebox"
 import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
+import { USER_RETURN_WITH } from "./user"
 
 const SessionErrorMsg = {
   CreateFailed: "Create session failed",
@@ -20,8 +21,8 @@ const SessionErrorMsg = {
 } as const
 
 export type SessionValidateResult = {
+  user: User & Pick<UserLinks, "role">
   session: Session
-  user: User
 }
 export type SessionToken = string & { type: "SessionToken" }
 export class SessionModel {
@@ -64,16 +65,19 @@ export class SessionModel {
         where: (field, op) => op.eq(field.id, token),
         with: {
           user: {
-            with: {
-              avatar: true,
-            },
+            with: USER_RETURN_WITH,
           },
         },
       })
       .then((x) => {
         if (!x) return x
+
         const { user, ...session } = x
-        return { user, session }
+        const flattened_user = {
+          ...user,
+          role: user.role.map((x) => x.role),
+        }
+        return { user: flattened_user, session }
       })
   }
 
@@ -109,7 +113,7 @@ export class SessionModel {
     const result = await this.findByToken(token)
     if (!result) return null
 
-    const { user, session } = result
+    const { session, user } = result
 
     if (Date.now() >= session.expires_at.getTime()) {
       await this.invalidate(token)
