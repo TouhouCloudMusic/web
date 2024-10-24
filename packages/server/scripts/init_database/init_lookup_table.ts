@@ -1,10 +1,13 @@
 import { sql } from "drizzle-orm"
-import { db } from "~/service/database"
-import { language_table, release_type_table } from "."
-import { LANGUAGES } from "./lang"
-import { RELEASE_TYPE } from "./release_type"
+import {
+  language_table,
+  release_type_table,
+} from "../../src/database/lookup_tables"
+import { LANGUAGES } from "../../src/database/lookup_tables/lang"
+import { RELEASE_TYPE_ARRAY } from "../../src/database/lookup_tables/release_type"
+import db from "./connection"
 
-async function main() {
+export default async function main() {
   await db
     .insert(language_table)
     .values(LANGUAGES)
@@ -17,7 +20,7 @@ async function main() {
 
   await db
     .insert(release_type_table)
-    .values(Object.values(RELEASE_TYPE))
+    .values(RELEASE_TYPE_ARRAY.map((name, index) => ({ id: ++index, name })))
     .onConflictDoUpdate({
       target: release_type_table.id,
       set: {
@@ -25,7 +28,3 @@ async function main() {
       },
     })
 }
-
-await main()
-
-process.exit(0)

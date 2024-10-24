@@ -5,7 +5,7 @@
     "build": "bun build --compile --minify-whitespace --minify-identifiers --minify-syntax --target bun --outfile server ./src/index.ts",
     "db:drop": "bunx drizzle-kit drop",
     "db:generate": "bunx drizzle-kit generate",
-    "db:init": "bun scripts/init_database.ts",
+    "db:init": "bun scripts/init_database/index.ts",
     "db:migrate": "bun ./src/database/migrate/index.ts",
     "dev": "bun run --hot src/index.ts",
     "fix": "bunx oxlint --fix --fix-suggestions",
