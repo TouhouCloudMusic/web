@@ -2,6 +2,7 @@ import { AsyncReturnType, toError } from "@touhouclouddb/utils"
 import { eq, sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
 import Elysia, { t } from "elysia"
+import sharp from "sharp"
 import { NewUser, user } from "~/database"
 import { User, user_schema } from "~/database/user/typebox"
 import { ResponseSchema } from "~/lib/response/schema"
@@ -11,7 +12,8 @@ import { OmitColumnFromSchema } from "./utils"
 
 const AVATAR_MIN_SIZE = 10 * 1024 // 10kb
 const AVATAR_MAX_SIZE = 2 * 1024 * 1024 // 2mb
-
+export const AVATAR_EXTENSION_NAME = "jpeg"
+const VALID_IMAGE_TYPES = ["image/png", "image/jpeg"]
 type Parmas = Parameters<typeof db.query.user.findFirst>
 type UserColumns = Exclude<Parmas[0], undefined>["columns"]
 type With = NonNullable<Parmas[0]>["with"]
@@ -156,18 +158,7 @@ export type UserProfile = typeof user_profile_schema.static
 
 export const user_model = new Elysia().decorate("model", UserModel).model({
   "user::avatar": t.Object({
-    data: t.File({
-      maxSize: AVATAR_MAX_SIZE,
-      minSize: AVATAR_MIN_SIZE,
-      type: "image",
-      error: (x) => {
-        const data = (x.value as any)?.data
-        if (data instanceof File) {
-          if (!data.type.startsWith("image")) return "Invalid file type"
-          return `File too ${data.size > AVATAR_MAX_SIZE ? "large" : "small"}`
-        }
-      },
-    }),
+    data: t.File(),
   }),
   "user::profile": ResponseSchema.ok(user_profile_schema),
 })
@@ -179,7 +170,7 @@ const sim_find = () =>
   })
 
 type UnflattenedUser = AsyncReturnType<typeof sim_find>
-export function flattenUserAvatar<T extends UnflattenedUser>(
+function flattenUserAvatar<T extends UnflattenedUser>(
   user: T,
 ): T extends undefined ? undefined : T & { avatar: string | null } {
   if (!user)
@@ -190,4 +181,37 @@ export function flattenUserAvatar<T extends UnflattenedUser>(
     avatar: !user.avatar ? null : user.avatar.filename,
   } satisfies UserProfile as unknown as T extends undefined ? undefined
   : T & { avatar: string | null }
+}
+
+export async function validateAvatar(avatar: File) {
+  if (avatar.size > AVATAR_MAX_SIZE) {
+    throw new Error("Image too large")
+  }
+
+  if (avatar.size < AVATAR_MIN_SIZE) {
+    throw new Error("Image too small")
+  }
+
+  if (!VALID_IMAGE_TYPES.includes(avatar.type)) {
+    throw new Error("Invalid image type")
+  }
+
+  const image = sharp(await avatar.arrayBuffer())
+
+  const metadata = await image.metadata()
+
+  const width = metadata.width
+  const height = metadata.height
+
+  if (!width || !height || width >= 512 || height >= 512) {
+    throw new Error("Invalid image size")
+  }
+
+  const aspect_ratio = width / height
+
+  if (!(Math.abs(aspect_ratio - 1) < 0.01)) {
+    throw new Error("Image aspect ratio is invalid")
+  }
+
+  return await image.toFormat(AVATAR_EXTENSION_NAME).toBuffer()
 }

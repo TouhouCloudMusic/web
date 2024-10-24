@@ -2,15 +2,17 @@ import { verify } from "@node-rs/argon2"
 import { hash } from "@touhouclouddb/utils"
 import { Effect } from "effect"
 import { UnknownException } from "effect/Cause"
-import { func } from "effect/FastCheck"
-import { Elysia, t } from "elysia"
-import { User } from "~/database"
-import { UserLinks } from "~/database/user/typebox"
+import { Elysia, error, redirect, t } from "elysia"
 import { Response } from "~/lib/response"
 import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
-import { user_model, UserModel } from "~/model/user"
+import {
+  AVATAR_EXTENSION_NAME,
+  user_model,
+  UserModel,
+  validateAvatar,
+} from "~/model/user"
 import { auth_guard, auth_service, updateSessionState } from "~/service/user"
 
 const AUTH_FAILED_MSG = "Incorrect username or password" as const
@@ -172,10 +174,13 @@ export const user_router = new Elysia()
       response: "user::profile",
     },
   )
-  .use(
-    new Elysia({ prefix: "/avatar" })
-      .use(auth_guard)
-      .use(user_model)
+  .group("/avatar", {}, (group) =>
+    group
+      .get("", ({ store: { user } }) => {
+        const filename = user.avatar?.filename
+        if (filename) return redirect(`image/${filename}`)
+        else return error(404)
+      })
       .post(
         "",
         async ({
@@ -185,16 +190,19 @@ export const user_router = new Elysia()
           },
           body,
         }) => {
-          const image = await new ImageModel().upload(user_id, body.data)
+          const avatar_buffer = await validateAvatar(body.data)
+          const bytes = new Uint8Array(avatar_buffer)
+          const image = await new ImageModel().upload(user_id, {
+            bytes,
+            extension_name: AVATAR_EXTENSION_NAME,
+          })
           await UserModel.updateAvatar({
             user_id,
             image_id: image.id,
           })
+          user.avatar = image
+          user.avatar_id = image.id
 
-          user = Object.assign(user, {
-            avatar: image,
-            avatar_id: image.id,
-          })
           return Response.ok("OK")
         },
         {
@@ -207,10 +215,8 @@ export const user_router = new Elysia()
         async ({ store: { user } }) => {
           await UserModel.removeAvatar(user)
 
-          user = Object.assign(user, {
-            avatar: null,
-            avatar_id: null,
-          })
+          user.avatar = null
+          user.avatar_id = null
           return Response.ok("OK")
         },
         {

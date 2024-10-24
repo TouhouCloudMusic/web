@@ -21,9 +21,16 @@ export class ImageModel {
     return await fs.unlink(path)
   }
 
-  async upload(user_id: number, image: File) {
-    const bytes = await image.bytes()
-    const extension_name = image.name.split(".").pop()
+  async upload(
+    user_id: number,
+    {
+      bytes,
+      extension_name,
+    }: {
+      bytes: Uint8Array
+      extension_name: string
+    },
+  ) {
     const image_hash = smartMd5(bytes)
     const file_name = `${image_hash}.${extension_name}`
     const [img] = await this.db
