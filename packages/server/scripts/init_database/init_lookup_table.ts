@@ -1,4 +1,6 @@
 import { sql } from "drizzle-orm"
+import { role_table } from "~/database"
+import { USER_ROLE, USER_ROLE_ARRAY } from "~/database/lookup_tables/role"
 import {
   language_table,
   release_type_table,
@@ -27,4 +29,9 @@ export default async function main() {
         name: sql.raw(`excluded.${release_type_table.name.name}`),
       },
     })
+
+  await db
+    .insert(role_table)
+    .values(Object.values(USER_ROLE))
+    .onConflictDoNothing()
 }
