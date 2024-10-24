@@ -3,7 +3,8 @@ import { eq, sql } from "drizzle-orm"
 import { Effect, identity } from "effect"
 import Elysia, { t } from "elysia"
 import sharp from "sharp"
-import { NewUser, user } from "~/database"
+import { NewUser, user, user_role_table } from "~/database"
+import { USER_ROLE } from "~/database/lookup_tables/role"
 import { User, user_schema } from "~/database/user/typebox"
 import { ResponseSchema } from "~/lib/response/schema"
 import { db } from "~/service/database"
@@ -18,17 +19,22 @@ type Parmas = Parameters<typeof db.query.user.findFirst>
 type UserColumns = Exclude<Parmas[0], undefined>["columns"]
 type With = NonNullable<Parmas[0]>["with"]
 
-export const USER_PROFILE_RETURN_COLUMNS = {
+const RETURN_COLUMNS = {
   name: true,
   location: true,
   created_at: true,
   updated_at: true,
 } as const satisfies Partial<OmitColumnFromSchema<User, UserColumns>>
 
-export const USER_PROFILE_RETURN_WITH = {
+const RETURN_WITH = {
   avatar: {
     columns: {
       filename: true,
+    },
+  },
+  role: {
+    with: {
+      role: true,
     },
   },
 } satisfies With
@@ -62,7 +68,14 @@ export abstract class UserModel {
   }
 
   static async insert(data: NewUser) {
-    return (await db.insert(user).values(data).returning({ id: user.id }))[0]
+    const new_user = (
+      await db.insert(user).values(data).returning({ id: user.id })
+    )[0]
+    await db.insert(user_role_table).values({
+      user_id: new_user.id,
+      role_id: USER_ROLE.User.id,
+    })
+    return new_user
   }
 
   static insertM(data: NewUser) {
@@ -76,9 +89,7 @@ export abstract class UserModel {
     return db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.id, id),
-        with: {
-          avatar: true,
-        },
+        with: RETURN_WITH,
       })
       .then(flattenUserAvatar)
   }
@@ -90,9 +101,7 @@ export abstract class UserModel {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),
-        with: {
-          avatar: true,
-        },
+        with: RETURN_WITH,
       })
       .then(flattenUserAvatar)
   }
@@ -101,7 +110,7 @@ export abstract class UserModel {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),
-        with: { avatar: true, session: true },
+        with: { ...RETURN_WITH, session: true },
       })
       .then(flattenUserAvatar)
   }
@@ -165,22 +174,21 @@ export const user_model = new Elysia().decorate("model", UserModel).model({
 
 const sim_find = () =>
   db.query.user.findFirst({
-    columns: USER_PROFILE_RETURN_COLUMNS,
-    with: USER_PROFILE_RETURN_WITH,
+    columns: RETURN_COLUMNS,
+    with: RETURN_WITH,
   })
 
 type UnflattenedUser = AsyncReturnType<typeof sim_find>
 function flattenUserAvatar<T extends UnflattenedUser>(
   user: T,
 ): T extends undefined ? undefined : T & { avatar: string | null } {
-  if (!user)
-    return user as unknown as T extends undefined ? undefined
-    : T & { avatar: string | null }
+  // @ts-expect-error
+  if (!user) return user
+  // @ts-expect-error
   return {
     ...user,
     avatar: !user.avatar ? null : user.avatar.filename,
-  } satisfies UserProfile as unknown as T extends undefined ? undefined
-  : T & { avatar: string | null }
+  } satisfies UserProfile
 }
 
 export async function validateAvatar(avatar: File) {
