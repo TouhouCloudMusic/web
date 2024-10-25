@@ -104,6 +104,8 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
-    }
-  }
+    },
+    "plugins": [{ "name": "eslint-plugin-export-scope" }]
+  },
+  "include": ["**/*", "**/.scope.ts"]
 }

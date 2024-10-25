@@ -87,7 +87,7 @@ export const release_label = pgTable(
 )
 
 export const release_track = pgTable("release_track", (t) => ({
-  id: integer().primaryKey().generatedByDefaultAsIdentity(),
+  id: t.integer().primaryKey().generatedByDefaultAsIdentity(),
   release_id: integer("release_id")
     .references(() => release.id, { onDelete: "cascade" })
     .notNull(),
