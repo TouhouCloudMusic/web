@@ -3,8 +3,8 @@ import { eq, sql } from "drizzle-orm"
 import { Effect } from "effect"
 import { NewUser, User, user, user_role_table } from "~/database"
 import { USER_ROLE } from "~/database/lookup_tables/role"
+import { Session, UserLinks, UserRole } from "~/database/user/typebox"
 import { db } from "~/service/database"
-import { UserProfile } from "."
 import { ImageModel } from "../image"
 import { OmitColumnFromSchema } from "../utils"
 type Parmas = Parameters<typeof db.query.user.findFirst>
@@ -43,20 +43,24 @@ const sim_find = () =>
   })
 
 type UnflattenedUser = AsyncReturnType<typeof sim_find>
+type FlattenedUser = Omit<NonNullable<UnflattenedUser>, "role"> & {
+  role: UserRole[]
+}
+
 function flattenUser<T extends UnflattenedUser>(
   user: T,
-): T extends undefined ? undefined : T & UserProfile {
+): T extends undefined ? undefined : T & FlattenedUser {
   // @ts-expect-error
   if (!user) return user
   // @ts-expect-error
   return {
     ...user,
     role: user.role.map((x) => x.role),
-  } satisfies UserProfile
+  } satisfies FlattenedUser
 }
 
 export abstract class UserModel {
-  static async exist(username: string) {
+  static async exist(username: string): Promise<boolean> {
     const [{ is_exists }] = await db.execute<{ is_exists: boolean }>(sql`
 			SELECT EXISTS(
 				SELECT 1
@@ -77,7 +81,7 @@ export abstract class UserModel {
     })
   }
 
-  static async create(data: NewUser) {
+  static async create(data: NewUser): Promise<{ id: number }> {
     return db.transaction(async (tx) => {
       const new_user = (
         await tx.insert(user).values(data).returning({ id: user.id })
@@ -100,7 +104,7 @@ export abstract class UserModel {
     })
   }
 
-  static async findById(id: number) {
+  static async findById(id: number): Promise<FlattenedUser | undefined> {
     return db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.id, id),
@@ -112,16 +116,20 @@ export abstract class UserModel {
     return Effect.tryPromise(() => this.findById(id))
   }
 
-  static async findByName(username: string): Promise<UserProfile | undefined> {
+  static async findByName(
+    username: string,
+  ): Promise<FlattenedUser | undefined> {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),
         with: USER_RETURN_WITH,
       })
-      .then((x) => flattenUser(x))
+      .then(flattenUser)
   }
 
-  static async findByNameWithSession(username: string) {
+  static async findByNameWithAuthInfo(
+    username: string,
+  ): Promise<(User & UserLinks) | undefined> {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),
@@ -130,9 +138,9 @@ export abstract class UserModel {
       .then(flattenUser)
   }
 
-  static findByNameWithSessionM(username: string) {
+  static findByNameWithAuthInfoM(username: string) {
     return Effect.tryPromise({
-      try: () => this.findByNameWithSession(username),
+      try: () => this.findByNameWithAuthInfo(username),
       catch(e) {
         console.log(e)
         return "Find user failed" as const
@@ -146,7 +154,7 @@ export abstract class UserModel {
   }: {
     user_id: number
     image_id: number
-  }) {
+  }): Promise<void> {
     const current_avatar_id = await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.id, user_id),
@@ -164,7 +172,7 @@ export abstract class UserModel {
       .where(eq(user.id, user_id))
   }
 
-  static async removeAvatar(user: User) {
+  static async removeAvatar(user: User): Promise<void> {
     if (user.avatar_id) {
       await new ImageModel().deleteByID(user.avatar_id)
     } else {

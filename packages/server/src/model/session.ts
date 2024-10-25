@@ -3,17 +3,10 @@ import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding"
-import { eq, getTableColumns } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { Effect, Option, pipe } from "effect"
-import { Session, User } from "~/database"
-import {
-  image_table,
-  role_table,
-  session as session_table,
-  user,
-  user_role_table,
-} from "~/database/schema"
-import { UserLinks } from "~/database/user/typebox"
+import { Session } from "~/database"
+import { session as session_table } from "~/database/schema"
 import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
 import { USER_RETURN_WITH, UserProfile } from "./user"
@@ -27,7 +20,7 @@ const SessionErrorMsg = {
 } as const
 
 export type SessionValidateResult = {
-  user: User & UserLinks
+  user: UserProfile
   session: Session
 }
 export type SessionToken = string & { type: "SessionToken" }
@@ -101,8 +94,8 @@ export class SessionModel {
     }).pipe(Effect.map((x) => Option.fromNullable(x)))
   }
 
-  static async update(session: Session) {
-    return await db
+  static async update(session: Session): Promise<void> {
+    await db
       .update(session_table)
       .set(session)
       .where(eq(session_table.id, session.id))

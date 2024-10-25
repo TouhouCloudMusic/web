@@ -3,6 +3,7 @@ import { Cookie, Elysia, error, t } from "elysia"
 import { Session } from "~/database"
 import { User, UserLinks } from "~/database/user/typebox"
 import { SessionModel, SessionValidateResult } from "~/model/session"
+import { UserProfile } from "~/model/user"
 
 export const SESSION_TOKEN_NAME = "session_token"
 const COOKIE_OPTION = {
@@ -92,14 +93,14 @@ export const auth_guard = new Elysia()
   }))
   .as("plugin")
 
-export function updateSessionState({
+export function updateSessionState<U, S>({
   user,
   session,
   store,
   session_token,
 }: {
-  user: User & UserLinks
-  session: Session
+  user: UserProfile extends U ? U : never
+  session: Session extends S ? S : never
   store: {
     user: unknown
     session: unknown
@@ -109,7 +110,7 @@ export function updateSessionState({
   store.user = user
   store.session = session
   session_token.set({
-    value: session.id,
+    value: (session as Session).id,
     maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
   })
 }

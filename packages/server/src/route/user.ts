@@ -92,7 +92,7 @@ export const user_router = new Elysia()
 
         if (validated_token) return validated_token
 
-        const { session, user } = yield* UserModel.findByNameWithSessionM(
+        const { session, user } = yield* UserModel.findByNameWithAuthInfoM(
           username,
         ).pipe(
           Effect.flatMap((result) =>

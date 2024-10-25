@@ -8,9 +8,8 @@ export * from "./model"
 
 export const user_profile_schema = t.Composite([
   t.Omit(user_schema, ["id", "password", "email", "avatar_id"]),
-  user_links_schema,
+  t.Omit(user_links_schema, ["session"]),
 ])
-
 export type UserProfile = typeof user_profile_schema.static
 
 export const user_model = new Elysia().decorate("model", UserModel).model({
