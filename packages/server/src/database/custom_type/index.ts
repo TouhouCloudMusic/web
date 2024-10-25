@@ -16,12 +16,15 @@ export const location = customType<{
   dataType() {
     return "location_tuple"
   },
-  toDriver(value) {
-    return `('${value.country}','${value.subdivision}','${value.city}')`
+  toDriver({ country, subdivision, city }) {
+    country = country ? `'${country}'` : "NULL"
+    subdivision = subdivision ? `'${subdivision}'` : "NULL"
+    city = city ? `'${city}'` : "NULL"
+    return `(${country}, ${subdivision}, ${city})`
   },
   fromDriver(value) {
     const match = /\((?<country>.+),\s?(?<province>.+),\s?(?<city>.+)\)/.exec(
-      value as string,
+      value,
     )
     if (!match) {
       throw new Error("Invalid location")

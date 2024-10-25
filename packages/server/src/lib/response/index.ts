@@ -34,6 +34,9 @@ function internalServerError<E>(message?: E) {
   })
 }
 
+function hello<T extends string>(name: T): Ok<`Hello, ${T}`> {
+  return Response.ok(`Hello, ${name}`)
+}
 export const Response = {
   ok<const T>(data: T): Ok<T> {
     return {
@@ -49,7 +52,5 @@ export const Response = {
   },
   notFound,
   internalServerError,
-  hello<T extends string>(name: T): Ok<`Hello, ${T}`> {
-    return Response.ok(`Hello, ${name}`)
-  },
+  hello,
 }

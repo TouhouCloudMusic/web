@@ -9,7 +9,7 @@
     "db:init": "bun scripts/init_database/create_database.ts && bun scripts/init_database/create_type.ts && bun run db:migrate && scripts/init_database/init_lookup_table.ts",
     "db:migrate": "bun ./src/database/migrate/index.ts",
     "dev": "bun run --hot src/index.ts",
-    "fix": "bunx oxlint --fix --fix-suggestions",
+    "fix": "bunx oxlint --fix --fix-suggestions && bunx eslint --fix --cache",
     "fmt": "bunx prettier --cache --write .",
     "lint": "bunx oxlint && bunx eslint --cache",
     "start": "./server",

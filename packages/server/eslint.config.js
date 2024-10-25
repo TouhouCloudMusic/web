@@ -14,11 +14,24 @@ export default tseslint.config(
   oxlint.configs["flat/import"],
   oxlint.configs["flat/jsdoc"],
   {
+    rules: {
+      "@typescript-eslint/restrict-template-expressions": [
+        "warn",
+        {
+          allowNumber: true,
+        },
+      ],
+    },
+  },
+  {
     languageOptions: {
       globals: globals.node,
       parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
+        projectService: {
+          defaultProject: "tsconfig.json",
+          allowDefaultProject: ["eslint.config.js"],
+        },
+        tsconfigRootDir: process.cwd(),
       },
     },
   },

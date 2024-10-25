@@ -9,7 +9,7 @@ export const artist_router = new Elysia({ prefix: "/artist" })
   .get(
     "",
     async ({ model, query: { keyword, limit } }) => {
-      let result = await model.findByKeyword(keyword, limit)
+      const result = await model.findByKeyword(keyword, limit)
       if (result.length === 0) return Response.notFound("Artist Not Found")
       return Response.ok(result)
     },
@@ -36,7 +36,7 @@ export const artist_router = new Elysia({ prefix: "/artist" })
         .get(
           "",
           async ({ model, params: { id } }) => {
-            let res = await model.findByID(id)
+            const res = await model.findByID(id)
             return !res ?
                 Response.notFound("Artist Not Found")
               : Response.ok(res)

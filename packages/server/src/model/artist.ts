@@ -83,7 +83,7 @@ function processArtist<T extends UnprocessedArtist>(
     ...artist,
     alias_group: undefined,
     aliases:
-      artist?.alias_group?.artist.filter(({ id }) => id !== artist?.id) ?? [],
+      artist.alias_group?.artist.filter(({ id }) => id !== artist.id) ?? [],
     release: artist.release.map((x) => x.release),
     members: artist.members.map((x) => x.member),
     member_of: artist.member_of.map((x) => x.group),

@@ -102,21 +102,24 @@ export class ReleaseModel {
         }
 
         if (track && track.length > 0) {
-          type WithSong = (Required<(typeof track)[number]> & {
+          type WithSong = Required<(typeof track)[number]> & {
             release_id: number
-          })[]
+          }
 
-          type WithoutSong = ((typeof track)[number] & {
+          type WithoutSong = (typeof track)[number] & {
             release_id: number
             song_id: undefined
-          })[]
+          }
 
           const [with_song, without_song] = track
             .map((x) => ({ ...x, release_id: new_release.id }))
-            .reduce<[WithSong, WithoutSong]>(
+            .reduce<[WithSong[], WithoutSong[]]>(
               (acc, x) => {
-                // @ts-expect-error
-                !x.song_id ? acc[1].push(x) : acc[0].push(x)
+                if (x.song_id) {
+                  acc[0].push(x as WithSong)
+                } else {
+                  acc[1].push(x as unknown as WithoutSong)
+                }
                 return acc
               },
               [[], []],
@@ -142,22 +145,21 @@ export class ReleaseModel {
               }
             })
 
-            const insert_song_artist_value = without_song_with_insert.reduce(
-              (acc, x) => {
-                if (!x.artist.length)
-                  return acc.concat({
-                    artist_id: new_release.id,
-                    song_id: x.song_id,
-                  })
-                return acc.concat(
-                  x.artist.map((id) => ({
-                    artist_id: id,
-                    song_id: x.song_id,
-                  })),
-                )
-              },
-              [] as { artist_id: number; song_id: number }[],
-            )
+            const insert_song_artist_value = without_song_with_insert.reduce<
+              { artist_id: number; song_id: number }[]
+            >((acc, x) => {
+              if (!x.artist.length)
+                return acc.concat({
+                  artist_id: new_release.id,
+                  song_id: x.song_id,
+                })
+              return acc.concat(
+                x.artist.map((id) => ({
+                  artist_id: id,
+                  song_id: x.song_id,
+                })),
+              )
+            }, [])
             await db.insert(song_artist).values(insert_song_artist_value)
 
             with_song.push(...without_song_with_insert)
@@ -168,6 +170,6 @@ export class ReleaseModel {
 
         return new_release.id
       })
-      .then(this.findByID)
+      .then((x) => this.findByID(x))
   }
 }
