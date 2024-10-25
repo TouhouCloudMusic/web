@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm"
 import { role_table } from "~/database"
-import { USER_ROLE, USER_ROLE_ARRAY } from "~/database/lookup_tables/role"
+import { USER_ROLE } from "~/database/lookup_tables/role"
 import {
   language_table,
   release_type_table,
@@ -9,7 +9,7 @@ import { LANGUAGES } from "../../src/database/lookup_tables/lang"
 import { RELEASE_TYPE_ARRAY } from "../../src/database/lookup_tables/release_type"
 import db from "./connection"
 
-export default async function main() {
+async function main() {
   await db
     .insert(language_table)
     .values(LANGUAGES)
@@ -35,3 +35,6 @@ export default async function main() {
     .values(Object.values(USER_ROLE))
     .onConflictDoNothing()
 }
+
+await main()
+process.exit(0)

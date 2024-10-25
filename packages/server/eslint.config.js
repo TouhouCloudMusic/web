@@ -11,7 +11,11 @@ export default tseslint.config(
   exportScope.configs.flatConfigRecommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  oxlint,
+  oxlint.configs["flat/recommended"],
+  oxlint.configs["flat/typescript"],
+  oxlint.configs["flat/unicorn"],
+  oxlint.configs["flat/import"],
+  oxlint.configs["flat/jsdoc"],
   {
     languageOptions: {
       globals: globals.node,

@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm"
 import db from "./connection"
 
-export default async function main() {
+async function main() {
   await db.execute(
     sql.raw(`
 			CREATE TYPE location_tuple AS (
@@ -20,3 +20,6 @@ export default async function main() {
 		`),
   )
 }
+
+await main()
+process.exit(0)

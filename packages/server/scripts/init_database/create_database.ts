@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/postgres-js"
 
-export default async function main() {
+async function main() {
   const { DB_HOST, DB_PASSWORD, DB_USER, DB_NAME } = process.env
   const url1 = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}`
 
@@ -24,3 +24,6 @@ export default async function main() {
 	`),
   )
 }
+
+await main()
+process.exit(0)
