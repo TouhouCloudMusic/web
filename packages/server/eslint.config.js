@@ -15,6 +15,12 @@ export default tseslint.config(
   oxlint.configs["flat/jsdoc"],
   {
     rules: {
+      "@typescript-eslint/no-empty-object-type": [
+        "error",
+        {
+          allowInterfaces: "always",
+        },
+      ],
       "@typescript-eslint/restrict-template-expressions": [
         "warn",
         {

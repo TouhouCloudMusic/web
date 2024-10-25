@@ -4,6 +4,7 @@ import Elysia, { t } from "elysia"
 import {
   Artist,
   artist_schema,
+  ArtistLinks,
   new_artist_schema,
   NewArtist,
 } from "~/database/artist/typebox"
@@ -18,7 +19,8 @@ import { QueueModel } from "./queue"
 type With = NonNullable<
   Parameters<typeof _db.query.artist.findFirst>[0]
 >["with"]
-type UnprocessedArtist = AsyncReturnType<typeof simulate_find>
+type UnflattenedArtist = AsyncReturnType<typeof simulate_find>
+type FlattenedArtist = Artist & ArtistLinks
 
 const simulate_find = () => _db.query.artist.findFirst({ with: RETURN_WITH })
 
@@ -73,21 +75,19 @@ const RETURN_WITH = {
   },
 } satisfies With
 
-function processArtist<T extends UnprocessedArtist>(
+function flattenArtist<T extends UnflattenedArtist>(
   artist: T,
-): T extends undefined ? undefined : Artist {
-  // @ts-ignore
-  if (!artist) return undefined
-  // @ts-ignore
-  return {
-    ...artist,
-    alias_group: undefined,
-    aliases:
-      artist.alias_group?.artist.filter(({ id }) => id !== artist.id) ?? [],
-    release: artist.release.map((x) => x.release),
-    members: artist.members.map((x) => x.member),
-    member_of: artist.member_of.map((x) => x.group),
-  }
+): T extends undefined ? undefined : NonNullable<T> & FlattenedArtist
+function flattenArtist<T extends UnflattenedArtist>(artist: T) {
+  if (artist)
+    return {
+      ...artist,
+      aliases:
+        artist.alias_group?.artist.filter(({ id }) => id !== artist.id) ?? [],
+      release: artist.release.map((x) => x.release),
+      members: artist.members.map((x) => x.member),
+      member_of: artist.member_of.map((x) => x.group),
+    } satisfies NonNullable<T> & FlattenedArtist
 }
 
 class ArtistModel {
@@ -107,7 +107,7 @@ class ArtistModel {
         where: (fields, op) => op.eq(fields.id, id),
         with: RETURN_WITH,
       })
-      .then(processArtist)
+      .then(flattenArtist)
   }
 
   async findByKeyword(keyword: string, limit = 10) {
@@ -117,7 +117,7 @@ class ArtistModel {
         limit,
         with: RETURN_WITH,
       })
-      .then((x) => x.map(processArtist))
+      .then((x) => x.map(flattenArtist))
   }
 
   async create(data: NewArtist) {

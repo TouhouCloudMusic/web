@@ -1,3 +1,5 @@
+import { never } from "effect/Fiber"
+
 type UnionToIntersection<U> =
   (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I
   : never
@@ -30,3 +32,7 @@ export type LessThan<A extends number, B extends number, T extends any[] = []> =
 
 export type Succ<N extends number, T extends any[] = []> =
   T["length"] extends N ? [...T, any]["length"] : Succ<N, [any, ...T]>
+
+export type SafeOmit<T extends Record<PropertyKey, any>, K extends keyof T> = {
+  [P in keyof T as P extends K ? never : P]: T[P]
+}

@@ -1,9 +1,8 @@
 import dayjs from "dayjs"
 import { Cookie, Elysia, error, t } from "elysia"
 import { Session } from "~/database"
-import { User, UserLinks } from "~/database/user/typebox"
 import { SessionModel, SessionValidateResult } from "~/model/session"
-import { UserProfile } from "~/model/user"
+import { UserResult } from "~/model/user"
 
 export const SESSION_TOKEN_NAME = "session_token"
 const COOKIE_OPTION = {
@@ -19,7 +18,7 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
     user: undefined,
     session: undefined,
   } as {
-    user: (User & UserLinks) | undefined
+    user: UserResult | undefined
     session: Session | undefined
   })
   .model({
@@ -69,11 +68,13 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
           return error(401)
         }
 
-        updateSessionState({
-          ...session_validate_result,
-          store,
-          session_token: cookie[SESSION_TOKEN_NAME],
-        })
+        store.session = session_validate_result.session
+        store.user = session_validate_result.user
+
+        resetSessionToken(
+          cookie[SESSION_TOKEN_NAME],
+          session_validate_result.session.id,
+        )
       })
       onError(({ cookie }) => {
         if (!cookie[SESSION_TOKEN_NAME].value) return error(401)
@@ -93,24 +94,12 @@ export const auth_guard = new Elysia()
   }))
   .as("plugin")
 
-export function updateSessionState<U, S>({
-  user,
-  session,
-  store,
-  session_token,
-}: {
-  user: UserProfile extends U ? U : never
-  session: Session extends S ? S : never
-  store: {
-    user: unknown
-    session: unknown
-  }
-  session_token: Cookie<string | undefined>
-}) {
-  store.user = user
-  store.session = session
-  session_token.set({
-    value: (session as Session).id,
+export function resetSessionToken(
+  token: Cookie<string | undefined>,
+  value: string,
+) {
+  token.set({
+    value: value,
     maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
   })
 }

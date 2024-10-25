@@ -1,63 +1,11 @@
-import { AsyncReturnType } from "@touhouclouddb/utils"
 import { eq, sql } from "drizzle-orm"
 import { Effect } from "effect"
 import { NewUser, User, user, user_role_table } from "~/database"
 import { USER_ROLE } from "~/database/lookup_tables/role"
-import { UserLinks, UserRole } from "~/database/user/typebox"
+import { UserLinks } from "~/database/user/typebox"
 import { db } from "~/service/database"
 import { ImageModel } from "../image"
-import { OmitColumnFromSchema } from "../utils"
-type Parmas = Parameters<typeof db.query.user.findFirst>
-type UserColumns = Exclude<Parmas[0], undefined>["columns"]
-type With = NonNullable<Parmas[0]>["with"]
-
-const RETURN_COLUMNS = {
-  name: true,
-  location: true,
-  created_at: true,
-  updated_at: true,
-} as const satisfies Partial<OmitColumnFromSchema<User, UserColumns>>
-
-export const USER_RETURN_WITH = {
-  avatar: true,
-  role: {
-    with: {
-      role: true,
-    },
-  },
-} satisfies With
-
-const RETURN_ON_INSERT = {
-  name: user.name,
-  location: user.location,
-  created_at: user.created_at,
-  updated_at: user.updated_at,
-} as const satisfies Partial<
-  Record<keyof OmitColumnFromSchema<User, UserColumns>, unknown>
->
-
-const sim_find = () =>
-  db.query.user.findFirst({
-    columns: RETURN_COLUMNS,
-    with: USER_RETURN_WITH,
-  })
-
-type UnflattenedUser = AsyncReturnType<typeof sim_find>
-type FlattenedUser = Omit<NonNullable<UnflattenedUser>, "role"> & {
-  role: UserRole[]
-}
-
-function flattenUser<T extends UnflattenedUser>(
-  user: T,
-): T extends undefined ? undefined : T & FlattenedUser {
-  // @ts-expect-error
-  if (!user) return user
-  // @ts-expect-error
-  return {
-    ...user,
-    role: user.role.map((x) => x.role),
-  } satisfies FlattenedUser
-}
+import { flattenUser, USER_RETURN_WITH, UserResult } from "./util"
 
 export abstract class UserModel {
   static async exist(username: string): Promise<boolean> {
@@ -104,7 +52,7 @@ export abstract class UserModel {
     })
   }
 
-  static async findById(id: number): Promise<FlattenedUser | undefined> {
+  static async findById(id: number): Promise<UserResult | undefined> {
     return db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.id, id),
@@ -116,9 +64,7 @@ export abstract class UserModel {
     return Effect.tryPromise(() => this.findById(id))
   }
 
-  static async findByName(
-    username: string,
-  ): Promise<FlattenedUser | undefined> {
+  static async findByName(username: string): Promise<UserResult | undefined> {
     return await db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.name, username),

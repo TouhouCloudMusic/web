@@ -9,7 +9,7 @@ import { Session } from "~/database"
 import { session as session_table } from "~/database/schema"
 import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
-import { USER_RETURN_WITH, UserProfile } from "./user"
+import { USER_RETURN_WITH, UserResult } from "./user"
 
 const SessionErrorMsg = {
   CreateFailed: "Create session failed",
@@ -20,7 +20,7 @@ const SessionErrorMsg = {
 } as const
 
 export type SessionValidateResult = {
-  user: UserProfile
+  user: UserResult
   session: Session
 }
 export type SessionToken = string & { type: "SessionToken" }

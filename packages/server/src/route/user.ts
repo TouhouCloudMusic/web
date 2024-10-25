@@ -7,9 +7,9 @@ import { Response } from "~/lib/response"
 import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
-import { user_model, UserModel, validateAvatar } from "~/model/user"
+import { user_model, validateAvatar } from "~/model/user"
 import { AVATAR_EXTENSION_NAME } from "~/model/user/avatar"
-import { auth_guard, auth_service, updateSessionState } from "~/service/user"
+import { auth_guard, auth_service, resetSessionToken } from "~/service/user"
 
 const AUTH_FAILED_MSG = "Incorrect username or password"
 const ALREADY_SIGNED_IN = "Already signed in"
@@ -20,6 +20,7 @@ export const user_router = new Elysia()
   .post(
     "/sign-up",
     async ({
+      UserModel,
       body: { username, password },
       store,
       cookie: { session_token: token },
@@ -43,12 +44,10 @@ export const user_router = new Elysia()
         const user = (yield* UserModel.findByIdM(id))!
         const session = yield* SessionModel.createM(id)
 
-        updateSessionState({
-          user,
-          session,
-          store,
-          session_token: token,
-        })
+        store.user = user
+        store.session = session
+
+        resetSessionToken(token, session.id)
 
         return user.name
       }).pipe(
@@ -77,6 +76,7 @@ export const user_router = new Elysia()
     "/sign-in",
     async ({
       store,
+      UserModel,
       body: { username, password },
       cookie: { session_token: token },
     }) => {
@@ -109,16 +109,13 @@ export const user_router = new Elysia()
 
         const new_session = session ?? (yield* SessionModel.createM(user.id))
 
-        return { user, session: new_session }
+        return { user: user, session: new_session }
       }).pipe(
         Effect.match({
           onSuccess: ({ user, session }) => {
-            updateSessionState({
-              user,
-              session,
-              store,
-              session_token: token,
-            })
+            store.user = user
+            store.session = session
+            resetSessionToken(token, session.id)
             return Response.hello(user.name)
           },
           onFailure: (err) => {
@@ -171,6 +168,7 @@ export const user_router = new Elysia()
       .post(
         "",
         async ({
+          UserModel,
           store: {
             user,
             session: { user_id },
@@ -209,7 +207,7 @@ export const user_router = new Elysia()
       )
       .delete(
         "",
-        async ({ store: { user } }) => {
+        async ({ UserModel, store: { user } }) => {
           await UserModel.removeAvatar(user)
 
           user.avatar = null

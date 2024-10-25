@@ -28,6 +28,9 @@ const link_props = t.Object({
   member_of: t.Array(link_artist),
   release: t.Array(link_release),
 })
+
+export type ArtistLinks = typeof link_props.static
+
 export const artist_schema = t.Composite([
   // @ts-ignore
   createSelectSchema(artist, {

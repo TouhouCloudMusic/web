@@ -12,12 +12,8 @@ export class ImageModel {
 
   private async writeFile(name: string, bytes: Uint8Array) {
     const path = `${process.env.IMAGE_PATH}/${name}`
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (process.isBun) return await Bun.write(path, bytes)
-    else {
-      await fs.writeFile(path, bytes)
-      return
-    }
+    if (process.isBun as 0 | 1) await Bun.write(path, bytes)
+    else await fs.writeFile(path, bytes)
   }
 
   private async removeFile(name: string) {

@@ -4,15 +4,14 @@ import { ResponseSchema } from "~/lib/response/schema"
 import { UserModel } from "./model"
 
 export * from "./avatar"
-export * from "./model"
-
+export { USER_RETURN_WITH, UserResult } from "./util"
 export const user_profile_schema = t.Composite([
   t.Omit(user_schema, ["id", "password", "email", "avatar_id"]),
   t.Omit(user_links_schema, ["session"]),
 ])
 export type UserProfile = typeof user_profile_schema.static
 
-export const user_model = new Elysia().decorate("model", UserModel).model({
+export const user_model = new Elysia().decorate("UserModel", UserModel).model({
   "user::avatar": t.Object({
     data: t.File(),
   }),
