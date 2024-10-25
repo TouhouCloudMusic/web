@@ -7,16 +7,12 @@ import { Response } from "~/lib/response"
 import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
-import {
-  AVATAR_EXTENSION_NAME,
-  user_model,
-  UserModel,
-  validateAvatar,
-} from "~/model/user"
+import { user_model, UserModel, validateAvatar } from "~/model/user"
+import { AVATAR_EXTENSION_NAME } from "~/model/user/avatar"
 import { auth_guard, auth_service, updateSessionState } from "~/service/user"
 
-const AUTH_FAILED_MSG = "Incorrect username or password" as const
-const ALREADY_SIGNED_IN = "Already signed in" as const
+const AUTH_FAILED_MSG = "Incorrect username or password"
+const ALREADY_SIGNED_IN = "Already signed in"
 const ALREADY_SIGNED_IN_RESPONSE = Response.err(409, ALREADY_SIGNED_IN)
 export const user_router = new Elysia()
   .use(auth_service)
@@ -59,7 +55,7 @@ export const user_router = new Elysia()
         Effect.match({
           onSuccess: Response.hello,
           onFailure: (err) => {
-            if (err instanceof UnknownException) throw err
+            if (err instanceof UnknownException) throw new Error(err.message)
             if (err === "User already exists") return Response.err(409, err)
             else return Response.err(500, err)
           },
@@ -93,6 +89,7 @@ export const user_router = new Elysia()
               token: token.value,
             })
           : null
+
         if (validated_token) return validated_token
 
         const { session, user } = yield* UserModel.findByNameWithSessionM(
@@ -129,7 +126,8 @@ export const user_router = new Elysia()
               case AUTH_FAILED_MSG:
                 return Response.err(401, err)
               default:
-                if (err instanceof UnknownException) throw err
+                if (err instanceof UnknownException)
+                  throw new Error(err.message)
                 else return Response.internalServerError(err)
             }
           },
@@ -157,11 +155,7 @@ export const user_router = new Elysia()
   .get(
     "/profile",
     ({ store: { user } }) => {
-      const profile = {
-        ...user,
-        avatar: user?.avatar?.filename ?? null,
-      }
-      return Response.ok(profile)
+      return Response.ok(user)
     },
     {
       response: "user::profile",

@@ -4,6 +4,7 @@ import { Session } from "~/database"
 import { User, UserLinks } from "~/database/user/typebox"
 import { SessionModel, SessionValidateResult } from "~/model/session"
 
+export const SESSION_TOKEN_NAME = "session_token"
 const COOKIE_OPTION = {
   secrets: ["Hakurei Reimu", "Kirisame Marisa"],
   path: "/" as const,
@@ -11,8 +12,6 @@ const COOKIE_OPTION = {
   secure: import.meta.env.NODE_ENV === "production",
   sameSite: "lax" as const,
 }
-
-export const SESSION_TOKEN_NAME = "session_token"
 
 export const auth_service = new Elysia({ name: "Service.Auth" })
   .state({
@@ -48,8 +47,9 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
       },
     ),
   })
+  // eslint-disable-next-line @typescript-eslint/unbound-method
   .macro(({ onBeforeHandle, onError }) => ({
-    isSignIn(enabled: true) {
+    isSignIn(enabled: boolean) {
       if (!enabled) return
       onBeforeHandle(async ({ error, cookie, store }) => {
         const token = cookie[SESSION_TOKEN_NAME].value
@@ -57,9 +57,12 @@ export const auth_service = new Elysia({ name: "Service.Auth" })
           return error(401)
         }
 
-        const session_validate_result: SessionValidateResult | null =
+        const session_validate_result =
           store.user && store.session ?
-            (store as SessionValidateResult)
+            ({
+              user: store.user,
+              session: store.session,
+            } as SessionValidateResult)
           : await SessionModel.validateToken(token)
         if (!session_validate_result) {
           return error(401)
@@ -89,14 +92,14 @@ export const auth_guard = new Elysia()
   }))
   .as("plugin")
 
-export function updateSessionState<U, S>({
+export function updateSessionState({
   user,
   session,
   store,
   session_token,
 }: {
-  user: U extends User ? U : never
-  session: S extends Session ? S : never
+  user: User & UserLinks
+  session: Session
   store: {
     user: unknown
     session: unknown
@@ -106,7 +109,7 @@ export function updateSessionState<U, S>({
   store.user = user
   store.session = session
   session_token.set({
-    value: (session as Session).id,
+    value: session.id,
     maxAge: dayjs().add(30, "day").diff(dayjs(), "second"),
   })
 }

@@ -3,14 +3,20 @@ import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding"
-import { eq } from "drizzle-orm"
+import { eq, getTableColumns } from "drizzle-orm"
 import { Effect, Option, pipe } from "effect"
 import { Session, User } from "~/database"
-import { session as session_table } from "~/database/schema"
+import {
+  image_table,
+  role_table,
+  session as session_table,
+  user,
+  user_role_table,
+} from "~/database/schema"
 import { UserLinks } from "~/database/user/typebox"
 import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
-import { USER_RETURN_WITH } from "./user"
+import { USER_RETURN_WITH, UserProfile } from "./user"
 
 const SessionErrorMsg = {
   CreateFailed: "Create session failed",
@@ -21,7 +27,7 @@ const SessionErrorMsg = {
 } as const
 
 export type SessionValidateResult = {
-  user: User & Pick<UserLinks, "role">
+  user: User & UserLinks
   session: Session
 }
 export type SessionToken = string & { type: "SessionToken" }
@@ -73,11 +79,13 @@ export class SessionModel {
         if (!x) return x
 
         const { user, ...session } = x
-        const flattened_user = {
-          ...user,
-          role: user.role.map((x) => x.role),
+        return {
+          user: {
+            ...user,
+            role: user.role.map((x) => x.role),
+          },
+          session,
         }
-        return { user: flattened_user, session }
       })
   }
 
@@ -136,6 +144,7 @@ export class SessionModel {
     const findSesion = this.findByTokenM.bind(this)
     const invalidateSession = this.invalidateM.bind(this)
     const updateSession = this.updateM.bind(this)
+
     return Effect.gen(function* () {
       const result = yield* findSesion(token)
 
