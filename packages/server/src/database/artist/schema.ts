@@ -19,19 +19,19 @@ export const artist_type_enum = pgEnum("artist_type", ["Person", "Group"])
 
 export const artist = pgTable("artist", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar("name", { length: 128 }).notNull(),
+  name: varchar({ length: 128 }).notNull(),
   artist_type: artist_type_enum("artist_type").notNull(),
-  text_alias: varchar("text_alias", { length: 128 }).array(),
-  alias_group_id: integer("alias_group_id").references(() => alias_group.id, {
+  text_alias: varchar({ length: 128 }).array(),
+  alias_group_id: integer().references(() => alias_group.id, {
     onDelete: "set null",
   }),
-  start_date: date("start_date"),
+  start_date: date(),
   start_date_precision: date_precision("start_date_prec"),
-  end_date: date("end_date"),
+  end_date: date(),
   end_date_precision: date_precision("end_date_prec"),
-  start_location: location("start_location"),
-  current_location: location("current_location"),
-  end_location: location("end_location"),
+  start_location: location(),
+  current_location: location(),
+  end_location: location(),
   ...created_and_updated_at,
 })
 
@@ -41,9 +41,9 @@ export const artist_relation = relations(artist, ({ one, many }) => ({
     references: [alias_group.id],
   }),
   localized_name: many(localized_name),
-  release: many(release_artist),
-  members: many(group_member, { relationName: "members" }),
-  member_of: many(group_member, { relationName: "member_of" }),
+  to_release_artist: many(release_artist),
+  to_members: many(group_member, { relationName: "members" }),
+  to_member_of: many(group_member, { relationName: "member_of" }),
 }))
 
 export const localized_name = pgTable(

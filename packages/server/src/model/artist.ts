@@ -42,7 +42,7 @@ const RETURN_WITH = {
       name: true,
     },
   },
-  members: {
+  to_members: {
     with: {
       member: {
         columns: {
@@ -52,7 +52,7 @@ const RETURN_WITH = {
       },
     },
   },
-  member_of: {
+  to_member_of: {
     with: {
       group: {
         columns: {
@@ -62,7 +62,7 @@ const RETURN_WITH = {
       },
     },
   },
-  release: {
+  to_release_artist: {
     columns: {},
     with: {
       release: {
@@ -84,9 +84,9 @@ function flattenArtist<T extends UnflattenedArtist>(artist: T) {
       ...artist,
       aliases:
         artist.alias_group?.artist.filter(({ id }) => id !== artist.id) ?? [],
-      release: artist.release.map((x) => x.release),
-      members: artist.members.map((x) => x.member),
-      member_of: artist.member_of.map((x) => x.group),
+      release: artist.to_release_artist.map((x) => x.release),
+      members: artist.to_members.map((x) => x.member),
+      member_of: artist.to_member_of.map((x) => x.group),
     } satisfies NonNullable<T> & FlattenedArtist
 }
 
