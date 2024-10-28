@@ -98,7 +98,6 @@ export const user_router = new Elysia()
           Effect.flatMap((result) =>
             result ? Effect.succeed(result) : Effect.fail(AUTH_FAILED_MSG),
           ),
-          Effect.map(({ session, ...user }) => ({ session, user })),
         )
 
         yield* Effect.tryPromise(() => verify(user.password, password)).pipe(

@@ -75,7 +75,7 @@ export class SessionModel {
         return {
           user: {
             ...user,
-            role: user.role.map((x) => x.role),
+            role: user.role.map((x) => x.role.name),
           },
           session,
         }
