@@ -1,19 +1,25 @@
 import { eq, sql } from "drizzle-orm"
 import { Effect } from "effect"
-import { NewUser, User, user, user_role_table } from "~/database"
+import {
+  type NewUser,
+  type User,
+  user_role_table,
+  user as user_table,
+} from "~/database"
 import { USER_ROLE } from "~/database/lookup_tables/role"
-import { UserLinks } from "~/database/user/typebox"
+import { type Session } from "~/database/user/typebox"
 import { db } from "~/service/database"
 import { ImageModel } from "../image"
-import { flattenUser, USER_RETURN_WITH, UserResult } from "./util"
+import { select_user_query, select_user_with_session_query } from "./query"
+import { flattenUser, USER_RETURN_WITH, type UserResult } from "./util"
 
 export abstract class UserModel {
   static async exist(username: string): Promise<boolean> {
     const [{ is_exists }] = await db.execute<{ is_exists: boolean }>(sql`
 			SELECT EXISTS(
 				SELECT 1
-				FROM ${user}
-				WHERE ${user.name} = ${username}
+				FROM ${user_table}
+				WHERE ${user_table.name} = ${username}
 			) as is_exists;`)
 
     return is_exists
@@ -32,7 +38,10 @@ export abstract class UserModel {
   static async create(data: NewUser): Promise<{ id: number }> {
     return db.transaction(async (tx) => {
       const new_user = (
-        await tx.insert(user).values(data).returning({ id: user.id })
+        await tx
+          .insert(user_table)
+          .values(data)
+          .returning({ id: user_table.id })
       )[0]
       await tx.insert(user_role_table).values({
         user_id: new_user.id,
@@ -65,23 +74,27 @@ export abstract class UserModel {
   }
 
   static async findByName(username: string): Promise<UserResult | undefined> {
-    return await db.query.user
-      .findFirst({
-        where: (fields, op) => op.eq(fields.name, username),
-        with: USER_RETURN_WITH,
-      })
-      .then(flattenUser)
+    const [data] = await db
+      .with(select_user_query)
+      .select()
+      .from(select_user_query)
+      .where(eq(select_user_query.name, username))
+    return data
   }
 
-  static async findByNameWithAuthInfo(
-    username: string,
-  ): Promise<(User & UserLinks) | undefined> {
-    return await db.query.user
-      .findFirst({
-        where: (fields, op) => op.eq(fields.name, username),
-        with: { ...USER_RETURN_WITH, session: true },
-      })
-      .then(flattenUser)
+  static async findByNameWithAuthInfo(username: string): Promise<
+    | {
+        user: UserResult
+        session: Session | null
+      }
+    | undefined
+  > {
+    const data = await select_user_with_session_query.where(
+      eq(user_table.name, username),
+    )
+    if (!data.length) return
+    const { session, ...user } = data[0]
+    return { user, session }
   }
 
   static findByNameWithAuthInfoM(username: string) {
@@ -113,9 +126,9 @@ export abstract class UserModel {
     }
 
     await db
-      .update(user)
+      .update(user_table)
       .set({ avatar_id: image_id })
-      .where(eq(user.id, user_id))
+      .where(eq(user_table.id, user_id))
   }
 
   static async removeAvatar(user: User): Promise<void> {

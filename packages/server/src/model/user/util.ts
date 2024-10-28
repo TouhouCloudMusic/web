@@ -1,8 +1,13 @@
-import { AsyncReturnType, SafeOmit } from "@touhouclouddb/utils"
-import { User, UserLinks } from "~/database/user/typebox"
+import { type AsyncReturnType, type SafeOmit } from "@touhouclouddb/utils"
+import { type FindFirstQueryConfig } from "@touhouclouddb/utils/drizzle"
+import { t } from "elysia"
+import {
+  type User,
+  user_links_schema,
+  user_schema,
+  type UserLinks,
+} from "~/database/user/typebox"
 import { db } from "~/service/database"
-
-type Parmas = Parameters<typeof db.query.user.findFirst>
 
 export const USER_RETURN_WITH = {
   avatar: true,
@@ -11,18 +16,7 @@ export const USER_RETURN_WITH = {
       role: true,
     },
   },
-} satisfies NonNullable<Parmas[0]>["with"]
-
-// type UserColumns = Exclude<Parmas[0], undefined>["columns"]
-
-// const RETURN_ON_INSERT = {
-//   name: user.name,
-//   location: user.location,
-//   created_at: user.created_at,
-//   updated_at: user.updated_at,
-// } as const satisfies Partial<
-//   Record<keyof OmitColumnFromSchema<User, UserColumns>, unknown>
-// >
+} satisfies FindFirstQueryConfig<typeof db.query.user>["with"]
 
 const sim_find = () =>
   db.query.user.findFirst({
@@ -30,15 +24,33 @@ const sim_find = () =>
   })
 
 export type UnflattenedUser = AsyncReturnType<typeof sim_find>
-export type UserResult = User & SafeOmit<UserLinks, "session">
+export interface UserResult
+  extends User,
+    SafeOmit<UserLinks, "session" | "role"> {
+  role: string[] | null
+}
+
+export const user_profile_schema = t.Composite([
+  t.Omit(user_schema, ["id", "password", "email", "avatar_id"]),
+  t.Omit(user_links_schema, ["session", "role"]),
+  t.Object({
+    role: t.Nullable(t.Array(t.String())),
+  }),
+])
+export type UserProfile = typeof user_profile_schema.static
 
 export function flattenUser<T extends UnflattenedUser>(
   user: T,
-): T extends undefined ? undefined : Omit<T, "role"> & Pick<UserLinks, "role">
+): T extends undefined ? undefined
+: Omit<T, "role"> & {
+    role: string[] | null
+  }
 export function flattenUser<T extends UnflattenedUser>(user: T) {
   if (user)
     return {
       ...user,
-      role: user.role.map((x) => x.role),
-    } satisfies Omit<T, "role"> & Pick<UserLinks, "role">
+      role: user.role.map((x) => x.role.name),
+    } satisfies Omit<T, "role"> & {
+      role: string[] | null
+    }
 }
