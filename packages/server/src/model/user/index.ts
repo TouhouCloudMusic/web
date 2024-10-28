@@ -4,12 +4,8 @@ import { UserModel } from "./model"
 import { user_profile_schema } from "./util"
 
 export * from "./avatar"
-export {
-  user_profile_schema,
-  USER_RETURN_WITH,
-  type UserProfile,
-  type UserResult,
-} from "./util"
+export { user_profile_schema, USER_RETURN_WITH } from "./util"
+export type { UserProfile, UserResult } from "./util"
 
 export const user_model = new Elysia().decorate("UserModel", UserModel).model({
   "user::avatar": t.Object({
