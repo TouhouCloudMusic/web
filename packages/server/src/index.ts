@@ -1,8 +1,10 @@
 import cors from "@elysiajs/cors"
+import { html } from "@elysiajs/html"
 import staticPlugin from "@elysiajs/static"
 import swagger from "@elysiajs/swagger"
 import { Elysia, error } from "elysia"
 import Postgres from "postgres"
+import { Hello } from "./homepage"
 import { Response } from "./lib/response"
 import { api_router } from "./route"
 import { user_router } from "./route/user"
@@ -14,6 +16,7 @@ const app = new Elysia()
       staticLimit: 0,
     }),
   )
+  .use(html())
   .use(
     swagger({
       path: "/docs",
@@ -37,7 +40,7 @@ const app = new Elysia()
     if (err instanceof Postgres.PostgresError)
       return Response.err(500, "Database error :(")
   })
-  .get("/", () => "Hello Elysia")
+  .use(Hello)
   .use(user_router)
   .use(api_router)
   .listen(process.env.PORT || 3456)
