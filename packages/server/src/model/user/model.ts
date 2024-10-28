@@ -1,12 +1,13 @@
-import { eq, sql } from "drizzle-orm"
+import { eq, type SQL, sql } from "drizzle-orm"
 import { Effect } from "effect"
 import {
   type NewUser,
+  role_table,
   type User,
   user_role_table,
   user as user_table,
 } from "~/database"
-import { USER_ROLE } from "~/database/lookup_tables/role"
+import { USER_ROLE, type UserRoleUnion } from "~/database/lookup_tables/role"
 import { type Session } from "~/database/user/typebox"
 import { db } from "~/service/database"
 import { ImageModel } from "../image"
@@ -137,5 +138,33 @@ export abstract class UserModel {
     } else {
       throw new Error("User has no avatar")
     }
+  }
+
+  static async checkRole(
+    user_id: number,
+    type: "any of" | "all of",
+    roles: UserRoleUnion[],
+  ): Promise<boolean> {
+    let logical_sql: SQL
+
+    if (type === "any of") {
+      logical_sql = sql`AND ${role_table.name} IN ${roles}`
+    } else {
+      const array_expr = sql.raw(
+        `ARRAY[${roles.map((x) => `'${x}'`).join(",")}]`,
+      )
+      logical_sql = sql`HAVING ARRAY_AGG(${role_table.name}) @> ${array_expr}`
+    }
+
+    const res = await db.execute<{ has_role: boolean }>(sql`
+      SELECT EXISTS (
+        SELECT 1
+        FROM ${user_role_table}
+        JOIN ${role_table} ON ${user_role_table.role_id} = ${role_table.id}
+        WHERE ${user_role_table.user_id} = ${user_id}
+        ${logical_sql}
+      ) AS has_role;`)
+
+    return res[0].has_role
   }
 }
