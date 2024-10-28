@@ -1,6 +1,6 @@
 import { song } from "~/database/schema"
-import { NewSong, Song } from "~/database/song/typebox"
-import { DB, db } from "~/service/database"
+import { type NewSong, type Song } from "~/database/song/typebox"
+import { type DB, db } from "~/service/database"
 
 export class SongModel {
   #db: DB

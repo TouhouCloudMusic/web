@@ -1,4 +1,4 @@
-import { AsyncReturnType } from "@touhouclouddb/utils"
+import { type AsyncReturnType } from "@touhouclouddb/utils"
 import { RELEASE_TYPE } from "~/database/lookup_tables/release_type"
 import {
   release,
@@ -6,9 +6,9 @@ import {
   release_title_translation,
   release_track,
 } from "~/database/release/schema"
-import { NewRelease, Release } from "~/database/release/typebox"
+import { type NewRelease, type Release } from "~/database/release/typebox"
 import { song, song_artist } from "~/database/schema"
-import { DB, db } from "~/service/database"
+import { type DB, db } from "~/service/database"
 
 type With = Required<
   NonNullable<Parameters<typeof db.query.release.findFirst>[0]>

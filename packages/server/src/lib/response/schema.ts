@@ -1,5 +1,5 @@
-import { date, lang } from "@touhouclouddb/database/interfaces"
-import { t, TSchema } from "elysia"
+import { type date, type lang } from "@touhouclouddb/database/interfaces"
+import { t, type TSchema } from "elysia"
 
 const localized_langs = [
   "Chinese",

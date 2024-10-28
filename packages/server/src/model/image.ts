@@ -2,7 +2,7 @@ import { smartMd5 } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import fs from "fs/promises"
 import { image_table } from "~/database/schema"
-import { DB, db } from "~/service/database"
+import { type DB, db } from "~/service/database"
 
 export class ImageModel {
   private db: DB

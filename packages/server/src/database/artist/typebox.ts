@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
 import { link_artist, link_release } from "../utils/link_schema"
-import { artist, artist_type_enum, localized_name } from "./schema"
+import { artist, type artist_type_enum, localized_name } from "./schema"
 
 export type ArtistType = (typeof artist_type_enum.enumValues)[number]
 

@@ -1,4 +1,4 @@
-import { HashedString } from "@touhouclouddb/utils"
+import { type HashedString } from "@touhouclouddb/utils"
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
 import { image_schema } from "../image/typebox"

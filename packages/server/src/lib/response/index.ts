@@ -1,5 +1,5 @@
-import { error, StatusMap } from "elysia"
-import { ElysiaCustomStatusResponse } from "elysia/error"
+import { error, type StatusMap } from "elysia"
+import { type ElysiaCustomStatusResponse } from "elysia/error"
 
 type Ok<T> = {
   readonly state: "success"

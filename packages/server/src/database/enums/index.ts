@@ -1,4 +1,4 @@
-import { UnionToTuple } from "@touhouclouddb/utils"
+import { type UnionToTuple } from "@touhouclouddb/utils"
 import { pgEnum } from "drizzle-orm/pg-core"
 
 export const date_precision = pgEnum("date_precision", [

@@ -1,5 +1,5 @@
-import { TableConfig } from "drizzle-orm"
-import { integer, PgTableWithColumns, real, varchar } from "drizzle-orm/pg-core"
+import { type TableConfig } from "drizzle-orm"
+import { integer, type PgTableWithColumns, real, varchar } from "drizzle-orm/pg-core"
 import { artist } from "~/database/artist/schema"
 import { user } from "~/database/user/schema"
 import { vote_level } from "../enums"

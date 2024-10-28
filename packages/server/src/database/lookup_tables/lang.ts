@@ -1,4 +1,4 @@
-import { Succ } from "@touhouclouddb/utils"
+import { type Succ } from "@touhouclouddb/utils"
 
 export const enum Languages {
   Chinese = 1,

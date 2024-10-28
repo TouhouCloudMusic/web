@@ -21,6 +21,12 @@ export default tseslint.config(
           allowInterfaces: "always",
         },
       ],
+      "@typescript-eslint/consistent-type-imports": [
+        "error",
+        {
+          fixStyle: "inline-type-imports",
+        },
+      ],
       "@typescript-eslint/restrict-template-expressions": [
         "warn",
         {

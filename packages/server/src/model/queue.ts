@@ -1,6 +1,6 @@
-import { EntityType } from "~/database/queue/typebox"
+import { type EntityType } from "~/database/queue/typebox"
 import { queue_table } from "~/database/schema"
-import { DB } from "~/service/database"
+import { type DB } from "~/service/database"
 
 export class QueueModel {
   #db: DB

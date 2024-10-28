@@ -1,19 +1,19 @@
-import { AsyncReturnType } from "@touhouclouddb/utils"
+import { type AsyncReturnType } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import Elysia, { t } from "elysia"
 import {
-  Artist,
+  type Artist,
   artist_schema,
-  ArtistLinks,
+  type ArtistLinks,
   new_artist_schema,
-  NewArtist,
+  type NewArtist,
 } from "~/database/artist/typebox"
 import {
   artist,
   localized_name as localized_name_table,
 } from "~/database/schema"
 import { ResponseSchema } from "~/lib/response/schema"
-import { db as _db, DB } from "~/service/database"
+import { db as _db, type DB } from "~/service/database"
 import { QueueModel } from "./queue"
 
 type With = NonNullable<
