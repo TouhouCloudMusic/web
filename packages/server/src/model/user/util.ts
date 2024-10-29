@@ -1,12 +1,7 @@
 import { type AsyncReturnType, type SafeOmit } from "@touhouclouddb/utils"
 import { type FindFirstQueryConfig } from "@touhouclouddb/utils/drizzle"
 import { t } from "elysia"
-import {
-  type User,
-  user_links_schema,
-  user_schema,
-  type UserLinks,
-} from "~/database/user/typebox"
+import { type User, user_schema, type UserLinks } from "~/database/user/typebox"
 import { db } from "~/service/database"
 
 export const USER_RETURN_WITH = {

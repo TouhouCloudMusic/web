@@ -1,5 +1,6 @@
 import { eq, type SQL, sql } from "drizzle-orm"
 import { Effect } from "effect"
+import Elysia, { t } from "elysia"
 import {
   type NewUser,
   role_table,
@@ -9,10 +10,16 @@ import {
 } from "~/database"
 import { USER_ROLE, type UserRoleUnion } from "~/database/lookup_tables/role"
 import { type Session } from "~/database/user/typebox"
+import { ResponseSchema } from "~/lib/response/schema"
 import { db } from "~/service/database"
 import { ImageModel } from "../image"
-import { select_user_query, select_user_with_session_query } from "./query"
-import { flattenUser, USER_RETURN_WITH, type UserResult } from "./util"
+import { select_user_query, select_user_with_session } from "./query"
+import {
+  flattenUser,
+  user_profile_schema,
+  USER_RETURN_WITH,
+  type UserResult,
+} from "./util"
 
 export abstract class UserModel {
   static async exist(username: string): Promise<boolean> {
@@ -63,24 +70,26 @@ export abstract class UserModel {
   }
 
   static async findById(id: number): Promise<UserResult | undefined> {
-    return db.query.user
-      .findFirst({
-        where: (fields, op) => op.eq(fields.id, id),
-        with: USER_RETURN_WITH,
-      })
-      .then(flattenUser)
+    return (
+      await db
+        .with(select_user_query)
+        .select()
+        .from(select_user_query)
+        .where(eq(select_user_query.id, id))
+    )[0]
   }
   static findByIdM(id: number) {
     return Effect.tryPromise(() => this.findById(id))
   }
 
   static async findByName(username: string): Promise<UserResult | undefined> {
-    const [data] = await db
-      .with(select_user_query)
-      .select()
-      .from(select_user_query)
-      .where(eq(select_user_query.name, username))
-    return data
+    return (
+      await db
+        .with(select_user_query)
+        .select()
+        .from(select_user_query)
+        .where(eq(select_user_query.name, username))
+    )[0]
   }
 
   static async findByNameWithAuthInfo(username: string): Promise<
@@ -90,12 +99,13 @@ export abstract class UserModel {
       }
     | undefined
   > {
-    const data = await select_user_with_session_query.where(
+    const data = await select_user_with_session.where(
       eq(user_table.name, username),
     )
+
     if (!data.length) return
     const { session, ...user } = data[0]
-    return { user, session }
+    return { user, session: session }
   }
 
   static findByNameWithAuthInfoM(username: string) {
@@ -168,3 +178,11 @@ export abstract class UserModel {
     return res[0].has_role
   }
 }
+
+export const user_model = new Elysia().decorate("UserModel", UserModel).model({
+  "user::avatar::get": t.File(),
+  "user::avatar::post": t.Object({
+    data: t.File(),
+  }),
+  "user::profile": ResponseSchema.ok(user_profile_schema),
+})
