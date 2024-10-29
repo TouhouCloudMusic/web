@@ -32,9 +32,9 @@ export interface UserResult
 
 export const user_profile_schema = t.Composite([
   t.Omit(user_schema, ["id", "password", "email", "avatar_id"]),
-  t.Omit(user_links_schema, ["session", "role"]),
   t.Object({
     role: t.Nullable(t.Array(t.String())),
+    avatar: t.Nullable(t.String()),
   }),
 ])
 export type UserProfile = typeof user_profile_schema.static

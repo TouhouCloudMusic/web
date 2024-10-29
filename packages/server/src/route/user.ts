@@ -151,7 +151,10 @@ export const user_router = new Elysia()
   .get(
     "/profile",
     ({ store: { user } }) => {
-      return Response.ok(user)
+      return Response.ok({
+        ...user,
+        avatar: user.avatar?.filename ?? null,
+      })
     },
     {
       response: "user::profile",
@@ -159,11 +162,17 @@ export const user_router = new Elysia()
   )
   .group("/avatar", {}, (group) =>
     group
-      .get("", ({ store: { user } }) => {
-        const filename = user.avatar?.filename
-        if (filename) return redirect(`image/${filename}`)
-        else return error(404)
-      })
+      .get(
+        "",
+        ({ store: { user } }) => {
+          const filename = user.avatar?.filename
+          if (filename) return redirect(`image/${filename}`)
+          else return error(404)
+        },
+        {
+          body: "user::avatar::get",
+        },
+      )
       .post(
         "",
         async ({
@@ -197,7 +206,7 @@ export const user_router = new Elysia()
           })
         },
         {
-          body: "user::avatar",
+          body: "user::avatar::post",
           response: {
             200: ResponseSchema.ok(t.String()),
             400: ResponseSchema.err,
