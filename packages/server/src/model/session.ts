@@ -9,7 +9,7 @@ import { type Session } from "~/database"
 import { session as session_table } from "~/database/schema"
 import { textEncoder } from "~/lib/singletons"
 import { db } from "~/service/database"
-import { USER_RETURN_WITH, type UserResult } from "./user"
+import { USER_RETURN_WITH, type UserResult } from "../user"
 
 const SessionErrorMsg = {
   CreateFailed: "Create session failed",

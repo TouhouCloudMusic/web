@@ -11,19 +11,18 @@ import {
 import { USER_ROLE, type UserRoleUnion } from "~/database/lookup_tables/role"
 import { type Session } from "~/database/user/typebox"
 import { ResponseSchema } from "~/lib/response/schema"
-import { db } from "~/service/database"
-import { ImageModel } from "../image"
-import { select_user_query, select_user_with_session } from "./query"
-import {
-  flattenUser,
-  user_profile_schema,
-  USER_RETURN_WITH,
-  type UserResult,
-} from "./util"
+import { ImageModel } from "~/model/image"
+import { db, type DB } from "~/service/database"
+import { select_user_query, select_user_with_session_query } from "./query"
+import { user_profile_schema, type UserResult } from "./utils"
 
-export abstract class UserModel {
-  static async exist(username: string): Promise<boolean> {
-    const [{ is_exists }] = await db.execute<{ is_exists: boolean }>(sql`
+export class UserModel {
+  private db: DB
+  constructor(_db: DB) {
+    this.db = _db
+  }
+  async exist(username: string): Promise<boolean> {
+    const [{ is_exists }] = await this.db.execute<{ is_exists: boolean }>(sql`
 			SELECT EXISTS(
 				SELECT 1
 				FROM ${user_table}
@@ -33,7 +32,7 @@ export abstract class UserModel {
     return is_exists
   }
 
-  static existM(username: string) {
+  existM(username: string) {
     return Effect.tryPromise({
       try: () => this.exist(username),
       catch(e) {
@@ -43,8 +42,8 @@ export abstract class UserModel {
     })
   }
 
-  static async create(data: NewUser): Promise<{ id: number }> {
-    return db.transaction(async (tx) => {
+  async create(data: NewUser): Promise<{ id: number }> {
+    return this.db.transaction(async (tx) => {
       const new_user = (
         await tx
           .insert(user_table)
@@ -59,7 +58,7 @@ export abstract class UserModel {
     })
   }
 
-  static createM(data: NewUser) {
+  createM(data: NewUser) {
     return Effect.tryPromise({
       try: () => this.create(data),
       catch(e) {
@@ -69,22 +68,22 @@ export abstract class UserModel {
     })
   }
 
-  static async findById(id: number): Promise<UserResult | undefined> {
+  async findById(id: number): Promise<UserResult | undefined> {
     return (
-      await db
+      await this.db
         .with(select_user_query)
         .select()
         .from(select_user_query)
         .where(eq(select_user_query.id, id))
     )[0]
   }
-  static findByIdM(id: number) {
+  findByIdM(id: number) {
     return Effect.tryPromise(() => this.findById(id))
   }
 
-  static async findByName(username: string): Promise<UserResult | undefined> {
+  async findByName(username: string): Promise<UserResult | undefined> {
     return (
-      await db
+      await this.db
         .with(select_user_query)
         .select()
         .from(select_user_query)
@@ -92,23 +91,25 @@ export abstract class UserModel {
     )[0]
   }
 
-  static async findByNameWithAuthInfo(username: string): Promise<
+  async findByNameWithAuthInfo(username: string): Promise<
     | {
         user: UserResult
         session: Session | null
       }
     | undefined
   > {
-    const data = await select_user_with_session.where(
-      eq(user_table.name, username),
-    )
+    const data = await db
+      .with(select_user_with_session_query)
+      .select()
+      .from(select_user_with_session_query)
+      .where(eq(select_user_with_session_query.name, username))
 
     if (!data.length) return
     const { session, ...user } = data[0]
     return { user, session: session }
   }
 
-  static findByNameWithAuthInfoM(username: string) {
+  findByNameWithAuthInfoM(username: string) {
     return Effect.tryPromise({
       try: () => this.findByNameWithAuthInfo(username),
       catch(e) {
@@ -118,14 +119,14 @@ export abstract class UserModel {
     })
   }
 
-  static async updateAvatar({
+  async updateAvatar({
     user_id,
     image_id,
   }: {
     user_id: number
     image_id: number
   }): Promise<void> {
-    const current_avatar_id = await db.query.user
+    const current_avatar_id = await this.db.query.user
       .findFirst({
         where: (fields, op) => op.eq(fields.id, user_id),
         columns: { avatar_id: true },
@@ -136,13 +137,13 @@ export abstract class UserModel {
       await new ImageModel().deleteByID(current_avatar_id)
     }
 
-    await db
+    await this.db
       .update(user_table)
       .set({ avatar_id: image_id })
       .where(eq(user_table.id, user_id))
   }
 
-  static async removeAvatar(user: User): Promise<void> {
+  async removeAvatar(user: User): Promise<void> {
     if (user.avatar_id) {
       await new ImageModel().deleteByID(user.avatar_id)
     } else {
@@ -150,7 +151,7 @@ export abstract class UserModel {
     }
   }
 
-  static async checkRole(
+  async checkRole(
     user_id: number,
     type: "any of" | "all of",
     roles: UserRoleUnion[],
@@ -166,7 +167,7 @@ export abstract class UserModel {
       logical_sql = sql`HAVING ARRAY_AGG(${role_table.name}) @> ${array_expr}`
     }
 
-    const res = await db.execute<{ has_role: boolean }>(sql`
+    const res = await this.db.execute<{ has_role: boolean }>(sql`
       SELECT EXISTS (
         SELECT 1
         FROM ${user_role_table}
@@ -179,10 +180,12 @@ export abstract class UserModel {
   }
 }
 
-export const user_model = new Elysia().decorate("UserModel", UserModel).model({
-  "user::avatar::get": t.File(),
-  "user::avatar::post": t.Object({
-    data: t.File(),
-  }),
-  "user::profile": ResponseSchema.ok(user_profile_schema),
-})
+export const user_model = new Elysia()
+  .decorate("UserModel", new UserModel(db))
+  .model({
+    "user::avatar::get": t.File(),
+    "user::avatar::post": t.Object({
+      data: t.File(),
+    }),
+    "user::profile": ResponseSchema.ok(user_profile_schema),
+  })

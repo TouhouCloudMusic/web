@@ -1,4 +1,5 @@
 import { sql } from "drizzle-orm"
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 import { role_table } from "~/database"
 import { USER_ROLE } from "~/database/lookup_tables/role"
 import {
@@ -7,9 +8,8 @@ import {
 } from "../../src/database/lookup_tables"
 import { LANGUAGES } from "../../src/database/lookup_tables/lang"
 import { RELEASE_TYPE_ARRAY } from "../../src/database/lookup_tables/release_type"
-import db from "./connection"
 
-async function main() {
+export async function initLookupTable(db: PostgresJsDatabase<any>) {
   await db
     .insert(language_table)
     .values(LANGUAGES)
@@ -35,6 +35,3 @@ async function main() {
     .values(Object.values(USER_ROLE))
     .onConflictDoNothing()
 }
-
-await main()
-process.exit(0)

@@ -2,7 +2,7 @@ import dayjs from "dayjs"
 import { type Cookie, Elysia, error, t } from "elysia"
 import { type Session } from "~/database"
 import { SessionModel, type SessionValidateResult } from "~/model/session"
-import { type UserResult } from "~/model/user"
+import { type UserResult } from "~/user"
 
 export const SESSION_TOKEN_NAME = "session_token"
 const COOKIE_OPTION = {

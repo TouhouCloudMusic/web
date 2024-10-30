@@ -7,9 +7,9 @@ import Postgres from "postgres"
 import { Hello } from "./homepage"
 import { Response } from "./lib/response"
 import { api_router } from "./route"
-import { user_router } from "./route/user"
+import { user_controller } from "./user/controller"
 
-const app = new Elysia()
+export const app = new Elysia()
   .use(
     staticPlugin({
       prefix: "/",
@@ -41,7 +41,7 @@ const app = new Elysia()
       return Response.err(500, "Database error :(")
   })
   .use(Hello)
-  .use(user_router)
+  .use(user_controller)
   .use(api_router)
   .listen(process.env.PORT || 3456)
 

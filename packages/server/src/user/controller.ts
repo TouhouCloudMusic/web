@@ -7,14 +7,14 @@ import { Response } from "~/lib/response"
 import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
-import { user_model, validateAvatar } from "~/model/user"
-import { AVATAR_EXTENSION_NAME } from "~/model/user/avatar"
 import { auth_guard, auth_service, resetSessionToken } from "~/service/user"
+import { user_model } from "./model"
+import { AVATAR_EXTENSION_NAME, validateAvatar } from "./utils"
 
 const AUTH_FAILED_MSG = "Incorrect username or password"
 const ALREADY_SIGNED_IN = "Already signed in"
 const ALREADY_SIGNED_IN_RESPONSE = Response.err(409, ALREADY_SIGNED_IN)
-export const user_router = new Elysia()
+export const user_controller = new Elysia()
   .use(auth_service)
   .use(user_model)
   .post(
@@ -69,6 +69,7 @@ export const user_router = new Elysia()
         409: ResponseSchema.err,
         500: ResponseSchema.err,
       },
+      // response: ResponseSchema.ok(t.String()),
       cookie: "auth::optional_session",
     },
   )

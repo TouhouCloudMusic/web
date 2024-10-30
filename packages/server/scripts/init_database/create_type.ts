@@ -1,7 +1,9 @@
 import { sql } from "drizzle-orm"
-import db from "./connection"
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js"
 
-async function main() {
+export async function createCustomType<T extends Record<string, unknown>>(
+  db: PostgresJsDatabase<T>,
+) {
   await db.execute(
     sql.raw(`
 			CREATE TYPE location_tuple AS (
@@ -20,6 +22,3 @@ async function main() {
 		`),
   )
 }
-
-await main()
-process.exit(0)
