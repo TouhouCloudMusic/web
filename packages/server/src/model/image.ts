@@ -46,31 +46,35 @@ export class ImageModel {
   }
 
   async deleteByHash(image_hash: string) {
-    const [{ filename }] = await this.db
-      .delete(image_table)
-      .where(eq(image_table.filename, image_hash))
-      .returning({
-        filename: image_table.filename,
-      })
-      .then((x) => {
-        if (!x.length) throw new Error("No such image")
-        return x
-      })
+    const { filename } = (
+      await this.db
+        .delete(image_table)
+        .where(eq(image_table.filename, image_hash))
+        .returning({
+          filename: image_table.filename,
+        })
+        .then((x) => {
+          if (!x.length) throw new Error("No such image")
+          return x
+        })
+    )[0]!
 
     await this.removeFile(filename)
   }
 
   async deleteByID(id: number) {
-    const [{ filename }] = await this.db
-      .delete(image_table)
-      .where(eq(image_table.id, id))
-      .returning({
-        filename: image_table.filename,
-      })
-      .then((x) => {
-        if (!x.length) throw new Error("No such image")
-        return x
-      })
+    const { filename } = (
+      await this.db
+        .delete(image_table)
+        .where(eq(image_table.id, id))
+        .returning({
+          filename: image_table.filename,
+        })
+        .then((x) => {
+          if (!x.length) throw new Error("No such image")
+          return x
+        })
+    )[0]!
 
     await this.removeFile(filename)
   }

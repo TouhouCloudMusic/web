@@ -1,4 +1,5 @@
 import { type AsyncReturnType } from "@touhouclouddb/utils"
+import type { FindFirstQueryConfig } from "@touhouclouddb/utils/drizzle"
 import { eq } from "drizzle-orm"
 import Elysia, { t } from "elysia"
 import {
@@ -13,16 +14,13 @@ import {
   localized_name as localized_name_table,
 } from "~/database/schema"
 import { ResponseSchema } from "~/lib/response/schema"
-import { db as _db, type DB } from "~/service/database"
+import { db, type DB } from "~/service/database"
 import { QueueModel } from "./queue"
 
-type With = NonNullable<
-  Parameters<typeof _db.query.artist.findFirst>[0]
->["with"]
 type UnflattenedArtist = AsyncReturnType<typeof simulate_find>
 type FlattenedArtist = Artist & ArtistLinks
 
-const simulate_find = () => _db.query.artist.findFirst({ with: RETURN_WITH })
+const simulate_find = () => db.query.artist.findFirst({ with: RETURN_WITH })
 
 const RETURN_WITH = {
   alias_group: {
@@ -43,6 +41,7 @@ const RETURN_WITH = {
     },
   },
   to_members: {
+    columns: {},
     with: {
       member: {
         columns: {
@@ -53,6 +52,7 @@ const RETURN_WITH = {
     },
   },
   to_member_of: {
+    columns: {},
     with: {
       group: {
         columns: {
@@ -73,7 +73,7 @@ const RETURN_WITH = {
       },
     },
   },
-} satisfies With
+} satisfies FindFirstQueryConfig<typeof db.query.artist>["with"]
 
 function flattenArtist<T extends UnflattenedArtist>(
   artist: T,
@@ -90,10 +90,10 @@ function flattenArtist<T extends UnflattenedArtist>(artist: T) {
     } satisfies NonNullable<T> & FlattenedArtist
 }
 
-class ArtistModel {
+export class ArtistModel {
   private db: DB
-  constructor(db?: DB) {
-    this.db = db ?? _db
+  constructor(_db?: DB) {
+    this.db = _db ?? db
   }
 
   private $inner_queue_model?: QueueModel
@@ -123,18 +123,18 @@ class ArtistModel {
   async create(data: NewArtist) {
     return this.db
       .transaction(async (tx) => {
-        const res = (await tx.insert(artist).values(data).returning())[0]
+        const [res] = await tx.insert(artist).values(data).returning()
 
         if (data.localized_name) {
           await tx.insert(localized_name_table).values(
             data.localized_name.map(({ name, language }) => ({
               name,
               language,
-              artist_id: res.id,
+              artist_id: res!.id,
             })),
           )
         }
-        return res.id
+        return res!.id
       })
       .then((id) => this.findByID(id))
   }
@@ -150,7 +150,7 @@ class ArtistModel {
   }) {
     const old_artist_data = await this.findByID(artist_id)
     if (!old_artist_data) {
-      throw new Error(`artist ${artist_id} not found`)
+      throw new Error(`Artist ${artist_id} not found`)
     }
     return this.queue_model.create({
       author: author_id,
@@ -161,7 +161,7 @@ class ArtistModel {
     })
   }
 
-  async update(artist_id: number, data: NewArtist) {
+  async update(artist_id: number, data: Partial<NewArtist>) {
     const { localized_name, ...artist_data } = data
     return this.db.transaction(async (tx) => {
       await tx

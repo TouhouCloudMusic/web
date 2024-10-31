@@ -22,13 +22,14 @@ export class UserModel {
     this.db = _db
   }
   async exist(username: string): Promise<boolean> {
-    const [{ is_exists }] = await this.db.execute<{ is_exists: boolean }>(sql`
+    const { is_exists } = (
+      await this.db.execute<{ is_exists: boolean }>(sql`
 			SELECT EXISTS(
 				SELECT 1
 				FROM ${user_table}
 				WHERE ${user_table.name} = ${username}
 			) as is_exists;`)
-
+    )[0]!
     return is_exists
   }
 
@@ -49,7 +50,7 @@ export class UserModel {
           .insert(user_table)
           .values(data)
           .returning({ id: user_table.id })
-      )[0]
+      )[0]!
       await tx.insert(user_role_table).values({
         user_id: new_user.id,
         role_id: USER_ROLE.User.id,
@@ -105,7 +106,7 @@ export class UserModel {
       .where(eq(select_user_with_session_query.name, username))
 
     if (!data.length) return
-    const { session, ...user } = data[0]
+    const { session, ...user } = data[0]!
     return { user, session: session }
   }
 
@@ -167,7 +168,8 @@ export class UserModel {
       logical_sql = sql`HAVING ARRAY_AGG(${role_table.name}) @> ${array_expr}`
     }
 
-    const res = await this.db.execute<{ has_role: boolean }>(sql`
+    const { has_role } = (
+      await this.db.execute<{ has_role: boolean }>(sql`
       SELECT EXISTS (
         SELECT 1
         FROM ${user_role_table}
@@ -175,8 +177,9 @@ export class UserModel {
         WHERE ${user_role_table.user_id} = ${user_id}
         ${logical_sql}
       ) AS has_role;`)
+    )[0]!
 
-    return res[0].has_role
+    return has_role
   }
 }
 
