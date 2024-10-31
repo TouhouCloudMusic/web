@@ -1,6 +1,5 @@
 import crypto from "node:crypto"
-
-export function smartMd5(
+export function toMd5Base64Url(
   byte:
     | string
     | Uint8Array
@@ -16,8 +15,8 @@ export function smartMd5(
     | Float64Array,
 ) {
   if (process.isBun) {
-    return new Bun.CryptoHasher("md5").update(byte).digest("hex")
+    return new Bun.CryptoHasher("md5").update(byte).digest("base64url")
   } else {
-    return crypto.createHash("md5").update(byte).digest("hex")
+    return crypto.createHash("md5").update(byte).digest("base64url")
   }
 }

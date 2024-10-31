@@ -1,4 +1,4 @@
-import { smartMd5 } from "@touhouclouddb/utils"
+import { toMd5Base64Url } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import fs from "fs/promises"
 import { image_table } from "~/database/schema"
@@ -6,18 +6,27 @@ import { type DB, db } from "~/service/database"
 
 export class ImageModel {
   private db: DB
+
   constructor(_db?: DB) {
     this.db = _db ?? db
   }
 
+  private get image_path() {
+    if (process.env.IMAGE_PATH) {
+      return process.env.IMAGE_PATH
+    } else {
+      throw new Error("IMAGE_PATH is not set")
+    }
+  }
+
   private async writeFile(name: string, bytes: Uint8Array) {
-    const path = `${process.env.IMAGE_PATH}/${name}`
+    const path = `${this.image_path}/${name}`
     if (process.isBun as 0 | 1) await Bun.write(path, bytes)
     else await fs.writeFile(path, bytes)
   }
 
   private async removeFile(name: string) {
-    const path = `${process.env.IMAGE_PATH}/${name}`
+    const path = `${this.image_path}/${name}`
     await fs.unlink(path)
   }
 
@@ -31,7 +40,7 @@ export class ImageModel {
       extension_name: string
     },
   ) {
-    const image_hash = smartMd5(bytes)
+    const image_hash = toMd5Base64Url(bytes)
     const file_name = `${image_hash}.${extension_name}`
     const [img] = await this.db
       .insert(image_table)
