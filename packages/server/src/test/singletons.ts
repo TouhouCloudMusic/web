@@ -3,7 +3,9 @@ import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
 import { schema } from "~/database"
 
-const { parsed, error } = config({ path: ".env.local" })
+const TEST_ENV_FILE_NAME = ".env.local"
+
+const { parsed, error } = config({ path: TEST_ENV_FILE_NAME })
 if (error) throw error
 process.env = { ...process.env, ...parsed }
 
@@ -14,7 +16,7 @@ const envs = [TEST_DB_HOST, TEST_DB_PASSWORD, TEST_DB_USER, TEST_DB_NAME]
 envs.forEach((env) => {
   if (!env) {
     throw new Error(
-      "Missing environment variable, Please setting test database env in your .env.local file",
+      `Missing environment variable, Please setting ${env} in ${TEST_ENV_FILE_NAME}`,
     )
   }
 })
