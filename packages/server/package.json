@@ -12,7 +12,8 @@
     "fix": "bunx oxlint --fix --fix-suggestions && bunx eslint --fix --cache",
     "fmt": "bunx prettier --cache --write .",
     "lint": "bunx oxlint && bunx eslint --cache",
-    "start": "./server"
+    "start": "./server",
+    "pre-push": "bun test"
   },
   "dependencies": {
     "@elysiajs/cors": "^1.1.1",
