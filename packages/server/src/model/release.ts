@@ -1,5 +1,4 @@
 import { type AsyncReturnType } from "@touhouclouddb/utils"
-import { RELEASE_TYPE } from "~/database/lookup_tables/release_type"
 import {
   release,
   release_artist,
@@ -82,7 +81,6 @@ export class ReleaseModel {
             .insert(release)
             .values({
               ...value,
-              release_type: RELEASE_TYPE[data.release_type].id,
             })
             .returning()
         )[0]!

@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm"
 import {
   date,
   integer,
+  pgEnum,
   pgTable,
   primaryKey,
   smallint,
@@ -10,24 +11,23 @@ import {
 } from "drizzle-orm/pg-core"
 import { artist } from "../artist"
 import { date_precision } from "../enums"
-import { release_type_table } from "../lookup_tables"
 import { song } from "../song/schema"
 import { created_and_updated_at } from "../utils/created_and_updated_at"
 import { credit_cons } from "../utils/vote"
 
+const release_type_enum = pgEnum("release_type", ["Album", "EP", "Single"])
+export type ReleaseType = (typeof release_type_enum.enumValues)[number]
 export const release = pgTable("release", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   title: varchar("title", { length: 128 }).notNull(),
-  catalog_number: varchar("catalog_number", { length: 16 }),
-  recording_date_end_precision: date_precision("recording_date_end_prec"),
-  recording_date_end: date("recording_date_end"),
-  recording_date_start_precision: date_precision("recording_date_start_prec"),
-  recording_date_start: date("recording_date_start"),
-  release_date_precision: date_precision("release_date_prec"),
+  release_type: release_type_enum().notNull(),
   release_date: date("release_date"),
-  release_type: smallint()
-    .notNull()
-    .references(() => release_type_table.id),
+  release_date_precision: date_precision("release_date_prec"),
+  recording_date_start: date("recording_date_start"),
+  recording_date_start_precision: date_precision("recording_date_start_prec"),
+  recording_date_end: date("recording_date_end"),
+  recording_date_end_precision: date_precision("recording_date_end_prec"),
+  catalog_number: varchar("catalog_number", { length: 16 }),
   total_disc: integer("total_disc"),
   ...created_and_updated_at,
 })
@@ -88,22 +88,22 @@ export const release_label = pgTable(
 
 export const release_track = pgTable("release_track", (t) => ({
   id: t.integer().primaryKey().generatedByDefaultAsIdentity(),
-  release_id: integer("release_id")
+  release_id: integer()
     .references(() => release.id, { onDelete: "cascade" })
     .notNull(),
-  song_id: integer("song_id")
+  song_id: integer()
     .references(() => song.id)
     .notNull(),
-  track_order: integer("track_order").notNull(),
-  track_number: varchar("track_number", { length: 4 }),
-  overwrite_title: varchar("overwrite_title", { length: 128 }),
+  track_order: integer().notNull(),
+  track_number: varchar({ length: 4 }),
+  overwrite_title: varchar({ length: 128 }),
 }))
 
-export const release_track_credit = pgTable("release_track_credit", {
-  release_track_id: integer("release_track_id")
+export const release_track_artist = pgTable("release_track_artist", {
+  release_track_id: integer()
     .references(() => release_track.id, { onDelete: "cascade" })
     .notNull(),
-  artist_id: integer("artist_id")
+  artist_id: integer()
     .references(() => artist.id)
     .notNull(),
 })

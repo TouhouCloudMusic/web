@@ -1,17 +1,8 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-typebox"
 import { t } from "elysia"
-import { RELEASE_TYPE_ARRAY } from "../lookup_tables/release_type"
 import { link_artist } from "../utils/link_schema"
-import {
-  release,
-  release_artist,
-  release_credit,
-  release_label,
-  release_title_translation,
-  release_track,
-} from "./schema"
+import { release, release_title_translation, release_track } from "./schema"
 
-export const release_type_string_schema = t.UnionEnum(RELEASE_TYPE_ARRAY)
 // @ts-ignore
 const l10n_title = t.Omit(createSelectSchema(release_title_translation), [
   "release_id",
@@ -28,9 +19,7 @@ const link_props = t.Object({
 
 export const release_schema = t.Composite([
   // @ts-ignore
-  createSelectSchema(release, {
-    release_type: release_type_string_schema,
-  }),
+  createSelectSchema(release),
   link_props,
 ])
 
@@ -55,9 +44,7 @@ const new_link_props = t.Object({
 
 export const new_release_schema = t.Composite([
   // @ts-ignore
-  createInsertSchema(release, {
-    release_type: release_type_string_schema,
-  }),
+  createInsertSchema(release),
   new_link_props,
 ])
 export type NewRelease = typeof new_release_schema.static
