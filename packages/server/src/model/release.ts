@@ -85,7 +85,7 @@ export class ReleaseModel {
               release_type: RELEASE_TYPE[data.release_type].id,
             })
             .returning()
-        )[0]
+        )[0]!
 
         tx.insert(release_artist).values(
           artist.map((id) => ({ artist_id: id, release_id: new_release.id })),
@@ -141,7 +141,7 @@ export class ReleaseModel {
                 throw new Error("overwrite_title is required")
               return {
                 ...x,
-                song_id: song_ids[i].id,
+                song_id: song_ids[i]!.id,
               }
             })
 
