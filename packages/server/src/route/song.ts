@@ -1,19 +1,19 @@
 import Elysia, { t } from "elysia"
 import { new_song_schema, song_schema } from "~/database/song/typebox"
 import { Response } from "~/lib/response"
-import { ResponseSchema } from "~/lib/response/schema"
+import { SchemaHelper } from "~/lib/response/schema"
 import { SongModel } from "~/model/song"
-import type { DB } from "~/service/database"
+import { database_service } from "~/service/database"
 import { auth_guard } from "~/service/user"
 
 export const song_router = new Elysia({ prefix: "/song" })
-  // @ts-expect-error
-  .derive((ctx) => ({ SongModel: new SongModel(ctx.db as DB) }))
+  .use(database_service)
+  .derive(({ db }) => ({ SongModel: new SongModel(db) }))
   .group(
     "/:id",
     {
       params: t.Object({
-        id: ResponseSchema.id,
+        id: SchemaHelper.id,
       }),
     },
     (router) =>
@@ -26,8 +26,8 @@ export const song_router = new Elysia({ prefix: "/song" })
         },
         {
           response: {
-            200: ResponseSchema.ok(new_song_schema),
-            404: ResponseSchema.err,
+            200: Response.ok.schema(new_song_schema),
+            404: Response.err.schema,
           },
         },
       ),
@@ -42,7 +42,7 @@ export const song_router = new Elysia({ prefix: "/song" })
       params: t.Object({
         count: t.Number({ minimum: 1, maximum: 20 }),
       }),
-      response: ResponseSchema.ok(t.Array(song_schema)),
+      response: Response.ok.schema(t.Array(song_schema)),
     },
   )
   .use(auth_guard)
@@ -54,6 +54,6 @@ export const song_router = new Elysia({ prefix: "/song" })
     },
     {
       body: new_song_schema,
-      response: ResponseSchema.ok(song_schema),
+      response: Response.ok.schema(song_schema),
     },
   )

@@ -1,26 +1,28 @@
 import Elysia, { t } from "elysia"
+import { artist_model } from "~/artist/model"
 import { Response } from "~/lib/response"
-import { ResponseSchema } from "~/lib/response/schema"
-import { artist_model } from "~/model/artist"
+import { SchemaHelper } from "~/lib/response/schema"
 import { auth_guard } from "~/service/user"
-
-export const artist_router = new Elysia({ prefix: "/artist" })
+import { artist_dto } from "./dto"
+export const artist_controller = new Elysia({ prefix: "/artist" })
   .use(artist_model)
+  .use(artist_dto)
   .get(
     "",
-    async ({ model, query: { keyword, limit } }) => {
-      const result = await model.findByKeyword(keyword, limit)
+    async ({ ArtistModel, query: { keyword, limit } }) => {
+      const result = await ArtistModel.findByKeyword(keyword, limit)
       if (result.length === 0) return Response.notFound("Artist Not Found")
       return Response.ok(result)
     },
     {
       query: t.Object({
-        keyword: ResponseSchema.keyword,
-        limit: ResponseSchema.limit(),
+        keyword: SchemaHelper.keyword,
+        limit: SchemaHelper.limit(),
       }),
+
       response: {
         200: "artist::find_by_keyword",
-        404: ResponseSchema.err,
+        404: Response.err.schema,
       },
     },
   )
@@ -28,15 +30,15 @@ export const artist_router = new Elysia({ prefix: "/artist" })
     "/:id",
     {
       params: t.Object({
-        id: ResponseSchema.id,
+        id: SchemaHelper.id,
       }),
     },
     (router) =>
       router
         .get(
           "",
-          async ({ model, params: { id } }) => {
-            const res = await model.findByID(id)
+          async ({ ArtistModel, params: { id } }) => {
+            const res = await ArtistModel.findByID(id)
             return !res ?
                 Response.notFound("Artist Not Found")
               : Response.ok(res)
@@ -44,32 +46,32 @@ export const artist_router = new Elysia({ prefix: "/artist" })
           {
             response: {
               200: "artist::find_by_id",
-              404: ResponseSchema.err,
+              404: Response.err.schema,
             },
           },
         )
         .use(auth_guard)
         .post(
           "",
-          async ({ model, body, params: { id }, store: { session } }) => {
-            return model.createPullRequest({
+          async ({ ArtistModel, body, params: { id }, store: { session } }) => {
+            return ArtistModel.createPullRequest({
               artist_data: body,
               artist_id: id,
               author_id: session.user_id,
             })
           },
           {
-            body: "artist::new",
+            body: "artist::update",
           },
         ),
   )
   .use(auth_guard)
   .post(
     "",
-    async ({ model, body }) => {
-      return model.create(body)
+    async ({ ArtistModel, body }) => {
+      return ArtistModel.create(body)
     },
     {
-      body: "artist::new",
+      body: "artist::create",
     },
   )

@@ -8,7 +8,7 @@ import { Effect, Option, pipe } from "effect"
 import { type Session } from "~/database"
 import { session as session_table } from "~/database/schema"
 import { textEncoder } from "~/lib/singletons"
-import { db } from "~/service/database"
+import { db } from "~/service/database/connection"
 import { USER_RETURN_WITH, type UserResult } from "../user"
 
 const SessionErrorMsg = {

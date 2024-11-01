@@ -7,7 +7,7 @@ import {
 } from "~/database/release/schema"
 import { type NewRelease, type Release } from "~/database/release/typebox"
 import { song, song_artist } from "~/database/schema"
-import { type DB, db } from "~/service/database"
+import { type DB, db } from "~/service/database/connection"
 
 type With = Required<
   NonNullable<Parameters<typeof db.query.release.findFirst>[0]>

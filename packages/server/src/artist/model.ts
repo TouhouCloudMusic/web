@@ -1,28 +1,17 @@
-import { type AsyncReturnType } from "@touhouclouddb/utils"
 import type { FindFirstQueryConfig } from "@touhouclouddb/utils/drizzle"
 import { eq } from "drizzle-orm"
-import Elysia, { t } from "elysia"
-import {
-  type Artist,
-  artist_schema,
-  type ArtistLinks,
-  new_artist_schema,
-  type NewArtist,
-} from "~/database/artist/typebox"
+import Elysia from "elysia"
+import { type Artist, type NewArtist } from "~/database/artist/typebox"
 import {
   artist,
   localized_name as localized_name_table,
 } from "~/database/schema"
-import { ResponseSchema } from "~/lib/response/schema"
-import { db, type DB } from "~/service/database"
-import { QueueModel } from "./queue"
+import { QueueModel } from "~/model/queue"
+import { database_service } from "~/service/database"
+import type { db, DB } from "~/service/database/connection"
+import { flattenArtist } from "./utils/flatten_artist"
 
-type UnflattenedArtist = AsyncReturnType<typeof simulate_find>
-type FlattenedArtist = Artist & ArtistLinks
-
-const simulate_find = () => db.query.artist.findFirst({ with: RETURN_WITH })
-
-const RETURN_WITH = {
+export const RETURN_WITH = {
   alias_group: {
     columns: {},
     with: {
@@ -75,30 +64,12 @@ const RETURN_WITH = {
   },
 } satisfies FindFirstQueryConfig<typeof db.query.artist>["with"]
 
-function flattenArtist<T extends UnflattenedArtist>(
-  artist: T,
-): T extends undefined ? undefined : NonNullable<T> & FlattenedArtist
-function flattenArtist<T extends UnflattenedArtist>(artist: T) {
-  if (artist)
-    return {
-      ...artist,
-      aliases:
-        artist.alias_group?.artist.filter(({ id }) => id !== artist.id) ?? [],
-      release: artist.to_release_artist.map((x) => x.release),
-      members: artist.to_members.map((x) => x.member),
-      member_of: artist.to_member_of.map((x) => x.group),
-    } satisfies NonNullable<T> & FlattenedArtist
-}
-
 export class ArtistModel {
-  private db: DB
-  constructor(_db?: DB) {
-    this.db = _db ?? db
-  }
+  constructor(private db: DB) {}
 
-  private $inner_queue_model?: QueueModel
+  private _queue_model?: QueueModel
   private get queue_model() {
-    return (this.$inner_queue_model ??= new QueueModel(this.db))
+    return (this._queue_model ??= new QueueModel(this.db))
   }
 
   async findByID(id: number): Promise<Artist | undefined> {
@@ -186,10 +157,11 @@ export class ArtistModel {
   }
 }
 
-export const artist_model = new Elysia()
-  .model({
-    "artist::new": new_artist_schema,
-    "artist::find_by_id": ResponseSchema.ok(artist_schema),
-    "artist::find_by_keyword": ResponseSchema.ok(t.Array(artist_schema)),
-  })
-  .decorate("model", new ArtistModel())
+export const artist_model = new Elysia({
+  name: "Model::Artist",
+})
+  .use(database_service)
+  .derive(({ db }) => ({
+    ArtistModel: new ArtistModel(db),
+  }))
+  .as("plugin")

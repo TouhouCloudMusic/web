@@ -1,7 +1,7 @@
 import Elysia, { t } from "elysia"
 import { new_release_schema } from "~/database/release/typebox"
 import { Response } from "~/lib/response"
-import { ResponseSchema } from "~/lib/response/schema"
+import { SchemaHelper } from "~/lib/response/schema"
 import { ReleaseModel } from "~/model/release"
 import { auth_guard } from "~/service/user"
 
@@ -11,7 +11,7 @@ export const release_router = new Elysia({ prefix: "/release" })
     "/:id",
     {
       params: t.Object({
-        id: ResponseSchema.id,
+        id: SchemaHelper.id,
       }),
     },
     (router) =>

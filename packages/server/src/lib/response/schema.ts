@@ -1,5 +1,5 @@
 import { type date, type lang } from "@touhouclouddb/database/interfaces"
-import { t, type TSchema } from "elysia"
+import { t } from "elysia"
 
 const localized_langs = [
   "Chinese",
@@ -10,7 +10,7 @@ const localized_langs = [
 
 const date_masks = ["Full", "YM", "Y"] as const satisfies date.FormatMask[]
 
-class ResponseSchema {
+class SchemaHelper {
   constructor() {}
   id = t.Number(
     t.Integer({
@@ -41,10 +41,7 @@ class ResponseSchema {
     province: t.String(),
     city: t.String(),
   })
-  err = t.Object({
-    state: t.Literal("error"),
-    message: t.String(),
-  })
+
   keyword = t.String({
     minLength: 1,
     maxLength: 32,
@@ -66,14 +63,8 @@ class ResponseSchema {
       error: "Invalid limit",
     })
   }
-  ok<T extends TSchema>(schema: T) {
-    return t.Object({
-      state: t.Literal("success"),
-      data: schema,
-    })
-  }
 }
 
-const schema = new ResponseSchema()
+const schema = new SchemaHelper()
 
-export { schema as ResponseSchema }
+export { schema as SchemaHelper }

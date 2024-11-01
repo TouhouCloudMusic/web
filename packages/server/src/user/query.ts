@@ -2,7 +2,7 @@ import { eq, getTableColumns, sql } from "drizzle-orm"
 import { role_table, user, user_role_table, type Session } from "~/database"
 import { type Image } from "~/database/image/typebox"
 import { image_table, session } from "~/database/schema"
-import { db } from "~/service/database"
+import { db } from "~/service/database/connection"
 
 const select_user_role_query = db.$with("select_user_role_query").as(
   db

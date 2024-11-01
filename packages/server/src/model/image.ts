@@ -2,7 +2,7 @@ import { toMd5Base64Url } from "@touhouclouddb/utils"
 import { eq } from "drizzle-orm"
 import fs from "fs/promises"
 import { image_table } from "~/database/schema"
-import { type DB, db } from "~/service/database"
+import { type DB, db } from "~/service/database/connection"
 
 export class ImageModel {
   private db: DB
@@ -51,7 +51,7 @@ export class ImageModel {
       .returning()
     await this.writeFile(file_name, bytes)
 
-    return img
+    return img!
   }
 
   async deleteByHash(image_hash: string) {

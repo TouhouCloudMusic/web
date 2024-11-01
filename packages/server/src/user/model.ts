@@ -10,17 +10,15 @@ import {
 } from "~/database"
 import { USER_ROLE, type UserRoleUnion } from "~/database/lookup_tables/role"
 import { type Session } from "~/database/user/typebox"
-import { ResponseSchema } from "~/lib/response/schema"
+import { Response } from "~/lib/response"
 import { ImageModel } from "~/model/image"
-import { db, type DB } from "~/service/database"
+import { database_service } from "~/service/database"
+import type { DB } from "~/service/database/connection"
 import { select_user_query, select_user_with_session_query } from "./query"
 import { user_profile_schema, type UserResult } from "./utils"
 
 export class UserModel {
-  private db: DB
-  constructor(_db: DB) {
-    this.db = _db
-  }
+  constructor(private db: DB) {}
   async exist(username: string): Promise<boolean> {
     const { is_exists } = (
       await this.db.execute<{ is_exists: boolean }>(sql`
@@ -99,7 +97,7 @@ export class UserModel {
       }
     | undefined
   > {
-    const data = await db
+    const data = await this.db
       .with(select_user_with_session_query)
       .select()
       .from(select_user_with_session_query)
@@ -183,16 +181,18 @@ export class UserModel {
   }
 }
 
-export const user_model = new Elysia()
-  // @ts-expect-error
+export const user_model = new Elysia({
+  name: "Model::User",
+})
+  .use(database_service)
   .derive(({ db }) => ({
-    UserModel: new UserModel(db as DB),
+    UserModel: new UserModel(db),
   }))
   .model({
     "user::avatar::get": t.File(),
     "user::avatar::post": t.Object({
       data: t.File(),
     }),
-    "user::profile": ResponseSchema.ok(user_profile_schema),
+    "user::profile": Response.ok.schema(user_profile_schema),
   })
   .as("plugin")

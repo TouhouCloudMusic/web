@@ -4,7 +4,6 @@ import { Effect, Either } from "effect"
 import { UnknownException } from "effect/Cause"
 import { Elysia, error, redirect, t } from "elysia"
 import { Response } from "~/lib/response"
-import { ResponseSchema } from "~/lib/response/schema"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
 import { auth_guard, auth_service, resetSessionToken } from "~/service/user"
@@ -65,11 +64,10 @@ export const user_controller = new Elysia()
     {
       body: "auth::sign",
       response: {
-        200: ResponseSchema.ok(t.String()),
-        409: ResponseSchema.err,
-        500: ResponseSchema.err,
+        200: Response.ok.schema(t.String()),
+        409: Response.err.schema,
+        500: Response.err.schema,
       },
-      // response: ResponseSchema.ok(t.String()),
       cookie: "auth::optional_session",
     },
   )
@@ -209,8 +207,8 @@ export const user_controller = new Elysia()
         {
           body: "user::avatar::post",
           response: {
-            200: ResponseSchema.ok(t.String()),
-            400: ResponseSchema.err,
+            200: Response.ok.schema(t.String()),
+            400: Response.err.schema,
           },
         },
       )
@@ -224,7 +222,7 @@ export const user_controller = new Elysia()
           return Response.ok("OK")
         },
         {
-          response: ResponseSchema.ok(t.String()),
+          response: Response.ok.schema(t.String()),
         },
       ),
   )

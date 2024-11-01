@@ -4326,7 +4326,7 @@ dot-prop@^8.0.2:
   dependencies:
     type-fest "^3.8.0"
 
-dotenv@^16.4.5, dotenv@^16.4.5:
+dotenv@^16.4.5:
   version "16.4.5"
   resolved "https://registry.npmmirror.com/dotenv/-/dotenv-16.4.5.tgz"
   integrity sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==
@@ -7441,7 +7441,7 @@ serve-static@^1.15.0:
     "@oslojs/encoding" "^1.1.0"
     "@touhouclouddb/utils" "packages/utils"
     dayjs "^1.11.13"
-    dotenv ""
+    dotenv "^16.4.5"
     drizzle-orm "^0.35.3"
     drizzle-typebox "^0.1.1"
     effect "^3.9.1"

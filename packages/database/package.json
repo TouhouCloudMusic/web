@@ -2,7 +2,7 @@
   "name": "@touhouclouddb/database",
   "main": "index.ts",
   "devDependencies": {
-    "@edgedb/generate": "^0.5.4",
+    "@edgedb/generate": "^0.5.4"
   },
   "peerDependencies": {
     "edgedb": "^1.5.8"

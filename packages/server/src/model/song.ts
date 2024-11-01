@@ -1,7 +1,7 @@
 import { sql } from "drizzle-orm"
 import { song } from "~/database/schema"
 import { type NewSong, type Song } from "~/database/song/typebox"
-import { type DB, db } from "~/service/database"
+import { type DB, db } from "~/service/database/connection"
 
 export class SongModel {
   private db: DB
@@ -26,11 +26,11 @@ export class SongModel {
     return (await this.db.insert(song).values(data).returning())[0]!
   }
 
-  async random(count: number) {
+  async random(count: number): Promise<Song[]> {
     return await this.db
       .select()
       .from(song)
-      .limit(count)
       .orderBy(sql`RANDOM()`)
+      .limit(count)
   }
 }
