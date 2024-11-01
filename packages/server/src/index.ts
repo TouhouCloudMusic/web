@@ -7,6 +7,7 @@ import Postgres from "postgres"
 import { Hello } from "./homepage"
 import { Response } from "./lib/response"
 import { api_router } from "./route"
+import { database_service } from "./service/database"
 import { user_controller } from "./user/controller"
 
 export const app = new Elysia()
@@ -41,6 +42,7 @@ export const app = new Elysia()
       return Response.err(500, "Database error :(")
   })
   .use(Hello)
+  .use(database_service())
   .use(user_controller)
   .use(api_router)
   .listen(process.env.PORT || 3456)

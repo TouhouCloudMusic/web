@@ -1,4 +1,5 @@
 import { drizzle } from "drizzle-orm/postgres-js"
+import Elysia from "elysia"
 import postgres from "postgres"
 import * as schema from "~/database/schema"
 
@@ -12,3 +13,8 @@ export const db = drizzle({
   schema,
   logger: true,
 })
+
+export const database_service = (_db: DB = db) =>
+  new Elysia({
+    name: "Service::Database",
+  }).decorate("db", _db)

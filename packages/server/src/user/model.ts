@@ -184,7 +184,10 @@ export class UserModel {
 }
 
 export const user_model = new Elysia()
-  .decorate("UserModel", new UserModel(db))
+  // @ts-expect-error
+  .derive(({ db }) => ({
+    UserModel: new UserModel(db as DB),
+  }))
   .model({
     "user::avatar::get": t.File(),
     "user::avatar::post": t.Object({
@@ -192,3 +195,4 @@ export const user_model = new Elysia()
     }),
     "user::profile": ResponseSchema.ok(user_profile_schema),
   })
+  .as("plugin")
