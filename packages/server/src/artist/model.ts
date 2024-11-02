@@ -161,7 +161,7 @@ export const artist_model = new Elysia({
   name: "Model::Artist",
 })
   .use(database_service)
-  .derive(({ db }) => ({
+  .decorate(({ db }) => ({
     ArtistModel: new ArtistModel(db),
   }))
   .as("plugin")

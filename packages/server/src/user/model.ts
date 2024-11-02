@@ -185,7 +185,7 @@ export const user_model = new Elysia({
   name: "Model::User",
 })
   .use(database_service)
-  .derive(({ db }) => ({
+  .decorate(({ db }) => ({
     UserModel: new UserModel(db),
   }))
   .model({
