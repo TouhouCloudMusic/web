@@ -1,5 +1,5 @@
 {
-  "id": "d8286543-51bc-4029-8d43-e919e7a0449b",
+  "id": "2f9d49b3-5212-4c11-981d-a0356f024102",
   "prevId": "d172475e-dc69-48a0-8708-f4d71e8fe51b",
   "version": "7",
   "dialect": "postgresql",
@@ -1900,6 +1900,15 @@
         "Create",
         "Update",
         "Delete"
+      ]
+    },
+    "public.release_type": {
+      "name": "release_type",
+      "schema": "public",
+      "values": [
+        "Album",
+        "EP",
+        "Single"
       ]
     }
   },
