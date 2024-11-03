@@ -1,7 +1,7 @@
 import { hash } from "@touhouclouddb/utils"
 import { describe, expect, test } from "bun:test"
 import { test_db } from "~/test/singletons"
-import { UserModel } from "./model"
+import { UserModel } from "../model/user"
 
 const TEST_USERNAME = "foo"
 const TEST_PASSWORD = "12345678"

@@ -14,8 +14,8 @@ import { Response } from "~/lib/response"
 import { ImageModel } from "~/model/image"
 import { database_service } from "~/service/database"
 import type { DB } from "~/service/database/connection"
-import { select_user_query, select_user_with_session_query } from "./query"
-import { user_profile_schema, type UserResult } from "./utils"
+import { select_user_query, select_user_with_session_query } from "../user/query"
+import { user_profile_schema, type UserResult } from "../user/utils"
 
 export class UserModel {
   constructor(private db: DB) {}

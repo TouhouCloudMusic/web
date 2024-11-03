@@ -2,7 +2,7 @@ import { eq, sql } from "drizzle-orm"
 import { type EntityType } from "~/database/queue/typebox"
 import { queue_table } from "~/database/schema"
 import { type DB } from "~/service/database/connection"
-import { UserModel } from "../user/model"
+import { UserModel } from "./user"
 
 export class QueueModel {
   constructor(private db: DB) {}

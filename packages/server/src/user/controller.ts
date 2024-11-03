@@ -7,7 +7,7 @@ import { Response } from "~/lib/response"
 import { ImageModel } from "~/model/image"
 import { SessionModel } from "~/model/session"
 import { auth_guard, auth_service, resetSessionToken } from "~/service/user"
-import { user_model } from "./model"
+import { user_model } from "../model/user"
 import { AVATAR_EXTENSION_NAME, validateAvatar } from "./utils"
 
 const AUTH_FAILED_MSG = "Incorrect username or password"
