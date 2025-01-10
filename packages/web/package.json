@@ -42,7 +42,7 @@
     "string-similarity-js": "^2.1.4",
     "tailwind-merge": "^2.5.2",
     "ts-pattern": "^5.4.0",
-    "valibot": "0.38.0",
+    "valibot": "0.42.1",
     "vinxi": "^0.4.3"
   },
   "devDependencies": {
