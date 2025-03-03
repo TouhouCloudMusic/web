@@ -13,7 +13,7 @@
     "@auth/core": "^0.35.2",
     "@floating-ui/dom": "^1.6.11",
     "@kobalte/core": "^0.13.6",
-    "@modular-forms/solid": "^0.23.0",
+    "@modular-forms/solid": "^0.25.1",
     "@solid-primitives/destructure": "^0.1.17",
     "@solid-primitives/i18n": "^2.1.1",
     "@solidjs/meta": "^0.29.4",
