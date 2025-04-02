@@ -1,0 +1,44 @@
+name: 📝 Todo Task
+description: 用于创建开发/实现任务，会自动添加标签并创建分支
+title: "[Task]: "
+labels: ["Todo Task"]
+assignees:
+  - your-github-username  # 可选
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请尽量详细描述这个任务的内容、背景和目标。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📋 任务描述
+      description: 说明这个任务需要做什么，为什么要做
+      placeholder: 比如：为用户系统添加注册功能……
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: ✅ 实施建议或步骤
+      description: 如果你有想法或步骤，请列出来
+      placeholder: |
+        1. 添加路由
+        2. 编写 controller
+        3. 编写测试
+
+  - type: input
+    id: related
+    attributes:
+      label: 🔗 相关 issue/PR（如有）
+      placeholder: #123
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 🚦 优先级
+      options:
+        - 高
+        - 中
+        - 低
