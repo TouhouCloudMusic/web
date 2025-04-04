@@ -17,6 +17,9 @@ import {
 import { twMerge } from "tailwind-merge"
 import { Button, type Props } from "~/components/button"
 
+// 为啥这地方原来没有导出。？
+export type RootProps = K_DialogRootProps
+
 export const Root = Dialog.Root
 
 export const Trigger = Dialog.Trigger
