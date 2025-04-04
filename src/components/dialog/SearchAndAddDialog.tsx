@@ -1,6 +1,7 @@
 import { For, type JSX, type ParentProps } from "solid-js"
 import { Cross2Icon, MagnifyingGlassIcon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
+import { createSignal, createMemo } from "solid-js"
 
 import { Button } from "../button/index.tsx"
 import { TextField } from "../form/index.tsx"
@@ -17,6 +18,13 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
     title: JSX.Element
   },
 ) {
+  const [searchQuery, setSearchQuery] = createSignal("")
+  const filteredData = createMemo(() =>
+    props.data.filter((item) =>
+      JSON.stringify(item).toLowerCase().includes(searchQuery().toLowerCase())
+    )
+  )
+
   const onSubmit = (e: Event) => {
     e.preventDefault()
     props.onSubmit?.()
@@ -53,12 +61,13 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
                 TextField.Input.className,
                 `border-0 bg-slate-100 pl-8 ring-0`,
               )}
+              onInput={(e) => setSearchQuery(e.currentTarget.value)}
             />
           </form>
         </div>
 
         <ul class="bg-secondary border-y-1.5 overflow-auto border-slate-200">
-          <For each={props.data}>
+          <For each={filteredData()}>
             {(data) => (
               <li class="bg-primary border-y-1.5 border-slate-200 px-4">
                 <props.listItem data={data} />
