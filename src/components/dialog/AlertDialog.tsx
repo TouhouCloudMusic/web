@@ -30,7 +30,7 @@ export function AlertDialog(props: AlertDialogProps) {
           <Dialog.Title class="text-lg">{props.title}</Dialog.Title>
           <Dialog.Description>{props.description}</Dialog.Description>
         </div>
-        <div class="flex gap-2">
+        <Dialog.Action>
           <Show when={!props.hideCancel}>
             <Dialog.CloseButton
               class="ml-auto"
@@ -47,7 +47,7 @@ export function AlertDialog(props: AlertDialogProps) {
           >
             {props.confirmText ?? "确定"}
           </Button>
-        </div>
+        </Dialog.Action>
       </Dialog.Content>
     </Dialog.Layout>
   )

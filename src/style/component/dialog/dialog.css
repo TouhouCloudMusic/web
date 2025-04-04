@@ -1,0 +1,14 @@
+@import "tailwindcss";
+.dialog__content {
+	animation: scaleFadeOut 200ms ease;
+}
+.dialog__content[data-expanded] {
+	animation: scaleFadeIn 200ms ease;
+}
+
+.dialog__overlay {
+	animation: fadeOut 200ms ease;
+}
+.dialog__overlay[data-expanded] {
+	animation: fadeIn 200ms ease;
+}

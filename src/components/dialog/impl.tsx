@@ -29,7 +29,7 @@ export const Portal = Dialog.Portal
 export const Overlay = <T extends ValidComponent = "div">(
   props: PolymorphicProps<T, DialogOverlayProps<T>>,
 ) => {
-  const CLASS = "fixed inset-0 z-50 bg-slate-900/10"
+  const CLASS = "dialog__overlay fixed inset-0 z-50 bg-slate-900/10"
 
   let class_name = createMemo(() => twMerge(CLASS, props["class"]))
 
@@ -45,7 +45,7 @@ export function Content<T extends ValidComponent = "div">(
   props: PolymorphicProps<T, DialogContentProps<T>>,
 ) {
   const CLASS =
-    "bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300"
+    "dialog__content bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300"
 
   let class_name = createMemo(() => twMerge(CLASS, props["class"]))
 
@@ -76,7 +76,7 @@ export function CloseButton(props: CloseButtonProps) {
 export function Title<T extends ValidComponent = "h2">(
   props: PolymorphicProps<T, DialogTitleProps<T>>,
 ) {
-  const CLASS = "font-medium"
+  const CLASS = "dialog__title font-medium"
 
   let class_name = createMemo(() => twMerge(CLASS, props["class"]))
 
@@ -91,7 +91,7 @@ export function Title<T extends ValidComponent = "h2">(
 export function Description<T extends ValidComponent = "p">(
   props: PolymorphicProps<T, DialogDescriptionProps<T>>,
 ) {
-  const CLASS = "mt-2 pr-2 text-sm text-gray-800"
+  const CLASS = "dialog__description mt-2 pr-2 text-sm text-gray-800"
 
   let class_name = createMemo(() => twMerge(CLASS, props["class"]))
 
@@ -101,6 +101,22 @@ export function Description<T extends ValidComponent = "p">(
       class={class_name()}
     />
   )
+}
+
+export function Action<T extends ValidComponent = "div">(
+  props: ParentProps<PolymorphicProps<T>>
+) {
+  if (!props.children) return null;
+
+  const CLASS = "dialog__action gap-2 flex justify-end";
+
+  let class_name = createMemo(() => twMerge(CLASS, props["class"]));
+
+  return (
+    <div class={class_name()}>
+      {props.children}
+    </div>
+  );
 }
 
 type LayoutProps = ParentProps &
