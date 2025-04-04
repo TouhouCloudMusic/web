@@ -13,12 +13,17 @@ import {
   type ParentProps,
   splitProps,
   type ValidComponent,
+  createSignal,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button, type Props } from "~/components/button"
 
-// 为啥这地方原来没有导出。？
-export type RootProps = K_DialogRootProps
+
+export type RootProps = ParentProps & K_DialogRootProps & {
+  trigger: JSX.Element,
+  backdropBlur?: boolean | undefined,
+  placement?: "Top" | "Middle" | "Bottom"
+}
 
 export const Root = Dialog.Root
 
@@ -27,11 +32,11 @@ export const Trigger = Dialog.Trigger
 export const Portal = Dialog.Portal
 
 export const Overlay = <T extends ValidComponent = "div">(
-  props: PolymorphicProps<T, DialogOverlayProps<T>>,
+  props: PolymorphicProps<T, DialogOverlayProps<T>> & { backdropBlur?: boolean },
 ) => {
-  const CLASS = "dialog__overlay fixed inset-0 z-50 bg-slate-900/10"
+  const CLASS = "dialog__overlay fixed inset-0 z-50 bg-slate-900/20"
 
-  let class_name = createMemo(() => twMerge(CLASS, props["class"]))
+  let class_name = createMemo(() => twMerge(CLASS, props["class"], props.backdropBlur ? "dialog__blur" : ""))
 
   return (
     <Dialog.Overlay
@@ -42,16 +47,30 @@ export const Overlay = <T extends ValidComponent = "div">(
 }
 
 export function Content<T extends ValidComponent = "div">(
-  props: PolymorphicProps<T, DialogContentProps<T>>,
+  props: PolymorphicProps<T, DialogContentProps<T>> & { 
+    dismissible?: boolean | undefined, 
+    placement?: "Top" | "Middle" | "Bottom", 
+  },
 ) {
+  const placementClass = props.placement === "Top" ? "dialog__top mt-0 !w-full" : 
+                         props.placement === "Bottom" ? "dialog__bottom mb-0 !w-full" : ""
+
   const CLASS =
     "dialog__content bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300"
 
-  let class_name = createMemo(() => twMerge(CLASS, props["class"]))
+  let class_name = createMemo(() => twMerge(CLASS, props["class"], placementClass))
+
+  const handleDismiss = (event: PointerEvent) => {
+    if (props.dismissible === false) {
+      event.preventDefault();
+    }
+  }
 
   return (
     <Dialog.Content
       {...props}
+      onPointerDownOutside={handleDismiss}
+      onEscapeKeyDown={handleDismiss}
       class={class_name()}
     />
   )
@@ -119,10 +138,6 @@ export function Action<T extends ValidComponent = "div">(
   );
 }
 
-type LayoutProps = ParentProps &
-  K_DialogRootProps & {
-    trigger: JSX.Element
-  }
 
 /**
  * A pre-made dialog layout
@@ -140,15 +155,16 @@ type LayoutProps = ParentProps &
  * </Dialog.Layout>
  * ```
  */
-export function Layout(props: LayoutProps) {
-  let [_, root_props] = splitProps(props, ["children", "trigger"])
+export function Layout(props: RootProps) {
+  let [_, root_props] = splitProps(props, ["children", "trigger", "backdropBlur"]);
+
   return (
     <Root {...root_props}>
       <Trigger>{props.trigger}</Trigger>
       <Portal>
-        <Overlay />
+        <Overlay backdropBlur={props.backdropBlur ?? false} />
         {props.children}
       </Portal>
     </Root>
-  )
+  );
 }

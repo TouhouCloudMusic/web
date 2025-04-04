@@ -15,17 +15,26 @@ export interface AlertDialogProps extends Dialog.RootProps {
   cancelText?: string
   confirmText?: string
   hideCancel?: boolean
+  dismissible?: boolean
+  backdropBlur?: boolean
+  placement?: "Top" | "Middle" | "Bottom"
 }
 
 export function AlertDialog(props: AlertDialogProps) {
+
   return (
     <Dialog.Layout
+      {...props}
       trigger={props.trigger}
       open={props.open!}
       defaultOpen={props.defaultOpen!}
       onOpenChange={props.onOpenChange!}
+      backdropBlur={props.backdropBlur}
     >
-      <Dialog.Content class="h-48 w-96 flex flex-col place-content-between">
+      <Dialog.Content 
+        class={`h-48 w-96 flex flex-col place-content-between shadow-2`} 
+        dismissible={props.dismissible} 
+        placement={props.placement ?? "Middle"}>
         <div>
           <Dialog.Title class="text-lg">{props.title}</Dialog.Title>
           <Dialog.Description>{props.description}</Dialog.Description>

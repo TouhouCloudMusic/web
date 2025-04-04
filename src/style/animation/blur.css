@@ -1,0 +1,20 @@
+@keyframes blurIn {
+	from {
+		backdrop-filter: blur(0px);
+		opacity: 0;
+	}
+	to {
+		backdrop-filter: blur(10px);
+		opacity: 1;
+	}
+}
+@keyframes blurOut {
+	from {
+		backdrop-filter: blur(10px);
+		opacity: 1;
+	}
+	to {
+		backdrop-filter: blur(0px);
+		opacity: 0;
+	}
+}
