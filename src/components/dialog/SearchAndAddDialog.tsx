@@ -19,6 +19,7 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
   },
 ) {
   const [searchQuery, setSearchQuery] = createSignal("")
+  const [open, setOpen] = createSignal(false);
   const filteredData = createMemo(() =>
     props.data.filter((item) =>
       JSON.stringify(item).toLowerCase().includes(searchQuery().toLowerCase())
@@ -32,9 +33,11 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
 
   return (
     <Dialog.Layout
+      open={open()}
       defaultOpen={props.defaultOpen ?? false}
       trigger={
         <Button
+          on:click={() => setOpen(true)}
           variant="Tertiary"
           size="Xs"
           class="aspect-square p-1.5"
@@ -66,7 +69,7 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
           </form>
         </div>
 
-        <ul class="bg-secondary border-y-1.5 overflow-auto border-slate-200">
+        <ul class="px-4 border-y-1.5 overflow-auto w-full">
           <For each={filteredData()}>
             {(data) => (
               <li class="bg-primary border-y-1.5 border-slate-200 px-4">
