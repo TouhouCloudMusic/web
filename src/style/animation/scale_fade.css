@@ -1,12 +1,6 @@
 @theme {
-  --scale-fade-in-duration: 200ms;
-  --scale-fade-out-duration: var(--scale-fade-in-duration);
-  --scale-fade-in-method: ease;
-  --scale-fade-out-method: var(--scale-fade-in-method);
-  --animate-scale-fade-in: scale-fade-in var(--scale-fade-in-duration)
-    var(--scale-fade-in-method);
-  --animate-scale-fade-out: scale-fade-out var(--scale-fade-out-duration)
-    var(--scale-fade-out-method);
+  --animate-scale-fade-in: scale-fade-in 200ms ease;
+  --animate-scale-fade-out: scale-fade-out 200ms ease;
 
   @keyframes scale-fade-in {
     from {

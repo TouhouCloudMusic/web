@@ -1,5 +1,5 @@
 @theme {
-  @keyframes fadeSwipeUpIn {
+  @keyframes fade-swipe-up-in {
     from {
       opacity: 0;
       transform: translateY(100%);
@@ -9,7 +9,7 @@
       transform: translateY(0);
     }
   }
-  @keyframes fadeSwipeUpOut {
+  @keyframes fade-swipe-up-out {
     from {
       opacity: 1;
       transform: translateY(0);
