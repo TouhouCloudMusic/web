@@ -33,7 +33,8 @@ export function Overlay<T extends ValidComponent = "div">(
 ) {
   const CLASS = `
     fixed inset-0 z-50 bg-slate-900/20
-    animate-fade-in data-expand:animate-fade-out
+    opacity-0 data-expanded:opacity-100
+    animate-fade-out data-expanded:animate-fade-in
     data-blur:backdrop-blur-none data-blur:data-expanded:backdrop-blur-2xs
     data-blur:animate-blur-out data-blur:data-expanded:animate-blur-in
     `
