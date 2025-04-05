@@ -16,7 +16,7 @@ const meta = {
       control: "boolean",
       description: "是否可通过点击外部或按下Esc键关闭",
     },
-    blur: { control: "boolean", description: "是否应用背景模糊效果" },
+    backgroundBlur: { control: "boolean", description: "是否应用背景模糊效果" },
     onConfirm: { action: "confirmed", description: "确认按钮点击回调" },
     onCancel: { action: "closed", description: "关闭对话框回调" },
   },
