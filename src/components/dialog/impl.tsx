@@ -7,26 +7,14 @@ import {
   type DialogTitleProps,
   type DialogRootProps,
 } from "@kobalte/core/dialog"
-import {
-  createContext,
-  type JSX,
-  mergeProps,
-  splitProps,
-  type ValidComponent,
-} from "solid-js"
+import { type JSX, mergeProps, splitProps, type ValidComponent } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button } from "~/components/button"
-import { useContextUnsave } from "~/lib/context"
 
-export type RootProps = DialogRootProps & Context
-type Context = {
-  blur?: boolean | undefined
-}
-
-const Context = createContext<Context>()
+export type RootProps = DialogRootProps
 
 export function Root(props: RootProps) {
-  return <Context.Provider value={props}>{props.children}</Context.Provider>
+  return <Dialog.Root>{props.children}</Dialog.Root>
 }
 
 export const Trigger = Dialog.Trigger
@@ -36,28 +24,23 @@ export const Portal = Dialog.Portal
 export type OverlayProps<T extends ValidComponent> = PolymorphicProps<
   T,
   DialogOverlayProps<T>
->
+> & {
+  "data-blur"?: boolean | undefined
+}
 
 export function Overlay<T extends ValidComponent = "div">(
   props: OverlayProps<T>,
 ) {
   const CLASS = `
     fixed inset-0 z-50 bg-slate-900/20
-    animate-fade-out data-expand:animate-fade-in
+    animate-fade-in data-expand:animate-fade-out
+    data-blur:backdrop-blur-none data-blur:data-expanded:backdrop-blur-2xs
+    data-blur:animate-blur-out data-blur:data-expanded:animate-blur-in
     `
-  let context = useContextUnsave(Context)
 
   let local_props = mergeProps(props, {
     get class() {
-      return twMerge(
-        CLASS,
-        props["class"],
-        context.blur &&
-          `
-          backdrop-blur-none data-expand:backdrop-blur-md
-          animate-blur-in data-expand:animate-blur-out
-          `,
-      )
+      return twMerge(CLASS, props["class"])
     },
   })
 
@@ -74,7 +57,7 @@ export function Content<T extends ValidComponent = "div">(
 ) {
   const CLASS = `
   bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300
-  animate-scale-fade-in data-expand:animate-scale-fade-out
+  animate-scale-fade-out data-expanded:animate-scale-fade-in
   `
 
   let local_props = mergeProps(props, {
@@ -129,12 +112,13 @@ export function Description<T extends ValidComponent = "p">(
 
 export type LayoutProps = RootProps & {
   trigger: JSX.Element
+  backgroundBlur?: boolean | undefined
 }
 /**
  * A pre-made dialog layout
  *
  * @example
- * ```tsx
+ * ```typescriptreact
  * <Dialog.Layout
  *     trigger={<Button><PlusIcon /></Button>}
  * >
@@ -153,7 +137,7 @@ export function Layout(props: LayoutProps) {
     <Root {...root_props}>
       <Trigger>{props.trigger}</Trigger>
       <Portal>
-        <Overlay />
+        <Overlay data-blur={props.backgroundBlur} />
         {props.children}
       </Portal>
     </Root>

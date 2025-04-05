@@ -169,7 +169,7 @@ export const BackdropBlurExample: Story = {
           open={open()}
           onOpenChange={setOpen}
           trigger={<Button variant="Primary">背景模糊对话框</Button>}
-          blur={true}
+          backgroundBlur={true}
         />
       </>
     )

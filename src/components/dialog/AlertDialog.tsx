@@ -11,12 +11,12 @@ export interface AlertDialogProps extends Dialog.LayoutProps {
   cancelText?: string
   confirmText?: string
   hideCancel?: boolean
-  dismissible?: boolean
+  dismissible?: boolean | undefined
 }
 
 export function AlertDialog(props: AlertDialogProps) {
   let handleDismiss = (e: Event) => {
-    if (props.dismissible) {
+    if (props.dismissible === false) {
       e.preventDefault()
     }
   }
@@ -27,7 +27,6 @@ export function AlertDialog(props: AlertDialogProps) {
       open={props.open!}
       defaultOpen={props.defaultOpen!}
       onOpenChange={props.onOpenChange!}
-      blur={props.blur}
     >
       <Dialog.Content
         class={`shadow-2 flex h-48 w-96 flex-col place-content-between`}

@@ -1,8 +1,12 @@
 @theme {
   --blur-in-duration: 200ms;
-  --blur-out-duration: var(--blur-in-duration);
   --blur-in-method: ease;
+  --blur-in-backdrop-blur: 2px;
+
+  --blur-out-duration: var(--blur-in-duration);
   --blur-out-method: var(--blur-in-method);
+  --blur-out-backdrop-blur: 2px;
+
   --animate-blur-in: blur-in var(--blur-in-duration) var(--blur-in-method);
   --animate-blur-out: blur-out var(--blur-out-duration) var(--blur-out-method);
 
@@ -12,13 +16,13 @@
       opacity: 0;
     }
     to {
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(var(--blur-in-backdrop-blur));
       opacity: 1;
     }
   }
   @keyframes blur-out {
     from {
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(var(--blur-out-backdrop-blur));
       opacity: 1;
     }
     to {
