@@ -1,11 +1,11 @@
 import { For, type JSX, type ParentProps } from "solid-js"
+import { createSignal, createMemo } from "solid-js"
 import { Cross2Icon, MagnifyingGlassIcon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
-import { createSignal, createMemo } from "solid-js"
 
+import { Dialog } from "."
 import { Button } from "../button/index.tsx"
 import { TextField } from "../form/index.tsx"
-import { Dialog } from "."
 
 export function SearchAndAddDialog<T extends Record<string, unknown>>(
   props: ParentProps & {
@@ -19,11 +19,11 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
   },
 ) {
   const [searchQuery, setSearchQuery] = createSignal("")
-  const [open, setOpen] = createSignal(false);
+  const [open, setOpen] = createSignal(false)
   const filteredData = createMemo(() =>
     props.data.filter((item) =>
-      JSON.stringify(item).toLowerCase().includes(searchQuery().toLowerCase())
-    )
+      JSON.stringify(item).toLowerCase().includes(searchQuery().toLowerCase()),
+    ),
   )
 
   const onSubmit = (e: Event) => {
@@ -56,9 +56,9 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
         <div class="mx-4">
           <form
             onSubmit={onSubmit}
-            class="relative mb-6 mt-3 grid grid-rows-1"
+            class="relative mt-3 mb-6 grid grid-rows-1"
           >
-            <MagnifyingGlassIcon class="text-tertiary absolute mx-auto size-4 w-8 self-center" />
+            <MagnifyingGlassIcon class="absolute mx-auto size-4 w-8 self-center text-tertiary" />
             <input
               class={twMerge(
                 TextField.Input.className,
@@ -69,10 +69,10 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
           </form>
         </div>
 
-        <ul class="px-4 border-y-1.5 overflow-auto w-full">
+        <ul class="border-y-1.5 w-full overflow-auto px-4">
           <For each={filteredData()}>
             {(data) => (
-              <li class="bg-primary border-y-1.5 border-slate-200 px-4">
+              <li class="border-y-1.5 border-slate-200 bg-primary px-4">
                 <props.listItem data={data} />
               </li>
             )}
