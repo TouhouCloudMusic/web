@@ -13,7 +13,6 @@ import {
   type ParentProps,
   splitProps,
   type ValidComponent,
-  createSignal,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button, type Props } from "~/components/button"
@@ -52,13 +51,15 @@ export function Content<T extends ValidComponent = "div">(
     placement?: "Top" | "Middle" | "Bottom", 
   },
 ) {
-  const placementClass = props.placement === "Top" ? "dialog__top mt-0 !w-full" : 
-                         props.placement === "Bottom" ? "dialog__bottom mb-0 !w-full" : ""
+  const placementClass = createMemo(() => 
+    props.placement === "Top" ? "dialog__top mt-0 !w-full" : 
+    props.placement === "Bottom" ? "dialog__bottom mb-0 !w-full" : ""
+  )
 
   const CLASS =
     "dialog__content bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300"
 
-  let class_name = createMemo(() => twMerge(CLASS, props["class"], placementClass))
+  let class_name = createMemo(() => twMerge(CLASS, props["class"], placementClass()))
 
   const handleDismiss = (event: PointerEvent) => {
     if (props.dismissible === false) {
@@ -125,7 +126,6 @@ export function Description<T extends ValidComponent = "p">(
 export function Action<T extends ValidComponent = "div">(
   props: ParentProps<PolymorphicProps<T>>
 ) {
-  if (!props.children) return null;
 
   const CLASS = "dialog__action gap-2 flex justify-end";
 
