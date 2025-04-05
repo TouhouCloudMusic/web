@@ -119,7 +119,7 @@ export type LayoutProps = RootProps & {
  * A pre-made dialog layout
  *
  * @example
- * ```typescriptreact
+ * ```tsx
  * <Dialog.Layout
  *     trigger={<Button><PlusIcon /></Button>}
  * >
