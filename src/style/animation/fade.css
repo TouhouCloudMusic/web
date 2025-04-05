@@ -1,16 +1,25 @@
-@keyframes fadeIn {
-	from {
-		opacity: 0;
-	}
-	to {
-		opacity: 1;
-	}
-}
-@keyframes fadeOut {
-	from {
-		opacity: 1;
-	}
-	to {
-		opacity: 0;
-	}
+@theme {
+  --fade-in-duration: 200ms;
+  --fade-out-duration: var(--fade-in-duration);
+  --fade-in-method: ease;
+  --fade-out-method: var(--fade-in-method);
+  --animate-fade-in: fade-in var(--fade-in-duration) var(--fade-in-method);
+  --animate-fade-out: fade-out var(--fade-out-duration) var(--fade-out-method);
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
 }

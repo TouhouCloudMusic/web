@@ -1,13 +1,9 @@
-import { type JSX, Show } from "solid-js"
+import { Show } from "solid-js"
 
 import { Dialog } from "."
 import { Button } from "../button"
 
-export interface AlertDialogProps extends Dialog.RootProps {
-  /**
-   * Trigger element of the dialog, doesn't need to be wrapped in `Dialog.Trigger`
-   */
-  trigger: JSX.Element
+export interface AlertDialogProps extends Dialog.LayoutProps {
   title: string
   description: string
   onCancel: () => void
@@ -16,12 +12,14 @@ export interface AlertDialogProps extends Dialog.RootProps {
   confirmText?: string
   hideCancel?: boolean
   dismissible?: boolean
-  backdropBlur?: boolean
-  placement?: "Top" | "Middle" | "Bottom"
 }
 
 export function AlertDialog(props: AlertDialogProps) {
-
+  let handleDismiss = (e: Event) => {
+    if (props.dismissible) {
+      e.preventDefault()
+    }
+  }
   return (
     <Dialog.Layout
       {...props}
@@ -29,17 +27,18 @@ export function AlertDialog(props: AlertDialogProps) {
       open={props.open!}
       defaultOpen={props.defaultOpen!}
       onOpenChange={props.onOpenChange!}
-      backdropBlur={props.backdropBlur}
+      blur={props.blur}
     >
-      <Dialog.Content 
-        class={`h-48 w-96 flex flex-col place-content-between shadow-2`} 
-        dismissible={props.dismissible} 
-        placement={props.placement ?? "Middle"}>
+      <Dialog.Content
+        class={`shadow-2 flex h-48 w-96 flex-col place-content-between`}
+        onPointerDownOutside={handleDismiss}
+        onEscapeKeyDown={handleDismiss}
+      >
         <div>
           <Dialog.Title class="text-lg">{props.title}</Dialog.Title>
           <Dialog.Description>{props.description}</Dialog.Description>
         </div>
-        <Dialog.Action>
+        <div class="flex justify-end gap-2">
           <Show when={!props.hideCancel}>
             <Dialog.CloseButton
               class="ml-auto"
@@ -56,7 +55,7 @@ export function AlertDialog(props: AlertDialogProps) {
           >
             {props.confirmText ?? "确定"}
           </Button>
-        </Dialog.Action>
+        </div>
       </Dialog.Content>
     </Dialog.Layout>
   )

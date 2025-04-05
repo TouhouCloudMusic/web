@@ -1,20 +1,32 @@
-@keyframes scaleFadeIn {
-	from {
-		scale: 1.1;
-		opacity: 0;
-	}
-	to {
-		scale: 1;
-		opacity: 1;
-	}
-}
-@keyframes scaleFadeOut {
-	from {
-		scale: 1;
-		opacity: 1;
-	}
-	to {
-		scale: 1.1;
-		opacity: 0;
-	}
+@theme {
+  --scale-fade-in-duration: 200ms;
+  --scale-fade-out-duration: var(--scale-fade-in-duration);
+  --scale-fade-in-method: ease;
+  --scale-fade-out-method: var(--scale-fade-in-method);
+  --animate-scale-fade-in: scale-fade-in var(--scale-fade-in-duration)
+    var(--scale-fade-in-method);
+  --animate-scale-fade-out: scale-fade-out var(--scale-fade-out-duration)
+    var(--scale-fade-out-method);
+
+  @keyframes scale-fade-in {
+    from {
+      scale: 1.1;
+      opacity: 0;
+    }
+    to {
+      scale: 1;
+      opacity: 1;
+    }
+  }
+
+  @keyframes scale-fade-out {
+    from {
+      scale: 1;
+      opacity: 1;
+    }
+    to {
+      scale: 1.1;
+      opacity: 0;
+    }
+  }
 }

@@ -1,20 +1,29 @@
-@keyframes blurIn {
-	from {
-		backdrop-filter: blur(0px);
-		opacity: 0;
-	}
-	to {
-		backdrop-filter: blur(10px);
-		opacity: 1;
-	}
-}
-@keyframes blurOut {
-	from {
-		backdrop-filter: blur(10px);
-		opacity: 1;
-	}
-	to {
-		backdrop-filter: blur(0px);
-		opacity: 0;
-	}
+@theme {
+  --blur-in-duration: 200ms;
+  --blur-out-duration: var(--blur-in-duration);
+  --blur-in-method: ease;
+  --blur-out-method: var(--blur-in-method);
+  --animate-blur-in: blur-in var(--blur-in-duration) var(--blur-in-method);
+  --animate-blur-out: blur-out var(--blur-out-duration) var(--blur-out-method);
+
+  @keyframes blur-in {
+    from {
+      backdrop-filter: blur(0px);
+      opacity: 0;
+    }
+    to {
+      backdrop-filter: blur(8px);
+      opacity: 1;
+    }
+  }
+  @keyframes blur-out {
+    from {
+      backdrop-filter: blur(8px);
+      opacity: 1;
+    }
+    to {
+      backdrop-filter: blur(0px);
+      opacity: 0;
+    }
+  }
 }
