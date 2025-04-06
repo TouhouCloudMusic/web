@@ -1,7 +1,6 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { FileField } from "@kobalte/core/file-field"
 import { createForm, valiForm } from "@modular-forms/solid"
-import "cropperjs"
 import {
   createEffect,
   createMemo,
@@ -25,7 +24,6 @@ import { type components } from "~/data/openapi"
 import { useUserCtx } from "~/state/user"
 import { type Replace } from "~/types"
 import { type SatisfyValibotSchema as GenericValibotSchema } from "~/types/valibot"
-import { createCropperBoundary } from "~/utils/adapter/cropper"
 import { createClickOutside } from "~/utils/createClickOutside"
 
 export function EditProfile() {
@@ -199,44 +197,11 @@ export function UploadAvatarFormContent(props: {
 function UploadAvatarFormCanvas(props: { file: File }) {
   let url = createMemo(() => {
     let url = window.URL.createObjectURL(props.file)
-
     onCleanup(() => window.URL.revokeObjectURL(url))
-
     return url
   })
 
-  let store = createCropperBoundary("image")
-
   return (
-    <cropper-canvas
-      background
-      class="size-88"
-      ref={store.setCanvasRef}
-    >
-      <cropper-image
-        src={url()}
-        alt="TODO"
-        scalable
-        rotatable
-        translatable
-        skewable
-        ref={store.setImageRef}
-      ></cropper-image>
-      <cropper-shade hidden></cropper-shade>
-
-      <cropper-selection
-        aspect-ratio={1}
-        initial-coverage={0.75}
-        keyboard
-        precise
-        // dynamic
-        ref={store.setSelectionRef}
-      >
-        <cropper-handle
-          action="move"
-          plain
-        ></cropper-handle>
-      </cropper-selection>
-    </cropper-canvas>
+    <div id="croppie-container" class="size-88"></div>
   )
 }

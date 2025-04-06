@@ -1,4 +1,5 @@
 @theme {
+  --blur-in-backdrop-blur: 2px;
   --animate-blur-in: blur-in 200ms ease;
   --animate-blur-out: blur-out 200ms ease;
 

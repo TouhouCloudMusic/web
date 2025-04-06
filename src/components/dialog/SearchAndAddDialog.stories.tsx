@@ -28,7 +28,10 @@ export const Default: Story = {
           {...args}
           listItem={listItem}
           defaultOpen={open()}
-          onSubmit={() => alert("Submitted")}
+          onSubmit={() => {
+            console.log("Submitted")
+            open()
+          }}
         />
       </>
     );

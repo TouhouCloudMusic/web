@@ -7,7 +7,12 @@ import {
   type DialogTitleProps,
   type DialogRootProps,
 } from "@kobalte/core/dialog"
-import { type JSX, mergeProps, splitProps, type ValidComponent } from "solid-js"
+import { 
+  type JSX, 
+  mergeProps, 
+  splitProps, 
+  type ValidComponent 
+} from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button } from "~/components/button"
 
@@ -57,7 +62,8 @@ export function Content<T extends ValidComponent = "div">(
   props: ContentProps<T>,
 ) {
   const CLASS = `
-  bg-primary fixed inset-0 z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300
+  bg-primary fixed z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300
+  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
   animate-scale-fade-out data-expanded:animate-scale-fade-in
   `
 

@@ -22,7 +22,7 @@ export function ResetFieldDialogTrigger(props: {
       }
       title="Reset field?"
       description="This cannot be undone."
-      onCancel={() => {}}
+      onCancel={() => {console.log("Cancel")}}
       onConfirm={props.onReset}
       cancelText="No"
       confirmText="Reset"
