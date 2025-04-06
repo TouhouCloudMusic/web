@@ -44,7 +44,12 @@ const ReplaceTest2: ReplaceTest2 extends number & File ? true : false = true
 type ReplaceTest3 = ReplaceInIntersection<number | Blob, Blob, File>
 const ReplaceTest3: ReplaceTest3 extends number | File ? true : false = true
 
-
 export interface TypeError<T extends string> {
   readonly __typeError__: T
+}
+
+export type NestedPartial<T> = {
+  [K in keyof T]?: NonNullable<T[K]> extends Record<string, unknown> ?
+    NestedPartial<NonNullable<T[K]>>
+  : NonNullable<T[K]> | undefined
 }
