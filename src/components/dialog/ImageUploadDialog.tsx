@@ -7,12 +7,17 @@ export type ImageUploadDialogProps = {
   title: JSX.Element
   trigger: JSX.Element
   open: boolean
+  /** sync the internal state of the dialog component */
+  syncOpen: (state: boolean) => void
   onImageSave: ImageDropProps["onSave"]
 }
 
 export function ImageUploadDialog(props: ImageUploadDialogProps) {
   return (
-    <Dialog.Root open={props.open}>
+    <Dialog.Root
+      open={props.open}
+      onOpenChange={props.syncOpen}
+    >
       {props.trigger}
       <Dialog.Portal>
         <Dialog.Overlay />

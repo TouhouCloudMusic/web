@@ -33,15 +33,9 @@ export const Default: Story = {
     return (
       <ImageUploadDialog
         {...args}
-        trigger={
-          <Dialog.Trigger
-            as={Button}
-            onClick={() => setOpen(true)}
-          >
-            Upload Image
-          </Dialog.Trigger>
-        }
+        trigger={<Dialog.Trigger as={Button}>Upload Image</Dialog.Trigger>}
         open={open()}
+        syncOpen={setOpen}
         onImageSave={(base64) => {
           logImage(base64)
         }}
@@ -55,9 +49,12 @@ export const Default: Story = {
 
 export const CustomTitle: Story = {
   render: (args) => {
+    const [open, setOpen] = createSignal(false)
     return (
       <ImageUploadDialog
         {...args}
+        open={open()}
+        syncOpen={setOpen}
         trigger={<Button>Upload Banner Image</Button>}
       />
     )
