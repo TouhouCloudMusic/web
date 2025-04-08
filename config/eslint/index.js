@@ -123,7 +123,7 @@ function reactiveRules() {
     "solid/reactivity": [
       "error",
       {
-        customReactiveFunctions: ["createCroppie"],
+        customReactiveFunctions: [],
       },
     ],
   }

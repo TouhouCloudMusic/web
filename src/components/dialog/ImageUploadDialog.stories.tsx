@@ -1,6 +1,8 @@
 import { createSignal } from "solid-js"
 import { type Meta, type StoryObj } from "storybook-solidjs"
+import { logImage } from "~/utils/log"
 
+import { Dialog } from "."
 import { Button } from "../button"
 import { ImageUploadDialog } from "./ImageUploadDialog"
 
@@ -8,15 +10,15 @@ const meta = {
   component: ImageUploadDialog,
   tags: ["autodocs"],
   argTypes: {
-    title: { control: "text", description: "Dialog title" },
-    open: { control: "boolean", description: "Controls dialog visibility" },
-    onOpenChange: {
-      action: "closed",
-      description: "Called when dialog is closed",
+    title: { control: "text", description: "The display title of the dialog" },
+    open: {
+      control: "boolean",
+      description: "The open state of the dialog",
     },
-    saveImage: {
+
+    onImageSave: {
       action: "image saved",
-      description: "Called when image is saved",
+      description: "The callback when the image is saved",
     },
   },
 } satisfies Meta<typeof ImageUploadDialog>
@@ -27,38 +29,36 @@ type Story = StoryObj<typeof ImageUploadDialog>
 export const Default: Story = {
   render: (args) => {
     const [open, setOpen] = createSignal(false)
-    const close = () => {
-      console.log("Close")
-      setOpen(false)
-    }
 
     return (
       <ImageUploadDialog
         {...args}
-        trigger={<Button>Upload Image</Button>}
+        trigger={
+          <Dialog.Trigger
+            as={Button}
+            onClick={() => setOpen(true)}
+          >
+            Upload Image
+          </Dialog.Trigger>
+        }
         open={open()}
-        onOpenChange={() => close()}
-        saveImage={(state) => {
-          console.log("Image saved:", state)
+        onImageSave={(base64) => {
+          logImage(base64)
         }}
       />
     )
   },
   args: {
-    title: "Upload Profile Picture",
+    title: "Upload Avatar",
   },
 }
 
 export const CustomTitle: Story = {
   render: (args) => {
-    const [isOpen, setIsOpen] = createSignal(false)
-
     return (
       <ImageUploadDialog
         {...args}
         trigger={<Button>Upload Banner Image</Button>}
-        open={isOpen()}
-        onOpenChange={() => setIsOpen(false)}
       />
     )
   },

@@ -6,12 +6,13 @@ import {
   type DialogOverlayProps,
   type DialogTitleProps,
   type DialogRootProps,
+  type DialogTriggerProps,
 } from "@kobalte/core/dialog"
-import { 
-  type JSX, 
-  mergeProps, 
-  splitProps, 
-  type ValidComponent 
+import {
+  createEffect,
+  mergeProps,
+  splitProps,
+  type ValidComponent,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button } from "~/components/button"
@@ -19,7 +20,7 @@ import { Button } from "~/components/button"
 export type RootProps = DialogRootProps
 
 export function Root(props: RootProps) {
-  return <Dialog.Root>{props.children}</Dialog.Root>
+  return <Dialog.Root {...props} />
 }
 
 export const Trigger = Dialog.Trigger
@@ -117,17 +118,17 @@ export function Description<T extends ValidComponent = "p">(
   return <Dialog.Description {...local_props} />
 }
 
-export type LayoutProps = RootProps & {
-  trigger: JSX.Element
+export type LayoutProps<Trigger extends ValidComponent> = RootProps & {
+  trigger: PolymorphicProps<Trigger, DialogTriggerProps<Trigger>>["as"]
   backgroundBlur?: boolean | undefined
 }
 /**
  * A pre-made dialog layout
- *
+ * @deprecated 太不灵活了
  * @example
  * ```tsx
  * <Dialog.Layout
- *     trigger={<Button><PlusIcon /></Button>}
+ *     trigger={<Dialog.Trigger as={Button}><PlusIcon /></Dialog.Trigger>}
  * >
  *     <Dialog.Content>
  *         <Dialog.Title>Dialog Title</Dialog.Title>
@@ -137,12 +138,22 @@ export type LayoutProps = RootProps & {
  * </Dialog.Layout>
  * ```
  */
-export function Layout(props: LayoutProps) {
-  let [_, root_props] = splitProps(props, ["children", "trigger"])
+export function Layout<Trigger extends ValidComponent>(
+  props: LayoutProps<Trigger>,
+) {
+  const [_, root_props] = splitProps(props, [
+    "children",
+    "trigger",
+    "backgroundBlur",
+  ]) satisfies [unknown, RootProps]
+
+  createEffect(() => {
+    console.log("Layout props.open", props.open)
+  })
 
   return (
     <Root {...root_props}>
-      <Trigger>{props.trigger}</Trigger>
+      {props.trigger}
       <Portal>
         <Overlay data-blur={props.backgroundBlur} />
         {props.children}
