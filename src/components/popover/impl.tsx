@@ -8,6 +8,7 @@ import {
   type PopoverRootProps,
 } from "@kobalte/core/popover"
 import {
+  Show,
   createContext,
   type JSX,
   mergeProps,
@@ -20,6 +21,8 @@ import { Button } from "~/components/button"
 export type RootProps = PopoverRootProps & Context
 type Context = {
   blur?: boolean | undefined
+  title?: string | undefined
+  description?: string | undefined
 }
 
 const Context = createContext<Context>()
@@ -124,6 +127,12 @@ export function Layout(props: LayoutProps) {
     <Root {...root_props}>
       <Trigger>{props.trigger}</Trigger>
       <Portal>
+        <Show when={props.title} keyed>
+          <Title class="text-lg">{props.title}</Title>
+        </Show>
+        <Show when={props.description} keyed>
+          <Description>{props.description}</Description>
+        </Show>
         {props.children}
       </Portal>
     </Root>
