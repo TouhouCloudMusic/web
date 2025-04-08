@@ -1,5 +1,5 @@
 import { type PolymorphicProps } from "@kobalte/core"
-import { Popover } from "@kobalte/core/popover";
+import { Popover, PopoverArrowProps } from "@kobalte/core/popover";
 import {
   type PopoverCloseButtonProps,
   type PopoverContentProps,
@@ -61,7 +61,9 @@ export function Content<T extends ValidComponent = "div">(
 }
 
 type CloseButtonProps<T extends ValidComponent = typeof Button> =
-  PolymorphicProps<T, PopoverCloseButtonProps<"button">>
+  PolymorphicProps<T, PopoverCloseButtonProps<"button">> & {
+    as?: T
+  }
 
 export function CloseButton<T extends ValidComponent = typeof Button>(
   props: CloseButtonProps<T>,
@@ -69,7 +71,7 @@ export function CloseButton<T extends ValidComponent = typeof Button>(
   return (
     <Popover.CloseButton
       {...props}
-      as={props.as ?? Button}
+      as={Button}
     />
   )
 }
@@ -88,10 +90,14 @@ export function Title<T extends ValidComponent = "h2">(
   return <Popover.Title {...local_props} />
 }
 
+export function Arrow(props: PolymorphicProps<"div", PopoverArrowProps>) {
+  return <Popover.Arrow {...props} />
+}
+
 export function Description<T extends ValidComponent = "p">(
   props: PolymorphicProps<T, PopoverDescriptionProps<T>>,
 ) {
-  const CLASS = "mt-2 pr-2 text-sm text-gray-800"
+  const CLASS = "my-2 pr-2 text-sm text-gray-800"
 
   let local_props = mergeProps(props, {
     get class() {
@@ -127,14 +133,8 @@ export function Layout(props: LayoutProps) {
     <Root {...root_props}>
       <Trigger>{props.trigger}</Trigger>
       <Portal>
-        <Show when={props.title} keyed>
-          <Title class="text-lg">{props.title}</Title>
-        </Show>
-        <Show when={props.description} keyed>
-          <Description>{props.description}</Description>
-        </Show>
         {props.children}
       </Portal>
     </Root>
   )
-} 
+}
