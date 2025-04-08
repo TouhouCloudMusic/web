@@ -14,6 +14,7 @@ import {
   mergeProps,
   splitProps,
   type ValidComponent,
+  createMemo,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button } from "~/components/button"
@@ -46,14 +47,16 @@ export type ContentProps<T extends ValidComponent = "div"> = PolymorphicProps<
 export function Content<T extends ValidComponent = "div">(
   props: ContentProps<T>,
 ) {
-  const CLASS = `
-  bg-primary fixed z-50 rounded-md p-4 shadow-lg shadow-gray-300
-  animate-scale-fade-out data-expanded:animate-scale-fade-in
-  `
+
+  const CLASS = createMemo(() => `
+  bg-primary fixed z-50 rounded-md p-4 border-[1.5px] border-gray-300
+  animate-scale-down data-expanded:animate-scale-up
+  origin-(--kb-popper-content-transform-origin)
+  `)
 
   let local_props = mergeProps(props, {
     get class() {
-      return twMerge(CLASS, props["class"])
+      return twMerge(CLASS(), props["class"])
     },
   })
 
