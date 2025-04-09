@@ -110,7 +110,7 @@ export function Img(props: ImgProps) {
 	)
 }
 
-export function Placeholder(props: ParentProps) {
+export function Fallback(props: ParentProps) {
 	const context = useContext(ImageContext)!
 	return (
 		<Show when={context.isLoading}>

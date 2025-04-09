@@ -25,7 +25,7 @@ export const Default: Story = {
 					height={300}
 					src="https://th.bing.com/th/id/OIP.1JqzUmtCX3Ng-8i-n5_kHgAAAA?w=120&h=104&c=7&bgcl=de1aa5&r=0&o=6&dpr=1.5&pid=13.1"
 				/>
-				<Image.Placeholder />
+				<Image.Fallback />
 				<Image.ErrorComponent />
 			</Image.Container>
 		</Image.Root>
@@ -45,7 +45,7 @@ export const ErrorState: Story = {
 					height={300}
 					src=""
 				/>
-				<Image.Placeholder />
+				<Image.Fallback />
 				<Image.ErrorComponent />
 			</Image.Container>
 		</Image.Root>
@@ -70,7 +70,7 @@ export const WithPreview: Story = {
 						onClick={() => setOpen(true)}
 						src="https://th.bing.com/th/id/OIP.1JqzUmtCX3Ng-8i-n5_kHgAAAA?w=120&h=104&c=7&bgcl=de1aa5&r=0&o=6&dpr=1.5&pid=13.1"
 					/>
-					<Image.Placeholder />
+					<Image.Fallback />
 					<Image.ErrorComponent />
 					<Image.Preview
 						open={open()}
