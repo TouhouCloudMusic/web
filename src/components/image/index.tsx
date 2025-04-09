@@ -77,7 +77,7 @@ export function Image(props: ImageProps) {
 			</Show>
 
 			{/* 主图 */}
-			<Show when={props.enablePreview}>
+			<Show when={props.enablePreview && !isError()} >
 				<button
 					type="button"
 					onClick={togglePreview}
@@ -94,7 +94,7 @@ export function Image(props: ImageProps) {
 				</button>
 			</Show>
 
-			<Show when={!props.enablePreview}>
+			<Show when={!props.enablePreview && !isError()}>
 				<img
 					{...props}
 					alt={props.alt ?? ""}

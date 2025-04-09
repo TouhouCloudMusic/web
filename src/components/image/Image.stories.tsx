@@ -97,8 +97,7 @@ const meta: Meta<typeof Image> = {
 		},
 		errorContent: {
 			control: false, // JSX 不支持控件调整
-			description:
-				"加载失败时显示的占位符",
+			description: "加载失败时显示的占位符",
 			table: {
 				type: { summary: "JSX.Element" },
 			},
@@ -146,8 +145,8 @@ export const ErrorState: Story = {
 		loading: "eager",
 		src: "",
 		enablePreview: false,
-		width: 0,
-		height: 0,
+		width: 100,
+		height: 100,
 	},
 }
 
