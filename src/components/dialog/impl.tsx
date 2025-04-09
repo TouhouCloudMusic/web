@@ -6,14 +6,8 @@ import {
   type DialogOverlayProps,
   type DialogTitleProps,
   type DialogRootProps,
-  type DialogTriggerProps,
 } from "@kobalte/core/dialog"
-import {
-  createEffect,
-  mergeProps,
-  splitProps,
-  type ValidComponent,
-} from "solid-js"
+import { mergeProps, type ValidComponent } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button } from "~/components/button"
 
@@ -116,48 +110,4 @@ export function Description<T extends ValidComponent = "p">(
     },
   })
   return <Dialog.Description {...local_props} />
-}
-
-export type LayoutProps<Trigger extends ValidComponent> = RootProps & {
-  trigger: PolymorphicProps<Trigger, DialogTriggerProps<Trigger>>["as"]
-  backgroundBlur?: boolean | undefined
-}
-/**
- * A pre-made dialog layout
- * @deprecated 太不灵活了
- * @example
- * ```tsx
- * <Dialog.Layout
- *     trigger={<Dialog.Trigger as={Button}><PlusIcon /></Dialog.Trigger>}
- * >
- *     <Dialog.Content>
- *         <Dialog.Title>Dialog Title</Dialog.Title>
- *         <Dialog.Description>Dialog Description</Dialog.Description>
- *         <Dialog.CloseButton>Close</Dialog.CloseButton>
- *     </Dialog.Content>
- * </Dialog.Layout>
- * ```
- */
-export function Layout<Trigger extends ValidComponent>(
-  props: LayoutProps<Trigger>,
-) {
-  const [_, root_props] = splitProps(props, [
-    "children",
-    "trigger",
-    "backgroundBlur",
-  ]) satisfies [unknown, RootProps]
-
-  createEffect(() => {
-    console.log("Layout props.open", props.open)
-  })
-
-  return (
-    <Root {...root_props}>
-      {props.trigger}
-      <Portal>
-        <Overlay data-blur={props.backgroundBlur} />
-        {props.children}
-      </Portal>
-    </Root>
-  )
 }

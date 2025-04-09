@@ -1,5 +1,5 @@
 import { type PolymorphicProps } from "@kobalte/core"
-import { Popover, PopoverArrowProps } from "@kobalte/core/popover";
+import { Popover, type PopoverArrowProps } from "@kobalte/core/popover"
 import {
   type PopoverCloseButtonProps,
   type PopoverContentProps,
@@ -7,33 +7,14 @@ import {
   type PopoverTitleProps,
   type PopoverRootProps,
 } from "@kobalte/core/popover"
-import {
-  Show,
-  createContext,
-  type JSX,
-  mergeProps,
-  splitProps,
-  type ValidComponent,
-  createMemo,
-} from "solid-js"
+import { mergeProps, type ValidComponent } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { Button } from "~/components/button"
 
-export type RootProps = PopoverRootProps & Context
-type Context = {
-  blur?: boolean | undefined
-  title?: string | undefined
-  description?: string | undefined
-}
-
-const Context = createContext<Context>()
+export type RootProps = PopoverRootProps
 
 export function Root(props: RootProps) {
-  return (
-    <Popover {...props}>
-      <Context.Provider value={props}>{props.children}</Context.Provider>
-    </Popover>
-  )
+  return <Popover {...props} />
 }
 
 export const Trigger = Popover.Trigger
@@ -47,20 +28,33 @@ export type ContentProps<T extends ValidComponent = "div"> = PolymorphicProps<
 export function Content<T extends ValidComponent = "div">(
   props: ContentProps<T>,
 ) {
-
-  const CLASS = createMemo(() => `
-  bg-primary fixed z-50 rounded-md p-4 border-[1.5px] border-gray-300
-  animate-scale-down data-expanded:animate-scale-up
-  origin-(--kb-popper-content-transform-origin)
-  `)
+  const CLASS = `
+    fixed z-50 p-4
+    bg-primary
+    border-1 border-slate-200 border-b-[1.5px]
+    shadow-sm
+    rounded
+    animate-scale-down data-expanded:animate-scale-up
+    origin-(--kb-popper-content-transform-origin)
+  `
 
   let local_props = mergeProps(props, {
     get class() {
-      return twMerge(CLASS(), props["class"])
+      return twMerge(CLASS, props["class"])
     },
   })
 
   return <Popover.Content {...local_props} />
+}
+
+export function PortalContent<T extends ValidComponent = "div">(
+  props: ContentProps<T>,
+) {
+  return (
+    <Portal>
+      <Content {...props} />
+    </Portal>
+  )
 }
 
 type CloseButtonProps<T extends ValidComponent = typeof Button> =
@@ -73,8 +67,8 @@ export function CloseButton<T extends ValidComponent = typeof Button>(
 ) {
   return (
     <Popover.CloseButton
-      {...props}
       as={Button}
+      {...props}
     />
   )
 }
@@ -108,36 +102,4 @@ export function Description<T extends ValidComponent = "p">(
     },
   })
   return <Popover.Description {...local_props} />
-}
-
-export type LayoutProps = RootProps & {
-  trigger: JSX.Element
-}
-/**
- * A pre-made popover layout
- *
- * @example
- * ```tsx
- * <Popover.Layout
- *     trigger={<Button><PlusIcon /></Button>}
- * >
- *     <Popover.Content>
- *         <Popover.Title>Popover Title</Popover.Title>
- *         <Popover.Description>Popover Description</Popover.Description>
- *         <Popover.CloseButton>Close</Popover.CloseButton>
- *     </Popover.Content>
- * </Popover.Layout>
- * ```
- */
-export function Layout(props: LayoutProps) {
-  let [_, root_props] = splitProps(props, ["children", "trigger"])
-
-  return (
-    <Root {...root_props}>
-      <Trigger>{props.trigger}</Trigger>
-      <Portal>
-        {props.children}
-      </Portal>
-    </Root>
-  )
 }

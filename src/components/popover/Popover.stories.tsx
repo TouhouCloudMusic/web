@@ -1,95 +1,110 @@
 import { type Meta, type StoryObj } from "storybook-solidjs"
 import { Button } from "~/components/button"
-import Popover from "."
+
+import { Popover } from "."
 
 const meta = {
-  component: Popover.Layout,
+  component: Popover.Root,
   tags: ["autodocs"],
   argTypes: {
     placement: {
       control: "select",
       options: [
-        "top", "bottom", "left", "right",
-        "top-start", "top-end",
-        "bottom-start", "bottom-end",
-        "left-start", "left-end",
-        "right-start", "right-end"
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "top-start",
+        "top-end",
+        "bottom-start",
+        "bottom-end",
+        "left-start",
+        "left-end",
+        "right-start",
+        "right-end",
       ],
       description: "弹窗相对于触发器的位置",
-      defaultValue: "bottom"
+      defaultValue: "bottom",
     },
     gutter: {
       control: "number",
       description: "弹窗与触发器/锚点元素之间的距离",
-      defaultValue: 0
+      defaultValue: 0,
     },
     shift: {
       control: "number",
       description: "弹窗沿锚点元素的偏移量",
-      defaultValue: 0
+      defaultValue: 0,
     },
     flip: {
-      control: { type: "select", options: [true, false, "top left", "bottom right"] },
+      control: {
+        type: "select",
+        options: [true, false, "top left", "bottom right"],
+      },
       description: "控制弹窗在溢出视口时的行为",
-      defaultValue: true
+      defaultValue: true,
     },
     slide: {
       control: "boolean",
       description: "弹窗在溢出时是否应该滑动",
-      defaultValue: true
+      defaultValue: true,
     },
     overlap: {
       control: "boolean",
       description: "弹窗在溢出时是否可以与锚点元素重叠",
-      defaultValue: false
+      defaultValue: false,
     },
     sameWidth: {
       control: "boolean",
       description: "弹窗是否应该与锚点元素具有相同的宽度",
-      defaultValue: false
+      defaultValue: false,
     },
     fitViewport: {
       control: "boolean",
       description: "弹窗是否应该适应视口",
-      defaultValue: true
+      defaultValue: true,
     },
     hideWhenDetached: {
       control: "boolean",
       description: "当锚点元素被遮挡时是否隐藏弹窗",
-      defaultValue: true
+      defaultValue: true,
     },
     detachedPadding: {
       control: "number",
       description: "考虑锚点元素被遮挡的最小内边距",
-      defaultValue: 0
+      defaultValue: 0,
     },
     arrowPadding: {
       control: "number",
       description: "箭头与弹窗角落之间的最小内边距",
-      defaultValue: 0
+      defaultValue: 0,
     },
     overflowPadding: {
       control: "number",
       description: "弹窗与视口边缘之间的最小内边距",
-      defaultValue: 0
-    }
+      defaultValue: 0,
+    },
   },
-} satisfies Meta<typeof Popover.Layout>
+} satisfies Meta<Popover.RootProps>
 
 export default meta
-type Story = StoryObj<typeof Popover.Layout>
+type Story = StoryObj<Popover.RootProps>
 
 export const Default: Story = {
   render: (args) => {
     return (
-      <Popover.Layout {...args} trigger={<Button>打开弹窗</Button>}>
-        <Popover.Content>
+      <Popover.Root
+        {...args}
+        defaultOpen
+      >
+        <Popover.Trigger as={Button}>打开弹窗</Popover.Trigger>
+        <Popover.PortalContent>
           <Popover.Arrow />
           <Popover.Title>弹窗标题</Popover.Title>
           <Popover.Description>这是弹窗内容的描述。</Popover.Description>
           <Popover.CloseButton>关闭</Popover.CloseButton>
-        </Popover.Content>
-      </Popover.Layout>
+        </Popover.PortalContent>
+      </Popover.Root>
     )
   },
 }
@@ -97,8 +112,9 @@ export const Default: Story = {
 export const CustomContent: Story = {
   render: (args) => {
     return (
-      <Popover.Layout {...args} trigger={<Button>打开自定义内容</Button>}>
-        <Popover.Content>
+      <Popover.Root {...args}>
+        <Popover.Trigger as={Button}>打开自定义内容</Popover.Trigger>
+        <Popover.PortalContent>
           <Popover.Arrow />
           <Popover.Title>弹窗标题</Popover.Title>
           <div class="mt-2 space-y-2">
@@ -109,8 +125,8 @@ export const CustomContent: Story = {
             </div>
           </div>
           <Popover.CloseButton class="mt-4">关闭</Popover.CloseButton>
-        </Popover.Content>
-      </Popover.Layout>
+        </Popover.PortalContent>
+      </Popover.Root>
     )
   },
-} 
+}

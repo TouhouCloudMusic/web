@@ -7,19 +7,21 @@ import { Dialog } from "."
 import { Button } from "../button/index.tsx"
 import { TextField } from "../form/index.tsx"
 
+export type SearchAndAddDialogProps<T> = ParentProps<{
+  onSubmit?: (args?: T) => unknown
+  // onSearch: (args: string) => unknown
+  data: T[]
+  // setData: (args: T) => unknown
+  defaultOpen?: boolean
+  listItem: (props: { data: T }) => JSX.Element
+  title: JSX.Element
+}>
+
 export function SearchAndAddDialog<T extends Record<string, unknown>>(
-  props: ParentProps & {
-    onSubmit?: (args?: T) => unknown
-    // onSearch: (args: string) => unknown
-    data: T[]
-    // setData: (args: T) => unknown
-    defaultOpen?: boolean
-    listItem: (props: { data: T }) => JSX.Element
-    title: JSX.Element
-  },
+  props: SearchAndAddDialogProps<T>,
 ) {
   const [searchQuery, setSearchQuery] = createSignal("")
-  const [open, setOpen] = createSignal(false)
+
   const filteredData = createMemo(() =>
     props.data.filter((item) =>
       JSON.stringify(item).toLowerCase().includes(searchQuery().toLowerCase()),
@@ -32,20 +34,15 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
   }
 
   return (
-    <Dialog.Layout
-      open={open()}
-      defaultOpen={props.defaultOpen ?? false}
-      trigger={
-        <Button
-          on:click={() => setOpen(true)}
-          variant="Tertiary"
-          size="Xs"
-          class="aspect-square p-1.5"
-        >
-          <PlusIcon />
-        </Button>
-      }
-    >
+    <Dialog.Root defaultOpen={props.defaultOpen ?? false}>
+      <Dialog.Trigger
+        as={Button}
+        variant="Tertiary"
+        size="Xs"
+        class="aspect-square p-1.5"
+      >
+        <PlusIcon />
+      </Dialog.Trigger>
       <Dialog.Content class="flex max-h-[min(48rem,50%)] min-h-[32rem] max-w-sm flex-col px-0 pb-8">
         <div class="mx-4 flex justify-between">
           <Dialog.Title class="text-lg font-medium">{props.title}</Dialog.Title>
@@ -81,6 +78,6 @@ export function SearchAndAddDialog<T extends Record<string, unknown>>(
 
         {props.children}
       </Dialog.Content>
-    </Dialog.Layout>
+    </Dialog.Root>
   )
 }
