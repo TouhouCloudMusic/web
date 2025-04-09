@@ -23,8 +23,6 @@
     "@solid-primitives/i18n": "^2.2.0",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
-    "@solidjs/start": "^1.1.3",
-    "@suid/vite-plugin": "^0.3.1",
     "@tanstack/solid-query": "^5.67.1",
     "@tanstack/solid-query-devtools": "^5.67.1",
     "@tanstack/solid-router": "^1.114.23",
