@@ -55,7 +55,9 @@ export const CustomTitle: Story = {
         {...args}
         open={open()}
         syncOpen={setOpen}
-        trigger={<Button>Upload Banner Image</Button>}
+        trigger={
+          <Dialog.Trigger as={Button}>Upload Banner Image</Dialog.Trigger>
+        }
       />
     )
   },

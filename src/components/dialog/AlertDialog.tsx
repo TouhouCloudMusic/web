@@ -1,9 +1,10 @@
-import { type JSX, Show } from "solid-js"
+import { type JSX, Show, splitProps } from "solid-js"
 
 import { Dialog } from "."
 import { Button } from "../button"
 
-export interface AlertDialogProps extends Dialog.RootProps {
+export interface AlertDialogProps
+  extends Exclude<Dialog.RootProps, "children"> {
   title: string
   trigger: JSX.Element
   description: string
@@ -21,13 +22,20 @@ export function AlertDialog(props: AlertDialogProps) {
       e.preventDefault()
     }
   }
+
+  let [_, root_props] = splitProps(props, [
+    "title",
+    "trigger",
+    "description",
+    "onCancel",
+    "onConfirm",
+    "cancelText",
+    "hideCancel",
+    "dismissible",
+    "children",
+  ])
   return (
-    <Dialog.Root
-      {...props}
-      open={props.open!}
-      defaultOpen={props.defaultOpen!}
-      onOpenChange={props.onOpenChange!}
-    >
+    <Dialog.Root {...root_props}>
       {props.trigger}
       <Dialog.Portal>
         <Dialog.Overlay />
