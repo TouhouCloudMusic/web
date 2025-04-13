@@ -1,6 +1,3 @@
-
-//!!WIP Project!!
-
 import {
   createQuery,
   queryOptions,
@@ -20,7 +17,7 @@ export async function artistProfileEndpoint({ keyword, id }: Deps) {
     // Fetch artist by ID
     res = await FetchClient.GET("/artist/{id}", {
       params: {
-        path: { id: id } // 或直接 path: { id }
+        path: { id: id },
       }
     });
   } else if (keyword) {
