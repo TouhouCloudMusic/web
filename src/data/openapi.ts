@@ -2002,6 +2002,19 @@ export interface operations {
                 };
                 content?: never;
             };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "Err";
+                        message: string;
+                        error_code: number;
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -2050,12 +2063,6 @@ export interface operations {
                         error_code: number;
                     };
                 };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             409: {
                 headers: {
