@@ -16,7 +16,7 @@ export function Profile() {
     <div class="col-span-12 col-start-7 flex flex-col items-center gap-4">
       <Switch>
         <Match when={query_result.isLoading}>
-          <p /><div class="text-xl font-bold text-center">少女祈祷中...</div>
+          <p /><div class="text-xl font-bold text-center">少女祈祷中...</div><p/>
        </Match>
         <Match when={query_result.data}>
         <Avatar user={query_result.data} class="size-24" />
