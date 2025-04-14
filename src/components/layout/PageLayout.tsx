@@ -4,7 +4,6 @@ import { twMerge } from "tailwind-merge"
 export function PageLayout(props: ParentProps<ComponentProps<"div">>) {
 	const CLASS = `
     bg-primary
-    grid grid-cols-24
     h-full
     lg:max-w-[min(max(75%,1024px),1280px)]
     xl:max-w-3/4
