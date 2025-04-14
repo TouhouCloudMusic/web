@@ -1,18 +1,23 @@
-import { createFileRoute, notFound } from "@tanstack/solid-router"
+import { createFileRoute } from "@tanstack/solid-router"
+import { Data } from "~/data"
 import { userProfileQuery, userProfileQueryOption } from "~/data/user"
 import { TanstackQueryClinet } from "~/state/tanstack"
 import { Profile } from "~/views/user/Profile"
 
 export const Route = createFileRoute("/(user)/profile_/$username")({
-  component: RouteComponent,
-  loader: ({ params: { username } }) =>
-    TanstackQueryClinet.ensureQueryData(
-      userProfileQueryOption({
-        "params.username": username,
-      }),
-    ),
+	component: RouteComponent,
+	loader: ({ params: { username } }) =>
+		TanstackQueryClinet.ensureQueryData(
+			userProfileQueryOption({
+				"params.username": username,
+			}),
+		),
 })
 
 function RouteComponent() {
-  return <Profile />
+	const parmas = Route.useParams()
+	const queryResult = userProfileQuery({
+		"params.username": parmas().username,
+	})
+	return <Profile data={Data.fromQueryResult(queryResult)} />
 }
