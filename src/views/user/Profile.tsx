@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/solid-router"
-import { Match, Switch } from "solid-js"
-import { Avatar } from "~/components/avatar"
+import { ComponentProps, Match, Show, splitProps, Switch } from "solid-js"
 import { Button } from "~/components/button"
 import { PageLayout } from "~/components/layout/PageLayout"
 import { Data } from "~/data"
@@ -13,29 +12,76 @@ type Props = {
 export function Profile(props: Props) {
 	return (
 		<PageLayout>
-			<div class="col-span-12 col-start-7 flex flex-col items-center gap-4">
-				<Switch>
-					<Match when={Data.isPending(props.data)}>
-						<div class="text-center text-xl font-bold">少女祈祷中...</div>
-					</Match>
-					<Match when={Data.isOk(props.data) && props.data.value}>
-						{(user) => (
-							<>
-								<Avatar
-									user={user()}
-									class="size-24"
-								/>
-								<h2 class="text-xl font-bold">用户名：{user().name}</h2>
-								<div class="text-xl font-bold">
-									最后登录：{user().last_login.slice(0, 16)}
-								</div>
-								<EditBtn />
-							</>
-						)}
-					</Match>
-				</Switch>
+			{/* Background image */}
+			<div class="flex h-56 w-full bg-slate-200">
+				<p class="m-auto self-center text-center text-slate-600">bg image</p>
+			</div>
+
+			<div class="relative isolate bg-white px-8 pb-8">
+				{/* Avatar */}
+				<div class="absolute -top-21 left-20 z-10 flex items-center space-x-4">
+					<div class="h-40 w-40 rounded-full border-2 border-white bg-slate-200"></div>
+				</div>
+
+				<div class="grid auto-rows-auto grid-cols-12 gap-4 px-4">
+					<div class="col-span-full col-start-4 mb-4 flex h-fit rounded-xl px-2 py-4">
+						<div class="flex">
+							<span class="self-center font-inter text-xl font-semibold">
+								<Show when={Data.isOk(props.data)}>
+									{Data.unwrap(props.data).name}
+								</Show>
+							</span>
+						</div>
+						<FollowButton state={FoloBtnState.Following} />
+					</div>
+					<div class="col-span-3 min-h-[1024px] rounded-xl bg-slate-100 p-4">
+						<h2 class="mb-2 font-bold text-slate-700">Intro</h2>
+						<p class="text-sm text-slate-600">简介内容...</p>
+					</div>
+					<div class="col-span-9 rounded-xl bg-slate-100 p-4">
+						<h2 class="mb-2 font-bold text-slate-700">Timeline</h2>
+						<ul class="space-y-2 text-sm text-slate-600"></ul>
+					</div>
+				</div>
 			</div>
 		</PageLayout>
+	)
+}
+
+const enum FoloBtnState {
+	CurrentUser,
+	Following,
+	Unfollowed,
+}
+type FoloBtnProps = {
+	state: FoloBtnState
+} & ComponentProps<typeof Button>
+
+function FollowButton(props: FoloBtnProps) {
+	const [_, buttonProps] = splitProps(props, ["state"])
+	return (
+		<Switch>
+			<Match when={props.state === FoloBtnState.Unfollowed}>
+				<Button
+					variant="Primary"
+					color="Reimu"
+					class="ml-auto"
+					{...buttonProps}
+				>
+					Follow
+				</Button>
+			</Match>
+			<Match when={props.state === FoloBtnState.Following}>
+				<Button
+					variant="Secondary"
+					color="Reimu"
+					class="ml-auto"
+					{...buttonProps}
+				>
+					Followed
+				</Button>
+			</Match>
+		</Switch>
 	)
 }
 

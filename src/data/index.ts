@@ -49,4 +49,24 @@ export const Data = {
 				state: DataState.Ok,
 			} as Ok<T>
 	},
+	unwrap<T>(data: Data<T>): T {
+		if (import.meta.env.DEV) {
+			if (Data.isOk(data)) return data.value
+			else
+				throw new Error(
+					`Unwrap a data on ${data.state == DataState.Err ? "an" : "a"} ${DataState_toString(data.state)} value`,
+				)
+		} else return (data as Ok<T>).value as unknown as T
+	},
+}
+
+function DataState_toString(state: DataState) {
+	switch (state) {
+		case DataState.Ok:
+			return "Ok"
+		case DataState.Pending:
+			return "Pending"
+		case DataState.Err:
+			return "Err"
+	}
 }
