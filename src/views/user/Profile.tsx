@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/solid-router"
-import { ComponentProps, Match, Show, splitProps, Switch } from "solid-js"
+import { type ComponentProps, Match, Show, splitProps, Switch } from "solid-js"
+import { type DOMElement } from "solid-js/jsx-runtime"
 import { Button } from "~/components/button"
 import { PageLayout } from "~/components/layout/PageLayout"
 import { Data } from "~/data"
@@ -32,7 +33,7 @@ export function Profile(props: Props) {
 								</Show>
 							</span>
 						</div>
-						<FollowButton state={FoloBtnState.Following} />
+						<FollowButton state={FoloBtnState.CurrentUser} />
 					</div>
 					<div class="col-span-3 min-h-[1024px] rounded-xl bg-slate-100 p-4">
 						<h2 class="mb-2 font-bold text-slate-700">Intro</h2>
@@ -59,13 +60,45 @@ type FoloBtnProps = {
 
 function FollowButton(props: FoloBtnProps) {
 	const [_, buttonProps] = splitProps(props, ["state"])
+	const setUnfo = (
+		e: MouseEvent & {
+			currentTarget: HTMLButtonElement
+			target: DOMElement
+		},
+	) => {
+		e.target.innerHTML = "Unfollow"
+	}
+
+	const setFo = (
+		e: MouseEvent & {
+			currentTarget: HTMLButtonElement
+			target: DOMElement
+		},
+	) => {
+		e.target.innerHTML = "Following"
+	}
+
 	return (
 		<Switch>
+			<Match when={props.state === FoloBtnState.CurrentUser}>
+				<Link
+					to="/profile/edit"
+					class="ml-auto"
+				>
+					<Button
+						variant="Tertiary"
+						class="w-25 rounded-full font-inter"
+						{...buttonProps}
+					>
+						Edit
+					</Button>
+				</Link>
+			</Match>
 			<Match when={props.state === FoloBtnState.Unfollowed}>
 				<Button
 					variant="Primary"
 					color="Reimu"
-					class="ml-auto"
+					class="ml-auto w-25 rounded-full"
 					{...buttonProps}
 				>
 					Follow
@@ -75,22 +108,14 @@ function FollowButton(props: FoloBtnProps) {
 				<Button
 					variant="Secondary"
 					color="Reimu"
-					class="ml-auto"
+					class="ml-auto w-25 rounded-full"
 					{...buttonProps}
+					onMouseOver={setUnfo}
+					onMouseOut={setFo}
 				>
 					Followed
 				</Button>
 			</Match>
 		</Switch>
-	)
-}
-
-function EditBtn() {
-	return (
-		<div>
-			<Link to="/profile/edit">
-				<Button variant="Tertiary">编辑资料</Button>
-			</Link>
-		</div>
 	)
 }

@@ -5,9 +5,8 @@ export function PageLayout(props: ParentProps<ComponentProps<"div">>) {
 	const CLASS = `
     bg-primary
     h-full
-    lg:max-w-[min(max(75%,1024px),1280px)]
-    xl:max-w-3/4
-    2xl:max-w-7xl
+    max-w-6xl
+	 2xl:max-w-7xl
     mx-auto
     border-x-1 border-gray-300
     `

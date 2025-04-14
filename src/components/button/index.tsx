@@ -143,7 +143,7 @@ const SecondaryColor: Record<AppColor, string> = {
 		// @tw
 		`
 		text-reimu-700 hover:text-white active:text-white
-		bg-slate-100 hover:bg-reimu-900 active:bg-reimu-1000
+		bg-slate-100 hover:bg-reimu-800 active:bg-reimu-800/80
 		`,
 	Marisa:
 		// @tw
