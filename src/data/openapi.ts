@@ -467,6 +467,10 @@ export type components = {
             status: string;
             data: components["schemas"]["SongResponse"][];
         };
+        DataVecUserRole: {
+            status: string;
+            data: components["schemas"]["UserRole"][];
+        };
         Data_EventResponse: {
             /** @enum {string} */
             status: "Ok";
@@ -754,11 +758,15 @@ export type components = {
         UserProfile: {
             name: string;
             /** @description Avatar url with sub directory, eg. ab/cd/abcd..xyz.jpg */
-            avatar_url?: string | null;
+            avatar_url?: string;
             /** Format: date-time */
             last_login: string;
             roles: number[];
+            /** @description Whether the querist follows the user. Return `None` if querist is not signed in or it's querist's own profile */
+            is_following?: boolean;
         };
+        /** @enum {string} */
+        UserRole: "Admin" | "Moderator" | "User";
     };
     responses: never;
     parameters: never;
@@ -2002,6 +2010,19 @@ export interface operations {
                 };
                 content?: never;
             };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        status: "Err";
+                        message: string;
+                        error_code: number;
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -2050,12 +2071,6 @@ export interface operations {
                         error_code: number;
                     };
                 };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
             409: {
                 headers: {
@@ -2429,7 +2444,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["DataVecLanguage"];
+                    "application/json": components["schemas"]["DataVecUserRole"];
                 };
             };
             500: {
