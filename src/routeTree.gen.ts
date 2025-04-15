@@ -16,7 +16,6 @@ import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
 import { Route as userProfileImport } from './routes/(user)/profile'
-import { Route as artistArtistsImport } from './routes/(artist)/artists'
 import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
 import { Route as artistArtistsEditImport } from './routes/(artist)/artists_.edit'
@@ -51,12 +50,6 @@ const userTestavataruploadRoute = userTestavataruploadImport.update({
 const userProfileRoute = userProfileImport.update({
   id: '/(user)/profile',
   path: '/profile',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const artistArtistsRoute = artistArtistsImport.update({
-  id: '/(artist)/artists',
-  path: '/artists',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -107,13 +100,6 @@ declare module '@tanstack/solid-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/(artist)/artists': {
-      id: '/(artist)/artists'
-      path: '/artists'
-      fullPath: '/artists'
-      preLoaderRoute: typeof artistArtistsImport
       parentRoute: typeof rootRoute
     }
     '/(user)/profile': {
@@ -167,7 +153,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/artists': typeof artistArtistsRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
   '/artists/$id': typeof artistArtistsIdRoute
@@ -180,7 +165,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/artists': typeof artistArtistsRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
   '/artists/$id': typeof artistArtistsIdRoute
@@ -194,7 +178,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
-  '/(artist)/artists': typeof artistArtistsRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/test_avatar_upload': typeof userTestavataruploadRoute
   '/(artist)/artists_/$id': typeof artistArtistsIdRoute
@@ -209,7 +192,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/artists'
     | '/profile'
     | '/test_avatar_upload'
     | '/artists/$id'
@@ -221,7 +203,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/artists'
     | '/profile'
     | '/test_avatar_upload'
     | '/artists/$id'
@@ -233,7 +214,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
-    | '/(artist)/artists'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
     | '/(artist)/artists_/$id'
@@ -247,7 +227,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
-  artistArtistsRoute: typeof artistArtistsRoute
   userProfileRoute: typeof userProfileRoute
   userTestavataruploadRoute: typeof userTestavataruploadRoute
   artistArtistsIdRoute: typeof artistArtistsIdRoute
@@ -260,7 +239,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
-  artistArtistsRoute: artistArtistsRoute,
   userProfileRoute: userProfileRoute,
   userTestavataruploadRoute: userTestavataruploadRoute,
   artistArtistsIdRoute: artistArtistsIdRoute,
@@ -282,7 +260,6 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/auth",
-        "/(artist)/artists",
         "/(user)/profile",
         "/(user)/test_avatar_upload",
         "/(artist)/artists_/$id",
@@ -299,9 +276,6 @@ export const routeTree = rootRoute
     },
     "/auth": {
       "filePath": "auth.tsx"
-    },
-    "/(artist)/artists": {
-      "filePath": "(artist)/artists.tsx"
     },
     "/(user)/profile": {
       "filePath": "(user)/profile.tsx"

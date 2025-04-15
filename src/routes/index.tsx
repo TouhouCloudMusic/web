@@ -21,7 +21,7 @@ function HomePage() {
             <Link to="/profile">Profile</Link>
           </li>
           <li>
-            <Link to="/artists">Artists</Link> {/* Test Poperse */}
+            <Link to="/artists/1">Artists</Link>
           </li>
           <Button
             // eslint-disable-next-line solid/reactivity
