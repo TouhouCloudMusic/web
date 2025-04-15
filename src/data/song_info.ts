@@ -49,7 +49,7 @@ import {
   export function songProfileQueryOption({ keyword, id }: Deps) {
     return queryOptions({
       // eslint-disable-next-line @tanstack/query/exhaustive-deps
-      queryKey: ["artistProfile", id ?? keyword].filter(Boolean),
+      queryKey: ["songInfo", id ?? keyword].filter(Boolean),
       queryFn: async () => {
         let song = await songInfoEndpoint({ keyword, id });
   

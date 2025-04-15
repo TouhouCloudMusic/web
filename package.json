@@ -30,6 +30,7 @@
     "cropperjs": "^2.0.0",
     "dayjs": "^1.11.13",
     "js-cookie": "^3.0.5",
+    "lucide-solid": "^0.488.0",
     "openapi-fetch": "^0.13.5",
     "solid-floating-ui": "^0.3.1",
     "solid-js": "^1.9.5",

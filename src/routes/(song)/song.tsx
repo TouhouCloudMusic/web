@@ -6,7 +6,7 @@ export const Route = createFileRoute('/(song)/song')({
 })
 
 export default function SongPage() {
-  const search = useSearch(); // ✅ 自动适配当前页面路径
+  const search = useSearch();
 
   return (
     <div>
