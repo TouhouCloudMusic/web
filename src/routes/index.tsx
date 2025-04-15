@@ -20,6 +20,9 @@ function HomePage() {
           <li>
             <Link to="/profile">Profile</Link>
           </li>
+          <li>
+            <Link to="/song/1">song</Link>
+          </li>
           <Button
             // eslint-disable-next-line solid/reactivity
             onClick={async () => {

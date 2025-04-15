@@ -18,6 +18,7 @@ import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar
 import { Route as userProfileImport } from './routes/(user)/profile'
 import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
+import { Route as songSongIdImport } from './routes/(song)/song_.$id'
 
 // Create/Update Routes
 
@@ -63,6 +64,12 @@ const userProfileUsernameRoute = userProfileUsernameImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const songSongIdRoute = songSongIdImport.update({
+  id: '/(song)/song_/$id',
+  path: '/song/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/solid-router' {
@@ -102,6 +109,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof userTestavataruploadImport
       parentRoute: typeof rootRoute
     }
+    '/(song)/song_/$id': {
+      id: '/(song)/song_/$id'
+      path: '/song/$id'
+      fullPath: '/song/$id'
+      preLoaderRoute: typeof songSongIdImport
+      parentRoute: typeof rootRoute
+    }
     '/(user)/profile_/$username': {
       id: '/(user)/profile_/$username'
       path: '/profile/$username'
@@ -127,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
+  '/song/$id': typeof songSongIdRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
@@ -137,6 +152,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
+  '/song/$id': typeof songSongIdRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
@@ -148,6 +164,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/test_avatar_upload': typeof userTestavataruploadRoute
+  '/(song)/song_/$id': typeof songSongIdRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
   '/(user)/profile_/edit': typeof userProfileEditRoute
 }
@@ -160,6 +177,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/profile'
     | '/test_avatar_upload'
+    | '/song/$id'
     | '/profile/$username'
     | '/profile/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -169,6 +187,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/profile'
     | '/test_avatar_upload'
+    | '/song/$id'
     | '/profile/$username'
     | '/profile/edit'
   id:
@@ -178,6 +197,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
+    | '/(song)/song_/$id'
     | '/(user)/profile_/$username'
     | '/(user)/profile_/edit'
   fileRoutesById: FileRoutesById
@@ -189,6 +209,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   userProfileRoute: typeof userProfileRoute
   userTestavataruploadRoute: typeof userTestavataruploadRoute
+  songSongIdRoute: typeof songSongIdRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
 }
@@ -199,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   userProfileRoute: userProfileRoute,
   userTestavataruploadRoute: userTestavataruploadRoute,
+  songSongIdRoute: songSongIdRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
 }
@@ -218,6 +240,7 @@ export const routeTree = rootRoute
         "/auth",
         "/(user)/profile",
         "/(user)/test_avatar_upload",
+        "/(song)/song_/$id",
         "/(user)/profile_/$username",
         "/(user)/profile_/edit"
       ]
@@ -236,6 +259,9 @@ export const routeTree = rootRoute
     },
     "/(user)/test_avatar_upload": {
       "filePath": "(user)/test_avatar_upload.tsx"
+    },
+    "/(song)/song_/$id": {
+      "filePath": "(song)/song_.$id.tsx"
     },
     "/(user)/profile_/$username": {
       "filePath": "(user)/profile_.$username.tsx"
