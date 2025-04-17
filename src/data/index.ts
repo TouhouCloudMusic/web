@@ -7,11 +7,7 @@ export const FetchClient = createFetchClient<paths>({
 	baseUrl: "/api",
 })
 
-export type Data<T> =
-	| Ok<T>
-	| {
-			state: DataState.Err | DataState.Pending
-	  }
+export type Data<T> = Ok<T> | Err | Pending
 
 const enum DataState {
 	Ok,
@@ -24,25 +20,35 @@ export type Ok<T> = {
 	state: DataState.Ok
 }
 
+export type Err = {
+	value: undefined
+	state: DataState.Err
+}
+
+export type Pending = {
+	value: undefined
+	state: DataState.Pending
+}
+
 export const Data = {
 	isOk(data: Data<unknown>): data is Ok<unknown> {
 		return data.state === DataState.Ok
 	},
-	isErr(data: Data<unknown>): data is { state: DataState.Err } {
+	isErr(data: Data<unknown>): data is Err {
 		return data.state === DataState.Err
 	},
-	isPending(data: Data<unknown>): data is { state: DataState.Pending } {
+	isPending(data: Data<unknown>): data is Pending {
 		return data.state === DataState.Pending
 	},
 	fromQueryResult<T>(queryResult: CreateQueryResult<T>): Data<T> {
 		if (queryResult.isError)
 			return {
 				state: DataState.Err,
-			}
+			} as Err
 		else if (queryResult.isLoading)
 			return {
 				state: DataState.Pending,
-			}
+			} as Pending
 		else
 			return {
 				value: queryResult.data,
