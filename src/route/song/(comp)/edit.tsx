@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { autoUpdate } from "@floating-ui/dom"
 import { useFloating } from "solid-floating-ui"
 import { createEffect, on, onCleanup } from "solid-js"
-import { ShowPortal } from "~/utils/ShowPortal"
-import { createAtom } from "~/utils/createAtom"
-import { createClickOutside } from "~/utils/createClickOutside"
+import { ShowPortal } from "~/utils/solid/ShowPortal"
+import { createAtom } from "~/utils/solid/createAtom"
+import { createClickOutside } from "~/utils/solid/createClickOutside"
 
 const itemClass = "px-2 py-1"
 export function EditComp() {

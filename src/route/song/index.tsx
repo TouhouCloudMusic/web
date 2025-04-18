@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Title } from "@solidjs/meta"
 
 import { AltVerComp } from "./(comp)/alt_ver"

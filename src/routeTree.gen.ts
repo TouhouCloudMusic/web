@@ -11,15 +11,23 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as SongImport } from './routes/song'
 import { Route as AuthImport } from './routes/auth'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as ReleaseKeywordImport } from './routes/release.$keyword'
 import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
 import { Route as userProfileImport } from './routes/(user)/profile'
 import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
 
 // Create/Update Routes
+
+const SongRoute = SongImport.update({
+  id: '/song',
+  path: '/song',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AuthRoute = AuthImport.update({
   id: '/auth',
@@ -36,6 +44,12 @@ const AboutRoute = AboutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ReleaseKeywordRoute = ReleaseKeywordImport.update({
+  id: '/release/$keyword',
+  path: '/release/$keyword',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -88,6 +102,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AuthImport
       parentRoute: typeof rootRoute
     }
+    '/song': {
+      id: '/song'
+      path: '/song'
+      fullPath: '/song'
+      preLoaderRoute: typeof SongImport
+      parentRoute: typeof rootRoute
+    }
     '/(user)/profile': {
       id: '/(user)/profile'
       path: '/profile'
@@ -100,6 +121,13 @@ declare module '@tanstack/solid-router' {
       path: '/test_avatar_upload'
       fullPath: '/test_avatar_upload'
       preLoaderRoute: typeof userTestavataruploadImport
+      parentRoute: typeof rootRoute
+    }
+    '/release/$keyword': {
+      id: '/release/$keyword'
+      path: '/release/$keyword'
+      fullPath: '/release/$keyword'
+      preLoaderRoute: typeof ReleaseKeywordImport
       parentRoute: typeof rootRoute
     }
     '/(user)/profile_/$username': {
@@ -125,8 +153,10 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/song': typeof SongRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
+  '/release/$keyword': typeof ReleaseKeywordRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
@@ -135,8 +165,10 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/song': typeof SongRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
+  '/release/$keyword': typeof ReleaseKeywordRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
@@ -146,8 +178,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/song': typeof SongRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/test_avatar_upload': typeof userTestavataruploadRoute
+  '/release/$keyword': typeof ReleaseKeywordRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
   '/(user)/profile_/edit': typeof userProfileEditRoute
 }
@@ -158,8 +192,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/song'
     | '/profile'
     | '/test_avatar_upload'
+    | '/release/$keyword'
     | '/profile/$username'
     | '/profile/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -167,8 +203,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/song'
     | '/profile'
     | '/test_avatar_upload'
+    | '/release/$keyword'
     | '/profile/$username'
     | '/profile/edit'
   id:
@@ -176,8 +214,10 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/song'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
+    | '/release/$keyword'
     | '/(user)/profile_/$username'
     | '/(user)/profile_/edit'
   fileRoutesById: FileRoutesById
@@ -187,8 +227,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  SongRoute: typeof SongRoute
   userProfileRoute: typeof userProfileRoute
   userTestavataruploadRoute: typeof userTestavataruploadRoute
+  ReleaseKeywordRoute: typeof ReleaseKeywordRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
 }
@@ -197,8 +239,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  SongRoute: SongRoute,
   userProfileRoute: userProfileRoute,
   userTestavataruploadRoute: userTestavataruploadRoute,
+  ReleaseKeywordRoute: ReleaseKeywordRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
 }
@@ -216,8 +260,10 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/auth",
+        "/song",
         "/(user)/profile",
         "/(user)/test_avatar_upload",
+        "/release/$keyword",
         "/(user)/profile_/$username",
         "/(user)/profile_/edit"
       ]
@@ -231,11 +277,17 @@ export const routeTree = rootRoute
     "/auth": {
       "filePath": "auth.tsx"
     },
+    "/song": {
+      "filePath": "song.tsx"
+    },
     "/(user)/profile": {
       "filePath": "(user)/profile.tsx"
     },
     "/(user)/test_avatar_upload": {
       "filePath": "(user)/test_avatar_upload.tsx"
+    },
+    "/release/$keyword": {
+      "filePath": "release.$keyword.tsx"
     },
     "/(user)/profile_/$username": {
       "filePath": "(user)/profile_.$username.tsx"
