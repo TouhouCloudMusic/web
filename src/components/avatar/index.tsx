@@ -1,4 +1,10 @@
-import { createSignal, type JSX, Show, splitProps } from "solid-js"
+import {
+	createEffect,
+	createSignal,
+	type JSX,
+	Show,
+	splitProps,
+} from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { type UserProfile } from "~/model/user"
 import { imgUrl } from "~/utils/adapter/static_file"
@@ -9,9 +15,17 @@ export interface Props
 }
 
 export function Avatar(props: Props) {
-	let [error, set_error] = createSignal(false)
+	let [error, setError] = createSignal(false)
 
 	let [_, other_props] = splitProps(props, ["class", "user"])
+
+	createEffect(() => {
+		if (!props.user) {
+			setError(true)
+		} else {
+			setError(false)
+		}
+	})
 
 	return (
 		<Show
@@ -34,7 +48,7 @@ export function Avatar(props: Props) {
 				src={imgUrl(props.user?.avatar_url) ?? ""}
 				alt={props.alt ?? "avatar"}
 				onError={() => {
-					set_error(true)
+					setError(true)
 				}}
 				class={twMerge("size-8 rounded-full object-cover", props.class)}
 			/>
