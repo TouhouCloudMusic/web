@@ -14,27 +14,30 @@ export function Avatar(props: Props) {
 	let [_, other_props] = splitProps(props, ["class", "user"])
 
 	return (
-		<div class={twMerge("size-8 overflow-hidden rounded-full", props.class)}>
-			<Show
-				when={!error()}
-				fallback={
-					<div class="flex size-full items-center justify-center bg-slate-200">
-						<span class="text-slate-500">
-							{props.user?.name[0]?.toUpperCase() ?? "N/A"}
-						</span>
-					</div>
-				}
-			>
-				<img
-					{...other_props}
-					src={imgUrl(props.user?.avatar_url) ?? ""}
-					alt={props.alt ?? "avatar"}
-					onError={() => {
-						set_error(true)
-					}}
-					class="size-full object-cover"
-				/>
-			</Show>
-		</div>
+		<Show
+			when={!error()}
+			fallback={
+				<div
+					class={twMerge(
+						"flex size-8 items-center justify-center rounded-full bg-slate-200",
+						props.class,
+					)}
+				>
+					<span class="text-slate-500">
+						{props.user?.name[0]?.toUpperCase() ?? "N/A"}
+					</span>
+				</div>
+			}
+		>
+			<img
+				{...other_props}
+				src={imgUrl(props.user?.avatar_url) ?? ""}
+				alt={props.alt ?? "avatar"}
+				onError={() => {
+					set_error(true)
+				}}
+				class={twMerge("size-8 rounded-full object-cover", props.class)}
+			/>
+		</Show>
 	)
 }
