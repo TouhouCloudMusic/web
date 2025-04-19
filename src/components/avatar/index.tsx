@@ -1,6 +1,7 @@
 import { createSignal, type JSX, Show, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { type UserProfile } from "~/model/user"
+import { imgUrl } from "~/utils/adapter/static_file"
 
 export interface Props
 	extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
@@ -26,7 +27,7 @@ export function Avatar(props: Props) {
 			>
 				<img
 					{...other_props}
-					src={props.user?.avatar_url ?? ""}
+					src={imgUrl(props.user?.avatar_url) ?? ""}
 					alt={props.alt ?? "avatar"}
 					onError={() => {
 						set_error(true)

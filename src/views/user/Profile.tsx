@@ -15,6 +15,7 @@ import { Button } from "~/components/button"
 import { PageLayout } from "~/components/layout/PageLayout"
 import { Data } from "~/data"
 import { type UserProfile } from "~/model/user"
+import { imgUrl } from "~/utils/adapter/static_file"
 import { callHandlerUnion } from "~/utils/dom/event"
 
 type Props = {
@@ -25,11 +26,11 @@ export function Profile(props: Props) {
 	return (
 		<PageLayout>
 			{/* Background image */}
-			<div class="flex h-56 w-full overflow-hidden bg-slate-200">
+			<div class="flex aspect-[4.236] w-full overflow-hidden bg-slate-200">
 				<Show when={props.data.value?.banner_url}>
 					{(url) => (
 						<img
-							src={url()}
+							src={imgUrl(url())}
 							class="size-full object-cover object-center"
 							alt="Banner of the user profile"
 						/>
