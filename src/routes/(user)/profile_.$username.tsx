@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/solid-router"
-import { Resource } from "~/data"
+import { FutureResult } from "~/data"
 import { userProfileQuery, userProfileQueryOption } from "~/data/user"
 import { TanstackQueryClinet } from "~/state/tanstack"
 import { Profile } from "~/views/user/Profile"
@@ -22,7 +22,7 @@ function RouteComponent() {
 	return (
 		<Profile
 			isCurrentUser={false}
-			data={Resource.fromQueryResult(queryResult)}
+			data={FutureResult.fromQueryResult(queryResult)}
 		/>
 	)
 }

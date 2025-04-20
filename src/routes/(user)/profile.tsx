@@ -1,7 +1,7 @@
 import { createFileRoute, useParams } from "@tanstack/solid-router"
 import { AuthGuard } from "~/components/route"
-import { Resource } from "~/data"
 import { userProfileQuery } from "~/data/user"
+import { FutureResult } from "~/libs/adt"
 import { Profile } from "~/views/user/Profile"
 
 export const Route = createFileRoute("/(user)/profile")({
@@ -15,10 +15,7 @@ function RouteComponent() {
 		<AuthGuard>
 			<Profile
 				isCurrentUser={true}
-				data={
-					// Resource.fromQueryResult(queryResult)
-					Resource.Loading()
-				}
+				data={FutureResult.fromQueryResult(queryResult)}
 			/>
 		</AuthGuard>
 	)

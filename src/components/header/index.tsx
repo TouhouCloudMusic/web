@@ -3,6 +3,7 @@ import { Link } from "@tanstack/solid-router"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 import { Button } from "~/components/button"
+import { Future, FutureResult } from "~/libs/adt"
 import { type UserProfile } from "~/model/user"
 import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
@@ -63,7 +64,7 @@ function AuthenticatedContent(props: { user: UserProfile }) {
 			</div>
 			<button onClick={() => setShow(!show())}>
 				<Avatar
-					user={props.user}
+					user={Future.Ready(props.user)}
 					onClick={() => setShow(!show())}
 				/>
 			</button>

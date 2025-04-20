@@ -203,6 +203,6 @@ const TertiaryColor: Record<AppColor, string> = {
 		// @tw
 		`
       text-slate-700
-      disabled:bg-gray-300
+      disabled:bg-slate-200
       `,
 }
