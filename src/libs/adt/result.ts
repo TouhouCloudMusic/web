@@ -3,7 +3,7 @@ export const enum ResultTag {
 	Err,
 }
 
-export interface Ok<T> extends Result<T, unknown> {
+export interface Ok<T> extends Result<T> {
 	readonly value: T
 	readonly tag: ResultTag.Ok
 }

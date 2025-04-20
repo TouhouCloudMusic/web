@@ -61,6 +61,7 @@ export function userProfileQueryOption({
 
 			return user
 		},
+		throwOnError: true,
 	})
 }
 

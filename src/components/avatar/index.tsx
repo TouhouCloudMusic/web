@@ -1,4 +1,5 @@
 import { setResponse } from "@modular-forms/solid"
+import { AccessorWithLatest, createAsync } from "@solidjs/router"
 import {
 	createEffect,
 	createSignal,
@@ -6,16 +7,16 @@ import {
 	Match,
 	Show,
 	splitProps,
+	Suspense,
 	Switch,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
-import { Future, FutureResult, FutureState } from "~/libs/adt"
 import { type UserProfile } from "~/model/user"
 import { imgUrl } from "~/utils/adapter/static_file"
 
 export interface Props
 	extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
-	user?: Future<UserProfile>
+	user?: AccessorWithLatest<UserProfile | undefined>
 }
 
 const enum ImageLoadingState {
@@ -30,32 +31,33 @@ export function Avatar(props: Props) {
 	const [_, otherProps] = splitProps(props, ["class", "user"])
 
 	return (
-		<Switch>
-			<Match when={props.user === undefined}>
-				<div
-					class={twMerge(
-						"flex size-8 items-center justify-center rounded-full bg-slate-200",
-						props.class,
-					)}
-				>
-					<span class="text-slate-500">
-						{props.user?.output?.name[0]?.toUpperCase() ?? "N/A"}
-					</span>
-				</div>
-			</Match>
-			<Match when={props.user?.isPending()}>
+		<Suspense
+			fallback={
 				<div
 					class={twMerge(
 						"size-8 animate-pulse items-center justify-center rounded-full bg-slate-200",
 						props.class,
 					)}
 				></div>
-			</Match>
-			<Match when={props.user?.isReady() && props.user.output}>
+			}
+		>
+			<Show
+				when={props.user}
+				fallback={
+					<div
+						class={twMerge(
+							"flex size-8 items-center justify-center rounded-full bg-slate-200",
+							props.class,
+						)}
+					>
+						<span class="text-slate-500">N/A</span>
+					</div>
+				}
+			>
 				{(user) => (
 					<img
 						{...otherProps}
-						src={imgUrl(user().avatar_url) ?? ""}
+						src={imgUrl(user()()?.avatar_url)}
 						alt={props.alt ?? "avatar"}
 						onLoad={() => {
 							setImageState(ImageLoadingState.Loaded)
@@ -70,7 +72,7 @@ export function Avatar(props: Props) {
 						)}
 					/>
 				)}
-			</Match>
-		</Switch>
+			</Show>
+		</Suspense>
 	)
 }
