@@ -1,6 +1,6 @@
 import { createFileRoute, useParams } from "@tanstack/solid-router"
 import { AuthGuard } from "~/components/route"
-import { Data } from "~/data"
+import { Resource } from "~/data"
 import { userProfileQuery } from "~/data/user"
 import { Profile } from "~/views/user/Profile"
 
@@ -10,9 +10,16 @@ export const Route = createFileRoute("/(user)/profile")({
 
 function RouteComponent() {
 	const queryResult = userProfileQuery({ "params.username": undefined })
+
 	return (
 		<AuthGuard>
-			<Profile data={Data.fromQueryResult(queryResult)} />
+			<Profile
+				isCurrentUser={true}
+				data={
+					// Resource.fromQueryResult(queryResult)
+					Resource.Loading()
+				}
+			/>
 		</AuthGuard>
 	)
 }
