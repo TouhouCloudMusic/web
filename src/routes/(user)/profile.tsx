@@ -1,6 +1,5 @@
-import { createAsync } from "@solidjs/router"
 import { createFileRoute } from "@tanstack/solid-router"
-import { Suspense } from "solid-js"
+import { createResource, Suspense } from "solid-js"
 import { AuthGuard } from "~/components/route"
 import { userProfileQuery } from "~/data/user"
 import { Profile } from "~/views/user/Profile"
@@ -12,7 +11,7 @@ export const Route = createFileRoute("/(user)/profile")({
 function RouteComponent() {
 	const queryResult = userProfileQuery({ "params.username": undefined })
 
-	const data = createAsync(() => queryResult.promise)
+	const [data] = createResource(() => queryResult.promise)
 	return (
 		<AuthGuard>
 			<Suspense fallback={<div>123123</div>}>

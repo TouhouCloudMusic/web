@@ -1,10 +1,10 @@
-import { type AccessorWithLatest } from "@solidjs/router"
 import { Link } from "@tanstack/solid-router"
 import {
 	type ComponentProps,
 	createContext,
 	Match,
 	mergeProps,
+	type Resource,
 	Show,
 	Suspense,
 	Switch,
@@ -20,12 +20,12 @@ import { assertContext } from "~/utils/context"
 import { callHandlerUnion } from "~/utils/dom/event"
 
 type Props = {
-	data: AccessorWithLatest<UserProfile | undefined>
+	data: Resource<UserProfile>
 	isCurrentUser: boolean
 }
 
 type Context = {
-	user: AccessorWithLatest<UserProfile | undefined>
+	user: Resource<UserProfile>
 	userType: UserType
 }
 
@@ -68,7 +68,8 @@ function Content() {
 			{/* Profile banner */}
 			<div
 				class={twJoin(
-					"flex h-68 w-full overflow-hidden bg-slate-200 not-has-[img]:animate-pulse",
+					"flex h-68 w-full overflow-hidden bg-slate-200",
+					context.user.loading && "animate-pulse",
 				)}
 			>
 				<Suspense>
@@ -188,7 +189,10 @@ function ProfileButton(props: ProfileButtonProps) {
 				</div>
 			}
 		>
-			{void context.user()}
+			{
+				// This is to trigger suspense
+				void context.user()
+			}
 			<Switch>
 				<Match when={context.userType === UserType.Current}>
 					<Button

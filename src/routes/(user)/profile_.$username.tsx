@@ -1,5 +1,5 @@
-import { createAsync } from "@solidjs/router"
 import { createFileRoute } from "@tanstack/solid-router"
+import { createResource } from "solid-js"
 import { userProfileQuery, userProfileQueryOption } from "~/data/user"
 import { TanstackQueryClinet } from "~/state/tanstack"
 import { Profile } from "~/views/user/Profile"
@@ -19,7 +19,8 @@ function RouteComponent() {
 	const queryResult = userProfileQuery({
 		"params.username": parmas().username,
 	})
-	const data = createAsync(() => queryResult.promise)
+
+	const [data] = createResource(() => queryResult.promise)
 	return (
 		<Profile
 			isCurrentUser={false}

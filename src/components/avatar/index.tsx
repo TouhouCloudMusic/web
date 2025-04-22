@@ -1,10 +1,9 @@
-import { setResponse } from "@modular-forms/solid"
-import { AccessorWithLatest, createAsync } from "@solidjs/router"
 import {
 	createEffect,
 	createSignal,
 	type JSX,
 	Match,
+	type Resource,
 	Show,
 	splitProps,
 	Suspense,
@@ -16,7 +15,7 @@ import { imgUrl } from "~/utils/adapter/static_file"
 
 export interface Props
 	extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
-	user?: AccessorWithLatest<UserProfile | undefined>
+	user?: Resource<UserProfile>
 }
 
 const enum ImageLoadingState {
