@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/solid-router"
-import { createResource, Suspense } from "solid-js"
+import { createResource } from "solid-js"
 import { AuthGuard } from "~/components/route"
 import { userProfileQuery } from "~/data/user"
+import { useUserCtx } from "~/state/user"
 import { Profile } from "~/views/user/Profile"
 
 export const Route = createFileRoute("/(user)/profile")({
@@ -9,17 +10,23 @@ export const Route = createFileRoute("/(user)/profile")({
 })
 
 function RouteComponent() {
-	const queryResult = userProfileQuery({ "params.username": undefined })
+	const userCtx = useUserCtx()
+	const queryResult = userProfileQuery({
+		"params.username": undefined,
+		current_user: userCtx.user,
+	})
 
-	const [data] = createResource(() => queryResult.promise)
+	const [data] = createResource(() =>
+		// Have to do this to avoid error but idk why
+		queryResult.promise.then((v) => v),
+	)
+
 	return (
 		<AuthGuard>
-			<Suspense fallback={<div>123123</div>}>
-				<Profile
-					isCurrentUser={true}
-					data={data}
-				/>
-			</Suspense>
+			<Profile
+				isCurrentUser={true}
+				data={data}
+			/>
 		</AuthGuard>
 	)
 }

@@ -1,13 +1,10 @@
 import {
-	createEffect,
 	createSignal,
 	type JSX,
-	Match,
 	type Resource,
 	Show,
 	splitProps,
 	Suspense,
-	Switch,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { type UserProfile } from "~/model/user"

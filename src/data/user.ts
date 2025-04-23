@@ -3,14 +3,14 @@ import {
 	createQuery,
 	queryOptions,
 } from "@tanstack/solid-query"
-import { notFound, useNavigate } from "@tanstack/solid-router"
+import { notFound } from "@tanstack/solid-router"
 import { type UserProfile } from "~/model/user"
 
 import { FetchClient } from "."
 
 type Deps = {
 	"params.username"?: string | undefined
-	current_user?: UserProfile
+	current_user?: UserProfile | undefined
 }
 
 export async function userProfileEndpoint({
@@ -51,6 +51,7 @@ export function userProfileQueryOption({
 			Boolean,
 		),
 		queryFn: async () => {
+			if (current_user) return current_user
 			let user = await userProfileEndpoint({
 				"params.username": params_username,
 			})
@@ -58,7 +59,6 @@ export function userProfileQueryOption({
 			if (!user) {
 				throw notFound()
 			}
-
 			return user
 		},
 		throwOnError: true,

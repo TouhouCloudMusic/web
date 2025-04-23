@@ -1,7 +1,15 @@
+/* eslint-disable solid/no-innerhtml */
 import { Link } from "@tanstack/solid-router"
+import Markdownit from "markdown-it"
+import footNote from "markdown-it-footnote"
+import taskList from "markdown-it-task-lists"
 import {
 	type ComponentProps,
 	createContext,
+	createMemo,
+	createResource,
+	createRoot,
+	ErrorBoundary,
 	Match,
 	mergeProps,
 	type Resource,
@@ -73,15 +81,21 @@ function Content() {
 				)}
 			>
 				<Suspense>
-					<Show when={context.user()?.banner_url}>
-						{(url) => (
-							<img
-								src={imgUrl(url())}
-								class="size-full object-cover object-center"
-								alt="Banner of the user profile"
-							/>
-						)}
-					</Show>
+					<ErrorBoundary
+						fallback={(e) => {
+							return <div>Image Error: {e}</div>
+						}}
+					>
+						<Show when={!context.user.error && context.user.latest?.banner_url}>
+							{(url) => (
+								<img
+									src={imgUrl(url())}
+									class="size-full object-cover object-center"
+									alt="Banner of the user profile"
+								/>
+							)}
+						</Show>
+					</ErrorBoundary>
 				</Suspense>
 			</div>
 
@@ -93,11 +107,11 @@ function Content() {
 						<UserName />
 						<ProfileButton />
 					</div>
-					<div class="col-span-3 min-h-[1024px] rounded-xl bg-slate-100 p-4">
-						<h2 class="mb-2 font-bold text-slate-700">Intro</h2>
-						<p class="text-sm text-slate-600">简介内容...</p>
-					</div>
-					<div class="col-span-9 rounded-xl bg-slate-100 p-4">
+					<Suspense fallback={<div>WTF</div>}>
+						<Bio />
+					</Suspense>
+
+					<div class="col-span-9 min-h-[1024px] rounded-xl bg-slate-100 p-4">
 						<h2 class="mb-2 font-bold text-slate-700">Timeline</h2>
 						<ul class="space-y-2 text-sm text-slate-600"></ul>
 					</div>
@@ -226,5 +240,75 @@ function ProfileButton(props: ProfileButtonProps) {
 				</Match>
 			</Switch>
 		</Suspense>
+	)
+}
+
+function createMdit() {
+	let inst: Markdownit | undefined
+
+	return async () => {
+		if (inst) {
+			return inst
+		} else {
+			const mdit = Markdownit()
+
+			mdit.use(footNote)
+			mdit.use(taskList)
+			const Shiki = (await import("@shikijs/markdown-it")).default
+			mdit.use(
+				await Shiki({
+					themes: {
+						dark: "catppuccin-latte",
+						light: "catppuccin-mocha",
+					},
+				}),
+			)
+
+			inst = mdit
+
+			return inst
+		}
+	}
+}
+
+const useMdit = createRoot(() => createMdit())
+
+function Bio() {
+	const ctx = assertContext(Context)
+
+	const [mdit] = createResource(async () => {
+		return useMdit()
+	})
+
+	const isLoading = createMemo(() => mdit.loading || ctx.user.loading)
+
+	return (
+		<div class="col-span-full">
+			<h1 class="mb-2 font-bold text-slate-700">Bio</h1>
+			<div
+				class={`min-h-32 rounded-md bg-slate-200 p-4 text-slate-700 ${isLoading() ? "animate-pulse" : undefined}`}
+			>
+				<Suspense>
+					{(() => {
+						const bio = ctx.user()?.bio
+
+						return (
+							<div
+								innerHTML={(() => {
+									if (bio) {
+										const html = mdit()?.render(bio)
+
+										return html
+									} else {
+										return "这个人什么也没写哦("
+									}
+								})()}
+								class="markdown"
+							></div>
+						)
+					})()}
+				</Suspense>
+			</div>
+		</div>
 	)
 }
