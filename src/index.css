@@ -15,6 +15,7 @@
 html {
   color: hsl(var(--text-color-primary));
   background-color: hsl(var(--background-color-primary));
+  white-space: break-spaces;
   font-family:
     Geist,
     -apple-system,
@@ -31,9 +32,16 @@ html {
     sans-serif;
 }
 
-body, html, #root {
+html[data-mode="dark"] {
+  color: white;
+}
+
+body {
   height: 100%;
-  margin: 0;
+}
+
+#app {
+  height: 100%;
 }
 
 svg {
