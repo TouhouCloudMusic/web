@@ -3,9 +3,8 @@ semi: false
 singleAttributePerLine: true
 overrides:
   - files:
-      - "**/.{ts,tsx}"
+      - "packages/web/**/.{ts,tsx}"
     options:
       htmlWhitespaceSensitivity: ignore
       plugins:
         - prettier-plugin-tailwindcss
-        - "@trivago/prettier-plugin-sort-imports"
