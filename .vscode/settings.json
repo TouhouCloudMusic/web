@@ -2,7 +2,9 @@
   "files.exclude": {
     ".eslintcache": true
   },
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "[typescript]": {
+    "typescript.preferences.importModuleSpecifierEnding": "minimal"
+  },
   // tailwind
   "tailwindCSS.classAttributes": ["class", "class:list", "twMerge"],
   "tailwindCSS.experimental.classRegex": [
