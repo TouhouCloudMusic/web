@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "storybook-solidjs"
 import * as mock from "~/mock"
 import { type UserContext, UserContextProvider } from "~/state/user"
-
 import * as right from "./right"
 
 const meta: Meta<typeof right.RightSidebar> = {

@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from "storybook-solidjs"
 import baka from "~/components/avatar/baka.jpg"
 import { type UserContext, UserContextProvider } from "~/state/user"
-
 import * as header from "."
 
 const meta: Meta<typeof header.Header> = {
