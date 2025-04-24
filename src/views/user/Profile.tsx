@@ -1,15 +1,11 @@
-/* eslint-disable solid/no-innerhtml */
+/* @refresh skip */
 import { Link } from "@tanstack/solid-router"
-import Markdownit from "markdown-it"
-import footNote from "markdown-it-footnote"
-import taskList from "markdown-it-task-lists"
 import {
 	type ComponentProps,
 	createContext,
-	createMemo,
-	createResource,
-	createRoot,
+	createSignal,
 	ErrorBoundary,
+	For,
 	Match,
 	mergeProps,
 	type Resource,
@@ -22,7 +18,8 @@ import { twJoin, twMerge } from "tailwind-merge"
 import { Avatar } from "~/components/avatar"
 import { Button } from "~/components/button"
 import { PageLayout } from "~/components/layout/PageLayout"
-import { type UserProfile } from "~/model/user"
+import { Markdown } from "~/components/markdown"
+import { type UserRole, type UserProfile } from "~/model/user"
 import { imgUrl } from "~/utils/adapter/static_file"
 import { assertContext } from "~/utils/context"
 import { callHandlerUnion } from "~/utils/dom/event"
@@ -103,17 +100,42 @@ function Content() {
 				<div class="grid auto-rows-auto grid-cols-12 gap-4 px-4">
 					{/* Avatar */}
 					<ProfileAvatar />
-					<div class="col-span-full col-start-4 mx-2 my-4 flex h-10 items-baseline rounded-xl">
-						<UserName />
-						<ProfileButton />
+					<div class="col-span-full col-start-4 mx-2 my-4 rounded-xl">
+						<div class="flex items-baseline">
+							<UserName />
+							<ProfileButton />
+						</div>
+						<ul class="mt-1 flex gap-2">
+							<For
+								each={context.user()?.roles.concat([
+									{
+										id: 123,
+										name: "Moderator",
+									},
+								])}
+							>
+								{(role) => (
+									<li>
+										<RoleBadge role={role.name} />
+									</li>
+								)}
+							</For>
+						</ul>
 					</div>
+
 					<Suspense fallback={<div>WTF</div>}>
 						<Bio />
 					</Suspense>
 
-					<div class="col-span-9 min-h-[1024px] rounded-xl bg-slate-100 p-4">
-						<h2 class="mb-2 font-bold text-slate-700">Timeline</h2>
-						<ul class="space-y-2 text-sm text-slate-600"></ul>
+					<div class="col-span-9">
+						<div class="mb-2 font-bold text-slate-700">Timeline</div>
+						<div class="min-h-[1024px] rounded-xl bg-slate-100 p-4">
+							<ul class="space-y-2 text-sm text-slate-600">
+								{
+									// TODO
+								}
+							</ul>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -129,7 +151,7 @@ function UserName() {
 				<div class="h-full w-36 animate-pulse rounded-md bg-slate-200"></div>
 			}
 		>
-			<span class="flex font-inter text-xl font-semibold">
+			<span class="flex font-inter text-xl font-semibold text-slate-1000">
 				{context.user()?.name}
 			</span>
 		</Suspense>
@@ -243,72 +265,51 @@ function ProfileButton(props: ProfileButtonProps) {
 	)
 }
 
-function createMdit() {
-	let inst: Markdownit | undefined
-
-	return async () => {
-		if (inst) {
-			return inst
-		} else {
-			const mdit = Markdownit()
-
-			mdit.use(footNote)
-			mdit.use(taskList)
-			const Shiki = (await import("@shikijs/markdown-it")).default
-			mdit.use(
-				await Shiki({
-					themes: {
-						dark: "catppuccin-latte",
-						light: "catppuccin-mocha",
-					},
-				}),
-			)
-
-			inst = mdit
-
-			return inst
-		}
-	}
-}
-
-const useMdit = createRoot(() => createMdit())
-
 function Bio() {
+	const [mdParsing, setMdParsing] = createSignal(true)
 	const ctx = assertContext(Context)
-
-	const [mdit] = createResource(async () => {
-		return useMdit()
-	})
-
-	const isLoading = createMemo(() => mdit.loading || ctx.user.loading)
-
 	return (
-		<div class="col-span-full">
-			<h1 class="mb-2 font-bold text-slate-700">Bio</h1>
+		<div class="col-span-3">
+			<div class="mb-2 font-bold text-slate-700">Bio</div>
 			<div
-				class={`min-h-32 rounded-md bg-slate-200 p-4 text-slate-700 ${isLoading() ? "animate-pulse" : undefined}`}
+				class={`min-h-32 rounded-md bg-slate-100 p-4 ${mdParsing() ? "animate-pulse" : ""}`}
 			>
 				<Suspense>
-					{(() => {
-						const bio = ctx.user()?.bio
-
-						return (
-							<div
-								innerHTML={(() => {
-									if (bio) {
-										const html = mdit()?.render(bio)
-
-										return html
-									} else {
-										return "这个人什么也没写哦("
-									}
-								})()}
-								class="markdown"
-							></div>
-						)
-					})()}
+					<Markdown
+						content={ctx.user()?.bio}
+						fallback="这个人什么也没有写哦（"
+						onRendered={() => setMdParsing(false)}
+					/>
 				</Suspense>
 			</div>
 		</div>
+	)
+}
+
+function RoleBadge(props: { role: UserRole }) {
+	function matchColor(role: UserRole) {
+		switch (role) {
+			case "Admin":
+				// @tw
+				return "bg-reimu-100 text-reimu-700"
+			case "Moderator":
+				// @tw
+				return "bg-purple-100/80 text-purple-800/75"
+			case "User":
+				return ""
+		}
+	}
+
+	return (
+		<Show when={props.role != "User"}>
+			<div
+				class={twJoin(
+					"w-fit rounded-full px-2 py-1 text-center text-xs font-semibold",
+					matchColor(props.role),
+				)}
+			>
+				{props.role}
+			</div>
+		</Show>
 	)
 }
