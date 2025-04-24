@@ -1,6 +1,4 @@
 @theme {
-  --color-*: initial;
-
   --color-slate-100: hsl(210 9 96);
   --color-slate-200: hsl(216 12 92);
   --color-slate-300: hsl(220 10 88);
