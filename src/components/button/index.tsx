@@ -40,8 +40,7 @@ export interface Props extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function Button(props: Props) {
-  // @tw
-  const BUTTON_COMMON_STYLES = `rounded-sm transition-all font-medium p-1`
+  const BUTTON_COMMON_STYLES = `rounded-sm transition-all font-medium p1`
   const DEFAULT_COLOR: AppColor = "Gray"
   let variant_color = match.in<Variant>().match({
     "'Primary'": () => PrimaryColor[props.color ?? DEFAULT_COLOR],
