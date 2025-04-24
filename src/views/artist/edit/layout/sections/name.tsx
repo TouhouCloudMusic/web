@@ -1,8 +1,6 @@
 import { Field } from "@modular-forms/solid"
 import { TextField } from "~/components/form/index.tsx"
-
 import { useController } from "../context.tsx"
-
 export function Name() {
   const { formStore, initData, t, dataQuery } = useController()
 

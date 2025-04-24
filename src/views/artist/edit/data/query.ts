@@ -4,7 +4,6 @@ import {
   type QueryOptions,
 } from "@tanstack/solid-query"
 import { type AppLocale } from "~/state/i18n"
-
 import { findArtistByID } from "./db"
 import { fetchDictionary } from "./i18n"
 

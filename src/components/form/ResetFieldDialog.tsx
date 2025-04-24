@@ -1,5 +1,4 @@
 import { createMemo } from "solid-js"
-
 import { Button, SecondaryButton, TertiaryButton } from "../button/index.tsx"
 import { ArrowPathIcon } from "../icons/heroicons/24/outline.tsx"
 import { Dialog } from "./Dialog/index.ts"

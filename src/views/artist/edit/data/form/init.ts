@@ -1,7 +1,6 @@
-import * as Option from "fp-ts/Option"
 import { pipe } from "fp-ts/function"
+import * as Option from "fp-ts/Option"
 import { sortMemberList } from "~/views/artist/utils/sort_member_list"
-
 import {
   type AliasSchema,
   type ArtistFormSchema,

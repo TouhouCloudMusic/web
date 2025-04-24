@@ -11,7 +11,7 @@ export function StateProvider(props: ParentProps) {
     <MetaProvider>
       <TanStackProvider>
         <I18NProvider>
-          <UserContextProvider>
+          <UserContextProvider user={undefined}>
             <ThemeProvider>{props.children}</ThemeProvider>
           </UserContextProvider>
         </I18NProvider>

@@ -1,30 +1,16 @@
-import { createContext, onMount, type ParentProps } from "solid-js"
+import { createContext, type ParentProps } from "solid-js"
 import { createMutable } from "solid-js/store"
 import { useContextUnsave } from "~/lib/context"
 import { type UserProfile } from "~/model/user"
-import { FetchClient } from "~/query"
 
 export const enum NotificationState {
   None,
   Unread,
   Muted,
 }
-
 export class UserStore {
   constructor(private ctx: UserContext) {
     return createMutable(this)
-  }
-
-  private isLoading = false
-
-  async trySignIn() {
-    let res = await FetchClient.GET("/profile")
-    this.isLoading = false
-    if (res.data?.data) {
-      this.ctx = {
-        user: res.data.data,
-      }
-    }
   }
 
   get notification_state() {
@@ -51,15 +37,15 @@ export class UserStore {
     this.ctx = ctx
   }
 
-  async sign_out() {
-    let res = await FetchClient.GET("/sign_out")
-    if (res.error) {
-      throw res.error
-    }
+  sign_out() {
     this.ctx = undefined
   }
 }
 
+export type User = {
+  name: string
+  avatar_url: string
+}
 export type UserContext =
   | {
       user: UserProfile
@@ -76,11 +62,13 @@ const USER_CONTEXT = createContext<UserStore>()
 
 export const use_user_ctx = () => useContextUnsave(USER_CONTEXT)
 
-export function UserContextProvider(props: ParentProps) {
-  let store = new UserStore(undefined)
-  onMount(() => {
-    void store.trySignIn()
-  })
+export function UserContextProvider(
+  props: ParentProps & {
+    user: UserContext
+  },
+) {
+  // eslint-disable-next-line solid/reactivity
+  let store = new UserStore(props.user)
   return (
     <USER_CONTEXT.Provider value={store}>
       {props.children}

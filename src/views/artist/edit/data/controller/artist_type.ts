@@ -6,7 +6,6 @@ import {
 } from "@modular-forms/solid"
 import { createEffect, on } from "solid-js"
 import { produce, type SetStoreFunction } from "solid-js/store"
-
 import { type ControllerStore } from "."
 import { type ArtistFormSchema, type MemberListSchema } from "../form"
 

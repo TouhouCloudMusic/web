@@ -1,4 +1,3 @@
-import { RatingGroup } from "@ark-ui/solid"
 import {
   type Accessor,
   Index,
@@ -7,6 +6,7 @@ import {
   Switch,
   createSignal,
 } from "solid-js"
+import { RatingGroup } from "@ark-ui/solid"
 import { StarIcon } from "solid-radix-icons"
 
 export function UserActionComp() {

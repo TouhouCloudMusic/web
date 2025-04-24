@@ -6,13 +6,14 @@ import { For } from "solid-js"
 import { CaretSortIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { stringSimilarity } from "string-similarity-js"
 import { twMerge } from "tailwind-merge"
+
 import { TertiaryButton } from "~/components/button/index.tsx"
-import { Combobox as ComboboxStyle } from "~/components/form/Combobox/index.tsx"
 import {
   FieldArray as _FieldArray,
   ResetFieldDialogTrigger,
   TextField,
 } from "~/components/form/index.tsx"
+import { Combobox as ComboboxStyle } from "~/components/form/Combobox/index.tsx"
 import { Card } from "~/components/layout/index.tsx"
 import { localizedLanguageArray } from "~/lib/form/schema/language.ts"
 import { type IndexComponentProps } from "~/lib/type/solid-js/jsx.ts"
@@ -62,13 +63,10 @@ export function LocalizedName() {
                 onReset={resetField}
               />
               <TertiaryButton
-                size="Xs"
+                size="xs"
                 onClick={insertItem}
                 class="mr-0.5 aspect-square h-full p-1.5"
-                aria-label={`Insert new item to ${fieldArray.name.replace(
-                  "_",
-                  " ",
-                )}`}
+                aria-label={`Insert new item to ${fieldArray.name.replace("_", " ")}`}
               >
                 <PlusIcon />
               </TertiaryButton>

@@ -1,7 +1,6 @@
-import type { SetStoreFunction } from "solid-js/store"
 import { createProvider } from "~/utils/createProvider"
-
 import type { UserPageData } from "./user"
+import type { SetStoreFunction } from "solid-js/store"
 
 type UserDataController = ReturnType<typeof createUserDataController>
 
