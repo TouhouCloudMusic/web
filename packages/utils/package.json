@@ -1,0 +1,10 @@
+{
+  "name": "@touhouclouddb/utils",
+  "module": "./src/index.ts",
+  "type": "module",
+  "devDependencies": {},
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {}
+}
