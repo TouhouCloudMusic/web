@@ -9,7 +9,7 @@ import {
   PersonIcon,
   ReaderIcon,
 } from "solid-radix-icons"
-import { use_user_ctx } from "~/state/user"
+import { useUserCtx } from "~/state/user"
 
 import { ListItem, Sidebar } from "."
 import { Avatar } from "../avatar"
@@ -20,7 +20,7 @@ export type Props = {
 }
 
 export function RightSidebar(props: Props) {
-  let user_ctx = use_user_ctx()
+  let user_ctx = useUserCtx()
   return (
     <div class="w-full h-[48vh] bg-slate-800/5">
       <Sidebar class="p-3 flex flex-col gap-2">
