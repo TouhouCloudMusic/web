@@ -1,12 +1,14 @@
-import type { Accessor, Setter } from "solid-js"
+import type { Setter } from "solid-js"
 
-export function createClickOutside<T extends HTMLElement>(
-  ref: Accessor<T>,
-  setter: Setter<boolean>,
+export function createClickOutsize<T extends () => HTMLElement | undefined>(
+  ref: Array<T>,
+  signal: Setter<boolean>,
 ) {
   return (event: Event) => {
-    if (!ref().contains(event.target as Node)) {
-      setter(false)
+    const target = event.target as HTMLElement
+    for (const el of ref) {
+      if (el()?.contains(target)) return
     }
+    signal(false)
   }
 }

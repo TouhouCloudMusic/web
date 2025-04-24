@@ -38,14 +38,12 @@ body,
   margin: 0;
 }
 
-@layer base {
-  svg {
-    color: var(--text-color-tertiary);
-  }
+svg {
+  color: var(--text-color-tertiary);
+}
 
-  select {
-    &:disabled {
-      background-color: hsl(var(--background-color-secondary));
-    }
+select {
+  &:disabled {
+    background-color: hsl(var(--background-color-secondary));
   }
 }

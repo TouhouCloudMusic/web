@@ -13,7 +13,12 @@ export function Avatar(props: Props) {
   let [_, other_props] = splitProps(props, ["class", "user"])
 
   return (
-    <div class={twMerge("size-8 rounded-full overflow-hidden", props.class)}>
+    <div
+      class={twMerge(
+        "inline-block size-8 rounded-full overflow-hidden cursor-pointer",
+        props.class,
+      )}
+    >
       <Show
         when={!error()}
         fallback={
