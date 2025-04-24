@@ -5,7 +5,7 @@ import { defineConfig } from "vite"
 import solidPlugin from "vite-plugin-solid"
 import tsconfigPaths from "vite-tsconfig-paths"
 
-import { generatePlugin } from "./plugins/generate"
+import { GenerateCounstantsPlugin } from "./plugins/generate_constants"
 
 export default defineConfig({
   plugins: [
@@ -14,7 +14,7 @@ export default defineConfig({
     tailwindcss(),
     TanStackRouterVite({ target: "solid", autoCodeSplitting: true }),
     tsconfigPaths(),
-    generatePlugin("http://localhost:12345"),
+    GenerateCounstantsPlugin("http://localhost:12345"),
   ],
   server: {
     port: 3000,
