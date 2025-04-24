@@ -47,9 +47,9 @@ export interface SongData {
   reviews: SongReview[]
 }
 
-export type SongStore = ReturnType<typeof createSongStore>
+export type SongController = ReturnType<typeof createSongController>
 
-function createSongStore(
+function createSongController(
   state: SongData,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setState: SetStoreFunction<SongData>,
@@ -76,4 +76,5 @@ function createSongStore(
   return songController
 }
 
-export const [SongDataProvider, useSongData] = createProvider(createSongStore)
+export const [SongDataProvider, useSongData] =
+  createProvider(createSongController)

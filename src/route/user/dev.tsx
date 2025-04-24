@@ -1,11 +1,11 @@
 import TimelineList from "./(comp)/time_line"
-import { testUserPageData } from "./mock_data"
-import { UserDataProvider } from "./store"
+import { UserDataProvider } from "./controller"
+import { testUserPageData } from "./user_test_data"
 
 export default function UserPage() {
   return (
     <UserDataProvider defaultState={testUserPageData}>
-      <main class="flex">
+      <main>
         <aside class="grow">
           这里是aside
           <div class="avatar">这里是头像</div>

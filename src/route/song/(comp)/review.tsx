@@ -1,7 +1,7 @@
 import { For } from "solid-js"
 import { RatingStatic } from "~/components/static_rating"
 
-import { useSongData } from "../store"
+import { useSongData } from "../controller"
 
 export function ReviewComp() {
   const { reviews } = useSongData()
@@ -39,7 +39,7 @@ export function ReviewComp() {
                     </p>
                     <p class="mx-2">
                       <time
-                        class="text-sm font-medium text-gray-600 italic"
+                        class="text-sm font-medium italic text-gray-600"
                         datetime={review.date}
                       >
                         {review.date}

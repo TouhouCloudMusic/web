@@ -1,6 +1,6 @@
-import type { SongData, SongReview } from "./store"
-import type { AltVer } from "./store"
-import { ALT_VER_TYPES } from "./store"
+import type { SongData, SongReview } from "./controller"
+import type { AltVer } from "./controller"
+import { ALT_VER_TYPES } from "./controller"
 
 function versionGenerator(index: number): AltVer[] {
   const arr: AltVer[] = []

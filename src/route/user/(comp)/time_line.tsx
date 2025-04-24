@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Index, Match, Switch } from "solid-js"
 
-import { useUserController } from "../store"
+import { useUserController } from "../controller"
 import type { ReviewAction } from "../user"
 
 export default function TimelineList() {
@@ -20,7 +20,7 @@ export default function TimelineList() {
                   头像
                 </a>
               </div>
-              <p class="self-center text-sm text-gray-600 italic">
+              <p class="self-center text-sm italic text-gray-600">
                 <time datetime={item().time}>{item().time}</time>
               </p>
             </div>
@@ -43,7 +43,7 @@ export default function TimelineList() {
                         封面
                       </a>
                     </div>
-                    <p class="mx-2 text-sm text-gray-600 italic">
+                    <p class="mx-2 text-sm italic text-gray-600">
                       <a
                         href={`/${item().target_type}/${item().target_id}`}
                         class="blue_link"
