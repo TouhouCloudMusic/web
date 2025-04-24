@@ -1,19 +1,35 @@
-import { createSignal, Show, splitProps, type JSX } from "solid-js"
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  Show,
+  splitProps,
+  type JSX,
+} from "solid-js"
 import { twMerge } from "tailwind-merge"
-import { type User } from "~/state/user"
 
 export interface Props extends JSX.ImgHTMLAttributes<HTMLImageElement> {
-  user?: User | undefined
+  username?: string
 }
 
 export function Avatar(props: Props) {
+  let is_invalid_src = createMemo(() => {
+    return props.src === undefined || props.src === ""
+  })
+
   let handle_error = () => {
     set_error(true)
   }
 
   let [error, set_error] = createSignal(false)
 
-  let [_, other_props] = splitProps(props, ["class", "src", "alt", "user"])
+  let [_, other_props] = splitProps(props, ["class", "src", "alt", "username"])
+
+  createEffect(() => {
+    if (is_invalid_src()) {
+      set_error(true)
+    }
+  })
 
   return (
     <div
@@ -27,14 +43,14 @@ export function Avatar(props: Props) {
         fallback={
           <div class="size-full flex items-center justify-center bg-gray-200">
             <span class="text-sm text-gray-500">
-              {props.user?.name[0]?.toUpperCase() ?? "N/A"}
+              {props.username?.[0]?.toUpperCase() ?? "N/A"}
             </span>
           </div>
         }
       >
         <img
           {...other_props}
-          src={props.user?.avatar_url}
+          src={props.src}
           alt={props.alt ?? "avatar"}
           onError={handle_error}
           class="object-cover size-full"
