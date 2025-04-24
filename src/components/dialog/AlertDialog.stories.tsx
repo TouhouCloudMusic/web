@@ -1,7 +1,7 @@
-import { type Meta, type StoryObj } from "storybook-solidjs"
-import { AlertDialog } from "./AlertDialog"
-import { createSignal } from "solid-js"
-import { Button } from "@suid/material"
+import { Meta, StoryObj } from "storybook-solidjs";
+import { AlertDialog } from "./AlertDialog";
+import { createSignal } from "solid-js";
+import { Button } from "@suid/material";
 
 const meta = {
   title: "组件/对话框/AlertDialog",
@@ -16,26 +16,26 @@ const meta = {
     onCancel: { action: "canceled", description: "取消按钮点击回调" },
     onClose: { action: "closed", description: "关闭对话框回调" },
   },
-} satisfies Meta<typeof AlertDialog>
+} satisfies Meta<typeof AlertDialog>;
 
-export default meta
-type Story = StoryObj<typeof AlertDialog>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 // 基础对话框示例
 export const Default: Story = {
   render: (args) => {
-    const [open, setOpen] = createSignal(false)
-
+    const [open, setOpen] = createSignal(false);
+    
     return (
       <>
         <Button onClick={() => setOpen(true)}>打开对话框</Button>
-        <AlertDialog
+        <AlertDialog 
           {...args}
-          open={open()}
+          open={open()} 
           onClose={() => setOpen(false)}
         />
       </>
-    )
+    );
   },
   args: {
     title: "提示",
@@ -43,33 +43,28 @@ export const Default: Story = {
     confirmText: "确定",
     cancelText: "取消",
   },
-}
+};
 
 // 删除确认对话框示例
 export const DeleteConfirmation: Story = {
   render: (args) => {
-    const [open, setOpen] = createSignal(false)
+    const [open, setOpen] = createSignal(false);
     const handleDelete = () => {
-      console.log("执行删除操作")
-      setTimeout(() => setOpen(false), 500)
-    }
-
+      console.log("执行删除操作");
+      setTimeout(() => setOpen(false), 500);
+    };
+    
     return (
       <>
-        <Button
-          color="error"
-          onClick={() => setOpen(true)}
-        >
-          删除项目
-        </Button>
-        <AlertDialog
+        <Button color="error" onClick={() => setOpen(true)}>删除项目</Button>
+        <AlertDialog 
           {...args}
           open={open()}
           onClose={() => setOpen(false)}
           onConfirm={handleDelete}
         />
       </>
-    )
+    );
   },
   args: {
     title: "确认删除",
@@ -77,29 +72,25 @@ export const DeleteConfirmation: Story = {
     confirmText: "删除",
     cancelText: "取消",
   },
-}
+};
 
 // 自定义按钮文本的对话框
 export const CustomButtonText: Story = {
   render: (args) => {
-    const [open, setOpen] = createSignal(false)
-
+    const [open, setOpen] = createSignal(false);
+    
     return (
       <>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => setOpen(true)}
-        >
+        <Button variant="outlined" color="primary" onClick={() => setOpen(true)}>
           自定义按钮文本
         </Button>
-        <AlertDialog
+        <AlertDialog 
           {...args}
           open={open()}
           onClose={() => setOpen(false)}
         />
       </>
-    )
+    );
   },
   args: {
     title: "版本更新",
@@ -107,28 +98,25 @@ export const CustomButtonText: Story = {
     confirmText: "立即更新",
     cancelText: "稍后再说",
   },
-}
+};
 
 // 没有取消按钮的对话框
 export const NoCancel: Story = {
   render: (args) => {
-    const [open, setOpen] = createSignal(false)
-
+    const [open, setOpen] = createSignal(false);
+    
     return (
       <>
-        <Button
-          variant="contained"
-          onClick={() => setOpen(true)}
-        >
+        <Button variant="contained" onClick={() => setOpen(true)}>
           只有确认按钮
         </Button>
-        <AlertDialog
+        <AlertDialog 
           {...args}
           open={open()}
           onClose={() => setOpen(false)}
         />
       </>
-    )
+    );
   },
   args: {
     title: "系统通知",
@@ -136,4 +124,4 @@ export const NoCancel: Story = {
     confirmText: "我知道了",
     cancelText: "", // 空字符串将隐藏取消按钮
   },
-}
+};
