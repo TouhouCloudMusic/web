@@ -2,6 +2,8 @@ import { createSignal, type JSX, Show, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { type UserProfile } from "~/model/user"
 
+import { createEffect } from "../../../dist/assets/web-BNG3azGW"
+
 export interface Props
   extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
   user?: UserProfile | undefined
@@ -12,6 +14,9 @@ export function Avatar(props: Props) {
 
   let [_, other_props] = splitProps(props, ["class", "user"])
 
+  createEffect(() => {
+    console.log(error())
+  })
   return (
     <div
       class={twMerge(
