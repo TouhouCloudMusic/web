@@ -1,22 +1,21 @@
 import { createSignal, type JSX, Show, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
-import { type UserProfile } from "~/model/user"
-
-import { createEffect } from "../../../dist/assets/web-BNG3azGW"
+import { type User } from "~/state/user"
 
 export interface Props
   extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
-  user?: UserProfile | undefined
+  user?: User | undefined
 }
 
 export function Avatar(props: Props) {
+  let handle_error = () => {
+    set_error(true)
+  }
+
   let [error, set_error] = createSignal(false)
 
   let [_, other_props] = splitProps(props, ["class", "user"])
 
-  createEffect(() => {
-    console.log(error())
-  })
   return (
     <div
       class={twMerge(
@@ -36,11 +35,9 @@ export function Avatar(props: Props) {
       >
         <img
           {...other_props}
-          src={props.user?.avatar_url ?? ""}
+          src={props.user?.avatar_url}
           alt={props.alt ?? "avatar"}
-          onError={() => {
-            set_error(true)
-          }}
+          onError={handle_error}
           class="object-cover size-full"
         />
       </Show>
