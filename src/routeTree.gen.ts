@@ -11,19 +11,12 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as AuthImport } from './routes/auth'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as userProfileImport } from './routes/(user)/profile'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
 
 // Create/Update Routes
-
-const AuthRoute = AuthImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRoute,
-} as any)
 
 const AboutRoute = AboutImport.update({
   id: '/about',
@@ -67,13 +60,6 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
     '/(user)/profile': {
       id: '/(user)/profile'
       path: '/profile'
@@ -96,7 +82,6 @@ declare module '@tanstack/solid-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
   '/profile': typeof userProfileRoute
   '/profile/$username': typeof userProfileUsernameRoute
 }
@@ -104,7 +89,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
   '/profile': typeof userProfileRoute
   '/profile/$username': typeof userProfileUsernameRoute
 }
@@ -113,21 +97,19 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/auth': typeof AuthRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/auth' | '/profile' | '/profile/$username'
+  fullPaths: '/' | '/about' | '/profile' | '/profile/$username'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/auth' | '/profile' | '/profile/$username'
+  to: '/' | '/about' | '/profile' | '/profile/$username'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/auth'
     | '/(user)/profile'
     | '/(user)/profile_/$username'
   fileRoutesById: FileRoutesById
@@ -136,7 +118,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AuthRoute: typeof AuthRoute
   userProfileRoute: typeof userProfileRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
 }
@@ -144,7 +125,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AuthRoute: AuthRoute,
   userProfileRoute: userProfileRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
 }
@@ -161,7 +141,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
-        "/auth",
         "/(user)/profile",
         "/(user)/profile_/$username"
       ]
@@ -171,9 +150,6 @@ export const routeTree = rootRoute
     },
     "/about": {
       "filePath": "about.tsx"
-    },
-    "/auth": {
-      "filePath": "auth.tsx"
     },
     "/(user)/profile": {
       "filePath": "(user)/profile.tsx"
