@@ -35,7 +35,7 @@ export function EditProfile() {
 
   return (
     <PageLayout>
-      <div class="col-span-22 col-start-2 grid grid-cols-[1fr_auto] pt-6">
+      <div class="col-start-2 col-span-22 grid grid-cols-[1fr_auto] pt-6">
         <div>
           <div>{user.name}</div>
           <div>{new Date(user.last_login).toLocaleString("zh-CN")}</div>
@@ -72,7 +72,7 @@ function UploadAvatarFormDialog() {
   setShow(true)
   return (
     <>
-      <div class="mt-8 flex">
+      <div class="flex mt-8">
         <Button
           class="mx-auto"
           variant="Primary"
@@ -114,17 +114,17 @@ export function UploadAvatarFormContent(props: {
   return (
     <Card
       ref={props.ref}
-      class="h-128 w-96"
+      class="w-96 h-128"
     >
       <Form class="size-full">
         <FileField
-          class="flex size-full flex-col"
+          class="flex flex-col size-full"
           multiple={false}
           onFileChange={(details) => {
             setShowDragZone(!(details.acceptedFiles.length > 0))
           }}
         >
-          <FileField.Label class="text-center text-lg font-medium">
+          <FileField.Label class="text-center font-medium text-lg">
             Upload Avatar
           </FileField.Label>
           <Show
