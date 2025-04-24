@@ -2,7 +2,7 @@ import { createContext, onMount, type ParentProps } from "solid-js"
 import { createMutable } from "solid-js/store"
 import { FetchClient } from "~/data"
 import { type UserProfile } from "~/model/user"
-import { assertContext, useContextUnsave } from "~/utils/context"
+import { useContextUnsave } from "~/utils/context"
 
 export const enum NotificationState {
 	None,
@@ -19,7 +19,6 @@ export class UserStore {
 
 	async trySignIn() {
 		let res = await FetchClient.GET("/profile")
-
 		this.isLoading = false
 		if (res.data?.data) {
 			this.ctx = {
@@ -54,9 +53,7 @@ export class UserStore {
 
 	async sign_out() {
 		let res = await FetchClient.GET("/sign_out")
-		if (res.response.status != 200) {
-			console.log("Sign out failed", res.error)
-
+		if (res.error) {
 			throw res.error
 		}
 		this.ctx = undefined
@@ -77,7 +74,7 @@ export type UserConfig = {
 
 const USER_CONTEXT = createContext<UserStore>()
 
-export const useUserCtx = () => assertContext(USER_CONTEXT)
+export const useUserCtx = () => useContextUnsave(USER_CONTEXT)
 
 export function UserContextProvider(props: ParentProps) {
 	let store = new UserStore(undefined)
