@@ -30,12 +30,7 @@ export const generatePlugin = (base_url?: string): Plugin => ({
 })
 
 async function generateConstants(base_url: string) {
-  let url = new URL("constant.ts", base_url)
-  let response = await fetch(url)
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.statusText}`)
-  }
-
+  const response = await fetch(`${base_url}/constant.ts`)
   const content = await response.text()
 
   return fs.writeFile("src/constant/server.ts", content)
