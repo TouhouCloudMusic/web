@@ -1,5 +1,6 @@
-import { createContext, createMemo, type ParentProps } from "solid-js"
-
+import { createProvider } from "~/utils/createProvider"
+import type { SetStoreFunction } from "solid-js/store"
+import { Context, createContext, createMemo, ParentProps } from "solid-js"
 import { useContextUnsave } from "~/lib/context"
 
 export const enum NotificationState {
@@ -19,7 +20,6 @@ export class UserStore {
       return NotificationState.None
     }
   }
-
   get user() {
     if (this.ctx) {
       return this.ctx.user

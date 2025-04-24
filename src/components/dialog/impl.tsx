@@ -9,13 +9,13 @@ import {
 } from "@kobalte/core/dialog"
 import {
   createMemo,
+  splitProps,
   type JSX,
   type ParentProps,
-  splitProps,
   type ValidComponent,
 } from "solid-js"
 import { twMerge } from "tailwind-merge"
-import { Button, type Props } from "~/components/button"
+import { type Props, Button } from "~/components/button"
 
 export type RootProps = Pick<
   K_DialogRootProps,
