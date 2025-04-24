@@ -1,14 +1,15 @@
 import { Title } from "@solidjs/meta"
 import { createFileRoute, Link } from "@tanstack/solid-router"
+import Cookies from "js-cookie"
 import { Button } from "~/components/button"
-import { useUserCtx } from "~/state/user"
+import { use_user_ctx } from "~/state/user"
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 })
 
 function HomePage() {
-  let user_ctx = useUserCtx()
+  let user_ctx = use_user_ctx()
   return (
     <div class="flex justify-center">
       <div class="w-[60rem]">
