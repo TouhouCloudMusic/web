@@ -5,23 +5,17 @@ import { TanStackRouterDevtools } from "@tanstack/solid-router-devtools"
 import { ErrorBoundary, type ParentProps } from "solid-js"
 import { Header } from "~/components/header"
 import ErrorPage from "~/route/500.tsx"
-import { NotFound } from "~/views/NotFound"
 
 export const Route = createRootRoute({
-  component: RouteTree,
-  notFoundComponent: NotFound,
-})
-
-function RouteTree() {
-  return (
+  component: () => (
     <Layout>
       <AppErrorBoundary>
         <Outlet />
         <TanStackRouterDevtools />
       </AppErrorBoundary>
     </Layout>
-  )
-}
+  ),
+})
 
 function Layout(props: ParentProps) {
   // TODO: Need fix, transition bettwen language change
