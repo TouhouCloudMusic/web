@@ -1,5 +1,5 @@
 import type { SetStoreFunction } from "solid-js/store"
-import { createProvider } from "~/utils/createProvider"
+import { createProvider } from "~/util/createProvider"
 
 export interface AltVer {
   title: string

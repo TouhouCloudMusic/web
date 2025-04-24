@@ -1,4 +1,4 @@
-import { createProvider } from "~/utils/createProvider"
+import { createProvider } from "~/util/createProvider"
 import type { UserPageData } from "./user"
 import type { SetStoreFunction } from "solid-js/store"
 

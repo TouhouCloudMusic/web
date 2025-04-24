@@ -1,4 +1,7 @@
 import dayjs from "dayjs"
+import * as Either from "fp-ts/either"
+import { pipe } from "fp-ts/function"
+import Cookie from "js-cookie"
 import type { ParentProps, Signal } from "solid-js"
 import {
   createContext,
@@ -7,73 +10,70 @@ import {
   Show,
   Suspense,
 } from "solid-js"
-import { useContextUnsave } from "~/lib/context"
+import { match } from "ts-pattern"
+import { getCookie } from "vinxi/http"
+import { useContextUnsave } from "~/lib/context/use_context_unsave"
 
 export enum AppTheme {
-  Light,
-  Dark,
+  light,
+  dark,
 }
 
-export class ThemeStore {
-  private signal: Signal<AppTheme>
+export class ThemeController {
+  private themeSignal: Signal<AppTheme>
 
   constructor(theme: AppTheme) {
-    this.signal = createSignal(theme)
+    this.themeSignal = createSignal(theme)
   }
 
-  public get theme(): AppTheme {
-    return this.signal[0]()
-  }
-
-  public static new(theme: AppTheme) {
-    return new ThemeStore(theme)
-  }
-
-  public static default() {
-    return new ThemeStore(AppTheme.Light)
+  public value(): AppTheme {
+    return this.themeSignal[0]()
   }
 
   public set(theme: AppTheme): void {
-    this.signal[1](theme)
-
+    this.themeSignal[1](theme)
     updateTheme(theme)
-    // setThemeCookie(theme)
+    setThemeCookie(theme)
   }
 }
 
-export const ThemeContext = createContext<ThemeStore>()
+export const ThemeContext = createContext<ThemeController>()
 export const useTheme = () => useContextUnsave(ThemeContext)
 
 export function ThemeProvider(props: ParentProps) {
+  const [serverTheme] = createResource(() => getThemeCookie())
   return (
     <Suspense>
-      <ThemeContext.Provider value={ThemeStore.default()}>
-        {props.children}
-      </ThemeContext.Provider>
+      <Show when={serverTheme()}>
+        {(serverTheme) => (
+          <ThemeContext.Provider
+            value={new ThemeController(mapThemeCookieToID(serverTheme()))}
+          >
+            {props.children}
+          </ThemeContext.Provider>
+        )}
+      </Show>
     </Suspense>
   )
 }
 
-function fromString(str: string) {
-  let id = (() => {
-    try {
-      return parseInt(str)
-    } catch {
-      return AppTheme.Light
-    }
-  })()
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-  if (AppTheme.Dark == id) {
-    return AppTheme.Dark
-  } else {
-    return AppTheme.Light
-  }
+function mapThemeCookieToID(str: string) {
+  const id = pipe(
+    Either.tryCatch(() => parseInt(str), Either.toError),
+    Either.match(
+      () => AppTheme.light,
+      (x) => x,
+    ),
+  )
+  return match(id)
+    .with(AppTheme.light, (x) => x)
+    .with(AppTheme.dark, (x) => x)
+    .otherwise(() => AppTheme.light)
 }
 
 export function updateTheme(theme: AppTheme) {
   switch (theme) {
-    case AppTheme.Dark:
+    case AppTheme.dark:
       setDoucmentTheme("dark")
       break
     default:
@@ -81,11 +81,17 @@ export function updateTheme(theme: AppTheme) {
   }
 }
 
-// function setThemeCookie(theme: AppTheme) {
-//   Cookie.set("app_theme", String(theme), {
-//     expires: dayjs().add(30, "days").toDate(),
-//   })
-// }
+function getThemeCookie(): string {
+  "use server"
+  const themeID = getCookie("app_theme") ?? "0"
+  return themeID
+}
+
+function setThemeCookie(theme: AppTheme) {
+  Cookie.set("app_theme", String(theme), {
+    expires: dayjs().add(30, "days").toDate(),
+  })
+}
 
 function setDoucmentTheme(str: string) {
   document.getElementById("app")!.classList.add("notransition")
