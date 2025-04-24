@@ -1,18 +1,12 @@
-export type AppColor =
-  | "Reimu" //
-  | "Marisa"
-  | "Green"
-  | "Blue"
-  | "Gray"
-  | "Slate"
+export type AppColor = "Slate" | "Gray" | "Reimu" | "Marisa" | "Green" | "Blue"
 
 export const AppColor = {
   *iter() {
-    yield "Reimu" as AppColor
-    yield "Marisa"
-    yield "Green"
-    yield "Blue"
+    yield "Blue" as AppColor
     yield "Gray"
+    yield "Green"
+    yield "Marisa"
+    yield "Reimu"
     yield "Slate"
   },
 }
