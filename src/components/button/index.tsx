@@ -2,16 +2,14 @@ import * as Kobalte from "@kobalte/core/button"
 import { mergeProps, type JSX } from "solid-js"
 import { twMerge } from "tailwind-merge"
 import { match } from "arktype"
-import { type AppColor } from "~/components"
-
+import { type ValidColor } from "~/components"
 /**
  * Note: 样式没做完
  */
-
 export type Size = "Xs" | "Sm" | "Md" | "Lg"
 export const Size = {
-  *iter() {
-    yield "Xs" as Size
+  *iter(): Generator<Size, void, unknown> {
+    yield "Xs"
     yield "Sm"
     yield "Md"
     yield "Lg"
@@ -23,8 +21,8 @@ export const Size = {
 
 export type Variant = "Primary" | "Secondary" | "Tertiary"
 export const Variant = {
-  *iter() {
-    yield "Primary" as Variant
+  *iter(): Generator<Variant, void, unknown> {
+    yield "Primary"
     yield "Secondary"
     yield "Tertiary"
   },
@@ -36,7 +34,7 @@ export const Variant = {
 export interface Props extends JSX.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant
   size?: Size
-  color?: AppColor
+  color?: ValidColor
 }
 
 export function Button(props: Props) {
@@ -85,7 +83,7 @@ const VariantClass = {
   Tertiary: `bg-primary hover:bg-gray-100 active:bg-gray-200 disabled:bg-gray-300 [&_svg]:text-tertiary`,
 }
 
-const PrimaryColor: Record<AppColor, string> = {
+const PrimaryColor: Record<ValidColor, string> = {
   Gray:
     // @tw
     `
@@ -125,7 +123,7 @@ const PrimaryColor: Record<AppColor, string> = {
     `,
 }
 
-const SecondaryColor: Record<AppColor, string> = {
+const SecondaryColor: Record<ValidColor, string> = {
   Gray:
     // @tw
     `
@@ -170,7 +168,7 @@ const SecondaryColor: Record<AppColor, string> = {
 		`,
 }
 
-const TertiaryColor: Record<AppColor, string> = {
+const TertiaryColor: Record<ValidColor, string> = {
   Gray:
     // @tw
     `

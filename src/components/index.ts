@@ -1,12 +1,18 @@
-export type AppColor = "Slate" | "Gray" | "Reimu" | "Marisa" | "Green" | "Blue"
+export type ValidColor =
+  | "slate"
+  | "gray"
+  | "reimu"
+  | "marisa"
+  | "green"
+  | "blue"
 
-export const AppColor = {
-  *iter() {
-    yield "Blue" as AppColor
-    yield "Gray"
-    yield "Green"
-    yield "Marisa"
-    yield "Reimu"
-    yield "Slate"
+export const ValidColor = {
+  iter: function* () {
+    yield "slate"
+    yield "gray"
+    yield "reimu"
+    yield "marisa"
+    yield "green"
+    yield "blue"
   },
 }

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "storybook-solidjs"
 
 import { Size, Button, Variant } from "."
-import { AppColor } from ".."
+import { ValidColor } from ".."
 
 const meta: Meta<typeof Button> = {
   component: Button,
@@ -14,7 +14,7 @@ const meta: Meta<typeof Button> = {
       control: {
         type: "select",
       },
-      options: AppColor.iter().toArray(),
+      options: ValidColor.iter().toArray(),
     },
     size: {
       control: {
