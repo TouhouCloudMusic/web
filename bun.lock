@@ -39,7 +39,7 @@
         "@ark/attest": "^0.46.0",
         "@chromatic-com/storybook": "^3.2.6",
         "@eslint/js": "^9.21.0",
-        "@faker-js/faker": "^9.5.1",
+        "@faker-js/faker": "^9.7.0",
         "@solidjs/testing-library": "^0.8.10",
         "@storybook/addon-essentials": "^8.6.12",
         "@storybook/addon-interactions": "^8.6.12",
@@ -252,7 +252,7 @@
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.2.8", "https://registry.npmmirror.com/@eslint/plugin-kit/-/plugin-kit-0.2.8.tgz", { "dependencies": { "@eslint/core": "^0.13.0", "levn": "^0.4.1" } }, "sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA=="],
 
-    "@faker-js/faker": ["@faker-js/faker@9.5.1", "https://registry.npmmirror.com/@faker-js/faker/-/faker-9.5.1.tgz", {}, "sha512-0fzMEDxkExR2cn731kpDaCCnBGBUOIXEi2S1N5l8Hltp6aPf4soTMJ+g4k8r2sI5oB+rpwIW8Uy/6jkwGpnWPg=="],
+    "@faker-js/faker": ["@faker-js/faker@9.7.0", "https://registry.npmmirror.com/@faker-js/faker/-/faker-9.7.0.tgz", {}, "sha512-aozo5vqjCmDoXLNUJarFZx2IN/GgGaogY4TMJ6so/WLZOWpSV7fvj2dmrV6sEAnUm1O7aCrhTibjpzeDFgNqbg=="],
 
     "@floating-ui/core": ["@floating-ui/core@1.6.9", "https://registry.npmmirror.com/@floating-ui/core/-/core-1.6.9.tgz", { "dependencies": { "@floating-ui/utils": "^0.2.9" } }, "sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw=="],
 
