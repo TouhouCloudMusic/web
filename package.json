@@ -50,7 +50,7 @@
 	"devDependencies": {
 		"@ark/attest": "^0.46.0",
 		"@chromatic-com/storybook": "^3.2.6",
-		"@eslint/js": "^9.21.0",
+		"@eslint/js": "^9.25.1",
 		"@faker-js/faker": "^9.5.1",
 		"@solidjs/testing-library": "^0.8.10",
 		"@storybook/addon-essentials": "^8.6.12",
