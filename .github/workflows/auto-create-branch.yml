@@ -3,17 +3,18 @@ name: Create Branch for Todo Task
 on:
   issues:
     types: [opened]
+  workflow_dispatch:
 
 jobs:
   create-branch-for-task:
-    if: contains(github.event.issue.labels.*.name, 'Todo Task')
+    if: contains(toJson(github.event.issue.labels), 'todo task')
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout main branch
+    - name: Checkout dev branch
       uses: actions/checkout@v4
       with:
-        ref: main
+        ref: dev
 
     - name: Set up Git config
       run: |
@@ -30,8 +31,8 @@ jobs:
 
     - name: Create and push branch
       run: |
-        git fetch origin main
-        git checkout -b ${{ steps.vars.outputs.branch_name }} origin/main
+        git fetch origin dev
+        git checkout -b ${{ steps.vars.outputs.branch_name }} origin/dev
         git push origin ${{ steps.vars.outputs.branch_name }}
 
     - name: Comment on the issue
