@@ -53,6 +53,10 @@ export async function generateOpenApi(base_url: string) {
 	)
 	const NULL = ts.factory.createLiteralTypeNode(ts.factory.createNull())
 
+	const DATE = ts.factory.createTypeReferenceNode(
+		ts.factory.createIdentifier("Date"),
+	)
+
 	let api_doc_url = new URL("openapi.json", base_url)
 
 	// Make sure server is running
@@ -74,6 +78,10 @@ export async function generateOpenApi(base_url: string) {
 
 			if (schemaObject.format === "binary") {
 				types.push(BLOB)
+			}
+
+			if (schemaObject.format === "date") {
+				types.push(DATE)
 			}
 
 			switch (types.length) {
