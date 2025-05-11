@@ -1,5 +1,5 @@
 import * as v from "valibot"
-import { type Eq, type If } from "~/types"
+import type { Expand, SafeOmit, Eq, If } from "~/types"
 import { type ExternalSchema } from "~/types/valibot"
 
 import { type OpenApiSchema } from ".."
@@ -14,6 +14,8 @@ import {
 } from "../share/schema"
 
 type o_NewArtistCorrection = OpenApiSchema["NewCorrection_NewArtist"]
+type o_NewArtist = o_NewArtistCorrection["data"]
+
 type o_ArtistType = OpenApiSchema["ArtistType"]
 type o_NewMembership = OpenApiSchema["NewMembership"]
 type o_Tenure = OpenApiSchema["Tenure"]
@@ -40,7 +42,13 @@ export const NewMembership = v.object({
 	tenure: v.array(Tenure),
 } satisfies ExternalSchema<o_NewMembership>)
 
-export type NewArtist = o_NewArtistCorrection["data"]
+export type NewArtist = Expand<
+	SafeOmit<o_NewArtist, "start_date" | "end_date"> &
+		Partial<{
+			start_date: DateWithPrecision | null
+			end_date: DateWithPrecision | null
+		}>
+>
 export const NewArtist = v.object({
 	name: EntityIdent,
 	localized_names: v.exactOptional(v.nullable(v.array(NewLocalizedName))),
@@ -53,12 +61,12 @@ export const NewArtist = v.object({
 	start_location: v.exactOptional(v.nullable(Location)),
 	current_location: v.exactOptional(v.nullable(Location)),
 	memberships: v.exactOptional(v.nullable(v.array(NewMembership))),
-} satisfies ExternalSchema<NewArtist>)
+} satisfies ExternalSchema<NewArtist, o_NewArtist>)
 
 export const NewArtistCorrection = NewCorrection(NewArtist)
-type v_NewArtistCorrection = v.InferInput<typeof NewArtistCorrection>
-export type NewArtistCorrection = If<
-	Eq<o_NewArtistCorrection, v_NewArtistCorrection>,
-	o_NewArtistCorrection,
+export type NewArtistCorrection = v.InferInput<typeof NewArtistCorrection>
+export type __NewArtistCorrectionOut = If<
+	Eq<o_NewArtistCorrection, v.InferOutput<typeof NewArtistCorrection>>,
+	v.InferOutput<typeof NewArtistCorrection>,
 	never
 >

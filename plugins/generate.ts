@@ -80,10 +80,6 @@ export async function generateOpenApi(base_url: string) {
 				types.push(BLOB)
 			}
 
-			if (schemaObject.format === "date") {
-				types.push(DATE)
-			}
-
 			switch (types.length) {
 				case 0:
 					return undefined

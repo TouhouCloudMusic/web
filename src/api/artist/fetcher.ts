@@ -1,8 +1,8 @@
 import { FetchClient } from ".."
-import { type NewArtistCorrection } from "./schema"
+import { type __NewArtistCorrectionOut } from "./schema"
 
 export type __CreataOption = {
-	data: NewArtistCorrection
+	data: __NewArtistCorrectionOut
 }
 export function __create(opt: __CreataOption) {
 	return FetchClient.POST("/artist", {
