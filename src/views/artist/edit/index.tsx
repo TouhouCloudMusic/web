@@ -24,7 +24,7 @@ type Props =
 	| {
 			type: "edit"
 	  }
-export default function (props: Props) {
+export function EditArtistPage(props: Props) {
 	return (
 		<PageLayout class="grid auto-rows-min grid-cols-24">
 			<div class="col-span-full grid h-24 grid-cols-subgrid border-b-1 border-slate-300">
@@ -51,13 +51,13 @@ const TENURE_STRING_SCHMEA = v.message(
 		v.transform((value) =>
 			value
 				.split(",")
-				.map((v) => {
+				.map((v): NewMembership["tenure"][number] => {
 					const [start, end] = v.split("-")
 
 					return {
 						join_year: start ? parseInt(start) : null,
 						leave_year: end ? parseInt(end) : null,
-					} satisfies NewMembership["tenure"][number]
+					}
 				})
 				.filter((v) => !!v.join_year && !!v.leave_year),
 		),
