@@ -41,6 +41,7 @@ export const NewMembership = v.object({
 	roles: v.array(EntityId),
 	tenure: v.array(Tenure),
 } satisfies ExternalSchema<o_NewMembership>)
+export type NewMembership = v.InferInput<typeof NewMembership>
 
 export type NewArtist = Expand<
 	SafeOmit<o_NewArtist, "start_date" | "end_date"> &

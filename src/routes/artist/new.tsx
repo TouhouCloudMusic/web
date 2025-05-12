@@ -6,5 +6,5 @@ export const Route = createFileRoute("/artist/new")({
 })
 
 function RouteComponent() {
-	return <Form />
+	return <Form type="new" />
 }

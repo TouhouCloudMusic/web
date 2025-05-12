@@ -2,11 +2,12 @@
 import { mergeProps, type ComponentProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-export type __LabelProps = ComponentProps<"label">
+export type LabelProps = ComponentProps<"label">
 
-export const LABEL_CLASSNAME = "font-inter font-medium leading-6"
+// @tw
+export const LABEL_CLASSNAME = "font-medium leading-6 mb-3 block"
 
-export function __Label(props: __LabelProps) {
+export function Label(props: LabelProps) {
 	const localProps = mergeProps(props, {
 		get class() {
 			return props.class ?
