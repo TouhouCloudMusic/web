@@ -1,3 +1,4 @@
+import dayjs from "dayjs"
 import { createEffect, createMemo, on } from "solid-js"
 import { createStore } from "solid-js/store"
 import {
@@ -28,6 +29,11 @@ const THIS_YEAR = new Date().getFullYear()
 export function DateWithPrecision(props: DateWithPrecisionProps) {
 	const [store, setStore] = createStore<Store>({})
 
+	const maxDay = createMemo(() =>
+		store.y && store.m ?
+			dayjs(`${store.y}-${store.m}`).daysInMonth()
+		:	undefined,
+	)
 	const setYear = (val?: number) => {
 		if (val && val > THIS_YEAR) {
 			val = THIS_YEAR
@@ -39,6 +45,9 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		setStore("m", val)
 	}
 	const setDay = (val?: number) => {
+		if (val && val > maxDay()!) {
+			val = maxDay()
+		}
 		setStore("d", val)
 	}
 	const onChange =
