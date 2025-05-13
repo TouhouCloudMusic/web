@@ -2,6 +2,7 @@
 // oxlint-disable eqeqeq max-lines-per-function
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
+import { useNavigate } from "@tanstack/solid-router"
 import { createMemo, createSignal, For, onMount, Show } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
@@ -21,16 +22,13 @@ import { Divider } from "~/components/divider"
 import { PageLayout } from "~/layout/PageLayout"
 import { todo } from "~/utils"
 
-type Props = (
+type Props =
 	| {
 			type: "new"
 	  }
 	| {
 			type: "edit"
 	  }
-) & {
-	handleSubmit(val: NewArtistCorrectionOut): void
-}
 export function EditArtistPage(props: Props) {
 	return (
 		<PageLayout class="grid auto-rows-min grid-cols-24">
@@ -71,7 +69,6 @@ const TENURE_STRING_SCHMEA = v.message(
 	),
 	"Invalid tenure string",
 )
-
 // oxlint-disable-next-line max-lines-per-function
 function Form(props: Props) {
 	const mutation = createMemo(() =>
@@ -87,15 +84,132 @@ function Form(props: Props) {
 			},
 		})
 
-	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
-		console.log("submit", data)
+	const navigator = useNavigate()
 
+	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
 		const parsed = v.safeParse(NewArtistCorrection, data)
 		if (parsed.success) {
-			mutation().mutate(parsed.output)
+			mutation().mutate(parsed.output, {
+				onSuccess() {
+					return navigator({
+						to: "/",
+					})
+				},
+			})
 		} else {
-			console.log("parse error", parsed.issues)
+			throw new M.FormError<NewArtistCorrection>(v.summarize(parsed.issues))
 		}
+	}
+
+	function Membership() {
+		return (
+			<FieldArray name="data.memberships">
+				{(fields) => {
+					const isDisabled = createMemo(() => {
+						const type = M.getValue(formStore, "data.artist_type")
+						return !type || type == "Unknown"
+					})
+					return (
+						<div class="w-96">
+							<div class="mb-4 flex place-content-between items-center gap-4">
+								<FormComp.Label class="m-0">Membership</FormComp.Label>
+								<Button
+									variant="Tertiary"
+									class="h-max p-2"
+									disabled={isDisabled()}
+									onClick={() => {
+										M.insert(formStore, "data.memberships", {
+											// @ts-expect-error
+											value: undefined,
+										})
+									}}
+								>
+									<PlusIcon class="size-4" />
+								</Button>
+							</div>
+							<ul class="flex flex-col gap-2">
+								<For each={fields.items}>
+									{(_, idx) => {
+										onMount(() => {
+											// @ts-expect-error
+											M.setValues(
+												formStore,
+												`data.memberships.${idx()}.tenure`,
+												[undefined],
+											)
+											// @ts-expect-error
+											M.setValues(
+												formStore,
+												`data.memberships.${idx()}.roles`,
+												[undefined],
+											)
+										})
+										return (
+											<>
+												<li class="grid grid-cols-[1fr_auto] gap-2">
+													<Field
+														name={`data.memberships.${idx()}.artist_id`}
+														type="number"
+													>
+														{(field, props) => (
+															<InputField.Root class="grow">
+																<InputField.Input
+																	{...props}
+																	id={field.name}
+																	type="number"
+																	class="no-spinner"
+																	placeholder="Artist ID"
+																/>
+																<InputField.Error message={field.error} />
+															</InputField.Root>
+														)}
+													</Field>
+													<InputField.Root class="row-start-2">
+														<InputField.Input
+															id={`memberships.${idx()}.roles`}
+															placeholder="Role IDs, e.g. `1,2,3`"
+															onChange={(e) => {
+																const value = e.target.value
+																const result = value.split(",").map((v) => {
+																	return Number.parseInt(v, 10)
+																})
+																M.setValues(
+																	formStore,
+																	`data.memberships.${idx()}.roles`,
+																	result,
+																)
+															}}
+														/>
+														{/* <InputField.Error message={} /> */}
+													</InputField.Root>
+													<Tenure index={idx()} />
+
+													<Button
+														variant="Tertiary"
+														size="Sm"
+														class="col-start-2 row-span-3"
+														onClick={() => {
+															M.remove(formStore, "data.memberships", {
+																at: idx(),
+															})
+														}}
+													>
+														<Cross1Icon />
+													</Button>
+												</li>
+												{idx() < fields.items.length - 1 && (
+													<Divider horizonal />
+												)}
+											</>
+										)
+									}}
+								</For>
+							</ul>
+						</div>
+					)
+				}}
+			</FieldArray>
+		)
 	}
 
 	function Tenure(props: { index: number }) {
@@ -391,112 +505,7 @@ function Form(props: Props) {
 				}}
 			/>
 
-			<FieldArray name="data.memberships">
-				{(fields) => {
-					const isDisabled = createMemo(() => {
-						const type = M.getValue(formStore, "data.artist_type")
-						return !type || type == "Unknown"
-					})
-					return (
-						<div class="w-96">
-							<div class="mb-4 flex place-content-between items-center gap-4">
-								<FormComp.Label class="m-0">Membership</FormComp.Label>
-								<Button
-									variant="Tertiary"
-									class="h-max p-2"
-									disabled={isDisabled()}
-									onClick={() => {
-										M.insert(formStore, "data.memberships", {
-											// @ts-expect-error
-											value: undefined,
-										})
-									}}
-								>
-									<PlusIcon class="size-4" />
-								</Button>
-							</div>
-							<ul class="flex flex-col gap-2">
-								<For each={fields.items}>
-									{(_, idx) => {
-										onMount(() => {
-											// @ts-expect-error
-											M.setValues(
-												formStore,
-												`data.memberships.${idx()}.tenure`,
-												[undefined],
-											)
-											// @ts-expect-error
-											M.setValues(
-												formStore,
-												`data.memberships.${idx()}.roles`,
-												[undefined],
-											)
-										})
-										return (
-											<>
-												<li class="grid grid-cols-[1fr_auto] gap-2">
-													<Field
-														name={`data.memberships.${idx()}.artist_id`}
-														type="number"
-													>
-														{(field, props) => (
-															<InputField.Root class="grow">
-																<InputField.Input
-																	{...props}
-																	id={field.name}
-																	type="number"
-																	class="no-spinner"
-																	placeholder="Artist ID"
-																/>
-																<InputField.Error message={field.error} />
-															</InputField.Root>
-														)}
-													</Field>
-													<InputField.Root class="row-start-2">
-														<InputField.Input
-															id={`memberships.${idx()}.roles`}
-															placeholder="Role IDs, e.g. `1,2,3`"
-															onChange={(e) => {
-																const value = e.target.value
-																const result = value.split(",").map((v) => {
-																	return Number.parseInt(v, 10)
-																})
-																M.setValues(
-																	formStore,
-																	`data.memberships.${idx()}.roles`,
-																	result,
-																)
-															}}
-														/>
-														{/* <InputField.Error message={} /> */}
-													</InputField.Root>
-													<Tenure index={idx()} />
-
-													<Button
-														variant="Tertiary"
-														size="Sm"
-														class="col-start-2 row-span-3"
-														onClick={() => {
-															M.remove(formStore, "data.memberships", {
-																at: idx(),
-															})
-														}}
-													>
-														<Cross1Icon />
-													</Button>
-												</li>
-												{idx() < fields.items.length - 1 && (
-													<Divider horizonal />
-												)}
-											</>
-										)
-									}}
-								</For>
-							</ul>
-						</div>
-					)
-				}}
-			</FieldArray>
+			<Membership />
 
 			<FieldArray name="data.links">
 				{(fields) => (
@@ -591,17 +600,25 @@ function Form(props: Props) {
 					)}
 				</InputField.Textarea>
 			</InputField.Root> */}
+			<div class="flex flex-col">
+				<Button
+					variant="Primary"
+					type="submit"
+					disabled={mutation().isPending || formStore.submitting}
+				>
+					{mutation().isPending || formStore.submitting ? "Loading" : "Submit"}
+				</Button>
 
-			<Button
-				variant="Primary"
-				type="submit"
-				// disabled={mutation().isPending || formStore.submitting}
-			>
-				{mutation().isPending || formStore.submitting ? "Loading" : "Submit"}
-			</Button>
-
-			<FormComp.ErrorMessage message={formStore.response.message} />
-			<FormComp.ErrorMessage message={mutation().error?.message} />
+				<FormComp.ErrorMessage message={formStore.response.message} />
+				<FormComp.ErrorMessage
+					class="text-lg"
+					message={
+						mutation().isError ?
+							`Error: ${mutation().error?.message}`
+						:	undefined
+					}
+				/>
+			</div>
 		</Form>
 	)
 }

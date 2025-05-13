@@ -11,4 +11,5 @@ export const create = () =>
 			})
 		},
 		mutationKey: ["artist::create"],
+		throwOnError: false,
 	}))

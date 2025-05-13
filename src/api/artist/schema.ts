@@ -68,6 +68,6 @@ export const NewArtistCorrection = NewCorrection(NewArtist)
 export type NewArtistCorrection = v.InferInput<typeof NewArtistCorrection>
 export type NewArtistCorrectionOut = If<
 	Extend<v.InferOutput<typeof NewArtistCorrection>, o_NewArtistCorrection>,
-	v.InferOutput<typeof NewArtistCorrection>,
+	o_NewArtistCorrection,
 	never
 >

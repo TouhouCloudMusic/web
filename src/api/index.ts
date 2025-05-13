@@ -5,7 +5,7 @@ import type { paths, components } from "./openapi"
 
 export type OpenApiSchema = Expand<RevExactRecursive<components["schemas"]>>
 
-export const FetchClient = createFetchClient<paths>({
+export const FetchClient = createFetchClient<Expand<RevExactRecursive<paths>>>({
 	baseUrl: "/api",
 })
 

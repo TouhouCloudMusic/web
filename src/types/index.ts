@@ -85,18 +85,20 @@ export type NestedPartial<T> = {
 	:	NonNullable<T[K]> | undefined
 }
 export type Expand<O> =
-	O extends infer T ?
+	O extends never ? never
+	: O extends infer T ?
 		T extends Record<string, unknown> ?
 			{
-				[K in keyof T]: ControlFlow<{
-					if: IsRecord<T[K]>
-					then: Expand<T[K]>
-					else: NonNullable<T[K]> extends unknown[] ?
-						| Expand<NonNullable<T[K]>[number]>[]
-						| If<IsUndefinable<Required<T>[K]>, undefined, never>
-						| If<IsNullable<T[K]>, null, never>
-					:	T[K]
-				}>
+				[K in keyof T]: NonNullable<T[K]> extends never ? never
+				:	ControlFlow<{
+						if: IsRecord<T[K]>
+						then: Expand<T[K]>
+						else: NonNullable<T[K]> extends unknown[] ?
+							| Expand<NonNullable<T[K]>[number]>[]
+							| If<IsUndefinable<Required<T>[K]>, undefined, never>
+							| If<IsNullable<T[K]>, null, never>
+						:	T[K]
+					}>
 			}
 		:	T
 	:	never
@@ -115,7 +117,8 @@ export type RevExactRecursive<T> = {
 	[K in keyof T]: ControlFlow<{
 		if: IsRecord<NonNullable<T[K]>, string>
 		then: RevExactRecursive<T[K]>
-		else: NonNullable<T[K]> extends unknown[] ?
+		else: NonNullable<T[K]> extends never ? never
+		: NonNullable<T[K]> extends unknown[] ?
 			| RevExactRecursive<NonNullable<T[K]>[number]>[]
 			| If<IsNullable<T[K]>, null, never>
 			| If<And<IsUndefinable<T[K]>, Not<IsOptionalKey<T, K>>>, undefined, never>

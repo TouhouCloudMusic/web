@@ -17,6 +17,7 @@
 		"no-duplicate-imports": "off",
 		"no-ternary": "off",
 		"no-undefined": "off",
+		"no-unused-vars": "warn",
 		"no-magic-numbers": [
 			"error",
 			{ "ignore": [0, 1], "ignoreArrayIndexes": true }
