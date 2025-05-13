@@ -1,23 +1,18 @@
 import * as v from "valibot"
 import { ENTITY_IDENT_MAX_LEN, ENTITY_IDENT_MIN_LEN } from "~/constant/server"
 import type { Eq, If } from "~/types"
-import { type ExternalSchema } from "~/types/valibot"
-import { type DeepMerge } from "~/utils/object"
+import type { ExternalSchema } from "~/types/valibot"
+import type { DeepMerge } from "~/utils/object"
 
-import { type OpenApiSchema } from ".."
+import type { OpenApiSchema } from ".."
 
-export function exactNullable<
-	const TWrapped extends v.BaseSchema<unknown, unknown, v.BaseIssue<unknown>>,
->(wrapped: TWrapped) {
-	return v.exactOptional(v.nullable(wrapped))
-}
+const i32_MAX = 2_147_483_647
 
 export const EntityId = v.pipe(
 	v.number(),
 	v.integer(),
 	v.minValue(1),
-	// i32::MAX
-	v.maxValue(2_147_483_647),
+	v.maxValue(i32_MAX),
 )
 export const EntityIdent = v.pipe(
 	v.string(),
@@ -27,7 +22,7 @@ export const EntityIdent = v.pipe(
 
 export type Location = OpenApiSchema["Location"]
 
-const locationField = exactNullable(v.pipe(v.string(), v.nonEmpty()))
+const locationField = v.nullish(v.pipe(v.string(), v.nonEmpty()))
 export const Location = v.object({
 	country: locationField,
 	province: locationField,
@@ -83,5 +78,6 @@ export const NewLocalizedName = v.object({
 export const Year = v.pipe(v.number(), v.integer())
 
 function toPlainDate(date: Date): string {
+	// oxlint-disable-next-line no-non-null-assertion
 	return date.toISOString().split("T")[0]!
 }

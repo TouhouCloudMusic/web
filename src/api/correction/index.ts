@@ -1,7 +1,7 @@
 import * as v from "valibot"
-import type { Eq, Expand, If, IsSubtype, SafeOmit } from "~/types"
+import type { Eq, Expand, If, Extend, SafeOmit } from "~/types"
 
-import { type OpenApiSchema } from ".."
+import type { OpenApiSchema } from ".."
 
 type O_CorrectionType = OpenApiSchema["CorrectionType"]
 export const CorrectionType = v.union([
@@ -37,7 +37,7 @@ type V_NewCorrection = SafeOmit<
 >
 
 export type NewCorrection<T> = If<
-	IsSubtype<O_NewCorrectionBase, V_NewCorrection>,
+	Extend<O_NewCorrectionBase, V_NewCorrection>,
 	Expand<
 		V_NewCorrection & {
 			data: T

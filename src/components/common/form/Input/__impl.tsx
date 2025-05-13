@@ -1,8 +1,8 @@
 import { type PolymorphicProps, TextField as K_TextField } from "@kobalte/core"
-import {
-	type TextFieldTextAreaProps,
-	type TextFieldInputProps,
-	type TextFieldRootProps,
+import type {
+	TextFieldTextAreaProps,
+	TextFieldInputProps,
+	TextFieldRootProps,
 } from "@kobalte/core/text-field"
 import {
 	createContext,
@@ -21,7 +21,7 @@ import { LABEL_CLASSNAME } from "../label"
 
 const TEXT_INPUT_CLASS = `flex flex-col`
 
-type ContextStore = {
+interface ContextStore {
 	inputId?: string | undefined
 	valid: boolean
 }

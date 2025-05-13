@@ -1,14 +1,17 @@
 /* @refresh reload */
+// oxlint-disable eqeqeq max-lines-per-function
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { createMemo, createSignal, For, onMount, Show } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
-import {
-	NewArtistCorrection,
-	type NewMembership,
-	type ArtistType,
+import { ArtistMutation } from "~/api/artist"
+import type {
+	Tenure,
+	NewArtistCorrectionOut,
+	ArtistType,
 } from "~/api/artist/schema"
+import { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
@@ -16,14 +19,18 @@ import { DateWithPrecision } from "~/components/composite/form/DateWithPrecision
 import { Location } from "~/components/composite/form/Location"
 import { Divider } from "~/components/divider"
 import { PageLayout } from "~/layout/PageLayout"
+import { todo } from "~/utils"
 
-type Props =
+type Props = (
 	| {
 			type: "new"
 	  }
 	| {
 			type: "edit"
 	  }
+) & {
+	handleSubmit(val: NewArtistCorrectionOut): void
+}
 export function EditArtistPage(props: Props) {
 	return (
 		<PageLayout class="grid auto-rows-min grid-cols-24">
@@ -31,7 +38,7 @@ export function EditArtistPage(props: Props) {
 				<div class="col-span-full col-start-2 -col-end-2 flex items-center">
 					<h1 class="text-2xl">
 						<Show
-							when={props.type == "new"}
+							when={props.type === "new"}
 							fallback={<>Edit Artist</>}
 						>
 							Create Artist
@@ -51,12 +58,12 @@ const TENURE_STRING_SCHMEA = v.message(
 		v.transform((value) =>
 			value
 				.split(",")
-				.map((v): NewMembership["tenure"][number] => {
+				.map((v): Tenure => {
 					const [start, end] = v.split("-")
 
 					return {
-						join_year: start ? parseInt(start) : null,
-						leave_year: end ? parseInt(end) : null,
+						join_year: start ? Number.parseInt(start, 10) : undefined,
+						leave_year: end ? Number.parseInt(end, 10) : undefined,
 					}
 				})
 				.filter((v) => !!v.join_year && !!v.leave_year),
@@ -65,7 +72,12 @@ const TENURE_STRING_SCHMEA = v.message(
 	"Invalid tenure string",
 )
 
+// oxlint-disable-next-line max-lines-per-function
 function Form(props: Props) {
+	const mutation = createMemo(() =>
+		props.type == "new" ? ArtistMutation.create() : todo(),
+	)
+
 	const [formStore, { Form, Field, FieldArray }] =
 		createForm<NewArtistCorrection>({
 			validate: M.valiForm(NewArtistCorrection),
@@ -75,9 +87,15 @@ function Form(props: Props) {
 			},
 		})
 
-	const handleSubmit = (values: NewArtistCorrection) => {
-		console.log(values)
-		// 这里可以添加表单提交逻辑
+	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
+		console.log("submit", data)
+
+		const parsed = v.safeParse(NewArtistCorrection, data)
+		if (parsed.success) {
+			mutation().mutate(parsed.output)
+		} else {
+			console.log("parse error", parsed.issues)
+		}
 	}
 
 	function Tenure(props: { index: number }) {
@@ -115,6 +133,7 @@ function Form(props: Props) {
 		<Form
 			class="col-span-full col-start-2 -col-end-2 flex flex-col gap-16 pt-12 pb-32"
 			shouldActive={false}
+			onSubmit={handleSubmit}
 		>
 			<Field name="data.name">
 				{(field, props) => (
@@ -163,7 +182,7 @@ function Form(props: Props) {
 								class="h-max p-2"
 								onClick={() => {
 									M.insert(formStore, "data.localized_names", {
-										// @ts-ignore
+										// @ts-expect-error
 										value: undefined,
 									})
 								}}
@@ -234,7 +253,7 @@ function Form(props: Props) {
 								class="h-max p-2"
 								onClick={() => {
 									M.insert(formStore, "data.aliases", {
-										// @ts-ignore
+										// @ts-expect-error
 										value: undefined,
 									})
 								}}
@@ -247,23 +266,14 @@ function Form(props: Props) {
 								{(_, idx) => (
 									<>
 										<li class="flex gap-2">
-											<Field
-												name={`data.aliases.${idx()}`}
-												transform={M.toCustom(
-													// @ts-expect-error bug
-													(v) => {
-														return Number(v)
-													},
-													{
-														on: "change",
-													},
-												)}
-											>
+											<Field name={`data.aliases.${idx()}`}>
 												{(field, props) => (
 													<InputField.Root class="grow">
 														<InputField.Input
 															{...props}
 															id={field.name}
+															type="number"
+															class="no-spinner"
 															placeholder="Alias Artist ID"
 														/>
 														<InputField.Error message={field.error} />
@@ -302,7 +312,7 @@ function Form(props: Props) {
 								class="h-max p-2"
 								onClick={() => {
 									M.insert(formStore, "data.text_aliases", {
-										// @ts-ignore
+										// @ts-expect-error
 										value: undefined,
 									})
 								}}
@@ -354,12 +364,19 @@ function Form(props: Props) {
 				setValue={(v) => {
 					M.setValue(formStore, "data.start_date", v)
 				}}
+				error={M.getError(formStore, "data.start_date", {
+					shouldActive: false,
+				})}
 			/>
+
 			<DateWithPrecision
 				label="End date"
 				setValue={(v) => {
 					M.setValue(formStore, "data.end_date", v)
 				}}
+				error={M.getError(formStore, "data.end_date", {
+					shouldActive: false,
+				})}
 			/>
 			<Location
 				label="Start Location"
@@ -390,7 +407,7 @@ function Form(props: Props) {
 									disabled={isDisabled()}
 									onClick={() => {
 										M.insert(formStore, "data.memberships", {
-											// @ts-ignore
+											// @ts-expect-error
 											value: undefined,
 										})
 									}}
@@ -406,13 +423,13 @@ function Form(props: Props) {
 											M.setValues(
 												formStore,
 												`data.memberships.${idx()}.tenure`,
-												[null],
+												[undefined],
 											)
 											// @ts-expect-error
 											M.setValues(
 												formStore,
 												`data.memberships.${idx()}.roles`,
-												[null],
+												[undefined],
 											)
 										})
 										return (
@@ -442,9 +459,7 @@ function Form(props: Props) {
 															onChange={(e) => {
 																const value = e.target.value
 																const result = value.split(",").map((v) => {
-																	return parseInt(
-																		v,
-																	) satisfies NewMembership["roles"][number]
+																	return Number.parseInt(v, 10)
 																})
 																M.setValues(
 																	formStore,
@@ -493,7 +508,7 @@ function Form(props: Props) {
 								class="h-max p-2"
 								onClick={() => {
 									M.insert(formStore, "data.links", {
-										// @ts-ignore
+										// @ts-expect-error
 										value: undefined,
 									})
 								}}
@@ -580,13 +595,13 @@ function Form(props: Props) {
 			<Button
 				variant="Primary"
 				type="submit"
-				onClick={() => {
-					console.log(M.getValues(formStore))
-				}}
+				// disabled={mutation().isPending || formStore.submitting}
 			>
-				Submit
+				{mutation().isPending || formStore.submitting ? "Loading" : "Submit"}
 			</Button>
+
 			<FormComp.ErrorMessage message={formStore.response.message} />
+			<FormComp.ErrorMessage message={mutation().error?.message} />
 		</Form>
 	)
 }

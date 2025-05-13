@@ -3,5 +3,9 @@ export function sleep(sec: number) {
 }
 
 export function tw(cls: string) {
-	return cls.replace(/\s+/g, " ").trim()
+	return cls.replaceAll(/\s+/g, " ").trim()
+}
+
+export function todo(msg?: string): never {
+	throw new Error(msg ?? "TODO")
 }
