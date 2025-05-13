@@ -2,16 +2,12 @@
 // oxlint-disable eqeqeq max-lines-per-function
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
-import { useNavigate } from "@tanstack/solid-router"
+import { useBlocker, useNavigate } from "@tanstack/solid-router"
 import { createMemo, createSignal, For, onMount, Show } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
 import { ArtistMutation } from "~/api/artist"
-import type {
-	Tenure,
-	NewArtistCorrectionOut,
-	ArtistType,
-} from "~/api/artist/schema"
+import type { Tenure, ArtistType } from "~/api/artist/schema"
 import { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
@@ -71,6 +67,8 @@ const TENURE_STRING_SCHMEA = v.message(
 )
 // oxlint-disable-next-line max-lines-per-function
 function Form(props: Props) {
+	const navigator = useNavigate()
+
 	const mutation = createMemo(() =>
 		props.type == "new" ? ArtistMutation.create() : todo(),
 	)
@@ -84,7 +82,19 @@ function Form(props: Props) {
 			},
 		})
 
-	const navigator = useNavigate()
+	useBlocker({
+		shouldBlockFn() {
+			if (!formStore.dirty) {
+				return false
+			}
+
+			const msg = confirm(
+				"Are you sure you want to leave this page? Your changes will be lost.",
+			)
+
+			return msg
+		},
+	})
 
 	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
 		const parsed = v.safeParse(NewArtistCorrection, data)
