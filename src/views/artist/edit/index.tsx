@@ -6,6 +6,7 @@ import { useBlocker, useNavigate } from "@tanstack/solid-router"
 import { createMemo, createSignal, For, onMount, Show } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
+
 import { ArtistMutation } from "~/api/artist"
 import type { Tenure, ArtistType } from "~/api/artist/schema"
 import { NewArtistCorrection } from "~/api/artist/schema"
@@ -69,9 +70,9 @@ const TENURE_STRING_SCHMEA = v.message(
 function Form(props: Props) {
 	const navigator = useNavigate()
 
-	const mutation = createMemo(() =>
-		props.type == "new" ? ArtistMutation.create() : todo(),
-	)
+	const mutation =
+		// eslint-disable-next-line solid/reactivity
+		/*@once*/ props.type == "new" ? ArtistMutation.create() : todo()
 
 	const [formStore, { Form, Field, FieldArray }] =
 		createForm<NewArtistCorrection>({
@@ -99,7 +100,7 @@ function Form(props: Props) {
 	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
 		const parsed = v.safeParse(NewArtistCorrection, data)
 		if (parsed.success) {
-			mutation().mutate(parsed.output, {
+			mutation.mutate(parsed.output, {
 				onSuccess() {
 					return navigator({
 						to: "/",
@@ -614,18 +615,16 @@ function Form(props: Props) {
 				<Button
 					variant="Primary"
 					type="submit"
-					disabled={mutation().isPending || formStore.submitting}
+					disabled={mutation.isPending || formStore.submitting}
 				>
-					{mutation().isPending || formStore.submitting ? "Loading" : "Submit"}
+					{mutation.isPending || formStore.submitting ? "Loading" : "Submit"}
 				</Button>
 
 				<FormComp.ErrorMessage message={formStore.response.message} />
 				<FormComp.ErrorMessage
 					class="text-lg"
 					message={
-						mutation().isError ?
-							`Error: ${mutation().error?.message}`
-						:	undefined
+						mutation.isError ? `Error: ${mutation.error.message}` : undefined
 					}
 				/>
 			</div>
