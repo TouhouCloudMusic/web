@@ -1,3 +1,4 @@
+import { lingui } from "@lingui/vite-plugin"
 import tailwindcss from "@tailwindcss/vite"
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite"
 import { defineConfig } from "vite"
@@ -20,6 +21,7 @@ export default defineConfig(({ mode }) => {
 			TanStackRouterVite({ target: "solid", autoCodeSplitting: true }),
 			tsconfigPaths(),
 			generatePlugin(SERVER_URL),
+			lingui(),
 		],
 		server: {
 			port: 3000,
