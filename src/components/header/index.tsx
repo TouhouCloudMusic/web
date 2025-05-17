@@ -1,5 +1,5 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
-import { Link } from "@tanstack/solid-router"
+import { Link, useLocation } from "@tanstack/solid-router"
 import { createMemo, createResource, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 import { type UserProfile } from "~/api/user"
@@ -21,20 +21,46 @@ const HEADER_BTN_CLASS = "size-6 p-1 m-auto"
 
 export function Header() {
 	const Divider = () => <span class="ml-3 h-5 w-[0.5px] bg-slate-400"></span>
+	const location = useLocation();
+
+	const navItems = [
+		{ path: "/", label: "发现音乐" },
+		{ path: "/library", label: "音乐库" },
+		{ path: "/articles", label: "文章" },
+		{ path: "/feeds", label: "动态" },
+		{ path: "/profile", label: "个人中心" }
+	];
+
+	const isActive = (path: string) => {
+		const pathname = location.pathname || "/";
+		return pathname === path ||
+			(path !== "/" && pathname && pathname.startsWith(path));
+	};
+
 	return (
 		<header class="box-content content-center items-center border-b-1 border-slate-300 bg-primary px-4 py-2">
-			<div class="my-auto flex h-8 items-center justify-between">
+			<div class="my-auto flex h-12 items-center justify-between">
 				{/* Left */}
 				<div class="flex items-center">
-					<Button
-						variant="Tertiary"
-						class={HEADER_BTN_CLASS}
-					>
-						<Link to="/">
-							<HamburgerMenuIcon class={"m-auto size-4"} />
-						</Link>
-					</Button>
-					<Divider />
+					<Link to="/" class="mr-6 font-bold text-xl text-rose-600">东方同音鉴</Link>
+
+					{/* 主导航 */}
+					<nav class="flex items-center space-x-6">
+						{navItems.map(item => (
+							<Link
+								to={item.path}
+								class={`text-sm font-medium transition-colors ${isActive(item.path)
+									? 'text-rose-600 relative'
+									: 'text-gray-600 hover:text-gray-900'
+									}`}
+							>
+								{item.label}
+								{isActive(item.path) && (
+									<div class="absolute -bottom-3 left-0 right-0 h-0.5 bg-rose-600 rounded-full"></div>
+								)}
+							</Link>
+						))}
+					</nav>
 				</div>
 				<SearchBar />
 
@@ -132,7 +158,7 @@ function UnauthenticatedButtons() {
 						type: "sign_in",
 					}}
 				>
-					Sign In
+					登录
 				</Link>
 			</Button>
 			<Button
@@ -146,7 +172,7 @@ function UnauthenticatedButtons() {
 						type: "sign_up",
 					}}
 				>
-					Sign Up
+					注册
 				</Link>
 			</Button>
 		</>

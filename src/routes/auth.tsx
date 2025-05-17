@@ -9,6 +9,9 @@ const AuthenSearchSchema = type({
 export const Route = createFileRoute("/auth")({
   component: RouteComponent,
   validateSearch: AuthenSearchSchema,
+  defaultSearchParams: {
+    type: "sign_in",
+  }
 })
 
 function RouteComponent() {

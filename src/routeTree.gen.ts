@@ -11,7 +11,10 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LibraryImport } from './routes/library'
+import { Route as FeedsImport } from './routes/feeds'
 import { Route as AuthImport } from './routes/auth'
+import { Route as ArticlesImport } from './routes/articles'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
 import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
@@ -21,9 +24,27 @@ import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$us
 
 // Create/Update Routes
 
+const LibraryRoute = LibraryImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const FeedsRoute = FeedsImport.update({
+  id: '/feeds',
+  path: '/feeds',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AuthRoute = AuthImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ArticlesRoute = ArticlesImport.update({
+  id: '/articles',
+  path: '/articles',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -81,11 +102,32 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesImport
+      parentRoute: typeof rootRoute
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/feeds': {
+      id: '/feeds'
+      path: '/feeds'
+      fullPath: '/feeds'
+      preLoaderRoute: typeof FeedsImport
+      parentRoute: typeof rootRoute
+    }
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryImport
       parentRoute: typeof rootRoute
     }
     '/(user)/profile': {
@@ -124,7 +166,10 @@ declare module '@tanstack/solid-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
+  '/feeds': typeof FeedsRoute
+  '/library': typeof LibraryRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
   '/profile/$username': typeof userProfileUsernameRoute
@@ -134,7 +179,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
+  '/feeds': typeof FeedsRoute
+  '/library': typeof LibraryRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
   '/profile/$username': typeof userProfileUsernameRoute
@@ -145,7 +193,10 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
+  '/feeds': typeof FeedsRoute
+  '/library': typeof LibraryRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/test_avatar_upload': typeof userTestavataruploadRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
@@ -157,7 +208,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/articles'
     | '/auth'
+    | '/feeds'
+    | '/library'
     | '/profile'
     | '/test_avatar_upload'
     | '/profile/$username'
@@ -166,7 +220,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/articles'
     | '/auth'
+    | '/feeds'
+    | '/library'
     | '/profile'
     | '/test_avatar_upload'
     | '/profile/$username'
@@ -175,7 +232,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/articles'
     | '/auth'
+    | '/feeds'
+    | '/library'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
     | '/(user)/profile_/$username'
@@ -186,7 +246,10 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ArticlesRoute: typeof ArticlesRoute
   AuthRoute: typeof AuthRoute
+  FeedsRoute: typeof FeedsRoute
+  LibraryRoute: typeof LibraryRoute
   userProfileRoute: typeof userProfileRoute
   userTestavataruploadRoute: typeof userTestavataruploadRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
@@ -196,7 +259,10 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ArticlesRoute: ArticlesRoute,
   AuthRoute: AuthRoute,
+  FeedsRoute: FeedsRoute,
+  LibraryRoute: LibraryRoute,
   userProfileRoute: userProfileRoute,
   userTestavataruploadRoute: userTestavataruploadRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
@@ -215,7 +281,10 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/about",
+        "/articles",
         "/auth",
+        "/feeds",
+        "/library",
         "/(user)/profile",
         "/(user)/test_avatar_upload",
         "/(user)/profile_/$username",
@@ -228,8 +297,17 @@ export const routeTree = rootRoute
     "/about": {
       "filePath": "about.tsx"
     },
+    "/articles": {
+      "filePath": "articles.tsx"
+    },
     "/auth": {
       "filePath": "auth.tsx"
+    },
+    "/feeds": {
+      "filePath": "feeds.tsx"
+    },
+    "/library": {
+      "filePath": "library.tsx"
     },
     "/(user)/profile": {
       "filePath": "(user)/profile.tsx"

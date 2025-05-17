@@ -10,6 +10,9 @@ import { twMerge } from "tailwind-merge"
 import { type UserProfile } from "~/api/user"
 import { imgUrl } from "~/utils/adapter/static_file"
 
+// 默认头像路径
+const DEFAULT_AVATAR = "/Admin.jpg";
+
 export interface Props
 	extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
 	user?: Resource<UserProfile>
@@ -40,20 +43,21 @@ export function Avatar(props: Props) {
 			<Show
 				when={props.user}
 				fallback={
-					<div
+					<img
+						{...otherProps}
+						src={DEFAULT_AVATAR}
+						alt="默认头像"
 						class={twMerge(
-							"flex size-8 items-center justify-center rounded-full bg-slate-200",
+							"size-8 rounded-full object-cover",
 							props.class,
 						)}
-					>
-						<span class="text-slate-500">N/A</span>
-					</div>
+					/>
 				}
 			>
 				{(user) => (
 					<img
 						{...otherProps}
-						src={imgUrl(user()()?.avatar_url)}
+						src={user()()?.avatar_url ? imgUrl(user()()?.avatar_url) : DEFAULT_AVATAR}
 						alt={props.alt ?? "avatar"}
 						onLoad={() => {
 							setImageState(ImageLoadingState.Loaded)
