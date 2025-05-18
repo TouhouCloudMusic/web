@@ -1,7 +1,9 @@
+import { useLingui } from "@lingui-solid/solid"
 import { Title } from "@solidjs/meta"
 import { createFileRoute, Link } from "@tanstack/solid-router"
 
 import { Button } from "~/components/button"
+import { useI18N } from "~/state/i18n"
 import { useUserCtx } from "~/state/user"
 
 export const Route = createFileRoute("/")({
@@ -9,7 +11,9 @@ export const Route = createFileRoute("/")({
 })
 
 function HomePage() {
-	let user_ctx = useUserCtx()
+	const userContext = useUserCtx()
+	const i18n = useI18N()
+
 	return (
 		<div class="flex justify-center">
 			<div class="w-240">
@@ -21,10 +25,20 @@ function HomePage() {
 					<li>
 						<Link to="/profile">Profile</Link>
 					</li>
+
+					<Button
+						class="w-48"
+						variant="Primary"
+						onClick={() =>
+							i18n.setLocale(i18n.locale == "en" ? "zh-Hans" : "en")
+						}
+					>
+						Lang: {i18n.locale}
+					</Button>
 					<Button
 						// eslint-disable-next-line solid/reactivity
 						onClick={async () => {
-							await user_ctx.sign_out()
+							await userContext.sign_out()
 						}}
 					>
 						Sign Out

@@ -12,3 +12,11 @@ msgstr ""
 "Last-Translator: \n"
 "Language-Team: \n"
 "Plural-Forms: \n"
+
+#: src/components/header/index.tsx:137
+msgid "Sign In"
+msgstr "登录"
+
+#: src/components/header/index.tsx:151
+msgid "Sign Up"
+msgstr "注册"

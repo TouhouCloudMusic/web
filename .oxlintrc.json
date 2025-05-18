@@ -50,6 +50,7 @@
 		"typescript/consistent-type-definitions": "off",
 		"typescript/explicit-function-return-type": "off",
 		"typescript/consistent-indexed-object-style": "warn",
+		"typescript/prefer-enum-initializers": "off",
 
 		"import/exports-last": "off",
 		"import/max-dependencies": "off",
@@ -58,7 +59,18 @@
 
 		"unicorn/no-anonymous-default-export": "off",
 		"unicorn/no-empty-file": "off",
-		"unicorn/no-null": "off"
+		"unicorn/no-null": "off",
+		"unicorn/filename-case": [
+			"warn",
+			{
+				"cases": {
+					"snakeCase": true,
+					"pascalCase": true
+				}
+			}
+		],
+
+		"promise/prefer-await-to-then": "off"
 	},
 	"plugins": [
 		"import",

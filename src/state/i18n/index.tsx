@@ -28,7 +28,7 @@ export function I18NProvider(props: ParentProps) {
 }
 
 export class I18nStore {
-	locale: Accessor<AppLocale>
+	#locale: Accessor<AppLocale>
 	#setLocale: Setter<AppLocale>
 	inTransition: Transition[0]
 	private startTransition: Transition[1]
@@ -37,7 +37,7 @@ export class I18nStore {
 		const [locale, setLocale] = createSignal<AppLocale>(init)
 		const [inTransition, startTransition] = useTransition()
 
-		this.locale = locale
+		this.#locale = locale
 		this.#setLocale = setLocale
 		this.inTransition = inTransition
 		this.startTransition = startTransition
@@ -61,12 +61,16 @@ export class I18nStore {
 		)
 	}
 
+	public get locale() {
+		return this.#locale()
+	}
+
 	public static new(locale: AppLocale) {
 		return new I18nStore(locale)
 	}
 
 	public setLocale(newLocale: AppLocale) {
-		if (!(this.locale() === newLocale)) {
+		if (!(this.#locale() === newLocale)) {
 			void this.startTransition(() => {
 				this.#setLocale(newLocale)
 			})
