@@ -14,9 +14,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/components/header/index.tsx:137
-msgid "Sign In"
-msgstr "Sign In"
+#~ msgid "Sign In"
+#~ msgstr "Sign In"
 
 #: src/components/header/index.tsx:151
-msgid "Sign Up"
-msgstr "Sign Up"
+#~ msgid "Sign Up"
+#~ msgstr "Sign Up"

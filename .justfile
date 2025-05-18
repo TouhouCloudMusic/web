@@ -1,3 +1,8 @@
+mod i18n '.just/i18n'
+
+default:
+	@just --list
+
 fmt:
 	npx prettier --write .
 
@@ -16,10 +21,3 @@ lint: oxlint eslint
 fix: oxfix esfix
 
 quickfix: oxfix
-
-extract:
-	bunx lingui extract
-compile:
-	bunx lingui compile --typescript
-
-i18n: extract compile
