@@ -3,6 +3,7 @@
 	"env": {
 		"browser": true
 	},
+	"ignorePatterns": ["src/locale/**"],
 	"categories": {
 		"correctness": "error",
 		"suspicious": "warn",
@@ -13,6 +14,7 @@
 		"nursery": "warn"
 	},
 	"rules": {
+		"eqeqeq": "off",
 		"no-async-await": "off",
 		"no-duplicate-imports": "off",
 		"no-ternary": "off",
@@ -22,12 +24,12 @@
 			"error",
 			{ "ignore": [0, 1], "ignoreArrayIndexes": true }
 		],
+		"no-void": "off",
 		"sort-keys": "off",
 
 		"oxc/no-const-enum": "off",
 		"oxc/no-optional-chaining": "off",
 
-		"eslint/eqeqeq": ["warn", "smart"],
 		"eslint/func-style": "off",
 		"eslint/max-depth": ["warn", 4],
 		"eslint/max-lines-per-function": [
