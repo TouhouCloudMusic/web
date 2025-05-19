@@ -26,7 +26,7 @@ export function Divider(props: Props) {
 
 	return (
 		<span
-			class={twMerge("bg-slate-300", direction_class(), props.class)}
+			class={twMerge("block bg-slate-300", direction_class(), props.class)}
 			{...other_props}
 		></span>
 	)

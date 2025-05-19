@@ -9,7 +9,6 @@ import { Button } from "~/components/button"
 import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
-import { RightSidebar } from "../Sidebar/right.tsx"
 import { Avatar } from "../avatar/index.tsx"
 import { Dialog } from "../dialog/index.ts"
 import { Divider } from "../divider"
@@ -18,7 +17,8 @@ import {
 	BellIcon,
 	BellSlashIcon,
 } from "../icons/heroicons/24/outline.tsx"
-import { Input } from "../input/index.tsx"
+import { LeftSidebar } from "./LeftSidebar"
+import { RightSidebar } from "./RightSidebar"
 
 const HEADER_BTN_CLASS = "size-fit p-1 m-auto"
 
@@ -43,40 +43,22 @@ export function Header() {
 			<div class="my-auto flex h-10 items-center justify-between">
 				{/* Left */}
 				<div class="flex items-center gap-3">
-					{/* <Link
-						to="/"
-						class="mr-6 text-xl font-bold text-rose-600"
-					>
-						东方同音鉴
-					</Link> */}
-
-					{/* 主导航 */}
-					{/* <nav class="flex items-center space-x-6">
-						{navItems.map((item) => (
-							<Link
-								to={item.path}
-								class={`text-sm font-medium transition-colors ${
-									isActive(item.path) ?
-										"relative text-rose-600"
-									:	"text-gray-600 hover:text-gray-900"
-								}`}
-							>
-								{item.label}
-								{isActive(item.path) && (
-									<div class="absolute right-0 -bottom-3 left-0 h-0.5 rounded-full bg-rose-600"></div>
-								)}
-							</Link>
-						))}
-					</nav> */}
-
-					<Button
-						variant="Tertiary"
-						class={HEADER_BTN_CLASS}
-					>
-						<Link to="/">
+					<Dialog.Root>
+						<K_Dialog.Trigger
+							variant="Tertiary"
+							class={HEADER_BTN_CLASS}
+							as={Button}
+						>
 							<HamburgerMenuIcon class={"m-auto size-5 text-slate-400"} />
-						</Link>
-					</Button>
+						</K_Dialog.Trigger>
+						<Dialog.Portal>
+							<Dialog.Overlay />
+							<K_Dialog.Content class="fixed inset-0 z-50 w-fit">
+								<LeftSidebar />
+							</K_Dialog.Content>
+						</Dialog.Portal>
+					</Dialog.Root>
+
 					<Divider
 						vertical
 						class="h-6"
