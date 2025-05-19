@@ -9,7 +9,7 @@ const DEFAULT_AVATAR = "/Admin.jpg"
 
 export interface Props
 	extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
-	user?: UserProfile
+	user?: UserProfile | undefined
 }
 
 const enum ImageLoadingState {

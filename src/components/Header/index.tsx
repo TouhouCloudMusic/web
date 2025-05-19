@@ -9,6 +9,7 @@ import { Button } from "~/components/button"
 import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
+import { RightSidebar } from "../Sidebar/right.tsx"
 import { Avatar } from "../avatar/index.tsx"
 import { Dialog } from "../dialog/index.ts"
 import { Divider } from "../divider"
@@ -18,7 +19,6 @@ import {
 	BellSlashIcon,
 } from "../icons/heroicons/24/outline.tsx"
 import { Input } from "../input/index.tsx"
-import { RightSidebar } from "../sidebar/right.tsx"
 
 const HEADER_BTN_CLASS = "size-fit p-1 m-auto"
 
