@@ -1,5 +1,5 @@
-@import "./style/style.css";
 @import "tailwindcss";
+@import "./style/style.css";
 
 @custom-variant dark (&:where([data-mode=dark] *));
 
@@ -120,15 +120,25 @@ body,
 	}
 }
 
-/* 隐藏滚动条但保留滚动功能 */
-.hide-scrollbar {
+@utility hide-scrollbar {
 	-ms-overflow-style: none;
 	/* IE and Edge */
 	scrollbar-width: none;
 	/* Firefox */
+
+	&::-webkit-scrollbar {
+		display: none;
+		/* Chrome, Safari and Opera */
+	}
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-	display: none;
-	/* Chrome, Safari and Opera */
+@utility no-spinner {
+	appearance: textfield;
+	-moz-appearance: textfield;
+
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }

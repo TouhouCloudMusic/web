@@ -1,8 +1,10 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
+import { Trans } from "@lingui-solid/solid/macro"
 import { Link, useLocation } from "@tanstack/solid-router"
-import { createMemo, createResource, Match, Show, Switch } from "solid-js"
-import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
-import { type UserProfile } from "~/api/user"
+import { createMemo, Match, Show, Switch } from "solid-js"
+import { MagnifyingGlassIcon } from "solid-radix-icons"
+
+import type { UserProfile } from "~/api/user"
 import { Button } from "~/components/button"
 import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
@@ -21,42 +23,47 @@ const HEADER_BTN_CLASS = "size-6 p-1 m-auto"
 
 export function Header() {
 	const Divider = () => <span class="ml-3 h-5 w-[0.5px] bg-slate-400"></span>
-	const location = useLocation();
+	const location = useLocation()
 
 	const navItems = [
 		{ path: "/", label: "发现音乐" },
 		{ path: "/library", label: "音乐库" },
 		{ path: "/articles", label: "文章" },
 		{ path: "/feeds", label: "动态" },
-		{ path: "/profile", label: "个人中心" }
-	];
+		{ path: "/profile", label: "个人中心" },
+	]
 
 	const isActive = (path: string) => {
-		const pathname = location.pathname || "/";
-		return pathname === path ||
-			(path !== "/" && pathname && pathname.startsWith(path));
-	};
+		const pathname = location().pathname || "/"
+		return pathname === path || (path !== "/" && pathname.startsWith(path))
+	}
 
 	return (
 		<header class="box-content content-center items-center border-b-1 border-slate-300 bg-primary px-4 py-2">
 			<div class="my-auto flex h-12 items-center justify-between">
 				{/* Left */}
 				<div class="flex items-center">
-					<Link to="/" class="mr-6 font-bold text-xl text-rose-600">东方同音鉴</Link>
+					<Link
+						to="/"
+						class="mr-6 text-xl font-bold text-rose-600"
+					>
+						东方同音鉴
+					</Link>
 
 					{/* 主导航 */}
 					<nav class="flex items-center space-x-6">
-						{navItems.map(item => (
+						{navItems.map((item) => (
 							<Link
 								to={item.path}
-								class={`text-sm font-medium transition-colors ${isActive(item.path)
-									? 'text-rose-600 relative'
-									: 'text-gray-600 hover:text-gray-900'
-									}`}
+								class={`text-sm font-medium transition-colors ${
+									isActive(item.path) ?
+										"relative text-rose-600"
+									:	"text-gray-600 hover:text-gray-900"
+								}`}
 							>
 								{item.label}
 								{isActive(item.path) && (
-									<div class="absolute -bottom-3 left-0 right-0 h-0.5 bg-rose-600 rounded-full"></div>
+									<div class="absolute right-0 -bottom-3 left-0 h-0.5 rounded-full bg-rose-600"></div>
 								)}
 							</Link>
 						))}
@@ -82,14 +89,13 @@ export function Header() {
 function AuthenticatedContent(props: { user: UserProfile }) {
 	let [show, setShow, setRef] = createClickOutside()
 	let close = () => setShow(false)
-	let [data] = createResource(() => Promise.resolve(props.user))
 	return (
 		<>
 			<div class="grid h-8 w-8 place-items-center">
 				<NotificationButton />
 			</div>
 			<button onClick={() => setShow(!show())}>
-				<Avatar user={data} />
+				<Avatar user={props.user} />
 			</button>
 			<Dialog.Root
 				open={show()}
@@ -145,6 +151,7 @@ function NotificationButton() {
 function UnauthenticatedButtons() {
 	// @tw
 	const BTN_CLASS = "w-18 max-h-full text-sm"
+
 	return (
 		<>
 			<Button
@@ -158,7 +165,7 @@ function UnauthenticatedButtons() {
 						type: "sign_in",
 					}}
 				>
-					登录
+					<Trans>Sign In</Trans>
 				</Link>
 			</Button>
 			<Button
@@ -172,7 +179,7 @@ function UnauthenticatedButtons() {
 						type: "sign_up",
 					}}
 				>
-					注册
+					<Trans>Sign Up</Trans>
 				</Link>
 			</Button>
 		</>

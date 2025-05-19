@@ -1,21 +1,15 @@
-import {
-	createSignal,
-	type JSX,
-	type Resource,
-	Show,
-	splitProps,
-	Suspense,
-} from "solid-js"
+import { createSignal, type JSX, Show, splitProps, Suspense } from "solid-js"
 import { twMerge } from "tailwind-merge"
-import { type UserProfile } from "~/api/user"
+
+import type { UserProfile } from "~/api/user"
 import { imgUrl } from "~/utils/adapter/static_file"
 
 // 默认头像路径
-const DEFAULT_AVATAR = "/Admin.jpg";
+const DEFAULT_AVATAR = "/Admin.jpg"
 
 export interface Props
 	extends Omit<JSX.ImgHTMLAttributes<HTMLImageElement>, "src" | "onError"> {
-	user?: Resource<UserProfile>
+	user?: UserProfile
 }
 
 const enum ImageLoadingState {
@@ -47,17 +41,14 @@ export function Avatar(props: Props) {
 						{...otherProps}
 						src={DEFAULT_AVATAR}
 						alt="默认头像"
-						class={twMerge(
-							"size-8 rounded-full object-cover",
-							props.class,
-						)}
+						class={twMerge("size-8 rounded-full object-cover", props.class)}
 					/>
 				}
 			>
 				{(user) => (
 					<img
 						{...otherProps}
-						src={user()()?.avatar_url ? imgUrl(user()()?.avatar_url) : DEFAULT_AVATAR}
+						src={imgUrl(user().avatar_url)}
 						alt={props.alt ?? "avatar"}
 						onLoad={() => {
 							setImageState(ImageLoadingState.Loaded)
