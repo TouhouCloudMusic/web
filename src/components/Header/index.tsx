@@ -23,7 +23,7 @@ import { RightSidebar } from "./RightSidebar"
 const HEADER_BTN_CLASS = "size-fit p-1 m-auto"
 
 export function Header() {
-	const location = useLocation()
+	// const location = useLocation()
 
 	// const navItems = [
 	// 	{ path: "/", label: "发现音乐" },
@@ -40,7 +40,7 @@ export function Header() {
 
 	return (
 		<header class="box-content content-center items-center border-b-1 border-slate-300 bg-primary px-4 py-2">
-			<div class="my-auto flex h-10 items-center justify-between">
+			<div class="my-auto flex h-8 items-center justify-between">
 				{/* Left */}
 				<div class="flex items-center gap-3">
 					<Dialog.Root>
@@ -118,7 +118,7 @@ function SearchBar() {
 	return (
 		<div class="grid w-fit items-center">
 			<input
-				class={`mr-auto h-8 w-96 rounded-xs bg-slate-100 pl-7 outline-transparent duration-200 hover:outline hover:outline-reimu-600 focus:bg-white focus:outline-[1.5px] focus:outline-reimu-600`}
+				class={`mr-auto h-7 w-96 rounded-xs bg-slate-100 pl-7 outline-transparent duration-200 hover:outline hover:outline-reimu-600 focus:bg-white focus:outline-[1.5px] focus:outline-reimu-600`}
 			/>
 			<MagnifyingGlassIcon class={"absolute col-start-1 ml-2 size-4"} />
 		</div>
