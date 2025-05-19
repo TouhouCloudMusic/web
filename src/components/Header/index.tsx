@@ -2,7 +2,7 @@ import { Dialog as K_Dialog } from "@kobalte/core"
 import { Trans } from "@lingui-solid/solid/macro"
 import { Link, useLocation } from "@tanstack/solid-router"
 import { createMemo, Match, Show, Switch } from "solid-js"
-import { MagnifyingGlassIcon } from "solid-radix-icons"
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
 import type { UserProfile } from "~/api/user"
 import { Button } from "~/components/button"
@@ -10,48 +10,48 @@ import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
 import { Avatar } from "../avatar/index.tsx"
-import { Dialog } from "../dialog"
+import { Dialog } from "../dialog/index.ts"
+import { Divider } from "../divider"
 import {
 	BellAlertIcon,
 	BellIcon,
 	BellSlashIcon,
 } from "../icons/heroicons/24/outline.tsx"
-import { Input } from "../input"
-import { RightSidebar } from "../sidebar/right"
+import { Input } from "../input/index.tsx"
+import { RightSidebar } from "../sidebar/right.tsx"
 
-const HEADER_BTN_CLASS = "size-6 p-1 m-auto"
+const HEADER_BTN_CLASS = "size-fit p-1 m-auto"
 
 export function Header() {
-	const Divider = () => <span class="ml-3 h-5 w-[0.5px] bg-slate-400"></span>
 	const location = useLocation()
 
-	const navItems = [
-		{ path: "/", label: "发现音乐" },
-		{ path: "/library", label: "音乐库" },
-		{ path: "/articles", label: "文章" },
-		{ path: "/feeds", label: "动态" },
-		{ path: "/profile", label: "个人中心" },
-	]
+	// const navItems = [
+	// 	{ path: "/", label: "发现音乐" },
+	// 	{ path: "/library", label: "音乐库" },
+	// 	{ path: "/articles", label: "文章" },
+	// 	{ path: "/feeds", label: "动态" },
+	// 	{ path: "/profile", label: "个人中心" },
+	// ]
 
-	const isActive = (path: string) => {
-		const pathname = location().pathname || "/"
-		return pathname === path || (path !== "/" && pathname.startsWith(path))
-	}
+	// const isActive = (path: string) => {
+	// 	const pathname = location().pathname || "/"
+	// 	return pathname === path || (path !== "/" && pathname.startsWith(path))
+	// }
 
 	return (
 		<header class="box-content content-center items-center border-b-1 border-slate-300 bg-primary px-4 py-2">
-			<div class="my-auto flex h-12 items-center justify-between">
+			<div class="my-auto flex h-10 items-center justify-between">
 				{/* Left */}
-				<div class="flex items-center">
-					<Link
+				<div class="flex items-center gap-3">
+					{/* <Link
 						to="/"
 						class="mr-6 text-xl font-bold text-rose-600"
 					>
 						东方同音鉴
-					</Link>
+					</Link> */}
 
 					{/* 主导航 */}
-					<nav class="flex items-center space-x-6">
+					{/* <nav class="flex items-center space-x-6">
 						{navItems.map((item) => (
 							<Link
 								to={item.path}
@@ -67,13 +67,30 @@ export function Header() {
 								)}
 							</Link>
 						))}
-					</nav>
+					</nav> */}
+
+					<Button
+						variant="Tertiary"
+						class={HEADER_BTN_CLASS}
+					>
+						<Link to="/">
+							<HamburgerMenuIcon class={"m-auto size-5 text-slate-400"} />
+						</Link>
+					</Button>
+					<Divider
+						vertical
+						class="h-6"
+					/>
 				</div>
 				<SearchBar />
 
 				{/* Right	*/}
-				<div class="flex shrink place-content-center items-center gap-3">
-					<Divider />
+
+				<div class="flex h-full shrink place-content-center items-center gap-3">
+					<Divider
+						vertical
+						class="h-6"
+					/>
 					<Show
 						when={useUserCtx().user}
 						fallback={<UnauthenticatedButtons />}
@@ -117,9 +134,9 @@ function AuthenticatedContent(props: { user: UserProfile }) {
 
 function SearchBar() {
 	return (
-		<div class="grid items-center">
-			<Input
-				class={`mr-auto h-7 w-96 rounded-xs border-none bg-slate-100 pl-2 duration-200`}
+		<div class="grid w-fit items-center">
+			<input
+				class={`mr-auto h-8 w-96 rounded-xs bg-slate-100 pl-7 outline-transparent duration-200 hover:outline hover:outline-reimu-600 focus:bg-white focus:outline-[1.5px] focus:outline-reimu-600`}
 			/>
 			<MagnifyingGlassIcon class={"absolute col-start-1 ml-2 size-4"} />
 		</div>
@@ -150,13 +167,12 @@ function NotificationButton() {
 
 function UnauthenticatedButtons() {
 	// @tw
-	const BTN_CLASS = "w-18 max-h-full text-sm"
+	const BTN_CLASS = "py-1 px-3 text-sm"
 
 	return (
-		<>
+		<div class="grid grid-cols-2 gap-3">
 			<Button
 				variant="Tertiary"
-				size="Sm"
 				class={BTN_CLASS.concat(" ", "text-slate-900")}
 			>
 				<Link
@@ -170,7 +186,6 @@ function UnauthenticatedButtons() {
 			</Button>
 			<Button
 				variant="Primary"
-				size="Sm"
 				class={BTN_CLASS}
 			>
 				<Link
@@ -182,6 +197,6 @@ function UnauthenticatedButtons() {
 					<Trans>Sign Up</Trans>
 				</Link>
 			</Button>
-		</>
+		</div>
 	)
 }
