@@ -1,1 +1,1 @@
-/*eslint-disable*/import type{Messages}from"@lingui/core";export const messages=JSON.parse("{\"n1ekoW\":[\"Sign In\"],\"mErq7F\":[\"Sign Up\"]}")as Messages;
+/*eslint-disable*/import type{Messages}from"@lingui/core";export const messages=JSON.parse("{\"n1ekoW\":[\"Sign In\"],\"mErq7F\":[\"Sign Up\"],\"qB22iM\":[\"Touhou Cloud DB\"],\"c41Voe\":[\"Touhou Cloud DB is an open doujin music database\"]}")as Messages;

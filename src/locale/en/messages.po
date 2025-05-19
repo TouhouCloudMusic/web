@@ -13,10 +13,18 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/header/index.tsx:137
+#: src/components/header/index.tsx:168
 #~ msgid "Sign In"
 #~ msgstr "Sign In"
 
-#: src/components/header/index.tsx:151
+#: src/components/header/index.tsx:182
 #~ msgid "Sign Up"
 #~ msgstr "Sign Up"
+
+#: src/App.tsx:31
+#~ msgid "Touhou Cloud DB"
+#~ msgstr "Touhou Cloud DB"
+
+#: src/App.tsx:35
+#~ msgid "Touhou Cloud DB is an open doujin music database"
+#~ msgstr "Touhou Cloud DB is an open doujin music database"
