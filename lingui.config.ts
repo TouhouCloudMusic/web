@@ -9,6 +9,7 @@ export default defineConfig({
 		{
 			path: "<rootDir>/src/locale/{locale}/messages",
 			include: ["<rootDir>/src"],
+			exclude: ["**/*.test.*", "**/*.stories.*", "src/assets"],
 		},
 	],
 	runtimeConfigModule: {

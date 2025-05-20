@@ -29,6 +29,10 @@ msgstr ""
 msgid "Event"
 msgstr ""
 
+#: src/views/auth/component/AuthForm.tsx:72
+msgid "Password"
+msgstr ""
+
 #: src/components/Header/LeftSidebar.tsx:28
 msgid "Recommandation"
 msgstr ""
@@ -37,10 +41,18 @@ msgstr ""
 msgid "Release"
 msgstr ""
 
+#: src/views/auth/component/AuthForm.tsx:86
+msgid "Repeated Password"
+msgstr ""
+
+#: src/views/auth/component/AuthForm.tsx:36
+#: src/views/auth/component/AuthForm.tsx:103
 #: src/components/Header/index.tsx:153
 msgid "Sign In"
 msgstr "登录"
 
+#: src/views/auth/component/AuthForm.tsx:44
+#: src/views/auth/component/AuthForm.tsx:103
 #: src/components/Header/index.tsx:161
 msgid "Sign Up"
 msgstr "注册"

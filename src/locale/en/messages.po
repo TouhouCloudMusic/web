@@ -29,6 +29,10 @@ msgstr "Discover"
 msgid "Event"
 msgstr "Event"
 
+#: src/views/auth/component/AuthForm.tsx:72
+msgid "Password"
+msgstr "Password"
+
 #: src/components/Header/LeftSidebar.tsx:28
 msgid "Recommandation"
 msgstr "Recommandation"
@@ -37,10 +41,18 @@ msgstr "Recommandation"
 msgid "Release"
 msgstr "Release"
 
+#: src/views/auth/component/AuthForm.tsx:86
+msgid "Repeated Password"
+msgstr "Repeated Password"
+
+#: src/views/auth/component/AuthForm.tsx:36
+#: src/views/auth/component/AuthForm.tsx:103
 #: src/components/Header/index.tsx:153
 msgid "Sign In"
 msgstr "Sign In"
 
+#: src/views/auth/component/AuthForm.tsx:44
+#: src/views/auth/component/AuthForm.tsx:103
 #: src/components/Header/index.tsx:161
 msgid "Sign Up"
 msgstr "Sign Up"
