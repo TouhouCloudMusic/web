@@ -37,11 +37,11 @@ msgstr ""
 msgid "Release"
 msgstr ""
 
-#: src/components/Header/index.tsx:154
+#: src/components/Header/index.tsx:153
 msgid "Sign In"
 msgstr "登录"
 
-#: src/components/Header/index.tsx:162
+#: src/components/Header/index.tsx:161
 msgid "Sign Up"
 msgstr "注册"
 

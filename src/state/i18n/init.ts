@@ -5,7 +5,7 @@ const STORAGE_KEY = "userLang"
 
 export function initUserLang(): AppLocale {
 	const saved = localStorage.getItem(STORAGE_KEY) as AppLocale | null
-	if (AppLang.allows(saved)) {
+	if (AppLocale.allows(saved)) {
 		return saved
 	}
 
