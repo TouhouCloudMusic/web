@@ -1,6 +1,6 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
-import { Trans } from "@lingui-solid/solid/macro"
-import { Link, useLocation } from "@tanstack/solid-router"
+import { useLingui } from "@lingui-solid/solid/macro"
+import { Link } from "@tanstack/solid-router"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
@@ -23,21 +23,6 @@ import { RightSidebar } from "./RightSidebar"
 const HEADER_BTN_CLASS = "size-fit p-1 m-auto"
 
 export function Header() {
-	// const location = useLocation()
-
-	// const navItems = [
-	// 	{ path: "/", label: "发现音乐" },
-	// 	{ path: "/library", label: "音乐库" },
-	// 	{ path: "/articles", label: "文章" },
-	// 	{ path: "/feeds", label: "动态" },
-	// 	{ path: "/profile", label: "个人中心" },
-	// ]
-
-	// const isActive = (path: string) => {
-	// 	const pathname = location().pathname || "/"
-	// 	return pathname === path || (path !== "/" && pathname.startsWith(path))
-	// }
-
 	return (
 		<header class="box-content content-center items-center border-b-1 border-slate-300 bg-primary px-4 py-2">
 			<div class="my-auto flex h-8 items-center justify-between">
@@ -150,12 +135,14 @@ function NotificationButton() {
 function UnauthenticatedButtons() {
 	// @tw
 	const BTN_CLASS = "py-1 px-3 text-sm"
+	const { t } = useLingui()
 
 	return (
 		<div class="grid grid-cols-2 gap-3">
 			<Button
 				variant="Tertiary"
 				class={BTN_CLASS.concat(" ", "text-slate-900")}
+				type="button"
 			>
 				<Link
 					to="/auth"
@@ -163,21 +150,15 @@ function UnauthenticatedButtons() {
 						type: "sign_in",
 					}}
 				>
-					<Trans>Sign In</Trans>
+					{t`Sign In`}
 				</Link>
 			</Button>
 			<Button
 				variant="Primary"
 				class={BTN_CLASS}
+				type="button"
 			>
-				<Link
-					to="/auth"
-					search={{
-						type: "sign_up",
-					}}
-				>
-					<Trans>Sign Up</Trans>
-				</Link>
+				{t`Sign Up`}
 			</Button>
 		</div>
 	)
