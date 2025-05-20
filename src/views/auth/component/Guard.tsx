@@ -1,8 +1,10 @@
-import { Show, type ParentProps } from "solid-js"
 import { Navigate } from "@tanstack/solid-router"
+import { Show, type ParentProps } from "solid-js"
+
 import { useUserCtx } from "~/state/user"
 
-export function Guard(props: ParentProps) {
+// TODO: Move to comps
+export function NotSignedIn(props: ParentProps) {
 	return (
 		<Show
 			when={!useUserCtx().is_signed_in}

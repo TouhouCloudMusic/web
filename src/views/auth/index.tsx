@@ -1,9 +1,9 @@
-import { Guard, FormComp } from "./component"
+import { NotSignedIn, AuthForm } from "./component"
 
 export function Auth() {
 	return (
-		<Guard>
-			<FormComp />
-		</Guard>
+		<NotSignedIn>
+			<AuthForm />
+		</NotSignedIn>
 	)
 }

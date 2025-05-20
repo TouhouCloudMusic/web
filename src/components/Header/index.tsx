@@ -101,7 +101,7 @@ function AuthenticatedContent(props: { user: UserProfile }) {
 
 function SearchBar() {
 	return (
-		<div class="grid w-fit items-center">
+		<div class="ml-36 grid w-fit items-center">
 			<input
 				class={`mr-auto h-7 w-96 rounded-xs bg-slate-100 pl-7 outline-transparent duration-200 hover:outline hover:outline-reimu-600 focus:bg-white focus:outline-[1.5px] focus:outline-reimu-600`}
 			/>
