@@ -1,4 +1,5 @@
 import { FetchClient } from ".."
+import { handleApiResponse } from "../utils"
 import type { NewArtistCorrectionOut } from "./schema"
 
 export interface __CreataOption {
@@ -17,4 +18,16 @@ export async function __create(opt: __CreataOption) {
 	}
 
 	throw new Error(response.statusText)
+}
+
+export async function __findById(id: number) {
+	const res = await FetchClient.GET(`/artist/{id}`, {
+		params: {
+			path: {
+				id,
+			},
+		},
+	})
+
+	return handleApiResponse(res)
 }
