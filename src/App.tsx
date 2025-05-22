@@ -5,7 +5,7 @@ import { createRouter, RouterProvider } from "@tanstack/solid-router"
 import { routeTree } from "./routeTree.gen"
 import { StateProvider } from "./state"
 
-const router = createRouter({ routeTree })
+const router = createRouter({ routeTree, defaultPreloadStaleTime: 0 })
 
 declare module "@tanstack/solid-router" {
 	interface Register {

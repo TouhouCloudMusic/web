@@ -20,6 +20,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as ArtistNewImport } from './routes/artist/new'
 import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
 import { Route as userProfileImport } from './routes/(user)/profile'
+import { Route as ArtistprofileIdImport } from './routes/artist/(profile).$id'
 import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
 
@@ -76,6 +77,12 @@ const userTestavataruploadRoute = userTestavataruploadImport.update({
 const userProfileRoute = userProfileImport.update({
   id: '/(user)/profile',
   path: '/profile',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ArtistprofileIdRoute = ArtistprofileIdImport.update({
+  id: '/artist/(profile)/$id',
+  path: '/artist/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -172,6 +179,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof userProfileEditImport
       parentRoute: typeof rootRoute
     }
+    '/artist/(profile)/$id': {
+      id: '/artist/(profile)/$id'
+      path: '/artist/$id'
+      fullPath: '/artist/$id'
+      preLoaderRoute: typeof ArtistprofileIdImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -189,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/artist/new': typeof ArtistNewRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
+  '/artist/$id': typeof ArtistprofileIdRoute
 }
 
 export interface FileRoutesByTo {
@@ -203,6 +218,7 @@ export interface FileRoutesByTo {
   '/artist/new': typeof ArtistNewRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
+  '/artist/$id': typeof ArtistprofileIdRoute
 }
 
 export interface FileRoutesById {
@@ -218,6 +234,7 @@ export interface FileRoutesById {
   '/artist/new': typeof ArtistNewRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
   '/(user)/profile_/edit': typeof userProfileEditRoute
+  '/artist/(profile)/$id': typeof ArtistprofileIdRoute
 }
 
 export interface FileRouteTypes {
@@ -234,6 +251,7 @@ export interface FileRouteTypes {
     | '/artist/new'
     | '/profile/$username'
     | '/profile/edit'
+    | '/artist/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -247,6 +265,7 @@ export interface FileRouteTypes {
     | '/artist/new'
     | '/profile/$username'
     | '/profile/edit'
+    | '/artist/$id'
   id:
     | '__root__'
     | '/'
@@ -260,6 +279,7 @@ export interface FileRouteTypes {
     | '/artist/new'
     | '/(user)/profile_/$username'
     | '/(user)/profile_/edit'
+    | '/artist/(profile)/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -275,6 +295,7 @@ export interface RootRouteChildren {
   ArtistNewRoute: typeof ArtistNewRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
+  ArtistprofileIdRoute: typeof ArtistprofileIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -289,6 +310,7 @@ const rootRouteChildren: RootRouteChildren = {
   ArtistNewRoute: ArtistNewRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
+  ArtistprofileIdRoute: ArtistprofileIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -311,7 +333,8 @@ export const routeTree = rootRoute
         "/(user)/test_avatar_upload",
         "/artist/new",
         "/(user)/profile_/$username",
-        "/(user)/profile_/edit"
+        "/(user)/profile_/edit",
+        "/artist/(profile)/$id"
       ]
     },
     "/": {
@@ -346,6 +369,9 @@ export const routeTree = rootRoute
     },
     "/(user)/profile_/edit": {
       "filePath": "(user)/profile_.edit.tsx"
+    },
+    "/artist/(profile)/$id": {
+      "filePath": "artist/(profile).$id.tsx"
     }
   }
 }
