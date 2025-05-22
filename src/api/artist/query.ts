@@ -3,7 +3,7 @@ import { notFound } from "@tanstack/solid-router"
 
 import * as F from "./fetcher"
 
-export function findByIdOption(id: number) {
+export function findById(id: number) {
 	return queryOptions({
 		queryKey: ["artist::profile", id],
 		queryFn: async () => {
