@@ -2,7 +2,8 @@ import type { UseQueryResult } from "@tanstack/solid-query"
 import { Show } from "solid-js"
 
 import type { Artist } from "~/api/artist"
-import { Tab } from "~/components/common"
+import { Tabs } from "~/components/common"
+import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
 
 import { Info } from "./Info"
@@ -24,29 +25,38 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 					return (
 						<>
 							<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
-								<div class="size-64 bg-secondary"></div>
+								<Image.Root>
+									<Image.Fallback>
+										{(state) =>
+											state == Image.State.Error ?
+												<div class="size-64 bg-slate-100"></div>
+											:	<></>
+										}
+									</Image.Fallback>
+									<Image.Img src={artist().profile_image_url ?? undefined} />
+								</Image.Root>
 								<Info artist={artist()} />
 							</div>
-							<Tab.Root class="mt-16">
-								<Tab.List class="grid grid-cols-3 w-fit">
+							<Tabs.Root class="mt-16">
+								<Tabs.List class="grid grid-cols-3 w-fit">
 									{TABS.map((item) => (
 										<li>
-											<Tab.Trigger
-												class="px-6 py-3 size-full text-slate-800"
+											<Tabs.Trigger
+												class="px-4 py-2.5 size-full text-md text-slate-800"
 												value={item}
 											>
 												{item}
-											</Tab.Trigger>
+											</Tabs.Trigger>
 										</li>
 									))}
-									<Tab.Indicator />
-								</Tab.List>
+									<Tabs.Indicator />
+								</Tabs.List>
 								<div class="w-full border-t border-slate-300">
-									<Tab.Content value="Discography">
+									<Tabs.Content value="Discography">
 										<Discography />
-									</Tab.Content>
+									</Tabs.Content>
 								</div>
-							</Tab.Root>
+							</Tabs.Root>
 
 							{/* <div class="max-w-full wrap-anywhere">
 								{JSON.stringify(props.query.data)}

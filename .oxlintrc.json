@@ -27,6 +27,7 @@
 		"no-void": "off",
 		"no-case-declarations": "off",
 		"no-else-return": "off",
+		"no-negated-condition": "off",
 		"no-empty-function": [
 			"warn",
 			{

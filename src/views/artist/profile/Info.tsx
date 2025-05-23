@@ -29,7 +29,58 @@ export function Info(props: { artist: Artist }) {
 				</div>
 			</Show>
 			<Location location={props.artist.start_location} />
+			<Aliases artist={props.artist} />
 			<Membership artist={props.artist} />
+		</div>
+	)
+}
+
+function Aliases(props: { artist: Artist }) {
+	const { t } = useLingui()
+	const aliases = createMemo(() => {
+		type Alias = {
+			id?: number
+			name?: string
+		}
+		let ret: Alias[] = []
+		if (props.artist.aliases) {
+			for (const aliasId of props.artist.aliases) {
+				ret.push({
+					id: aliasId,
+				})
+			}
+		}
+
+		if (props.artist.text_aliases) {
+			for (const alias of props.artist.text_aliases) {
+				ret.push({
+					name: alias,
+				})
+			}
+		}
+
+		return ret
+	})
+	return (
+		<div>
+			<InfoLabel>{t`Aliases`}</InfoLabel>
+			<ul class="flex flex-row gap-1">
+				<For each={aliases()}>
+					{(alias, index) => (
+						<>
+							<li>
+								<Show
+									when={alias.id}
+									fallback={alias.name}
+								>
+									{alias.id}
+								</Show>
+								<Show when={aliases().length - 1 > index()}>{", "}</Show>
+							</li>
+						</>
+					)}
+				</For>
+			</ul>
 		</div>
 	)
 }
