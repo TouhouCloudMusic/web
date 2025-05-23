@@ -5,20 +5,20 @@ import * as v from "valibot"
 import { ArtistQueryOption } from "~/api/artist"
 import { EntityId } from "~/api/share/schema"
 import { TanstackQueryClinet } from "~/state/tanstack"
-import { ArtistProfile } from "~/views/artist/profile"
+import { ArtistProfilePage } from "~/views/artist/profile"
 
-export const Route = createFileRoute("/artist/(profile)/$id")({
+export const Route = createFileRoute("/artist/$id")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
-		const parsed = v.parse(EntityId, Number.parseInt(id, 10))
+		const parsedId = v.parse(EntityId, Number.parseInt(id, 10))
 
 		return await TanstackQueryClinet.ensureQueryData(
-			ArtistQueryOption.findById(parsed),
+			ArtistQueryOption.findById(parsedId),
 		)
 	},
-	errorComponent: () => {
-		return <Navigate to="/" />
-	},
+	// errorComponent: () => {
+	// 	return <Navigate to="/" />
+	// },
 })
 
 function RouteComponent() {
@@ -29,7 +29,7 @@ function RouteComponent() {
 
 	return (
 		<>
-			<ArtistProfile artist={query.data} />
+			<ArtistProfilePage query={query} />
 		</>
 	)
 }
