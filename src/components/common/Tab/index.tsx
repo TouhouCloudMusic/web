@@ -1,1 +1,1 @@
-export * as Tab from "./__internal"
+export * as Tabs from "./__internal"
