@@ -22,11 +22,17 @@
 		"no-unused-vars": "warn",
 		"no-magic-numbers": [
 			"error",
-			{ "ignore": [0, 1], "ignoreArrayIndexes": true }
+			{ "ignore": [-1, 0, 1], "ignoreArrayIndexes": true }
 		],
 		"no-void": "off",
 		"no-case-declarations": "off",
 		"no-else-return": "off",
+		"no-empty-function": [
+			"warn",
+			{
+				"allow": ["constructor", "privateConstructors", "protectedConstructors"]
+			}
+		],
 		"sort-keys": "off",
 
 		"oxc/no-const-enum": "off",
@@ -53,6 +59,7 @@
 		"typescript/explicit-function-return-type": "off",
 		"typescript/consistent-indexed-object-style": "warn",
 		"typescript/prefer-enum-initializers": "off",
+		"typescript/no-non-null-assertion": "off",
 
 		"import/exports-last": "off",
 		"import/max-dependencies": "off",
