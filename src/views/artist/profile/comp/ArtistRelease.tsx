@@ -1,19 +1,10 @@
 import { createMemo, createSignal, For } from "solid-js"
 
-import type { ReleaseType } from "~/api/release"
+import { RELEASE_TYPES, type ReleaseType } from "~/api/release"
 import { Tab } from "~/components/common/Tab"
 import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from "../context"
-
-const RELEASE_TYPES: ReleaseType[] = [
-	"Album",
-	"Ep",
-	"Single",
-	"Compilation",
-	"Demo",
-	"Other",
-] as const
 
 export function ArtistRelease() {
 	return (
