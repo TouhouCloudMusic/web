@@ -1,6 +1,6 @@
 import { FetchClient } from ".."
-import { ReleaseType } from "../release"
-import { Pagination } from "../shared"
+import type { ReleaseType } from "../release"
+import type { Pagination } from "../shared"
 import { handleApiResponse } from "../utils"
 import type { NewArtistCorrectionOut } from "./schema"
 

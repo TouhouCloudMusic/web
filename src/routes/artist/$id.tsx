@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/solid-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/solid-query"
 import { createFileRoute, Navigate } from "@tanstack/solid-router"
 import * as v from "valibot"
 
 import { ArtistQueryOption } from "~/api/artist"
+import { RELEASE_TYPES } from "~/api/release"
 import { EntityId } from "~/api/shared/schema"
 import { TanstackQueryClinet } from "~/state/tanstack"
+import { mapTuple } from "~/utils/data/array"
 import { ArtistProfilePage } from "~/views/artist/profile"
 
 export const Route = createFileRoute("/artist/$id")({
@@ -27,9 +29,22 @@ function RouteComponent() {
 		ArtistQueryOption.findById(Number.parseInt(params().id, 10)),
 	)
 
+	const initDiscographies = mapTuple(
+		(t) =>
+			useInfiniteQuery(() =>
+				ArtistQueryOption.discographies(query.data!.id, t),
+			),
+		RELEASE_TYPES,
+	)
+
 	return (
 		<>
-			<ArtistProfilePage query={query} />
+			<ArtistProfilePage
+				artist={query.data!}
+				discographies={initDiscographies.flatMap(
+					(q) => q.data?.pages.flatMap((p) => p.items) ?? [],
+				)}
+			/>
 		</>
 	)
 }

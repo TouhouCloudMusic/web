@@ -3,7 +3,7 @@ import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
 
 import type { Artist } from "~/api/artist"
-import type { DateWithPrecision } from "~/api/shared/schema"
+import { DateWithPrecision } from "~/api/shared"
 import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from "../context"
@@ -74,7 +74,7 @@ function DateInfo(props: { value?: Artist["start_date"]; label: string }) {
 			return
 		}
 
-		return displayDateWithPrection(props.value)
+		return DateWithPrecision.display(props.value)
 	})
 	return (
 		<Show when={props.value}>
@@ -157,15 +157,4 @@ function getInfoAliases(artist: Artist): InfoAlias[] {
 	}
 
 	return arr
-}
-
-function displayDateWithPrection(input: DateWithPrecision): string {
-	const [year, month, day] = input.value.split("-")
-	if (input.precision == "Year") {
-		return year!
-	} else if (input.precision == "Month") {
-		return `${year!}-${month!}`
-	} else {
-		return `${year!}-${month!}-${day!}`
-	}
 }

@@ -1,11 +1,52 @@
 import { createMemo, createSignal, For } from "solid-js"
 
-import { RELEASE_TYPES, type ReleaseType } from "~/api/release"
+import type { ArtistRelease as TArtistRelease } from "~/api/artist"
+import type { ReleaseType } from "~/api/release"
+import { RELEASE_TYPES } from "~/api/release"
+import { DateWithPrecision } from "~/api/shared"
 import { Tab } from "~/components/common/Tab"
 import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from "../context"
 
+// type ReleaseMockData = {
+// 	title: string
+// 	releaseDate?: string
+// 	artistName: string
+// 	type: ReleaseType
+// }
+
+// const MOCK_RELEASES: ReleaseMockData[] = [
+// 	{
+// 		title: "東方紺珠伝 ~ Legacy of Lunatic Kingdom",
+// 		releaseDate: "2015-08-14",
+// 		artistName: "ZUN",
+// 		type: "Album",
+// 	},
+// 	{
+// 		title: "東方虹龍洞 ~ Unconnected Marketeers",
+// 		releaseDate: "2021-05-04",
+// 		artistName: "ZUN",
+// 		type: "Album",
+// 	},
+// 	{
+// 		title: "Touhou Kouryudou ~ Unconnected Marketeers OST",
+// 		artistName: "ZUN",
+// 		type: "Album",
+// 	},
+// 	{
+// 		title: "大空魔術 ~ Magical Astronomy",
+// 		releaseDate: "2006-08-13",
+// 		artistName: "ZUN",
+// 		type: "Compilation",
+// 	},
+// 	{
+// 		title: "蓬莱人形 ~ Dolls in Pseudo Paradise",
+// 		releaseDate: "2002-12-30",
+// 		artistName: "ZUN",
+// 		type: "Album",
+// 	},
+// ]
 export function ArtistRelease() {
 	return (
 		<Tab.Root>
@@ -39,75 +80,37 @@ export function ArtistRelease() {
 	)
 }
 
-type ReleaseMockData = {
-	title: string
-	releaseDate?: string
-	artistName: string
-	type: ReleaseType
-}
-
-const MOCK_RELEASES: ReleaseMockData[] = [
-	{
-		title: "東方紺珠伝 ~ Legacy of Lunatic Kingdom",
-		releaseDate: "2015-08-14",
-		artistName: "ZUN",
-		type: "Album",
-	},
-	{
-		title: "東方虹龍洞 ~ Unconnected Marketeers",
-		releaseDate: "2021-05-04",
-		artistName: "ZUN",
-		type: "Album",
-	},
-	{
-		title: "Touhou Kouryudou ~ Unconnected Marketeers OST",
-		artistName: "ZUN",
-		type: "Album",
-	},
-	{
-		title: "大空魔術 ~ Magical Astronomy",
-		releaseDate: "2006-08-13",
-		artistName: "ZUN",
-		type: "Compilation",
-	},
-	{
-		title: "蓬莱人形 ~ Dolls in Pseudo Paradise",
-		releaseDate: "2002-12-30",
-		artistName: "ZUN",
-		type: "Album",
-	},
-]
-
 function Discography() {
+	const context = assertContext(ArtistContext)
 	const [selectedType, setSelectedType] = createSignal<ReleaseType>("Album")
 
-	const releaseData = () => MOCK_RELEASES
 	// Keep the map on the heap instead of creating a new one each time
-	const releaseMap = new Map<ReleaseType, ReleaseMockData[]>()
+	const releaseMap = new Map<ReleaseType, TArtistRelease[]>()
 	// Effect run after render so we have to use memo here
 	const _ = createMemo(() => {
 		releaseMap.clear()
-		const sorted = releaseData().toSorted((a, b) => {
-			if (!a.releaseDate) {
+		const sorted = context.discographies.toSorted((a, b) => {
+			if (!a.release_date) {
 				return 1
 			}
 
-			if (!b.releaseDate) {
+			if (!b.release_date) {
 				return -1
 			}
 
 			return (
-				new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
+				new Date(a.release_date.value).getTime() -
+				new Date(b.release_date.value).getTime()
 			)
 		})
 
 		// Perf: split to sperated array by type then push at once
 		for (const release of sorted) {
-			let arr = releaseMap.get(release.type)
+			let arr = releaseMap.get(release.release_type)
 			if (arr) {
 				arr.push(release)
 			} else {
-				releaseMap.set(release.type, [release])
+				releaseMap.set(release.release_type, [release])
 			}
 		}
 	})
@@ -138,18 +141,21 @@ function Discography() {
 	)
 }
 
-function ArtistReleases(props: { data?: ReleaseMockData[] | undefined }) {
+function ArtistReleases(props: { data?: TArtistRelease[] | undefined }) {
 	const context = assertContext(ArtistContext)
 	return (
 		<For each={props.data}>
 			{(release) => {
 				const formatted = () => {
 					const displayArtistName =
-						release.artistName === context.artist.name ?
+						release.artist.some((a) => a.name === context.artist.name) ?
 							undefined
-						:	release.artistName
+						:	release.artist.map((a) => a.name).join(", ")
 
-					const releaseDate = release.releaseDate
+					const releaseDate =
+						release.release_date ?
+							DateWithPrecision.display(release.release_date)
+						:	undefined
 					if (displayArtistName && releaseDate) {
 						return `${displayArtistName} · ${releaseDate}`
 					}

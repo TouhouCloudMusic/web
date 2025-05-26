@@ -1,4 +1,4 @@
-import { queryOptions } from "@tanstack/solid-query"
+import { infiniteQueryOptions, queryOptions } from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
 
 import type { ReleaseType } from "../release"
@@ -24,12 +24,14 @@ export function discographies(
 	releaseType: ReleaseType,
 	pagination?: Pagination,
 ) {
-	return queryOptions({
+	return infiniteQueryOptions({
 		queryKey: ["artist::discographies", id, releaseType, pagination],
 		queryFn: async () => {
 			const discographies = await F.__discographies(id, releaseType, pagination)
 			return discographies
 		},
+		initialPageParam: 0,
+		getNextPageParam: (last) => last.next_cursor,
 		throwOnError: true,
 	})
 }

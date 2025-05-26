@@ -68,6 +68,7 @@
 		"import/no-anonymous-default-export": "off",
 		"import/no-namespace": "off",
 		"import/group-exports": "off",
+		"import/no-cycle": "off",
 
 		"unicorn/no-anonymous-default-export": "off",
 		"unicorn/no-empty-file": "off",

@@ -1,7 +1,6 @@
-import type { UseQueryResult } from "@tanstack/solid-query"
-import { Show } from "solid-js"
+import { Suspense } from "solid-js"
 
-import type { Artist } from "~/api/artist"
+import type { Artist, ArtistRelease as TArtistRelease } from "~/api/artist"
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
 
@@ -10,51 +9,49 @@ import { Info } from "./comp/Info"
 import { ArtistContext } from "./context"
 
 export type ArtistProfilePageProps = {
-	query: UseQueryResult<Artist>
+	artist: Artist
+	discographies: TArtistRelease[]
 }
 
 export function ArtistProfilePage(props: ArtistProfilePageProps) {
+	const contextValue: ArtistContext = {
+		get artist() {
+			return props.artist
+		},
+		get discographies() {
+			return props.discographies
+		},
+	}
 	return (
 		<PageLayout class="px-9 py-8">
 			{/* TODO: fallback */}
-			<Show
-				when={props.query.isSuccess && props.query.data}
-				fallback={<div>Loading...</div>}
-			>
-				{(artist) => {
-					const contextValue: ArtistContext = {
-						get artist() {
-							return artist()
-						},
-					}
-
-					return (
-						<ArtistContext.Provider value={contextValue}>
-							<div class="flex flex-col space-y-8">
-								<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
-									<Image.Root>
-										<Image.Fallback>
-											{(state) =>
-												state == Image.State.Error ?
-													<div class="size-64 bg-slate-100"></div>
-												:	<></>
-											}
-										</Image.Fallback>
-										<Image.Img src={artist().profile_image_url ?? undefined} />
-									</Image.Root>
-									<Info />
-								</div>
-								<div>
-									<ArtistRelease />
-								</div>
-							</div>
-							{/* <div class="max-w-full wrap-anywhere">
+			<Suspense fallback={<div>Loading...</div>}>
+				<ArtistContext.Provider value={contextValue}>
+					<div class="flex flex-col space-y-8">
+						<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
+							<Image.Root>
+								<Image.Fallback>
+									{(state) =>
+										state == Image.State.Error ?
+											<div class="size-64 bg-slate-100"></div>
+										:	<></>
+									}
+								</Image.Fallback>
+								<Image.Img src={props.artist.profile_image_url ?? undefined} />
+							</Image.Root>
+							<Info />
+						</div>
+						<div>
+							<Suspense fallback={<div>Loading...</div>}>
+								<ArtistRelease />
+							</Suspense>
+						</div>
+					</div>
+					{/* <div class="max-w-full wrap-anywhere">
                 {JSON.stringify(props.query.data)}
             </div> */}
-						</ArtistContext.Provider>
-					)
-				}}
-			</Show>
+				</ArtistContext.Provider>
+			</Suspense>
 		</PageLayout>
 	)
 }
