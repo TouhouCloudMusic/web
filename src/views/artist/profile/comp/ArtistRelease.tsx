@@ -1,4 +1,4 @@
-import { createEffect, createMemo, createSignal, For } from "solid-js"
+import { createMemo, createSignal, For } from "solid-js"
 
 import type { ReleaseType } from "~/api/release"
 import { Tab } from "~/components/common/Tab"

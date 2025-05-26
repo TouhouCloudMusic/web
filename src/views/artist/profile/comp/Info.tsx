@@ -16,28 +16,26 @@ export function Info() {
 	const { t } = useLingui()
 	const context = assertContext(ArtistContext)
 	return (
-		<div class="flex flex-col space-y-4">
+		<div class="flex flex-col">
 			<h1 class="text-xl font-semibold">{context.artist.name}</h1>
-			<Show when={context.artist.artist_type !== "Unknown"}>
-				<div class="">
+			<div class="mt-4 space-y-2">
+				<Show when={context.artist.artist_type !== "Unknown"}>
 					<DateInfo
 						value={context.artist.start_date}
 						label={context.artist.artist_type == "Solo" ? t`Born` : t`Formed`}
 					/>
-				</div>
-				<div>
 					<DateInfo
 						value={context.artist.end_date}
 						label={
 							context.artist.artist_type == "Solo" ? t`Died` : t`Disbanded`
 						}
 					/>
-				</div>
-			</Show>
-			<Location location={context.artist.start_location} />
-			<Location location={context.artist.current_location} />
-			<Aliases />
-			<Membership />
+				</Show>
+				<Location location={context.artist.start_location} />
+				<Location location={context.artist.current_location} />
+				<Aliases />
+				<Membership />
+			</div>
 		</div>
 	)
 }
