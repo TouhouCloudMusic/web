@@ -90,17 +90,13 @@ const MOCK_RELEASES: ReleaseMockData[] = [
 function Discography() {
 	const [selectedType, setSelectedType] = createSignal<ReleaseType>("Album")
 
+	const releaseData = () => MOCK_RELEASES
+	// Keep the map on the heap instead of creating a new one each time
 	const releaseMap = new Map<ReleaseType, ReleaseMockData[]>()
-	/** Effect didn't work but idk why */
+	// Effect run after render so we have to use memo here
 	const _ = createMemo(() => {
 		releaseMap.clear()
-		const sorted = MOCK_RELEASES.toSorted((a, b) => {
-			if (a.releaseDate && b.releaseDate) {
-				return (
-					new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
-				)
-			}
-
+		const sorted = releaseData().toSorted((a, b) => {
 			if (!a.releaseDate) {
 				return 1
 			}
@@ -109,7 +105,9 @@ function Discography() {
 				return -1
 			}
 
-			return 0
+			return (
+				new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
+			)
 		})
 
 		// Perf: split to sperated array by type then push at once
@@ -122,8 +120,6 @@ function Discography() {
 			}
 		}
 	})
-
-	const currentReleases = createMemo(() => releaseMap.get(selectedType()))
 
 	return (
 		<div class="grid grid-cols-[auto_1fr]">
@@ -145,7 +141,7 @@ function Discography() {
 				</Tab.List>
 			</Tab.Root>
 			<ul class="space-y-4 p-6">
-				<ArtistReleases data={currentReleases()} />
+				<ArtistReleases data={releaseMap.get(selectedType())} />
 			</ul>
 		</div>
 	)

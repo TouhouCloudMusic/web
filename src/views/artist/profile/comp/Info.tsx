@@ -9,7 +9,7 @@ import { assertContext } from "~/utils/context"
 import { ArtistContext } from "../context"
 
 function InfoLabel(props: ParentProps) {
-	return <span class="text-sm text-secondary">{props.children}</span>
+	return <span class="text-sm text-tertiary">{props.children}</span>
 }
 
 export function Info() {
@@ -17,7 +17,7 @@ export function Info() {
 	const context = assertContext(ArtistContext)
 	return (
 		<div class="flex flex-col space-y-4">
-			<h1 class="font-semibold text-xl">{context.artist.name}</h1>
+			<h1 class="text-xl font-semibold">{context.artist.name}</h1>
 			<Show when={context.artist.artist_type !== "Unknown"}>
 				<div class="">
 					<DateInfo
