@@ -1,4 +1,5 @@
 import * as v from "valibot"
+
 import { ENTITY_IDENT_MAX_LEN, ENTITY_IDENT_MIN_LEN } from "~/constant/server"
 import type { Eq, If } from "~/types"
 import type { ExternalSchema } from "~/types/valibot"
@@ -39,7 +40,7 @@ export type DatePrecision = If<
 	never
 >
 
-export type DateWithPrecision = DeepMerge<
+export type DateWithPrecisionIn = DeepMerge<
 	[
 		{
 			value: Date
@@ -47,11 +48,13 @@ export type DateWithPrecision = DeepMerge<
 		OpenApiSchema["DateWithPrecision"],
 	]
 >
+export type DateWithPrecision = v.InferOutput<typeof DateWithPrecision>
+
 export const DateWithPrecision = v.pipe(
 	v.object({
 		value: v.date(),
 		precision: DatePrecision,
-	} satisfies ExternalSchema<DateWithPrecision>),
+	} satisfies ExternalSchema<DateWithPrecisionIn>),
 	v.transform((v) => {
 		if (v.precision === "Year") {
 			v.value.setMonth(0)

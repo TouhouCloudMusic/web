@@ -38,6 +38,7 @@
 
 		"oxc/no-const-enum": "off",
 		"oxc/no-optional-chaining": "off",
+		"oxc/no-barrel-file": "off",
 
 		"eslint/func-style": "off",
 		"eslint/max-depth": ["warn", 4],
@@ -66,6 +67,7 @@
 		"import/max-dependencies": "off",
 		"import/no-anonymous-default-export": "off",
 		"import/no-namespace": "off",
+		"import/group-exports": "off",
 
 		"unicorn/no-anonymous-default-export": "off",
 		"unicorn/no-empty-file": "off",

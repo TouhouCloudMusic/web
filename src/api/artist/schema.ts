@@ -1,11 +1,12 @@
 import * as v from "valibot"
+
 import type { Expand, SafeOmit, Eq, If, Extend } from "~/types"
 import type { ExternalSchema } from "~/types/valibot"
 
 import type { OpenApiSchema } from ".."
 import { NewCorrection } from "../correction"
+import type { DateWithPrecisionIn } from "../share/schema"
 import {
-	DateWithPrecision,
 	EntityId,
 	EntityIdent,
 	Location,
@@ -46,8 +47,8 @@ export type NewMembership = v.InferInput<typeof NewMembership>
 export type NewArtist = Expand<
 	SafeOmit<o_NewArtist, "start_date" | "end_date"> &
 		Partial<{
-			start_date: DateWithPrecision | null
-			end_date: DateWithPrecision | null
+			start_date: DateWithPrecisionIn | null
+			end_date: DateWithPrecisionIn | null
 		}>
 >
 export const NewArtist = v.object({
