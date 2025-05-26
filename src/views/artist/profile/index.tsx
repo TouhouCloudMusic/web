@@ -15,7 +15,7 @@ export type ArtistProfilePageProps = {
 
 export function ArtistProfilePage(props: ArtistProfilePageProps) {
 	return (
-		<PageLayout class="p-10">
+		<PageLayout class="px-9 py-8">
 			{/* TODO: fallback */}
 			<Show
 				when={props.query.isSuccess && props.query.data}
@@ -30,21 +30,24 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 
 					return (
 						<ArtistContext.Provider value={contextValue}>
-							<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
-								<Image.Root>
-									<Image.Fallback>
-										{(state) =>
-											state == Image.State.Error ?
-												<div class="size-64 bg-slate-100"></div>
-											:	<></>
-										}
-									</Image.Fallback>
-									<Image.Img src={artist().profile_image_url ?? undefined} />
-								</Image.Root>
-								<Info />
+							<div class="flex flex-col space-y-8">
+								<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
+									<Image.Root>
+										<Image.Fallback>
+											{(state) =>
+												state == Image.State.Error ?
+													<div class="size-64 bg-slate-100"></div>
+												:	<></>
+											}
+										</Image.Fallback>
+										<Image.Img src={artist().profile_image_url ?? undefined} />
+									</Image.Root>
+									<Info />
+								</div>
+								<div>
+									<ArtistRelease />
+								</div>
 							</div>
-							<ArtistRelease />
-
 							{/* <div class="max-w-full wrap-anywhere">
                 {JSON.stringify(props.query.data)}
             </div> */}

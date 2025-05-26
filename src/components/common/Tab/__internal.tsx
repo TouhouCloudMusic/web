@@ -1,47 +1,33 @@
 import type { PolymorphicProps } from "@kobalte/core"
 import * as K_Tab from "@kobalte/core/tabs"
-import { createContext, createEffect, mergeProps } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createContext, mergeProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/components/button"
 import { assertContext } from "~/utils/context"
 
-export type RootProps = PolymorphicProps<"div", K_Tab.TabsRootProps<"div">>
+export type RootProps = PolymorphicProps<"div", K_Tab.TabsRootProps<"div">> & {
+	orientation?: "horizontal" | "vertical"
+}
 
 type IndicatorPosition = "bottom" | "top" | "left" | "right"
 
-type Context = (
+type Context =
 	| {
 			orientation: "horizontal"
-			indicatorPosition: "bottom" | "top"
 	  }
 	| {
 			orientation: "vertical"
-			indicatorPosition: "left" | "right"
 	  }
-) & {
-	setIndicatorPosition(val: IndicatorPosition): void
-}
 const Context = createContext<Context>()
 
 export function Root(props: RootProps) {
-	const [store, setStore] = createStore<{
-		indicatorPosition?: IndicatorPosition
-	}>({})
-
 	return (
 		<Context.Provider
 			value={
 				{
 					get orientation() {
 						return props.orientation ?? "horizontal"
-					},
-					get indicatorPosition() {
-						return store.indicatorPosition
-					},
-					setIndicatorPosition(val: IndicatorPosition) {
-						setStore("indicatorPosition", val)
 					},
 				} as Context
 			}
@@ -52,9 +38,14 @@ export function Root(props: RootProps) {
 }
 
 export function List(props: PolymorphicProps<"ul", K_Tab.TabsListProps<"ul">>) {
+	const context = assertContext(Context)
 	const finalProps = mergeProps(props, {
 		get class() {
-			return twMerge("relative", props.class)
+			return twMerge(
+				"relative flex",
+				context.orientation == "horizontal" ? "" : "flex-col",
+				props.class,
+			)
 		},
 	})
 	return (
@@ -101,30 +92,29 @@ export type IndicatorProps = PolymorphicProps<
 
 export function Indicator(props: IndicatorProps) {
 	const context = assertContext(Context)
-
-	createEffect(() => {
-		context.setIndicatorPosition(
-			(props.position ?? context.orientation == "horizontal") ?
-				"bottom"
-			:	"left",
-		)
-	})
-
 	const finalProps = mergeProps(props, {
 		get class() {
 			const positionClass = () => {
-				switch (context.indicatorPosition) {
-					case "bottom":
-						return "bottom-[-1px] h-[2px]"
-					case "top":
-						return "top-[-1px] h-[2px]"
-					case "left":
-						return "left-[-1px] w-[2px]"
-					case "right":
-						return "right-[-1px] w-[2px]"
-					default:
-						return ""
+				if (
+					(!props.position && context.orientation == "horizontal") ||
+					props.position === "bottom"
+				) {
+					return "bottom-[-1px] h-[2px]"
 				}
+				if (
+					(!props.position && context.orientation == "vertical") ||
+					props.position === "right"
+				) {
+					return "right-[-1px] w-[2px]"
+				}
+				if (props.position === "top") {
+					return "top-[-1px] h-[2px]"
+				}
+				if (props.position === "left") {
+					return "left-[-1px] w-[2px]"
+				}
+
+				return ""
 			}
 
 			return twMerge(

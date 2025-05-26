@@ -8,10 +8,10 @@ importOrder:
   - "^[../]"
   - "^[./]"
 importOrderSeparation: true
-# tailwindStylesheet: "./src/index.css"
+tailwindStylesheet: "./src/index.css"
 plugins:
   - "@trivago/prettier-plugin-sort-imports"
-  # - prettier-plugin-tailwindcss
+  - prettier-plugin-tailwindcss
 overrides:
   - files: "*.yaml"
     options:
