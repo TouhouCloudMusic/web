@@ -2,7 +2,7 @@ import type { UseQueryResult } from "@tanstack/solid-query"
 import { Show } from "solid-js"
 
 import type { Artist } from "~/api/artist"
-import { Tabs } from "~/components/common"
+import { Tab } from "~/components/common"
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
 
@@ -37,26 +37,26 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 								</Image.Root>
 								<Info artist={artist()} />
 							</div>
-							<Tabs.Root class="mt-16">
-								<Tabs.List class="grid grid-cols-3 w-fit">
+							<Tab.Root class="mt-16">
+								<Tab.List class="grid grid-cols-3 w-fit">
 									{TABS.map((item) => (
 										<li>
-											<Tabs.Trigger
+											<Tab.Trigger
 												class="px-4 py-2.5 size-full text-md text-slate-800"
 												value={item}
 											>
 												{item}
-											</Tabs.Trigger>
+											</Tab.Trigger>
 										</li>
 									))}
-									<Tabs.Indicator />
-								</Tabs.List>
+									<Tab.Indicator />
+								</Tab.List>
 								<div class="w-full border-t border-slate-300">
-									<Tabs.Content value="Discography">
+									<Tab.Content value="Discography">
 										<Discography />
-									</Tabs.Content>
+									</Tab.Content>
 								</div>
-							</Tabs.Root>
+							</Tab.Root>
 
 							{/* <div class="max-w-full wrap-anywhere">
 								{JSON.stringify(props.query.data)}
