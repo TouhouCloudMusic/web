@@ -3,7 +3,7 @@ import { createFileRoute, Navigate } from "@tanstack/solid-router"
 import * as v from "valibot"
 
 import { ArtistQueryOption } from "~/api/artist"
-import { EntityId } from "~/api/share/schema"
+import { EntityId } from "~/api/shared/schema"
 import { TanstackQueryClinet } from "~/state/tanstack"
 import { ArtistProfilePage } from "~/views/artist/profile"
 

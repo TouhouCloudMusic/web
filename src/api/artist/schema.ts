@@ -5,14 +5,14 @@ import type { ExternalSchema } from "~/types/valibot"
 
 import type { OpenApiSchema } from ".."
 import { NewCorrection } from "../correction"
-import type { DateWithPrecisionIn } from "../share/schema"
+import type { DateWithPrecisionIn } from "../shared/schema"
 import {
 	EntityId,
 	EntityIdent,
 	Location,
 	Year,
 	NewLocalizedName,
-} from "../share/schema"
+} from "../shared/schema"
 
 type o_NewArtistCorrection = OpenApiSchema["NewCorrection_NewArtist"]
 

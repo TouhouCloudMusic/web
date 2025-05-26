@@ -1,4 +1,6 @@
 import { FetchClient } from ".."
+import { ReleaseType } from "../release"
+import { Pagination } from "../shared"
 import { handleApiResponse } from "../utils"
 import type { NewArtistCorrectionOut } from "./schema"
 
@@ -25,6 +27,29 @@ export async function __findById(id: number) {
 		params: {
 			path: {
 				id,
+			},
+		},
+	})
+
+	return handleApiResponse(res)
+}
+
+export async function __discographies(
+	id: number,
+	releaseType: ReleaseType,
+	pagination?: Pagination,
+) {
+	const res = await FetchClient.GET(`/artist/{id}/discographies`, {
+		params: {
+			path: {
+				id,
+			},
+			query: {
+				release_type: releaseType,
+				pagination: pagination ?? {
+					cursor: 0,
+					limit: 10,
+				},
 			},
 		},
 	})

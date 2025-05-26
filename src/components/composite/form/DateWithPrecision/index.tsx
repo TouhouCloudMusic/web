@@ -5,7 +5,7 @@ import { createStore } from "solid-js/store"
 import type {
 	DateWithPrecisionIn as t_DateWithPrecision,
 	DatePrecision,
-} from "~/api/share/schema"
+} from "~/api/shared/schema"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 

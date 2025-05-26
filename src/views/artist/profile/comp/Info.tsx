@@ -3,7 +3,7 @@ import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
 
 import type { Artist } from "~/api/artist"
-import type { DateWithPrecision } from "~/api/share/schema"
+import type { DateWithPrecision } from "~/api/shared/schema"
 import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from "../context"
