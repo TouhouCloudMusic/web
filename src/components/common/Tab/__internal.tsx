@@ -1,14 +1,54 @@
 import type { PolymorphicProps } from "@kobalte/core"
 import * as K_Tab from "@kobalte/core/tabs"
-import { mergeProps } from "solid-js"
+import { createContext, createEffect, mergeProps } from "solid-js"
+import { createStore } from "solid-js/store"
 import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/components/button"
+import { assertContext } from "~/utils/context"
 
-export function Root(
-	props: PolymorphicProps<"div", K_Tab.TabsRootProps<"div">>,
-) {
-	return <K_Tab.Root {...props} />
+export type RootProps = PolymorphicProps<"div", K_Tab.TabsRootProps<"div">>
+
+type IndicatorPosition = "bottom" | "top" | "left" | "right"
+
+type Context = (
+	| {
+			orientation: "horizontal"
+			indicatorPosition: "bottom" | "top"
+	  }
+	| {
+			orientation: "vertical"
+			indicatorPosition: "left" | "right"
+	  }
+) & {
+	setIndicatorPosition(val: IndicatorPosition): void
+}
+const Context = createContext<Context>()
+
+export function Root(props: RootProps) {
+	const [store, setStore] = createStore<{
+		indicatorPosition?: IndicatorPosition
+	}>({})
+
+	return (
+		<Context.Provider
+			value={
+				{
+					get orientation() {
+						return props.orientation ?? "horizontal"
+					},
+					get indicatorPosition() {
+						return store.indicatorPosition
+					},
+					setIndicatorPosition(val: IndicatorPosition) {
+						setStore("indicatorPosition", val)
+					},
+				} as Context
+			}
+		>
+			<K_Tab.Root {...props} />
+		</Context.Provider>
+	)
 }
 
 export function List(props: PolymorphicProps<"ul", K_Tab.TabsListProps<"ul">>) {
@@ -52,13 +92,44 @@ export function Content(
 	return <K_Tab.Content {...props} />
 }
 
-export function Indicator(
-	props: PolymorphicProps<"div", K_Tab.TabsIndicatorProps<"div">>,
-) {
+export type IndicatorProps = PolymorphicProps<
+	"div",
+	K_Tab.TabsIndicatorProps<"div">
+> & {
+	position?: IndicatorPosition
+}
+
+export function Indicator(props: IndicatorProps) {
+	const context = assertContext(Context)
+
+	createEffect(() => {
+		context.setIndicatorPosition(
+			(props.position ?? context.orientation == "horizontal") ?
+				"bottom"
+			:	"left",
+		)
+	})
+
 	const finalProps = mergeProps(props, {
 		get class() {
+			const positionClass = () => {
+				switch (context.indicatorPosition) {
+					case "bottom":
+						return "bottom-[-1px] h-[2px]"
+					case "top":
+						return "top-[-1px] h-[2px]"
+					case "left":
+						return "left-[-1px] w-[2px]"
+					case "right":
+						return "right-[-1px] w-[2px]"
+					default:
+						return ""
+				}
+			}
+
 			return twMerge(
-				"absolute bottom-[-1px] h-[2px] bg-reimu-600 duration-150",
+				positionClass(),
+				"absolute bg-reimu-600 duration-150",
 				props.class,
 			)
 		},
