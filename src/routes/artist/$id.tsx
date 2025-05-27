@@ -3,10 +3,9 @@ import { createFileRoute } from "@tanstack/solid-router"
 import * as v from "valibot"
 
 import { ArtistQueryOption } from "~/api/artist"
-import { RELEASE_TYPES, ReleaseType } from "~/api/release"
+import type { ReleaseType } from "~/api/release"
 import { EntityId } from "~/api/shared/schema"
 import { TanstackQueryClinet } from "~/state/tanstack"
-import { mapTuple } from "~/utils/data/array"
 import { ArtistProfilePage } from "~/views/artist/profile"
 
 export const Route = createFileRoute("/artist/$id")({
@@ -26,31 +25,30 @@ export const Route = createFileRoute("/artist/$id")({
 // oxlint-disable-next-line max-lines-per-function
 function RouteComponent() {
 	const params = Route.useParams()
-	const query = useQuery(() =>
-		ArtistQueryOption.findById(Number.parseInt(params().id, 10)),
-	)
+	const artistId = Number.parseInt(params().id, 10)
+	const query = useQuery(() => ArtistQueryOption.findById(artistId))
 
 	const initDiscographyAlbum = useInfiniteQuery(() =>
-		ArtistQueryOption.discography(query.data!.id, "Album"),
+		ArtistQueryOption.discography(artistId, "Album"),
 	)
 	const initDiscographyEP = useInfiniteQuery(() =>
-		ArtistQueryOption.discography(query.data!.id, "Ep"),
+		ArtistQueryOption.discography(artistId, "Ep"),
 	)
 
 	const initDiscographySingle = useInfiniteQuery(() =>
-		ArtistQueryOption.discography(query.data!.id, "Single"),
+		ArtistQueryOption.discography(artistId, "Single"),
 	)
 
 	const initDiscographyCompilation = useInfiniteQuery(() =>
-		ArtistQueryOption.discography(query.data!.id, "Compilation"),
+		ArtistQueryOption.discography(artistId, "Compilation"),
 	)
 
 	const initDiscographyDemo = useInfiniteQuery(() =>
-		ArtistQueryOption.discography(query.data!.id, "Demo"),
+		ArtistQueryOption.discography(artistId, "Demo"),
 	)
 
 	const initDiscographyOther = useInfiniteQuery(() =>
-		ArtistQueryOption.discography(query.data!.id, "Other"),
+		ArtistQueryOption.discography(artistId, "Other"),
 	)
 
 	const initDiscographies = [
@@ -63,11 +61,11 @@ function RouteComponent() {
 	]
 
 	const initAppearances = useInfiniteQuery(() =>
-		ArtistQueryOption.appearances(query.data!.id),
+		ArtistQueryOption.appearances(artistId),
 	)
 
 	const initCredits = useInfiniteQuery(() =>
-		ArtistQueryOption.credits(query.data!.id),
+		ArtistQueryOption.credits(artistId),
 	)
 
 	const discographies = {
