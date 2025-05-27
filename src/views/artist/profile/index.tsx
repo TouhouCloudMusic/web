@@ -1,26 +1,37 @@
+/* @refresh skip */
 import { createContext, Suspense } from "solid-js"
 
 import type { Artist, ArtistRelease as TArtistRelease } from "~/api/artist"
+import type { ReleaseType } from "~/api/release"
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
+import type { InfiniteQuery } from "~/types/query"
 
 import { ArtistRelease } from "./comp/ArtistRelease"
 import { Info } from "./comp/Info"
 
 export type ArtistContext = {
 	artist: Artist
-	appearances: TArtistRelease[]
-	discographies: TArtistRelease[]
-	credits: TArtistRelease[]
+	appearances: InfiniteQuery<TArtistRelease>
+	discographies: {
+		data: TArtistRelease[]
+		hasNext(type: ReleaseType): boolean
+		next(type: ReleaseType): Promise<void>
+	}
+	credits: InfiniteQuery<TArtistRelease>
 }
 
 export const ArtistContext = createContext<ArtistContext>()
 
 export type ArtistProfilePageProps = {
 	artist: Artist
-	appearances: TArtistRelease[]
-	discographies: TArtistRelease[]
-	credits: TArtistRelease[]
+	appearances: InfiniteQuery<TArtistRelease>
+	discographies: {
+		data: TArtistRelease[]
+		hasNext(type: ReleaseType): boolean
+		next(type: ReleaseType): Promise<void>
+	}
+	credits: InfiniteQuery<TArtistRelease>
 }
 
 export function ArtistProfilePage(props: ArtistProfilePageProps) {

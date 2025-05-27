@@ -1,3 +1,4 @@
+/* @refresh skip */
 import { Trans } from "@lingui-solid/solid/macro"
 import { createMemo, createSignal, For, Show } from "solid-js"
 
@@ -5,6 +6,7 @@ import type { ArtistRelease as TArtistRelease } from "~/api/artist"
 import type { ReleaseType } from "~/api/release"
 import { RELEASE_TYPES } from "~/api/release"
 import { DateWithPrecision } from "~/api/shared"
+import { Button } from "~/components/button"
 import { Tab } from "~/components/common/Tab"
 import { assertContext } from "~/utils/context"
 
@@ -22,9 +24,9 @@ export function ArtistRelease() {
 					each={TABS.filter((tabType) => {
 						switch (tabType) {
 							case "Appearance":
-								return context.appearances.length
+								return context.appearances.data.length
 							case "Credit":
-								return context.credits.length
+								return context.credits.data.length
 							default:
 								return true
 						}
@@ -50,7 +52,7 @@ export function ArtistRelease() {
 			>
 				<Discography />
 			</Tab.Content>
-			<Show when={context.appearances.length}>
+			<Show when={context.appearances.data.length}>
 				<Tab.Content<ArtistReleaseType>
 					value="Appearance"
 					class="w-full border-t border-slate-300"
@@ -58,7 +60,7 @@ export function ArtistRelease() {
 					<></>
 				</Tab.Content>
 			</Show>
-			<Show when={context.credits.length}>
+			<Show when={context.credits.data.length}>
 				<Tab.Content<ArtistReleaseType>
 					value="Credit"
 					class="w-full border-t border-slate-300"
@@ -79,7 +81,7 @@ function Discography() {
 	// Effect run after render so we have to use memo here
 	const _ = createMemo(() => {
 		releaseMap.clear()
-		const sorted = context.discographies.toSorted((a, b) => {
+		const sorted = context.discographies.data.toSorted((a, b) => {
 			if (!a.release_date) {
 				return 1
 			}
@@ -105,9 +107,13 @@ function Discography() {
 		}
 	})
 
+	const existingTypes = createMemo(() => {
+		return RELEASE_TYPES.filter((type) => releaseMap.has(type))
+	})
+
 	return (
 		<Show
-			when={RELEASE_TYPES.filter((type) => releaseMap.has(type)).length}
+			when={existingTypes().length}
 			fallback={
 				<div class="m-auto flex min-h-16 items-center place-self-center pl-4 whitespace-pre text-secondary">
 					<Trans>
@@ -128,7 +134,7 @@ function Discography() {
 					onChange={setSelectedType}
 				>
 					<Tab.List class="space-y-2 px-2 pt-6">
-						<For each={RELEASE_TYPES.filter((type) => releaseMap.has(type))}>
+						<For each={existingTypes()}>
 							{(type) => (
 								<Tab.Trigger
 									value={type}
@@ -141,53 +147,75 @@ function Discography() {
 					</Tab.List>
 				</Tab.Root>
 				<ul class="space-y-4 p-6">
-					<ArtistReleases data={releaseMap.get(selectedType())} />
+					<ArtistReleases
+						data={releaseMap.get(selectedType())}
+						hasNext={context.discographies.hasNext(selectedType())}
+						next={() => context.discographies.next(selectedType())}
+					/>
 				</ul>
 			</div>
 		</Show>
 	)
 }
 
-function ArtistReleases(props: { data?: TArtistRelease[] | undefined }) {
+function ArtistReleases(props: {
+	data?: TArtistRelease[] | undefined
+	hasNext: boolean
+	next: () => Promise<void>
+}) {
 	const context = assertContext(ArtistContext)
 
 	return (
-		<For each={props.data}>
-			{(release) => {
-				const formatted = () => {
-					const displayArtistName =
-						release.artist.some((a) => a.name === context.artist.name) ?
-							undefined
-						:	release.artist.map((a) => a.name).join(", ")
+		<>
+			<For each={props.data}>
+				{(release) => {
+					const formatted = () => {
+						const displayArtistName =
+							release.artist.some((a) => a.name === context.artist.name) ?
+								undefined
+							:	release.artist.map((a) => a.name).join(", ")
 
-					const releaseDate =
-						release.release_date ?
-							DateWithPrecision.display(release.release_date)
-						:	undefined
-					if (displayArtistName && releaseDate) {
-						return `${displayArtistName} · ${releaseDate}`
+						const releaseDate =
+							release.release_date ?
+								DateWithPrecision.display(release.release_date)
+							:	undefined
+						if (displayArtistName && releaseDate) {
+							return `${displayArtistName} · ${releaseDate}`
+						}
+
+						if (displayArtistName) {
+							return displayArtistName
+						}
+
+						if (releaseDate) {
+							return releaseDate
+						}
+
+						return "N/A"
 					}
+					return (
+						<li class="flex h-16 space-x-4">
+							<div class="size-16 rounded bg-secondary"></div>
+							<div class="grid grid-rows-2 items-center">
+								<div class="font-semibold text-slate-1000">{release.title}</div>
+								<div class="text-sm text-secondary">{formatted()}</div>
+							</div>
+						</li>
+					)
+				}}
+			</For>
 
-					if (displayArtistName) {
-						return displayArtistName
-					}
-
-					if (releaseDate) {
-						return releaseDate
-					}
-
-					return "N/A"
-				}
-				return (
-					<li class="flex h-16 space-x-4">
-						<div class="size-16 rounded bg-secondary"></div>
-						<div class="grid grid-rows-2 items-center">
-							<div class="font-semibold text-slate-1000">{release.title}</div>
-							<div class="text-sm text-secondary">{formatted()}</div>
-						</div>
-					</li>
-				)
-			}}
-		</For>
+			<Show when={props.hasNext}>
+				<div class="flex w-full justify-center">
+					<Button
+						variant="Tertiary"
+						onClick={props.next}
+						class="px-16 font-normal"
+					>
+						Load More
+					</Button>
+				</div>
+			</Show>
+		</>
 	)
 }

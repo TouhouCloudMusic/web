@@ -1,3 +1,4 @@
+/* @refresh skip */
 import { useLingui } from "@lingui-solid/solid/macro"
 import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
@@ -97,8 +98,7 @@ function Membership() {
 				return t`Member Of`
 			case "Multiple":
 				return t`Members`
-			default:
-				throw new Error("Unreachable")
+			// Unreachable
 		}
 	})
 	return (
