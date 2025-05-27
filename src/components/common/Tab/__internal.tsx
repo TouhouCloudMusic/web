@@ -77,8 +77,8 @@ export function Trigger(
 	)
 }
 
-export function Content(
-	props: PolymorphicProps<"div", K_Tab.TabsContentProps<"div">>,
+export function Content<T>(
+	props: PolymorphicProps<"div", K_Tab.TabsContentProps<"div">> & { value: T },
 ) {
 	return <K_Tab.Content {...props} />
 }

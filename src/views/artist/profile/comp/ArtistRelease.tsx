@@ -1,4 +1,5 @@
-import { createMemo, createSignal, For } from "solid-js"
+import { Trans } from "@lingui-solid/solid/macro"
+import { createMemo, createSignal, For, Show } from "solid-js"
 
 import type { ArtistRelease as TArtistRelease } from "~/api/artist"
 import type { ReleaseType } from "~/api/release"
@@ -9,11 +10,14 @@ import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from "../context"
 
+type ArtistReleaseType = (typeof TABS)[number]
+
+const TABS = ["Discography", "Appearance", "Credit"] as const
 export function ArtistRelease() {
 	return (
 		<Tab.Root>
 			<Tab.List class="grid w-fit grid-cols-3">
-				<For each={["Discography", "Appearance", "Credit"]}>
+				<For each={TABS}>
 					{(tabType) => (
 						<li>
 							<Tab.Trigger
@@ -27,17 +31,25 @@ export function ArtistRelease() {
 				</For>
 				<Tab.Indicator />
 			</Tab.List>
-			<div class="w-full border-t border-slate-300">
-				<Tab.Content value="Discography">
-					<Discography />
-				</Tab.Content>
-				<Tab.Content value="Appearance">
-					<></>
-				</Tab.Content>
-				<Tab.Content value="Credit">
-					<></>
-				</Tab.Content>
-			</div>
+
+			<Tab.Content<ArtistReleaseType>
+				value="Discography"
+				class="w-full border-t border-slate-300"
+			>
+				<Discography />
+			</Tab.Content>
+			<Tab.Content<ArtistReleaseType>
+				value="Appearance"
+				class="w-full border-t border-slate-300"
+			>
+				<></>
+			</Tab.Content>
+			<Tab.Content<ArtistReleaseType>
+				value="Credit"
+				class="w-full border-t border-slate-300"
+			>
+				<></>
+			</Tab.Content>
 		</Tab.Root>
 	)
 }
@@ -78,33 +90,51 @@ function Discography() {
 	})
 
 	return (
-		<div class="grid grid-cols-[auto_1fr]">
-			<Tab.Root
-				orientation="vertical"
-				onChange={setSelectedType}
-			>
-				<Tab.List class="space-y-2 px-2 pt-6">
-					<For each={RELEASE_TYPES.filter((type) => releaseMap.has(type))}>
-						{(type) => (
-							<Tab.Trigger
-								value={type}
-								class="flex h-10 items-center justify-center rounded-md px-2 text-center font-normal text-slate-900 outline-2 outline-offset-2 outline-transparent focus-visible:outline-slate-300 data-selected:bg-slate-100"
-							>
-								{type}
-							</Tab.Trigger>
-						)}
-					</For>
-				</Tab.List>
-			</Tab.Root>
-			<ul class="space-y-4 p-6">
-				<ArtistReleases data={releaseMap.get(selectedType())} />
-			</ul>
-		</div>
+		<Show
+			when={RELEASE_TYPES.filter((type) => releaseMap.has(type)).length}
+			fallback={
+				<div class="m-auto flex min-h-16 items-center place-self-center pl-4 whitespace-pre text-secondary">
+					<Trans>
+						This Artist has no releases yet, you can update it on{" "}
+						<a
+							href="TODO"
+							class="text-blue-600"
+						>
+							Update New Release
+						</a>
+					</Trans>
+				</div>
+			}
+		>
+			<div class="grid grid-cols-[auto_1fr]">
+				<Tab.Root
+					orientation="vertical"
+					onChange={setSelectedType}
+				>
+					<Tab.List class="space-y-2 px-2 pt-6">
+						<For each={RELEASE_TYPES.filter((type) => releaseMap.has(type))}>
+							{(type) => (
+								<Tab.Trigger
+									value={type}
+									class="flex h-10 items-center justify-center rounded-md px-2 text-center font-normal text-secondary outline-2 outline-offset-2 outline-transparent focus-visible:outline-slate-300 data-selected:bg-slate-100"
+								>
+									{type}
+								</Tab.Trigger>
+							)}
+						</For>
+					</Tab.List>
+				</Tab.Root>
+				<ul class="space-y-4 p-6">
+					<ArtistReleases data={releaseMap.get(selectedType())} />
+				</ul>
+			</div>
+		</Show>
 	)
 }
 
 function ArtistReleases(props: { data?: TArtistRelease[] | undefined }) {
 	const context = assertContext(ArtistContext)
+
 	return (
 		<For each={props.data}>
 			{(release) => {
