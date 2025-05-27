@@ -6,7 +6,7 @@ import type { Artist } from "~/api/artist"
 import { DateWithPrecision } from "~/api/shared"
 import { assertContext } from "~/utils/context"
 
-import { ArtistContext } from "../context"
+import { ArtistContext } from ".."
 
 function InfoLabel(props: ParentProps) {
 	return <span class="text-sm text-tertiary">{props.children}</span>

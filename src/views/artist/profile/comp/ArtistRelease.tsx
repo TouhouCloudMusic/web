@@ -8,16 +8,28 @@ import { DateWithPrecision } from "~/api/shared"
 import { Tab } from "~/components/common/Tab"
 import { assertContext } from "~/utils/context"
 
-import { ArtistContext } from "../context"
+import { ArtistContext } from ".."
 
 type ArtistReleaseType = (typeof TABS)[number]
 
 const TABS = ["Discography", "Appearance", "Credit"] as const
 export function ArtistRelease() {
+	const context = assertContext(ArtistContext)
 	return (
 		<Tab.Root>
 			<Tab.List class="grid w-fit grid-cols-3">
-				<For each={TABS}>
+				<For
+					each={TABS.filter((tabType) => {
+						switch (tabType) {
+							case "Appearance":
+								return context.appearances.length
+							case "Credit":
+								return context.credits.length
+							default:
+								return true
+						}
+					})}
+				>
 					{(tabType) => (
 						<li>
 							<Tab.Trigger
@@ -38,18 +50,22 @@ export function ArtistRelease() {
 			>
 				<Discography />
 			</Tab.Content>
-			<Tab.Content<ArtistReleaseType>
-				value="Appearance"
-				class="w-full border-t border-slate-300"
-			>
-				<></>
-			</Tab.Content>
-			<Tab.Content<ArtistReleaseType>
-				value="Credit"
-				class="w-full border-t border-slate-300"
-			>
-				<></>
-			</Tab.Content>
+			<Show when={context.appearances.length}>
+				<Tab.Content<ArtistReleaseType>
+					value="Appearance"
+					class="w-full border-t border-slate-300"
+				>
+					<></>
+				</Tab.Content>
+			</Show>
+			<Show when={context.credits.length}>
+				<Tab.Content<ArtistReleaseType>
+					value="Credit"
+					class="w-full border-t border-slate-300"
+				>
+					<></>
+				</Tab.Content>
+			</Show>
 		</Tab.Root>
 	)
 }

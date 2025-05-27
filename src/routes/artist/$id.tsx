@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/solid-query"
-import { createFileRoute, Navigate } from "@tanstack/solid-router"
+import { createFileRoute } from "@tanstack/solid-router"
 import * as v from "valibot"
 
 import { ArtistQueryOption } from "~/api/artist"
@@ -31,10 +31,16 @@ function RouteComponent() {
 
 	const initDiscographies = mapTuple(
 		(t) =>
-			useInfiniteQuery(() =>
-				ArtistQueryOption.discographies(query.data!.id, t),
-			),
+			useInfiniteQuery(() => ArtistQueryOption.discography(query.data!.id, t)),
 		RELEASE_TYPES,
+	)
+
+	const initAppearances = useInfiniteQuery(() =>
+		ArtistQueryOption.appearances(query.data!.id),
+	)
+
+	const initCredits = useInfiniteQuery(() =>
+		ArtistQueryOption.credits(query.data!.id),
 	)
 
 	return (
@@ -44,6 +50,8 @@ function RouteComponent() {
 				discographies={initDiscographies.flatMap(
 					(q) => q.data?.pages.flatMap((p) => p.items) ?? [],
 				)}
+				appearances={initAppearances.data?.pages.flatMap((p) => p.items) ?? []}
+				credits={initCredits.data?.pages.flatMap((p) => p.items) ?? []}
 			/>
 		</>
 	)

@@ -19,7 +19,33 @@ export function findById(id: number) {
 	})
 }
 
-export function discographies(
+export function appearances(id: number) {
+	return infiniteQueryOptions({
+		queryKey: ["artist::appearances", id],
+		queryFn: async () => {
+			const appearances = await F.__appearances(id)
+			return appearances
+		},
+		initialPageParam: 0,
+		getNextPageParam: (last) => last.next_cursor,
+		throwOnError: true,
+	})
+}
+
+export function credits(id: number) {
+	return infiniteQueryOptions({
+		queryKey: ["artist::credits", id],
+		queryFn: async () => {
+			const credits = await F.__credits(id)
+			return credits
+		},
+		initialPageParam: 0,
+		getNextPageParam: (last) => last.next_cursor,
+		throwOnError: true,
+	})
+}
+
+export function discography(
 	id: number,
 	releaseType: ReleaseType,
 	pagination?: Pagination,

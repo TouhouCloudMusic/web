@@ -1,4 +1,4 @@
-import { Suspense } from "solid-js"
+import { createContext, Suspense } from "solid-js"
 
 import type { Artist, ArtistRelease as TArtistRelease } from "~/api/artist"
 import { Image } from "~/components/image"
@@ -6,11 +6,21 @@ import { PageLayout } from "~/layout/PageLayout"
 
 import { ArtistRelease } from "./comp/ArtistRelease"
 import { Info } from "./comp/Info"
-import { ArtistContext } from "./context"
+
+export type ArtistContext = {
+	artist: Artist
+	appearances: TArtistRelease[]
+	discographies: TArtistRelease[]
+	credits: TArtistRelease[]
+}
+
+export const ArtistContext = createContext<ArtistContext>()
 
 export type ArtistProfilePageProps = {
 	artist: Artist
+	appearances: TArtistRelease[]
 	discographies: TArtistRelease[]
+	credits: TArtistRelease[]
 }
 
 export function ArtistProfilePage(props: ArtistProfilePageProps) {
@@ -18,8 +28,14 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 		get artist() {
 			return props.artist
 		},
+		get appearances() {
+			return props.appearances
+		},
 		get discographies() {
 			return props.discographies
+		},
+		get credits() {
+			return props.credits
 		},
 	}
 	return (
