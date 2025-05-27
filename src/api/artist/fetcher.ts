@@ -34,7 +34,39 @@ export async function __findById(id: number) {
 	return handleApiResponse(res)
 }
 
-const DEFAULT_LIMIT = 10
+const DEFAULT_ARTIST_RELEASE_LIMIT = 10
+
+export async function __appearances(id: number, pagination?: Pagination) {
+	const res = await FetchClient.GET(`/artist/{id}/appearances`, {
+		params: {
+			path: {
+				id,
+			},
+			query: {
+				cursor: pagination?.cursor ?? 0,
+				limit: pagination?.limit ?? DEFAULT_ARTIST_RELEASE_LIMIT,
+			},
+		},
+	})
+
+	return handleApiResponse(res)
+}
+
+export async function __credits(id: number, pagination?: Pagination) {
+	const res = await FetchClient.GET(`/artist/{id}/credits`, {
+		params: {
+			path: {
+				id,
+			},
+			query: {
+				cursor: pagination?.cursor ?? 0,
+				limit: pagination?.limit ?? DEFAULT_ARTIST_RELEASE_LIMIT,
+			},
+		},
+	})
+
+	return handleApiResponse(res)
+}
 
 export async function __discographies(
 	id: number,
@@ -49,7 +81,7 @@ export async function __discographies(
 			query: {
 				release_type: releaseType,
 				cursor: pagination?.cursor ?? 0,
-				limit: pagination?.limit ?? DEFAULT_LIMIT,
+				limit: pagination?.limit ?? DEFAULT_ARTIST_RELEASE_LIMIT,
 			},
 		},
 	})
