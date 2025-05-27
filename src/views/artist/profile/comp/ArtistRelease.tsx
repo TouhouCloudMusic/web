@@ -111,12 +111,12 @@ function Discography() {
 			fallback={
 				<div class="m-auto flex min-h-16 items-center place-self-center pl-4 whitespace-pre text-secondary">
 					<Trans>
-						This Artist has no releases yet, you can update it on{" "}
+						This Artist has no releases yet, you can upload them on{" "}
 						<a
 							href="TODO"
 							class="text-blue-600"
 						>
-							Update New Release
+							Upload New Release
 						</a>
 					</Trans>
 				</div>

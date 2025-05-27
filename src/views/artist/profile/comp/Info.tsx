@@ -15,6 +15,7 @@ function InfoLabel(props: ParentProps) {
 export function Info() {
 	const { t } = useLingui()
 	const context = assertContext(ArtistContext)
+
 	return (
 		<div class="flex flex-col">
 			<h1 class="text-xl font-semibold">{context.artist.name}</h1>
@@ -35,6 +36,7 @@ export function Info() {
 				<Location location={context.artist.current_location} />
 				<Aliases />
 				<Membership />
+				<Links />
 			</div>
 		</div>
 	)
@@ -111,6 +113,31 @@ function Membership() {
 				<ul>
 					<For each={context.artist.memberships}>
 						{(membership) => <li>{membership.artist_id}</li>}
+					</For>
+				</ul>
+			</div>
+		</Show>
+	)
+}
+
+function Links() {
+	const context = assertContext(ArtistContext)
+	return (
+		<Show when={context.artist.links?.length}>
+			<div>
+				<InfoLabel>Links</InfoLabel>
+				<ul>
+					<For each={context.artist.links}>
+						{(link) => (
+							<li>
+								<a
+									class="text-blue-600"
+									href={link}
+								>
+									{link}
+								</a>
+							</li>
+						)}
 					</For>
 				</ul>
 			</div>
