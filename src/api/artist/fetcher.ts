@@ -34,6 +34,8 @@ export async function __findById(id: number) {
 	return handleApiResponse(res)
 }
 
+const DEFAULT_LIMIT = 10
+
 export async function __discographies(
 	id: number,
 	releaseType: ReleaseType,
@@ -46,10 +48,8 @@ export async function __discographies(
 			},
 			query: {
 				release_type: releaseType,
-				pagination: pagination ?? {
-					cursor: 0,
-					limit: 10,
-				},
+				cursor: pagination?.cursor ?? 0,
+				limit: pagination?.limit ?? DEFAULT_LIMIT,
 			},
 		},
 	})
