@@ -9,44 +9,6 @@ import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from "../context"
 
-// type ReleaseMockData = {
-// 	title: string
-// 	releaseDate?: string
-// 	artistName: string
-// 	type: ReleaseType
-// }
-
-// const MOCK_RELEASES: ReleaseMockData[] = [
-// 	{
-// 		title: "東方紺珠伝 ~ Legacy of Lunatic Kingdom",
-// 		releaseDate: "2015-08-14",
-// 		artistName: "ZUN",
-// 		type: "Album",
-// 	},
-// 	{
-// 		title: "東方虹龍洞 ~ Unconnected Marketeers",
-// 		releaseDate: "2021-05-04",
-// 		artistName: "ZUN",
-// 		type: "Album",
-// 	},
-// 	{
-// 		title: "Touhou Kouryudou ~ Unconnected Marketeers OST",
-// 		artistName: "ZUN",
-// 		type: "Album",
-// 	},
-// 	{
-// 		title: "大空魔術 ~ Magical Astronomy",
-// 		releaseDate: "2006-08-13",
-// 		artistName: "ZUN",
-// 		type: "Compilation",
-// 	},
-// 	{
-// 		title: "蓬莱人形 ~ Dolls in Pseudo Paradise",
-// 		releaseDate: "2002-12-30",
-// 		artistName: "ZUN",
-// 		type: "Album",
-// 	},
-// ]
 export function ArtistRelease() {
 	return (
 		<Tab.Root>
