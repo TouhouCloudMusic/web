@@ -99,7 +99,6 @@ export async function __discographiesInit(
 				id,
 			},
 			query: {
-				cursor: 0,
 				limit,
 			},
 		},

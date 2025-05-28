@@ -15,6 +15,7 @@
 	},
 	"rules": {
 		"curly": "off",
+		"max-params": "off",
 		"eqeqeq": "off",
 		"no-async-await": "off",
 		"no-duplicate-imports": "off",
