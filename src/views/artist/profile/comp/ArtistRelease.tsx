@@ -21,9 +21,11 @@ export function ArtistRelease() {
 		<Suspense fallback={<div>Loading...</div>}>
 			<Show
 				when={
-					!context.discographies.isLoading &&
-					!context.appearances.isLoading &&
-					!context.credits.isLoading
+					!(
+						context.discographies.isLoading ||
+						context.appearances.isLoading ||
+						context.credits.isLoading
+					)
 				}
 				fallback={<div>Loading...</div>}
 			>

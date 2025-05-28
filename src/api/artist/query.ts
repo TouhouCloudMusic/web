@@ -1,5 +1,11 @@
-import { infiniteQueryOptions, queryOptions } from "@tanstack/solid-query"
+import {
+	infiniteQueryOptions,
+	queryOptions,
+	useQuery,
+} from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
+
+import { Str } from "~/utils/data"
 
 import type { ReleaseType } from "../release"
 import * as F from "./fetcher"
@@ -48,10 +54,31 @@ export function credits(id: number) {
 	})
 }
 
+// export function discography(id: number, releaseType: ReleaseType) {
+// 	return infiniteQueryOptions({
+// 		queryKey: ["artist::discographies", id, releaseType],
+// 		queryFn: async (context) => {
+// 			const discographies = await F.__discographies(id, releaseType, {
+// 				cursor: context.pageParam,
+// 			})
+// 			return discographies
+// 		},
+// 		getNextPageParam: (last) => last.next_cursor,
+// 		initialPageParam: 0,
+// 		throwOnError: true,
+// 	})
+// }
+
 export function discography(id: number, releaseType: ReleaseType) {
 	return infiniteQueryOptions({
 		queryKey: ["artist::discographies", id, releaseType],
 		queryFn: async (context) => {
+			if (context.pageParam === 0) {
+				const query = useQuery(() => discographyInit(id))
+				const res = await query.promise
+				return res[Str.toLowerCase(releaseType)]
+			}
+
 			const discographies = await F.__discographies(id, releaseType, {
 				cursor: context.pageParam,
 			})
