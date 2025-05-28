@@ -2,10 +2,8 @@
 import { Trans } from "@lingui-solid/solid/macro"
 import { createMemo, createSignal, For, Show } from "solid-js"
 
-import type { ArtistRelease as TArtistRelease } from "~/api/artist"
-import type { ReleaseType } from "~/api/release"
-import { RELEASE_TYPES } from "~/api/release"
-import { DateWithPrecision } from "~/api/shared"
+import { RELEASE_TYPES, DateWithPrecision } from "~/api"
+import type { ArtistRelease as TArtistRelease, ReleaseType } from "~/api"
 import { Button } from "~/components/button"
 import { Tab } from "~/components/common/Tab"
 import { assertContext } from "~/utils/context"
@@ -76,39 +74,10 @@ function Discography() {
 	const context = assertContext(ArtistContext)
 	const [selectedType, setSelectedType] = createSignal<ReleaseType>("Album")
 
-	// Keep the map on the heap instead of creating a new one each time
-	const releaseMap = new Map<ReleaseType, TArtistRelease[]>()
-	// Effect run after render so we have to use memo here
-	const _ = createMemo(() => {
-		releaseMap.clear()
-		const sorted = context.discographies.data.toSorted((a, b) => {
-			if (!a.release_date) {
-				return 1
-			}
-
-			if (!b.release_date) {
-				return -1
-			}
-
-			return (
-				new Date(a.release_date.value).getTime() -
-				new Date(b.release_date.value).getTime()
-			)
-		})
-
-		// Perf: split to sperated array by type then push at once
-		for (const release of sorted) {
-			let arr = releaseMap.get(release.release_type)
-			if (arr) {
-				arr.push(release)
-			} else {
-				releaseMap.set(release.release_type, [release])
-			}
-		}
-	})
-
 	const existingTypes = createMemo(() => {
-		return RELEASE_TYPES.filter((type) => releaseMap.has(type))
+		return RELEASE_TYPES.filter(
+			(type) => context.discographies.data[type].length,
+		)
 	})
 
 	return (
@@ -148,7 +117,7 @@ function Discography() {
 				</Tab.Root>
 				<ul class="space-y-4 p-6">
 					<ArtistReleases
-						data={releaseMap.get(selectedType())}
+						data={context.discographies.data[selectedType()]}
 						hasNext={context.discographies.hasNext(selectedType())}
 						next={() => context.discographies.next(selectedType())}
 					/>

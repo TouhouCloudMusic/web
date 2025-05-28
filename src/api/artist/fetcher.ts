@@ -88,3 +88,22 @@ export async function __discographies(
 
 	return handleApiResponse(res)
 }
+
+export async function __discographiesInit(
+	id: number,
+	limit = DEFAULT_ARTIST_RELEASE_LIMIT,
+) {
+	const res = await FetchClient.GET(`/artist/{id}/discographies/init`, {
+		params: {
+			path: {
+				id,
+			},
+			query: {
+				cursor: 0,
+				limit,
+			},
+		},
+	})
+
+	return handleApiResponse(res)
+}

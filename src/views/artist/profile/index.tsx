@@ -14,7 +14,7 @@ export type ArtistContext = {
 	artist: Artist
 	appearances: InfiniteQuery<TArtistRelease>
 	discographies: {
-		data: TArtistRelease[]
+		data: Record<ReleaseType, TArtistRelease[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
 	}
@@ -27,7 +27,7 @@ export type ArtistProfilePageProps = {
 	artist: Artist
 	appearances: InfiniteQuery<TArtistRelease>
 	discographies: {
-		data: TArtistRelease[]
+		data: Record<ReleaseType, TArtistRelease[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
 	}
@@ -50,7 +50,7 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 		},
 	}
 	return (
-		<PageLayout class="px-9 py-8">
+		<PageLayout class="p-9">
 			{/* TODO: fallback */}
 			<Suspense fallback={<div>Loading...</div>}>
 				<ArtistContext.Provider value={contextValue}>

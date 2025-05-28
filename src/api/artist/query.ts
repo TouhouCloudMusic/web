@@ -56,8 +56,18 @@ export function discography(
 			const discographies = await F.__discographies(id, releaseType, pagination)
 			return discographies
 		},
-		initialPageParam: 0,
 		getNextPageParam: (last) => last.next_cursor,
+		initialPageParam: 0,
+		throwOnError: true,
+	})
+}
+
+export function discographyInit(id: number, limit?: number) {
+	return queryOptions({
+		queryKey: ["artist::discographies::init", id, limit],
+		queryFn: () => {
+			return F.__discographiesInit(id, limit)
+		},
 		throwOnError: true,
 	})
 }

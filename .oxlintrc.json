@@ -14,6 +14,7 @@
 		"nursery": "warn"
 	},
 	"rules": {
+		"curly": "off",
 		"eqeqeq": "off",
 		"no-async-await": "off",
 		"no-duplicate-imports": "off",
