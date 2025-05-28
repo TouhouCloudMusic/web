@@ -17,6 +17,7 @@ export type ArtistContext = {
 		data: Record<ReleaseType, TArtistRelease[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
+		isLoading: boolean
 	}
 	credits: InfiniteQuery<TArtistRelease>
 }
@@ -30,6 +31,7 @@ export type ArtistProfilePageProps = {
 		data: Record<ReleaseType, TArtistRelease[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
+		isLoading: boolean
 	}
 	credits: InfiniteQuery<TArtistRelease>
 }
@@ -69,9 +71,7 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 							<Info />
 						</div>
 						<div>
-							<Suspense fallback={<div>Loading...</div>}>
-								<ArtistRelease />
-							</Suspense>
+							<ArtistRelease />
 						</div>
 					</div>
 					{/* <div class="max-w-full wrap-anywhere">

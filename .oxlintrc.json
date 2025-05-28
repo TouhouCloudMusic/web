@@ -14,6 +14,8 @@
 		"nursery": "warn"
 	},
 	"rules": {
+		// False Positives
+		"array-callback-return": ["off", { "allowImplicitReturn": true }],
 		"curly": "off",
 		"max-params": "off",
 		"eqeqeq": "off",

@@ -17,71 +17,83 @@ const TABS = ["Discography", "Appearance", "Credit"] as const
 export function ArtistRelease() {
 	const context = assertContext(ArtistContext)
 
-	// Don't remove this memo, it's used to trigger suspense
-	const tabs = createMemo(() => {
-		return TABS.filter((tabType) => {
-			switch (tabType) {
-				case "Appearance":
-					return context.appearances.data.length
-				case "Credit":
-					return context.credits.data.length
-				default:
-					return true
-			}
-		})
-	})
-
 	return (
-		// Don't remove this Suspense
-		// It is used to prevent the tab content from being rendered before the data is loaded
-		<Suspense>
-			<Tab.Root defaultValue="Discography">
-				<Tab.List class="grid w-fit grid-cols-3">
-					<For each={tabs()}>
-						{(tabType) => (
-							<li>
-								<Tab.Trigger
-									class="text-md size-full px-4 py-2.5 text-slate-800"
-									value={tabType}
-								>
-									{tabType}
-								</Tab.Trigger>
-							</li>
-						)}
-					</For>
-					<Tab.Indicator />
-				</Tab.List>
-
-				<Tab.Content<ArtistReleaseType>
-					value="Discography"
-					class="w-full border-t border-slate-300"
-				>
-					<Discography />
-				</Tab.Content>
-				<Tab.Content<ArtistReleaseType>
-					value="Appearance"
-					class="w-full border-t border-slate-300"
-				>
-					<ArtistReleases
-						class="p-6"
-						data={context.appearances.data}
-						hasNext={context.appearances.hasNext}
-						next={() => context.appearances.next()}
-					/>
-				</Tab.Content>
-				<Tab.Content<ArtistReleaseType>
-					value="Credit"
-					class="w-full border-t border-slate-300"
-				>
-					<ArtistReleases
-						class="p-6"
-						data={context.credits.data}
-						hasNext={context.credits.hasNext}
-						next={() => context.credits.next()}
-					/>
-				</Tab.Content>
-			</Tab.Root>
+		<Suspense fallback={<div>Loading...</div>}>
+			<Show
+				when={
+					!context.discographies.isLoading &&
+					!context.appearances.isLoading &&
+					!context.credits.isLoading
+				}
+				fallback={<div>Loading...</div>}
+			>
+				<Inner />
+			</Show>
 		</Suspense>
+	)
+}
+
+function Inner() {
+	const context = assertContext(ArtistContext)
+	return (
+		// https://github.com/kobaltedev/kobalte/issues/222
+		<Tab.Root>
+			<Tab.List class="grid w-fit grid-cols-3">
+				<For
+					each={TABS.filter((tab) => {
+						switch (tab) {
+							case "Appearance":
+								return context.appearances.data.length
+							case "Credit":
+								return context.credits.data.length
+							default:
+								return true
+						}
+					})}
+				>
+					{(tabType) => (
+						<li>
+							<Tab.Trigger
+								class="text-md size-full px-4 py-2.5 text-slate-800"
+								value={tabType}
+							>
+								{tabType}
+							</Tab.Trigger>
+						</li>
+					)}
+				</For>
+				<Tab.Indicator />
+			</Tab.List>
+
+			<Tab.Content<ArtistReleaseType>
+				value="Discography"
+				class="w-full border-t border-slate-300"
+			>
+				<Discography />
+			</Tab.Content>
+			<Tab.Content<ArtistReleaseType>
+				value="Appearance"
+				class="w-full border-t border-slate-300"
+			>
+				<ArtistReleases
+					class="p-6"
+					data={context.appearances.data}
+					hasNext={context.appearances.hasNext}
+					next={() => context.appearances.next()}
+				/>
+			</Tab.Content>
+			<Tab.Content<ArtistReleaseType>
+				value="Credit"
+				class="w-full border-t border-slate-300"
+			>
+				<ArtistReleases
+					class="p-6"
+					data={context.credits.data}
+					hasNext={context.credits.hasNext}
+					next={() => context.credits.next()}
+				/>
+			</Tab.Content>
+		</Tab.Root>
 	)
 }
 
