@@ -2,7 +2,6 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
 
 import type { ReleaseType } from "../release"
-import type { Pagination } from "../shared"
 import * as F from "./fetcher"
 
 export function findById(id: number) {
@@ -22,8 +21,10 @@ export function findById(id: number) {
 export function appearances(id: number) {
 	return infiniteQueryOptions({
 		queryKey: ["artist::appearances", id],
-		queryFn: async () => {
-			const appearances = await F.__appearances(id)
+		queryFn: async (context) => {
+			const appearances = await F.__appearances(id, {
+				cursor: context.pageParam,
+			})
 			return appearances
 		},
 		initialPageParam: 0,
@@ -35,8 +36,10 @@ export function appearances(id: number) {
 export function credits(id: number) {
 	return infiniteQueryOptions({
 		queryKey: ["artist::credits", id],
-		queryFn: async () => {
-			const credits = await F.__credits(id)
+		queryFn: async (context) => {
+			const credits = await F.__credits(id, {
+				cursor: context.pageParam,
+			})
 			return credits
 		},
 		initialPageParam: 0,
@@ -45,15 +48,13 @@ export function credits(id: number) {
 	})
 }
 
-export function discography(
-	id: number,
-	releaseType: ReleaseType,
-	pagination?: Pagination,
-) {
+export function discography(id: number, releaseType: ReleaseType) {
 	return infiniteQueryOptions({
-		queryKey: ["artist::discographies", id, releaseType, pagination],
-		queryFn: async () => {
-			const discographies = await F.__discographies(id, releaseType, pagination)
+		queryKey: ["artist::discographies", id, releaseType],
+		queryFn: async (context) => {
+			const discographies = await F.__discographies(id, releaseType, {
+				cursor: context.pageParam,
+			})
 			return discographies
 		},
 		getNextPageParam: (last) => last.next_cursor,

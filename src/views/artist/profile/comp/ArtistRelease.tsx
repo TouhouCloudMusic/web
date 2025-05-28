@@ -1,6 +1,7 @@
 /* @refresh skip */
 import { Trans } from "@lingui-solid/solid/macro"
-import { createMemo, createSignal, For, Show } from "solid-js"
+import { createMemo, createSignal, For, Show, Suspense } from "solid-js"
+import { twJoin } from "tailwind-merge"
 
 import { RELEASE_TYPES, DateWithPrecision } from "~/api"
 import type { ArtistRelease as TArtistRelease, ReleaseType } from "~/api"
@@ -15,58 +16,72 @@ type ArtistReleaseType = (typeof TABS)[number]
 const TABS = ["Discography", "Appearance", "Credit"] as const
 export function ArtistRelease() {
 	const context = assertContext(ArtistContext)
-	return (
-		<Tab.Root>
-			<Tab.List class="grid w-fit grid-cols-3">
-				<For
-					each={TABS.filter((tabType) => {
-						switch (tabType) {
-							case "Appearance":
-								return context.appearances.data.length
-							case "Credit":
-								return context.credits.data.length
-							default:
-								return true
-						}
-					})}
-				>
-					{(tabType) => (
-						<li>
-							<Tab.Trigger
-								class="text-md size-full px-4 py-2.5 text-slate-800"
-								value={tabType}
-							>
-								{tabType}
-							</Tab.Trigger>
-						</li>
-					)}
-				</For>
-				<Tab.Indicator />
-			</Tab.List>
 
-			<Tab.Content<ArtistReleaseType>
-				value="Discography"
-				class="w-full border-t border-slate-300"
-			>
-				<Discography />
-			</Tab.Content>
-			<Show when={context.appearances.data.length}>
+	// Don't remove this memo, it's used to trigger suspense
+	const tabs = createMemo(() => {
+		return TABS.filter((tabType) => {
+			switch (tabType) {
+				case "Appearance":
+					return context.appearances.data.length
+				case "Credit":
+					return context.credits.data.length
+				default:
+					return true
+			}
+		})
+	})
+
+	return (
+		// Don't remove this Suspense
+		// It is used to prevent the tab content from being rendered before the data is loaded
+		<Suspense>
+			<Tab.Root defaultValue="Discography">
+				<Tab.List class="grid w-fit grid-cols-3">
+					<For each={tabs()}>
+						{(tabType) => (
+							<li>
+								<Tab.Trigger
+									class="text-md size-full px-4 py-2.5 text-slate-800"
+									value={tabType}
+								>
+									{tabType}
+								</Tab.Trigger>
+							</li>
+						)}
+					</For>
+					<Tab.Indicator />
+				</Tab.List>
+
+				<Tab.Content<ArtistReleaseType>
+					value="Discography"
+					class="w-full border-t border-slate-300"
+				>
+					<Discography />
+				</Tab.Content>
 				<Tab.Content<ArtistReleaseType>
 					value="Appearance"
 					class="w-full border-t border-slate-300"
 				>
-					<></>
+					<ArtistReleases
+						class="p-6"
+						data={context.appearances.data}
+						hasNext={context.appearances.hasNext}
+						next={() => context.appearances.next()}
+					/>
 				</Tab.Content>
-			</Show>
-			<Show when={context.credits.data.length}>
 				<Tab.Content<ArtistReleaseType>
 					value="Credit"
 					class="w-full border-t border-slate-300"
 				>
-					<></>
+					<ArtistReleases
+						class="p-6"
+						data={context.credits.data}
+						hasNext={context.credits.hasNext}
+						next={() => context.credits.next()}
+					/>
 				</Tab.Content>
-			</Show>
-		</Tab.Root>
+			</Tab.Root>
+		</Suspense>
 	)
 }
 
@@ -115,13 +130,13 @@ function Discography() {
 						</For>
 					</Tab.List>
 				</Tab.Root>
-				<ul class="space-y-4 p-6">
-					<ArtistReleases
-						data={context.discographies.data[selectedType()]}
-						hasNext={context.discographies.hasNext(selectedType())}
-						next={() => context.discographies.next(selectedType())}
-					/>
-				</ul>
+
+				<ArtistReleases
+					class="p-6"
+					data={context.discographies.data[selectedType()]}
+					hasNext={context.discographies.hasNext(selectedType())}
+					next={() => context.discographies.next(selectedType())}
+				/>
 			</div>
 		</Show>
 	)
@@ -131,11 +146,12 @@ function ArtistReleases(props: {
 	data?: TArtistRelease[] | undefined
 	hasNext: boolean
 	next: () => Promise<void>
+	class?: string
 }) {
 	const context = assertContext(ArtistContext)
 
 	return (
-		<>
+		<ul class={twJoin("space-y-4", props.class)}>
 			<For each={props.data}>
 				{(release) => {
 					const formatted = () => {
@@ -185,6 +201,6 @@ function ArtistReleases(props: {
 					</Button>
 				</div>
 			</Show>
-		</>
+		</ul>
 	)
 }

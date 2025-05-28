@@ -17,6 +17,7 @@
 		"curly": "off",
 		"max-params": "off",
 		"eqeqeq": "off",
+		"no-plusplus": "off",
 		"no-async-await": "off",
 		"no-duplicate-imports": "off",
 		"no-ternary": "off",

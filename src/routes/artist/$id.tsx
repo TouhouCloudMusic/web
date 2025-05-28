@@ -119,7 +119,12 @@ function RouteComponent() {
 						return discographyMap
 					},
 					hasNext(type: ReleaseType) {
-						return discography[type].hasNextPage
+						if (enabled[type]) return discography[type].hasNextPage
+						else
+							return (
+								initDiscographies.data?.[Str.toLowerCase(type)].next_cursor !=
+								undefined
+							)
 					},
 					async next(type: ReleaseType): Promise<void> {
 						setEnabled(type, true)
