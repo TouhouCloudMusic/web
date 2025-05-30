@@ -1,39 +1,39 @@
 /* @refresh skip */
 import { createContext, Suspense } from "solid-js"
 
-import type { Artist, ArtistRelease as TArtistRelease } from "~/api/artist"
+import type { Artist, Discography, Appearance, Credit } from "~/api/artist"
 import type { ReleaseType } from "~/api/release"
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
 import type { InfiniteQuery } from "~/types/query"
 
-import { ArtistRelease } from "./comp/ArtistRelease"
-import { Info } from "./comp/Info"
+import { ArtistInfo } from "./comp/ArtistInfo"
+import { ArtistReleaseInfo } from "./comp/ArtistReleaseInfo"
 
 export type ArtistContext = {
 	artist: Artist
-	appearances: InfiniteQuery<TArtistRelease>
+	appearances: InfiniteQuery<Appearance>
 	discographies: {
-		data: Record<ReleaseType, TArtistRelease[]>
+		data: Record<ReleaseType, Discography[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
 		isLoading: boolean
 	}
-	credits: InfiniteQuery<TArtistRelease>
+	credits: InfiniteQuery<Credit>
 }
 
 export const ArtistContext = createContext<ArtistContext>()
 
 export type ArtistProfilePageProps = {
 	artist: Artist
-	appearances: InfiniteQuery<TArtistRelease>
+	appearances: InfiniteQuery<Appearance>
 	discographies: {
-		data: Record<ReleaseType, TArtistRelease[]>
+		data: Record<ReleaseType, Discography[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
 		isLoading: boolean
 	}
-	credits: InfiniteQuery<TArtistRelease>
+	credits: InfiniteQuery<Credit>
 }
 
 export function ArtistProfilePage(props: ArtistProfilePageProps) {
@@ -68,10 +68,10 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 								</Image.Fallback>
 								<Image.Img src={props.artist.profile_image_url ?? undefined} />
 							</Image.Root>
-							<Info />
+							<ArtistInfo />
 						</div>
 						<div>
-							<ArtistRelease />
+							<ArtistReleaseInfo />
 						</div>
 					</div>
 					{/* <div class="max-w-full wrap-anywhere">

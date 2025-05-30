@@ -10,7 +10,7 @@ export const FetchClient = createFetchClient<RevExactRecursive<paths>>({
 	baseUrl: "/api",
 })
 
-export * from "./artist"
+export type { Artist } from "./artist"
 export * from "./auth"
 export * from "./release"
 export * from "./shared"

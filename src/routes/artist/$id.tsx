@@ -4,7 +4,7 @@ import { createEffect } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import * as v from "valibot"
 
-import type { ArtistRelease } from "~/api/artist"
+import type { Discography } from "~/api/artist"
 import { ArtistQueryOption } from "~/api/artist"
 import type { ReleaseType } from "~/api/release"
 import { RELEASE_TYPES } from "~/api/release"
@@ -46,7 +46,7 @@ function RouteComponent() {
 	)
 
 	const [discographyMap, setDiscographyMap] = createStore(
-		Obj.fromEntries(RELEASE_TYPES.map((ty) => [ty, [] as ArtistRelease[]])),
+		Obj.fromEntries(RELEASE_TYPES.map((ty) => [ty, [] as Discography[]])),
 	)
 
 	const discography = Obj.fromEntries(

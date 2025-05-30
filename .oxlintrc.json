@@ -39,6 +39,14 @@
 				"allow": ["constructor", "privateConstructors", "protectedConstructors"]
 			}
 		],
+		"max-lines": [
+			"warn",
+			{
+				"max": 300,
+				"skipBlankLines": true,
+				"skipComments": true
+			}
+		],
 		"sort-keys": "off",
 
 		"default-case": [
@@ -51,6 +59,7 @@
 		"oxc/no-const-enum": "off",
 		"oxc/no-optional-chaining": "off",
 		"oxc/no-barrel-file": "off",
+		"oxc/no-rest-spread-properties": "off",
 
 		"eslint/func-style": "off",
 		"eslint/max-depth": ["warn", 4],
