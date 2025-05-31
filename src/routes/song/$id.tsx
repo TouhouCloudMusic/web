@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/solid-router'
 import { SongInfo } from '~/views/song/song_info'
 
-export const Route = createFileRoute('/(song)/song_/$id')({
+export const Route = createFileRoute('/song/$id')({
   component: SongInfoPage,
 })
 

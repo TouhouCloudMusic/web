@@ -17,14 +17,13 @@ import { Route as AuthImport } from './routes/auth'
 import { Route as ArticlesImport } from './routes/articles'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as SongIdImport } from './routes/song/$id'
 import { Route as ArtistNewImport } from './routes/artist/new'
 import { Route as ArtistIdImport } from './routes/artist/$id'
 import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
 import { Route as userProfileImport } from './routes/(user)/profile'
-import { Route as songSongImport } from './routes/(song)/song'
 import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
-import { Route as songSongIdImport } from './routes/(song)/song_.$id'
 
 // Create/Update Routes
 
@@ -64,6 +63,12 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const SongIdRoute = SongIdImport.update({
+  id: '/song/$id',
+  path: '/song/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const ArtistNewRoute = ArtistNewImport.update({
   id: '/artist/new',
   path: '/artist/new',
@@ -88,12 +93,6 @@ const userProfileRoute = userProfileImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const songSongRoute = songSongImport.update({
-  id: '/(song)/song',
-  path: '/song',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const userProfileEditRoute = userProfileEditImport.update({
   id: '/(user)/profile_/edit',
   path: '/profile/edit',
@@ -103,12 +102,6 @@ const userProfileEditRoute = userProfileEditImport.update({
 const userProfileUsernameRoute = userProfileUsernameImport.update({
   id: '/(user)/profile_/$username',
   path: '/profile/$username',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const songSongIdRoute = songSongIdImport.update({
-  id: '/(song)/song_/$id',
-  path: '/song/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -158,13 +151,6 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof LibraryImport
       parentRoute: typeof rootRoute
     }
-    '/(song)/song': {
-      id: '/(song)/song'
-      path: '/song'
-      fullPath: '/song'
-      preLoaderRoute: typeof songSongImport
-      parentRoute: typeof rootRoute
-    }
     '/(user)/profile': {
       id: '/(user)/profile'
       path: '/profile'
@@ -193,11 +179,11 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ArtistNewImport
       parentRoute: typeof rootRoute
     }
-    '/(song)/song_/$id': {
-      id: '/(song)/song_/$id'
+    '/song/$id': {
+      id: '/song/$id'
       path: '/song/$id'
       fullPath: '/song/$id'
-      preLoaderRoute: typeof songSongIdImport
+      preLoaderRoute: typeof SongIdImport
       parentRoute: typeof rootRoute
     }
     '/(user)/profile_/$username': {
@@ -226,12 +212,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/feeds': typeof FeedsRoute
   '/library': typeof LibraryRoute
-  '/song': typeof songSongRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
   '/artist/$id': typeof ArtistIdRoute
   '/artist/new': typeof ArtistNewRoute
-  '/song/$id': typeof songSongIdRoute
+  '/song/$id': typeof SongIdRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
@@ -243,12 +228,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/feeds': typeof FeedsRoute
   '/library': typeof LibraryRoute
-  '/song': typeof songSongRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTestavataruploadRoute
   '/artist/$id': typeof ArtistIdRoute
   '/artist/new': typeof ArtistNewRoute
-  '/song/$id': typeof songSongIdRoute
+  '/song/$id': typeof SongIdRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
@@ -261,12 +245,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/feeds': typeof FeedsRoute
   '/library': typeof LibraryRoute
-  '/(song)/song': typeof songSongRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/test_avatar_upload': typeof userTestavataruploadRoute
   '/artist/$id': typeof ArtistIdRoute
   '/artist/new': typeof ArtistNewRoute
-  '/(song)/song_/$id': typeof songSongIdRoute
+  '/song/$id': typeof SongIdRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
   '/(user)/profile_/edit': typeof userProfileEditRoute
 }
@@ -280,7 +263,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/feeds'
     | '/library'
-    | '/song'
     | '/profile'
     | '/test_avatar_upload'
     | '/artist/$id'
@@ -296,7 +278,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/feeds'
     | '/library'
-    | '/song'
     | '/profile'
     | '/test_avatar_upload'
     | '/artist/$id'
@@ -312,12 +293,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/feeds'
     | '/library'
-    | '/(song)/song'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
     | '/artist/$id'
     | '/artist/new'
-    | '/(song)/song_/$id'
+    | '/song/$id'
     | '/(user)/profile_/$username'
     | '/(user)/profile_/edit'
   fileRoutesById: FileRoutesById
@@ -330,12 +310,11 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   FeedsRoute: typeof FeedsRoute
   LibraryRoute: typeof LibraryRoute
-  songSongRoute: typeof songSongRoute
   userProfileRoute: typeof userProfileRoute
   userTestavataruploadRoute: typeof userTestavataruploadRoute
   ArtistIdRoute: typeof ArtistIdRoute
   ArtistNewRoute: typeof ArtistNewRoute
-  songSongIdRoute: typeof songSongIdRoute
+  SongIdRoute: typeof SongIdRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
 }
@@ -347,12 +326,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   FeedsRoute: FeedsRoute,
   LibraryRoute: LibraryRoute,
-  songSongRoute: songSongRoute,
   userProfileRoute: userProfileRoute,
   userTestavataruploadRoute: userTestavataruploadRoute,
   ArtistIdRoute: ArtistIdRoute,
   ArtistNewRoute: ArtistNewRoute,
-  songSongIdRoute: songSongIdRoute,
+  SongIdRoute: SongIdRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
 }
@@ -373,12 +351,11 @@ export const routeTree = rootRoute
         "/auth",
         "/feeds",
         "/library",
-        "/(song)/song",
         "/(user)/profile",
         "/(user)/test_avatar_upload",
         "/artist/$id",
         "/artist/new",
-        "/(song)/song_/$id",
+        "/song/$id",
         "/(user)/profile_/$username",
         "/(user)/profile_/edit"
       ]
@@ -401,9 +378,6 @@ export const routeTree = rootRoute
     "/library": {
       "filePath": "library.tsx"
     },
-    "/(song)/song": {
-      "filePath": "(song)/song.tsx"
-    },
     "/(user)/profile": {
       "filePath": "(user)/profile.tsx"
     },
@@ -416,8 +390,8 @@ export const routeTree = rootRoute
     "/artist/new": {
       "filePath": "artist/new.tsx"
     },
-    "/(song)/song_/$id": {
-      "filePath": "(song)/song_.$id.tsx"
+    "/song/$id": {
+      "filePath": "song/$id.tsx"
     },
     "/(user)/profile_/$username": {
       "filePath": "(user)/profile_.$username.tsx"
