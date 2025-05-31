@@ -1,68 +1,68 @@
+import { I18nProvider as LinguiProvier } from "@lingui-solid/solid"
+import { i18n } from "@lingui/core"
 import { type } from "arktype"
-import type { ParentProps, Signal } from "solid-js"
-import { createContext, createSignal, useTransition } from "solid-js"
-import type { Context, Transition } from "solid-js/types/reactive/signal.d.ts"
-import { useContextUnsave } from "~/lib/context"
+import type { ParentProps } from "solid-js"
+import { createContext } from "solid-js"
+
+import { assertContext } from "~/utils/context"
+
+import { initUserLang } from "./init"
 
 export const AppLocale = type(`"en" | "zh-Hans"`)
 export type AppLocale = typeof AppLocale.infer
-export const I18nContext =
-  createContext<I18nStore>() as unknown as Context<I18nStore>
 
+const I18nContext = createContext<I18nStore>()
 export function I18NProvider(props: ParentProps) {
-  return (
-    <>
-      <I18nContext.Provider value={I18nStore.default()}>
-        {props.children}
-      </I18nContext.Provider>
-    </>
-  )
+	const lang = initUserLang()
+
+	return (
+		<I18nContext.Provider value={I18nStore.new(lang)}>
+			<LinguiProvier i18n={i18n}>{props.children}</LinguiProvier>
+		</I18nContext.Provider>
+	)
 }
 
 export class I18nStore {
-  private locale_signal: Signal<AppLocale>
-  private transition: Transition
+	constructor(init: AppLocale) {
+		this.effect(init)
+	}
 
-  constructor(locale: AppLocale) {
-    this.locale_signal = createSignal<AppLocale>(locale)
-    this.transition = useTransition()
+	public get locale() {
+		return i18n.locale
+	}
 
-    this.effect()
-  }
+	public static new(lang: AppLocale) {
+		return new I18nStore(lang)
+	}
 
-  public static new(locale: AppLocale) {
-    return new I18nStore(locale)
-  }
+	public setLocale(lang: AppLocale) {
+		if (this.locale === lang) {
+			// void this.startTransition(() => {
+			// 	this.#setLocale(newLocale)
+			// })
+			return
+		}
+		this.effect(lang)
+	}
 
-  public static default() {
-    return new I18nStore("en")
-  }
+	effect(lang: AppLocale) {
+		void dynamicLoad(lang)
+		setDocumentLang(lang)
+	}
+}
 
-  public get locale() {
-    return this.locale_signal[0]
-  }
-
-  public setLocale(newLocale: AppLocale) {
-    if (this.locale() === newLocale) return
-    void this.transition[1](() => {
-      this.locale_signal[1](newLocale)
-      this.effect()
-    })
-  }
-
-  public duringTransition() {
-    return this.transition[0]()
-  }
-
-  effect() {
-    setDocumentLang(this.locale())
-  }
+function dynamicLoad(lang: AppLocale) {
+	return import(`../../locale/${lang}/messages.ts`).then(({ messages }) => {
+		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+		i18n.load(lang, messages)
+		i18n.activate(lang)
+	})
 }
 
 export function useI18N() {
-  return useContextUnsave(I18nContext)
+	return assertContext(I18nContext)
 }
 
 function setDocumentLang(locale: AppLocale) {
-  document.documentElement.lang = locale
+	document.documentElement.lang = locale
 }
