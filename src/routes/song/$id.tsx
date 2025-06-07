@@ -1,18 +1,30 @@
-import { createFileRoute } from '@tanstack/solid-router'
-import { SongInfo } from '~/views/song/song_info'
+import { useQuery } from "@tanstack/solid-query"
+import { createFileRoute } from "@tanstack/solid-router"
+import * as v from "valibot"
 
-export const Route = createFileRoute('/song/$id')({
-  component: SongInfoPage,
+import { EntityId } from "~/api/shared/schema"
+import { SongQueryOption } from "~/api/song"
+import { TanstackQueryClinet } from "~/state/tanstack"
+import { SongInfoPage } from "~/views/song/Info"
+
+export const Route = createFileRoute("/song/$id")({
+	component: RouteComponent,
+	loader: async ({ params }) => {
+		const parsedId = v.parse(EntityId, Number.parseInt(params.id, 10))
+		return await TanstackQueryClinet.ensureQueryData(
+			SongQueryOption.findById(parsedId),
+		)
+	},
+
+	// Optional: Add error component and pending component as in artist route if desired
+	// errorComponent: () => <Navigate to="/" />,
+	// pendingComponent: () => <div>Loading song...</div>,
 })
 
-function SongInfoPage() {
-  const params = Route.useParams();
-  const id = () => Number(params().id);
+function RouteComponent() {
+	const params = Route.useParams()
+	const parsedId = v.parse(EntityId, Number.parseInt(params().id, 10))
+	const songData = useQuery(() => SongQueryOption.findById(parsedId))
 
-  return (
-    <div>
-      <SongInfo id={id()} />
-    </div>
-  );
+	return <SongInfoPage song={songData.data!} />
 }
-
