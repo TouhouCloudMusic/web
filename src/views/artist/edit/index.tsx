@@ -3,29 +3,26 @@
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
-import {
-	createEffect,
-	createMemo,
-	createSignal,
-	For,
-	onMount,
-	Show,
-	Suspense,
-} from "solid-js"
-import { ArrowLeftIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { For, Show, Suspense } from "solid-js"
+import { ArrowLeftIcon } from "solid-radix-icons"
 import * as v from "valibot"
 
 import { ArtistMutation } from "~/api/artist"
 import type { Artist } from "~/api/artist"
-import type { Tenure, ArtistType } from "~/api/artist/schema"
+import type { ArtistType } from "~/api/artist/schema"
 import { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { DateWithPrecision } from "~/components/composite/form/DateWithPrecision"
 import { Location } from "~/components/composite/form/Location"
-import { Divider } from "~/components/divider"
 import { PageLayout } from "~/layout/PageLayout"
+
+import { AliasesFieldArray } from "./comp/Aliases.tsx"
+import { LinksFieldArray } from "./comp/Links.tsx"
+import { LocalizedNamesFieldArray } from "./comp/LocalizedNames.tsx"
+import { MembershipFieldArray } from "./comp/Membership.tsx"
+import { TextAliasesFieldArray } from "./comp/TextAliases.tsx"
 
 type Props =
 	| {
@@ -68,90 +65,69 @@ export function EditArtistPage(props: Props) {
 	)
 }
 
-const TENURE_STRING_SCHMEA = v.message(
-	v.pipe(
-		v.string(),
-		v.regex(/^\d+-\d+(,\d+-\d+)*$/),
-		v.transform((value) =>
-			value
-				.split(",")
-				.map((v): Tenure => {
-					const [start, end] = v.split("-")
-
-					return {
-						join_year: start ? Number.parseInt(start, 10) : undefined,
-						leave_year: end ? Number.parseInt(end, 10) : undefined,
-					}
-				})
-				.filter((v) => !!v.join_year && !!v.leave_year),
-		),
-	),
-	"Invalid tenure string",
-)
 // oxlint-disable-next-line max-lines-per-function
 function Form(props: Props) {
 	const navigator = useNavigate()
 
 	const mutation = ArtistMutation.getInstance()
 
-	const [formStore, { Form, Field, FieldArray }] =
-		createForm<NewArtistCorrection>({
-			validate: M.valiForm(NewArtistCorrection),
-			get initialValues(): M.PartialValues<NewArtistCorrection> {
-				return props.type == "new" ?
-						{
-							type: "Create",
-							description: "",
-							data: {
-								name: "",
-								artist_type: "Unknown" as const,
-								localized_names: [],
-								aliases: [],
-								text_aliases: [],
-								links: [],
-								memberships: [],
-							},
-						}
-					:	{
-							type: "Update",
-							description: "",
-							data: {
-								name: props.artist.name,
-								artist_type: props.artist.artist_type,
-								localized_names:
-									props.artist.localized_names?.map((ln) => ({
-										language_id: ln.language.id,
-										name: ln.name,
-									})) ?? [],
-								aliases: props.artist.aliases ?? [],
-								text_aliases: props.artist.text_aliases ?? [],
-								start_date:
-									props.artist.start_date ?
-										{
-											value: new Date(props.artist.start_date.value),
-											precision: props.artist.start_date.precision,
-										}
-									:	null,
-								end_date:
-									props.artist.end_date ?
-										{
-											value: new Date(props.artist.end_date.value),
-											precision: props.artist.end_date.precision,
-										}
-									:	null,
-								links: props.artist.links ?? [],
-								start_location: props.artist.start_location,
-								current_location: props.artist.current_location,
-								memberships:
-									props.artist.memberships?.map((m) => ({
-										artist_id: m.artist_id,
-										roles: m.roles?.map((r) => r.id) ?? [],
-										tenure: m.tenure ?? [],
-									})) ?? [],
-							},
-						}
-			},
-		})
+	const [formStore, { Form, Field }] = createForm<NewArtistCorrection>({
+		validate: M.valiForm(NewArtistCorrection),
+		get initialValues(): M.PartialValues<NewArtistCorrection> {
+			return props.type == "new" ?
+					{
+						type: "Create",
+						description: "",
+						data: {
+							name: "",
+							artist_type: "Unknown" as const,
+							localized_names: [],
+							aliases: [],
+							text_aliases: [],
+							links: [],
+							memberships: [],
+						},
+					}
+				:	{
+						type: "Update",
+						description: "",
+						data: {
+							name: props.artist.name,
+							artist_type: props.artist.artist_type,
+							localized_names:
+								props.artist.localized_names?.map((ln) => ({
+									language_id: ln.language.id,
+									name: ln.name,
+								})) ?? [],
+							aliases: props.artist.aliases ?? [],
+							text_aliases: props.artist.text_aliases ?? [],
+							start_date:
+								props.artist.start_date ?
+									{
+										value: new Date(props.artist.start_date.value),
+										precision: props.artist.start_date.precision,
+									}
+								:	null,
+							end_date:
+								props.artist.end_date ?
+									{
+										value: new Date(props.artist.end_date.value),
+										precision: props.artist.end_date.precision,
+									}
+								:	null,
+							links: props.artist.links ?? [],
+							start_location: props.artist.start_location,
+							current_location: props.artist.current_location,
+							memberships:
+								props.artist.memberships?.map((m) => ({
+									artist_id: m.artist_id,
+									roles: m.roles?.map((r) => r.id) ?? [],
+									tenure: m.tenure ?? [],
+								})) ?? [],
+						},
+					}
+		},
+	})
 
 	useBlocker({
 		shouldBlockFn() {
@@ -213,148 +189,6 @@ function Form(props: Props) {
 		}
 	}
 
-	function Membership() {
-		return (
-			<FieldArray name="data.memberships">
-				{(fields) => {
-					const isDisabled = createMemo(() => {
-						const type = M.getValue(formStore, "data.artist_type")
-						return !type || type == "Unknown"
-					})
-					return (
-						<div class="w-96">
-							<div class="mb-4 flex place-content-between items-center gap-4">
-								<FormComp.Label class="m-0">Membership</FormComp.Label>
-								<Button
-									variant="Tertiary"
-									class="h-max p-2"
-									disabled={isDisabled()}
-									onClick={() => {
-										M.insert(formStore, "data.memberships", {
-											// @ts-expect-error
-											value: undefined,
-										})
-									}}
-								>
-									<PlusIcon class="size-4" />
-								</Button>
-							</div>
-							<ul class="flex flex-col gap-2">
-								<For each={fields.items}>
-									{(_, idx) => {
-										onMount(() => {
-											// @ts-expect-error
-											M.setValues(
-												formStore,
-												`data.memberships.${idx()}.tenure`,
-												[undefined],
-											)
-											// @ts-expect-error
-											M.setValues(
-												formStore,
-												`data.memberships.${idx()}.roles`,
-												[undefined],
-											)
-										})
-										return (
-											<>
-												<li class="grid grid-cols-[1fr_auto] gap-2">
-													<Field
-														name={`data.memberships.${idx()}.artist_id`}
-														type="number"
-													>
-														{(field, props) => (
-															<InputField.Root class="grow">
-																<InputField.Input
-																	{...props}
-																	id={field.name}
-																	type="number"
-																	class="no-spinner"
-																	placeholder="Artist ID"
-																/>
-																<InputField.Error message={field.error} />
-															</InputField.Root>
-														)}
-													</Field>
-													<InputField.Root class="row-start-2">
-														<InputField.Input
-															id={`memberships.${idx()}.roles`}
-															placeholder="Role IDs, e.g. `1,2,3`"
-															onChange={(e) => {
-																const value = e.target.value
-																const result = value.split(",").map((v) => {
-																	return Number.parseInt(v, 10)
-																})
-																M.setValues(
-																	formStore,
-																	`data.memberships.${idx()}.roles`,
-																	result,
-																)
-															}}
-														/>
-														{/* <InputField.Error message={} /> */}
-													</InputField.Root>
-													<Tenure index={idx()} />
-
-													<Button
-														variant="Tertiary"
-														size="Sm"
-														class="col-start-2 row-span-3"
-														onClick={() => {
-															M.remove(formStore, "data.memberships", {
-																at: idx(),
-															})
-														}}
-													>
-														<Cross1Icon />
-													</Button>
-												</li>
-												{idx() < fields.items.length - 1 && (
-													<Divider horizonal />
-												)}
-											</>
-										)
-									}}
-								</For>
-							</ul>
-						</div>
-					)
-				}}
-			</FieldArray>
-		)
-	}
-
-	function Tenure(props: { index: number }) {
-		const [error, setError] =
-			createSignal<v.InferIssue<typeof TENURE_STRING_SCHMEA>[]>()
-
-		return (
-			<InputField.Root class="row-start-3">
-				<InputField.Input
-					id={`memberships.${props.index}.tenure`}
-					placeholder="Tenures, e.g. `1234-5678, 1234-5678`"
-					onChange={(e) => {
-						const value = e.target.value
-
-						const result = v.safeParse(TENURE_STRING_SCHMEA, value)
-
-						if (result.success) {
-							M.setValues(
-								formStore,
-								`data.memberships.${props.index}.tenure`,
-								result.output,
-							)
-						}
-						setError(result.issues)
-					}}
-				/>
-				<For each={error()}>
-					{(issue) => <InputField.Error message={issue.message} />}
-				</For>
-			</InputField.Root>
-		)
-	}
-
 	return (
 		<Form
 			class="col-span-full col-start-2 -col-end-2 flex flex-col gap-16 pt-12 pb-32"
@@ -407,196 +241,11 @@ function Form(props: Props) {
 				)}
 			</Field>
 
-			<FieldArray name="data.localized_names">
-				{(fields) => (
-					<div class="w-96">
-						<div class="mb-4 flex place-content-between items-center gap-4">
-							<FormComp.Label class="m-0">Localized Names</FormComp.Label>
-							<Button
-								variant="Tertiary"
-								class="h-max p-2"
-								onClick={() => {
-									M.insert(formStore, "data.localized_names", {
-										// @ts-expect-error
-										value: undefined,
-									})
-								}}
-							>
-								<PlusIcon class="size-4" />
-							</Button>
-						</div>
-						<ul class="flex flex-col gap-2">
-							<For each={fields.items}>
-								{(_, idx) => (
-									<li class="grid grid-cols-[1fr_auto] grid-rows-2 gap-2">
-										<Field
-											name={`data.localized_names.${idx()}.language_id`}
-											type="number"
-										>
-											{(field, props) => (
-												<InputField.Root>
-													<InputField.Input
-														{...props}
-														id={field.name}
-														placeholder="Language ID"
-														value={field.value}
-													/>
-													<InputField.Error message={field.error} />
-												</InputField.Root>
-											)}
-										</Field>
-										<Field name={`data.localized_names.${idx()}.name`}>
-											{(field, props) => (
-												<InputField.Root class="row-start-2">
-													<InputField.Input
-														{...props}
-														id={field.name}
-														placeholder="Name"
-														value={field.value}
-													/>
-													<InputField.Error message={field.error} />
-												</InputField.Root>
-											)}
-										</Field>
-										<Button
-											variant="Tertiary"
-											size="Sm"
-											class="row-span-2 w-fit"
-											onClick={() => {
-												M.remove(formStore, "data.localized_names", {
-													at: idx(),
-												})
-											}}
-										>
-											<Cross1Icon />
-										</Button>
+			<LocalizedNamesFieldArray formStore={formStore} />
 
-										{idx() < fields.items.length - 1 && <Divider horizonal />}
-									</li>
-								)}
-							</For>
-						</ul>
-					</div>
-				)}
-			</FieldArray>
+			<AliasesFieldArray formStore={formStore} />
 
-			<FieldArray name="data.aliases">
-				{(fields) => (
-					<div class="w-96">
-						<div class="mb-4 flex place-content-between items-center gap-4">
-							<FormComp.Label class="m-0">Aliases</FormComp.Label>
-							<Button
-								variant="Tertiary"
-								class="h-max p-2"
-								onClick={() => {
-									M.insert(formStore, "data.aliases", {
-										// @ts-expect-error
-										value: undefined,
-									})
-								}}
-							>
-								<PlusIcon class="size-4" />
-							</Button>
-						</div>
-						<ul class="flex flex-col gap-2">
-							<For each={fields.items}>
-								{(_, idx) => (
-									<>
-										<li class="flex gap-2">
-											<Field name={`data.aliases.${idx()}`}>
-												{(field, props) => (
-													<InputField.Root class="grow">
-														<InputField.Input
-															{...props}
-															id={field.name}
-															type="number"
-															class="no-spinner"
-															placeholder="Alias Artist ID"
-															value={field.value}
-														/>
-														<InputField.Error message={field.error} />
-													</InputField.Root>
-												)}
-											</Field>
-											<Button
-												variant="Tertiary"
-												size="Sm"
-												class="row-span-2 w-fit"
-												onClick={() => {
-													M.remove(formStore, "data.aliases", {
-														at: idx(),
-													})
-												}}
-											>
-												<Cross1Icon />
-											</Button>
-										</li>
-										{idx() < fields.items.length - 1 && <Divider horizonal />}
-									</>
-								)}
-							</For>
-						</ul>
-					</div>
-				)}
-			</FieldArray>
-
-			<FieldArray name="data.text_aliases">
-				{(fields) => (
-					<div class="w-96">
-						<div class="mb-4 flex place-content-between items-center gap-4">
-							<FormComp.Label class="m-0">Text Aliases</FormComp.Label>
-							<Button
-								variant="Tertiary"
-								class="h-max p-2"
-								onClick={() => {
-									M.insert(formStore, "data.text_aliases", {
-										// @ts-expect-error
-										value: undefined,
-									})
-								}}
-							>
-								<PlusIcon class="size-4" />
-							</Button>
-						</div>
-						<ul class="flex flex-col gap-2">
-							<For each={fields.items}>
-								{(_, idx) => (
-									<>
-										<li class="flex gap-2">
-											<Field name={`data.text_aliases.${idx()}`}>
-												{(field, props) => (
-													<InputField.Root class="grow">
-														<InputField.Input
-															{...props}
-															id={field.name}
-															placeholder="Name"
-															value={field.value}
-														/>
-														<InputField.Error message={field.error} />
-													</InputField.Root>
-												)}
-											</Field>
-											<Button
-												variant="Tertiary"
-												size="Sm"
-												class="row-span-2 w-fit"
-												onClick={() => {
-													M.remove(formStore, "data.text_aliases", {
-														at: idx(),
-													})
-												}}
-											>
-												<Cross1Icon />
-											</Button>
-										</li>
-										{idx() < fields.items.length - 1 && <Divider horizonal />}
-									</>
-								)}
-							</For>
-						</ul>
-					</div>
-				)}
-			</FieldArray>
+			<TextAliasesFieldArray formStore={formStore} />
 
 			<DateWithPrecision
 				label="Start date"
@@ -632,66 +281,9 @@ function Form(props: Props) {
 				}}
 			/>
 
-			<Membership />
+			<MembershipFieldArray formStore={formStore} />
 
-			<FieldArray name="data.links">
-				{(fields) => (
-					<div class="w-96">
-						<div class="mb-4 flex place-content-between items-center gap-4">
-							<FormComp.Label class="m-0">Links</FormComp.Label>
-							<Button
-								variant="Tertiary"
-								class="h-max p-2"
-								onClick={() => {
-									M.insert(formStore, "data.links", {
-										// @ts-expect-error
-										value: undefined,
-									})
-								}}
-							>
-								<PlusIcon class="size-4" />
-							</Button>
-						</div>
-						<ul class="flex flex-col gap-2">
-							<For each={fields.items}>
-								{(_, idx) => (
-									<>
-										<li class="flex gap-2">
-											<Field name={`data.links.${idx()}`}>
-												{(field, props) => (
-													<InputField.Root class="grow">
-														<InputField.Input
-															{...props}
-															id={field.name}
-															type="url"
-															placeholder="Url"
-															value={field.value}
-														/>
-														<InputField.Error message={field.error} />
-													</InputField.Root>
-												)}
-											</Field>
-											<Button
-												variant="Tertiary"
-												size="Sm"
-												class="row-span-2 w-fit"
-												onClick={() => {
-													M.remove(formStore, "data.links", {
-														at: idx(),
-													})
-												}}
-											>
-												<Cross1Icon />
-											</Button>
-										</li>
-										{idx() < fields.items.length - 1 && <Divider horizonal />}
-									</>
-								)}
-							</For>
-						</ul>
-					</div>
-				)}
-			</FieldArray>
+			<LinksFieldArray formStore={formStore} />
 
 			<Field name="description">
 				{(field, props) => (
