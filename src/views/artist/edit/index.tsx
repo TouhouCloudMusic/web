@@ -3,7 +3,14 @@
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
-import { createMemo, createSignal, For, onMount, Show } from "solid-js"
+import {
+	createMemo,
+	createSignal,
+	For,
+	onMount,
+	Show,
+	Suspense,
+} from "solid-js"
 import { ArrowLeftIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
 
@@ -53,7 +60,9 @@ export function EditArtistPage(props: Props) {
 					</h1>
 				</div>
 			</div>
-			<Form {...props} />
+			<Suspense fallback={<div>Loading...</div>}>
+				<Form {...props} />
+			</Suspense>
 		</PageLayout>
 	)
 }
