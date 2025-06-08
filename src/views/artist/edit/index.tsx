@@ -3,14 +3,7 @@
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
-import {
-	createEffect,
-	createMemo,
-	createSignal,
-	For,
-	onMount,
-	Show,
-} from "solid-js"
+import { createMemo, createSignal, For, onMount, Show } from "solid-js"
 import { ArrowLeftIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
 
@@ -94,69 +87,61 @@ function Form(props: Props) {
 	const [formStore, { Form, Field, FieldArray }] =
 		createForm<NewArtistCorrection>({
 			validate: M.valiForm(NewArtistCorrection),
-			initialValues: {
-				type: "Create",
-				description: "",
-				data: {
-					name: "",
-					artist_type: "Unknown",
-					localized_names: [],
-					aliases: [],
-					text_aliases: [],
-					links: [],
-					memberships: [],
-				},
+			get initialValues(): M.PartialValues<NewArtistCorrection> {
+				return props.type == "new" ?
+						{
+							type: "Create",
+							description: "",
+							data: {
+								name: "",
+								artist_type: "Unknown" as const,
+								localized_names: [],
+								aliases: [],
+								text_aliases: [],
+								links: [],
+								memberships: [],
+							},
+						}
+					:	{
+							type: "Update",
+							description: "",
+							data: {
+								name: props.artist.name,
+								artist_type: props.artist.artist_type,
+								localized_names:
+									props.artist.localized_names?.map((ln) => ({
+										language_id: ln.language.id,
+										name: ln.name,
+									})) ?? [],
+								aliases: props.artist.aliases ?? [],
+								text_aliases: props.artist.text_aliases ?? [],
+								start_date:
+									props.artist.start_date ?
+										{
+											value: new Date(props.artist.start_date.value),
+											precision: props.artist.start_date.precision,
+										}
+									:	null,
+								end_date:
+									props.artist.end_date ?
+										{
+											value: new Date(props.artist.end_date.value),
+											precision: props.artist.end_date.precision,
+										}
+									:	null,
+								links: props.artist.links ?? [],
+								start_location: props.artist.start_location,
+								current_location: props.artist.current_location,
+								memberships:
+									props.artist.memberships?.map((m) => ({
+										artist_id: m.artist_id,
+										roles: m.roles?.map((r) => r.id) ?? [],
+										tenure: m.tenure ?? [],
+									})) ?? [],
+							},
+						}
 			},
 		})
-
-	createEffect(() => {
-		if (props.type === "edit") {
-			M.setValues(
-				formStore,
-				{
-					type: "Update",
-					description: "",
-					data: {
-						name: props.artist.name,
-						artist_type: props.artist.artist_type,
-						localized_names:
-							props.artist.localized_names?.map((ln) => ({
-								language_id: ln.language.id,
-								name: ln.name,
-							})) ?? [],
-						aliases: props.artist.aliases ?? [],
-						text_aliases: props.artist.text_aliases ?? [],
-						start_date:
-							props.artist.start_date ?
-								{
-									value: new Date(props.artist.start_date.value),
-									precision: props.artist.start_date.precision,
-								}
-							:	null,
-						end_date:
-							props.artist.end_date ?
-								{
-									value: new Date(props.artist.end_date.value),
-									precision: props.artist.end_date.precision,
-								}
-							:	null,
-						links: props.artist.links ?? [],
-						start_location: props.artist.start_location,
-						current_location: props.artist.current_location,
-						memberships:
-							props.artist.memberships?.map((m) => ({
-								artist_id: m.artist_id,
-								roles: m.roles?.map((r) => r.id) ?? [],
-								tenure: m.tenure ?? [],
-							})) ?? [],
-					},
-				},
-				{
-					shouldDirty: false,
-				},
-			)
-		}
-	})
 
 	useBlocker({
 		shouldBlockFn() {
