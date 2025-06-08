@@ -1,5 +1,6 @@
 /* @refresh reload */
 // oxlint-disable eqeqeq max-lines-per-function
+import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
@@ -51,14 +52,20 @@ export function EditArtistPage(props: Props) {
 					<h1 class="text-2xl">
 						<Show
 							when={props.type === "new"}
-							fallback={<>Edit Artist</>}
+							fallback={<Trans>Edit Artist</Trans>}
 						>
-							Create Artist
+							<Trans>Create Artist</Trans>
 						</Show>
 					</h1>
 				</div>
 			</div>
-			<Suspense fallback={<div>Loading...</div>}>
+			<Suspense
+				fallback={
+					<div>
+						<Trans>Loading...</Trans>
+					</div>
+				}
+			>
 				<Form {...props} />
 			</Suspense>
 		</PageLayout>
@@ -67,6 +74,7 @@ export function EditArtistPage(props: Props) {
 
 // oxlint-disable-next-line max-lines-per-function
 function Form(props: Props) {
+	const { t } = useLingui()
 	const navigator = useNavigate()
 
 	const mutation = ArtistMutation.getInstance()
@@ -136,7 +144,7 @@ function Form(props: Props) {
 			}
 
 			const msg = confirm(
-				"Are you sure you want to leave this page? Your changes will be lost.",
+				t`Are you sure you want to leave this page? Your changes will be lost.`,
 			)
 
 			// bro confirmation = unblock...
@@ -198,7 +206,9 @@ function Form(props: Props) {
 			<Field name="data.name">
 				{(field, props) => (
 					<InputField.Root class="w-96">
-						<InputField.Label>Name</InputField.Label>
+						<InputField.Label>
+							<Trans>Name</Trans>
+						</InputField.Label>
 						<InputField.Input
 							{...props}
 							type="text"
@@ -216,14 +226,18 @@ function Form(props: Props) {
 			>
 				{(field, props) => (
 					<div class="flex flex-col">
-						<FormComp.Label for="artist_type">Artist Type</FormComp.Label>
+						<FormComp.Label for="artist_type">
+							<Trans>Artist Type</Trans>
+						</FormComp.Label>
 						<div class="w-fit rounded-sm border border-slate-300">
 							<select
 								{...props}
 								id="artist_type"
 								class="h-8 w-fit px-1 whitespace-nowrap"
 							>
-								<option value="">-- Please select artist type --</option>
+								<option value="">
+									<Trans>-- Please select artist type --</Trans>
+								</option>
 								<For each={["Solo", "Multiple", "Unknown"] as ArtistType[]}>
 									{(type) => (
 										<option
@@ -248,7 +262,7 @@ function Form(props: Props) {
 			<TextAliasesFieldArray formStore={formStore} />
 
 			<DateWithPrecision
-				label="Start date"
+				label={t`Start date`}
 				setValue={(v) => {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					M.setValue(formStore, "data.start_date", v)
@@ -259,7 +273,7 @@ function Form(props: Props) {
 			/>
 
 			<DateWithPrecision
-				label="End date"
+				label={t`End date`}
 				setValue={(v) => {
 					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					M.setValue(formStore, "data.end_date", v)
@@ -269,13 +283,13 @@ function Form(props: Props) {
 				})}
 			/>
 			<Location
-				label="Start Location"
+				label={t`Start Location`}
 				setValue={(v) => {
 					M.setValue(formStore, "data.start_location", v)
 				}}
 			/>
 			<Location
-				label="Current Location"
+				label={t`Current Location`}
 				setValue={(v) => {
 					M.setValue(formStore, "data.current_location", v)
 				}}
@@ -288,7 +302,9 @@ function Form(props: Props) {
 			<Field name="description">
 				{(field, props) => (
 					<InputField.Root>
-						<InputField.Label>Description</InputField.Label>
+						<InputField.Label>
+							<Trans>Description</Trans>
+						</InputField.Label>
 						<InputField.Textarea
 							{...props}
 							id={field.name}
@@ -326,14 +342,14 @@ function Form(props: Props) {
 					type="submit"
 					disabled={mutation.isPending || formStore.submitting}
 				>
-					{mutation.isPending || formStore.submitting ? "Loading" : "Submit"}
+					{mutation.isPending || formStore.submitting ? t`Loading` : t`Submit`}
 				</Button>
 
 				<FormComp.ErrorMessage message={formStore.response.message} />
 				<FormComp.ErrorMessage
 					class="text-lg"
 					message={
-						mutation.isError ? `Error: ${mutation.error.message}` : undefined
+						mutation.isError ? t`Error: ${mutation.error.message}` : undefined
 					}
 				/>
 			</div>
