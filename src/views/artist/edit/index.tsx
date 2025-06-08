@@ -3,7 +3,14 @@
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
-import { createEffect, createMemo, createSignal, For, onMount, Show } from "solid-js"
+import {
+	createEffect,
+	createMemo,
+	createSignal,
+	For,
+	onMount,
+	Show,
+} from "solid-js"
 import { ArrowLeftIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
 
@@ -33,9 +40,14 @@ export function EditArtistPage(props: Props) {
 		<PageLayout class="grid auto-rows-min grid-cols-24">
 			<div class="col-span-full grid h-24 grid-cols-subgrid border-b-1 border-slate-300">
 				<div class="col-span-full col-start-2 -col-end-2 flex items-center gap-4">
-					<Button class="px-0" variant="Tertiary" size="Sm" onClick={() => {
-						history.back()
-					}}>
+					<Button
+						class="px-0"
+						variant="Tertiary"
+						size="Sm"
+						onClick={() => {
+							history.back()
+						}}
+					>
 						<ArrowLeftIcon class="size-6" />
 					</Button>
 					<h1 class="text-2xl">
@@ -77,61 +89,72 @@ const TENURE_STRING_SCHMEA = v.message(
 function Form(props: Props) {
 	const navigator = useNavigate()
 
-	const mutation =
-		// eslint-disable-next-line solid/reactivity
-		/*@once*/ props.type == "new" ? ArtistMutation.create() : ArtistMutation.update()
+	const mutation = ArtistMutation.getInstance()
 
-	const [formStore, { Form, Field, FieldArray }] = createForm<NewArtistCorrection>({
-		validate: M.valiForm(NewArtistCorrection),
-		initialValues: {
-			type: "Create",
-			description: "",
-			data: {
-				name: "",
-				artist_type: "Unknown",
-				localized_names: [],
-				aliases: [],
-				text_aliases: [],
-				links: [],
-				memberships: []
-			}
-		}
-	})
+	const [formStore, { Form, Field, FieldArray }] =
+		createForm<NewArtistCorrection>({
+			validate: M.valiForm(NewArtistCorrection),
+			initialValues: {
+				type: "Create",
+				description: "",
+				data: {
+					name: "",
+					artist_type: "Unknown",
+					localized_names: [],
+					aliases: [],
+					text_aliases: [],
+					links: [],
+					memberships: [],
+				},
+			},
+		})
 
 	createEffect(() => {
 		if (props.type === "edit") {
-			M.setValues(formStore, {
-				type: "Update",
-				description: "",
-				data: {
-					name: props.artist.name,
-					artist_type: props.artist.artist_type,
-					localized_names: props.artist.localized_names?.map(ln => ({
-						language_id: ln.language.id,
-						name: ln.name
-					})) ?? [],
-					aliases: props.artist.aliases ?? [],
-					text_aliases: props.artist.text_aliases ?? [],
-					start_date: props.artist.start_date ? {
-						value: new Date(props.artist.start_date.value),
-						precision: props.artist.start_date.precision
-					} : null,
-					end_date: props.artist.end_date ? {
-						value: new Date(props.artist.end_date.value),
-						precision: props.artist.end_date.precision
-					} : null,
-					links: props.artist.links ?? [],
-					start_location: props.artist.start_location,
-					current_location: props.artist.current_location,
-					memberships: props.artist.memberships?.map(m => ({
-						artist_id: m.artist_id,
-						roles: m.roles?.map(r => r.id) ?? [],
-						tenure: m.tenure ?? []
-					})) ?? []
-				}
-			}, {
-				shouldDirty: false
-			})
+			M.setValues(
+				formStore,
+				{
+					type: "Update",
+					description: "",
+					data: {
+						name: props.artist.name,
+						artist_type: props.artist.artist_type,
+						localized_names:
+							props.artist.localized_names?.map((ln) => ({
+								language_id: ln.language.id,
+								name: ln.name,
+							})) ?? [],
+						aliases: props.artist.aliases ?? [],
+						text_aliases: props.artist.text_aliases ?? [],
+						start_date:
+							props.artist.start_date ?
+								{
+									value: new Date(props.artist.start_date.value),
+									precision: props.artist.start_date.precision,
+								}
+							:	null,
+						end_date:
+							props.artist.end_date ?
+								{
+									value: new Date(props.artist.end_date.value),
+									precision: props.artist.end_date.precision,
+								}
+							:	null,
+						links: props.artist.links ?? [],
+						start_location: props.artist.start_location,
+						current_location: props.artist.current_location,
+						memberships:
+							props.artist.memberships?.map((m) => ({
+								artist_id: m.artist_id,
+								roles: m.roles?.map((r) => r.id) ?? [],
+								tenure: m.tenure ?? [],
+							})) ?? [],
+					},
+				},
+				{
+					shouldDirty: false,
+				},
+			)
 		}
 	})
 
@@ -153,22 +176,43 @@ function Form(props: Props) {
 	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
 		const parsed = v.safeParse(NewArtistCorrection, data)
 		if (parsed.success) {
-			if (props.type === "edit") {
-				mutation.mutate({ 
-					id: props.artist.id, 
-					data: data
-				}, {
-					onSuccess() {
-						history.back()
-					},
-				})
-			} else {
-				mutation.mutate(data, {
-					onSuccess() {
-						history.back()
-					},
-				})
-			}
+			let _ =
+				props.type == "new" ?
+					mutation.mutate(
+						{
+							type: "Create",
+							data: parsed.output,
+						},
+						{
+							onSuccess() {
+								// TODO: navigate to the artist page
+								void navigator({
+									to: `/`,
+								})
+							},
+							onError() {
+								// TODO: show error message
+							},
+						},
+					)
+				:	mutation.mutate(
+						{
+							type: "Update",
+							id: props.artist.id,
+							data: parsed.output,
+						},
+						{
+							onSuccess() {
+								// TODO: navigate to correction page
+								void navigator({
+									to: `/artist/${props.artist.id}`,
+								})
+							},
+							onError() {
+								// TODO: show error message
+							},
+						},
+					)
 		} else {
 			throw new M.FormError<NewArtistCorrection>(v.summarize(parsed.issues))
 		}
