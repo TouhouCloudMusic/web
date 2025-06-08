@@ -13,3 +13,15 @@ export const create = () =>
 		mutationKey: ["artist::create"],
 		throwOnError: false,
 	}))
+
+export const update = () =>
+	useMutation(() => ({
+		mutationFn: (params: { id: number; data: NewArtistCorrectionOut }) => {
+			return Fetcher.__update({
+				id: params.id,
+				data: params.data,
+			})
+		},
+		mutationKey: ["artist::update"],
+		throwOnError: false,
+	}))

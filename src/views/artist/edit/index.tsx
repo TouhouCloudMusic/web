@@ -3,11 +3,12 @@
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
-import { createMemo, createSignal, For, onMount, Show } from "solid-js"
-import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { createEffect, createMemo, createSignal, For, onMount, Show } from "solid-js"
+import { ArrowLeftIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 import * as v from "valibot"
 
 import { ArtistMutation } from "~/api/artist"
+import type { Artist } from "~/api/artist"
 import type { Tenure, ArtistType } from "~/api/artist/schema"
 import { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
@@ -17,7 +18,6 @@ import { DateWithPrecision } from "~/components/composite/form/DateWithPrecision
 import { Location } from "~/components/composite/form/Location"
 import { Divider } from "~/components/divider"
 import { PageLayout } from "~/layout/PageLayout"
-import { todo } from "~/utils"
 
 type Props =
 	| {
@@ -25,12 +25,19 @@ type Props =
 	  }
 	| {
 			type: "edit"
+			artist: Artist
 	  }
+
 export function EditArtistPage(props: Props) {
 	return (
 		<PageLayout class="grid auto-rows-min grid-cols-24">
 			<div class="col-span-full grid h-24 grid-cols-subgrid border-b-1 border-slate-300">
-				<div class="col-span-full col-start-2 -col-end-2 flex items-center">
+				<div class="col-span-full col-start-2 -col-end-2 flex items-center gap-4">
+					<Button class="px-0" variant="Tertiary" size="Sm" onClick={() => {
+						history.back()
+					}}>
+						<ArrowLeftIcon class="size-6" />
+					</Button>
 					<h1 class="text-2xl">
 						<Show
 							when={props.type === "new"}
@@ -72,16 +79,61 @@ function Form(props: Props) {
 
 	const mutation =
 		// eslint-disable-next-line solid/reactivity
-		/*@once*/ props.type == "new" ? ArtistMutation.create() : todo()
+		/*@once*/ props.type == "new" ? ArtistMutation.create() : ArtistMutation.update()
 
-	const [formStore, { Form, Field, FieldArray }] =
-		createForm<NewArtistCorrection>({
-			validate: M.valiForm(NewArtistCorrection),
-			initialValues: {
-				// eslint-disable-next-line solid/reactivity
-				type: props.type == "new" ? "Create" : "Update",
-			},
-		})
+	const [formStore, { Form, Field, FieldArray }] = createForm<NewArtistCorrection>({
+		validate: M.valiForm(NewArtistCorrection),
+		initialValues: {
+			type: "Create",
+			description: "",
+			data: {
+				name: "",
+				artist_type: "Unknown",
+				localized_names: [],
+				aliases: [],
+				text_aliases: [],
+				links: [],
+				memberships: []
+			}
+		}
+	})
+
+	createEffect(() => {
+		if (props.type === "edit") {
+			M.setValues(formStore, {
+				type: "Update",
+				description: "",
+				data: {
+					name: props.artist.name,
+					artist_type: props.artist.artist_type,
+					localized_names: props.artist.localized_names?.map(ln => ({
+						language_id: ln.language.id,
+						name: ln.name
+					})) ?? [],
+					aliases: props.artist.aliases ?? [],
+					text_aliases: props.artist.text_aliases ?? [],
+					start_date: props.artist.start_date ? {
+						value: new Date(props.artist.start_date.value),
+						precision: props.artist.start_date.precision
+					} : null,
+					end_date: props.artist.end_date ? {
+						value: new Date(props.artist.end_date.value),
+						precision: props.artist.end_date.precision
+					} : null,
+					links: props.artist.links ?? [],
+					start_location: props.artist.start_location,
+					current_location: props.artist.current_location,
+					memberships: props.artist.memberships?.map(m => ({
+						artist_id: m.artist_id,
+						roles: m.roles?.map(r => r.id) ?? [],
+						tenure: m.tenure ?? []
+					})) ?? []
+				}
+			}, {
+				shouldDirty: false
+			})
+		}
+	})
 
 	useBlocker({
 		shouldBlockFn() {
@@ -93,20 +145,30 @@ function Form(props: Props) {
 				"Are you sure you want to leave this page? Your changes will be lost.",
 			)
 
-			return msg
+			// bro confirmation = unblock...
+			return !msg
 		},
 	})
 
 	const handleSubmit: M.SubmitHandler<NewArtistCorrection> = (data) => {
 		const parsed = v.safeParse(NewArtistCorrection, data)
 		if (parsed.success) {
-			mutation.mutate(parsed.output, {
-				onSuccess() {
-					return navigator({
-						to: "/",
-					})
-				},
-			})
+			if (props.type === "edit") {
+				mutation.mutate({ 
+					id: props.artist.id, 
+					data: data
+				}, {
+					onSuccess() {
+						history.back()
+					},
+				})
+			} else {
+				mutation.mutate(data, {
+					onSuccess() {
+						history.back()
+					},
+				})
+			}
 		} else {
 			throw new M.FormError<NewArtistCorrection>(v.summarize(parsed.issues))
 		}
@@ -329,6 +391,7 @@ function Form(props: Props) {
 														{...props}
 														id={field.name}
 														placeholder="Language ID"
+														value={field.value}
 													/>
 													<InputField.Error message={field.error} />
 												</InputField.Root>
@@ -341,6 +404,7 @@ function Form(props: Props) {
 														{...props}
 														id={field.name}
 														placeholder="Name"
+														value={field.value}
 													/>
 													<InputField.Error message={field.error} />
 												</InputField.Root>
@@ -400,6 +464,7 @@ function Form(props: Props) {
 															type="number"
 															class="no-spinner"
 															placeholder="Alias Artist ID"
+															value={field.value}
 														/>
 														<InputField.Error message={field.error} />
 													</InputField.Root>
@@ -457,6 +522,7 @@ function Form(props: Props) {
 															{...props}
 															id={field.name}
 															placeholder="Name"
+															value={field.value}
 														/>
 														<InputField.Error message={field.error} />
 													</InputField.Root>
@@ -487,6 +553,7 @@ function Form(props: Props) {
 			<DateWithPrecision
 				label="Start date"
 				setValue={(v) => {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					M.setValue(formStore, "data.start_date", v)
 				}}
 				error={M.getError(formStore, "data.start_date", {
@@ -497,6 +564,7 @@ function Form(props: Props) {
 			<DateWithPrecision
 				label="End date"
 				setValue={(v) => {
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					M.setValue(formStore, "data.end_date", v)
 				}}
 				error={M.getError(formStore, "data.end_date", {
@@ -549,6 +617,7 @@ function Form(props: Props) {
 															id={field.name}
 															type="url"
 															placeholder="Url"
+															value={field.value}
 														/>
 														<InputField.Error message={field.error} />
 													</InputField.Root>
@@ -595,7 +664,7 @@ function Form(props: Props) {
 							{...props}
 							hidden
 							id={field.name}
-							value=""
+							value={field.value}
 						/>
 						<InputField.Error message={field.error} />
 					</InputField.Root>

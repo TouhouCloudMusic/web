@@ -13,7 +13,7 @@ import { TanstackQueryClinet } from "~/state/tanstack"
 import { Obj } from "~/utils/data"
 import { ArtistProfilePage } from "~/views/artist/profile"
 
-export const Route = createFileRoute("/artist/$id")({
+export const Route = createFileRoute("/artist/$id/")({
 	component: RouteComponent,
 	loader: async ({ params: { id } }) => {
 		const parsedId = v.parse(EntityId, Number.parseInt(id, 10))
