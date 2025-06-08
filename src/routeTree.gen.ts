@@ -20,8 +20,8 @@ import { Route as IndexImport } from './routes/index'
 import { Route as ArtistNewImport } from './routes/artist/new'
 import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
 import { Route as userProfileImport } from './routes/(user)/profile'
-import { Route as ArtistIdIndexImport } from './routes/artist/$id/index'
-import { Route as ArtistIdEditImport } from './routes/artist/$id/edit'
+import { Route as ArtistIdIndexImport } from './routes/artist/$id.index'
+import { Route as ArtistIdEditImport } from './routes/artist/$id.edit'
 import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
 import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
 
@@ -394,10 +394,10 @@ export const routeTree = rootRoute
       "filePath": "(user)/profile_.edit.tsx"
     },
     "/artist/$id/edit": {
-      "filePath": "artist/$id/edit.tsx"
+      "filePath": "artist/$id.edit.tsx"
     },
     "/artist/$id/": {
-      "filePath": "artist/$id/index.tsx"
+      "filePath": "artist/$id.index.tsx"
     }
   }
 }
