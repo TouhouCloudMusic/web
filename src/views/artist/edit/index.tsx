@@ -4,6 +4,7 @@ import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker, useNavigate } from "@tanstack/solid-router"
 import {
+	createEffect,
 	createMemo,
 	createSignal,
 	For,
@@ -375,7 +376,10 @@ function Form(props: Props) {
 				)}
 			</Field>
 
-			<Field name="data.artist_type">
+			<Field
+				name="data.artist_type"
+				type="string"
+			>
 				{(field, props) => (
 					<div class="flex flex-col">
 						<FormComp.Label for="artist_type">Artist Type</FormComp.Label>
@@ -384,11 +388,17 @@ function Form(props: Props) {
 								{...props}
 								id="artist_type"
 								class="h-8 w-fit px-1 whitespace-nowrap"
-								value={field.value}
 							>
 								<option value="">-- Please select artist type --</option>
 								<For each={["Solo", "Multiple", "Unknown"] as ArtistType[]}>
-									{(type) => <option value={type}>{type}</option>}
+									{(type) => (
+										<option
+											value={type}
+											selected={field.value == type}
+										>
+											{type}
+										</option>
+									)}
 								</For>
 							</select>
 						</div>
