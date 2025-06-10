@@ -71,7 +71,7 @@
         "eslint-plugin-oxlint": "^0.16.0",
         "eslint-plugin-perfectionist": "^4.12.3",
         "eslint-plugin-solid": "^0.14.5",
-        "eslint-plugin-storybook": "^0.12.0",
+        "eslint-plugin-storybook": "^9.0.0",
         "globals": "^16.0.0",
         "hotscript": "^1.0.13",
         "husky": "^9.1.7",
@@ -956,7 +956,7 @@
 
     "eslint-plugin-solid": ["eslint-plugin-solid@0.14.5", "https://registry.npmmirror.com/eslint-plugin-solid/-/eslint-plugin-solid-0.14.5.tgz", { "dependencies": { "@typescript-eslint/utils": "^7.13.1 || ^8.0.0", "estraverse": "^5.3.0", "is-html": "^2.0.0", "kebab-case": "^1.0.2", "known-css-properties": "^0.30.0", "style-to-object": "^1.0.6" }, "peerDependencies": { "eslint": "^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0", "typescript": ">=4.8.4" } }, "sha512-nfuYK09ah5aJG/oEN6P1qziy1zLgW4PDWe75VNPi4CEFYk1x2AEqwFeQfEPR7gNn0F2jOeqKhx2E+5oNCOBYWQ=="],
 
-    "eslint-plugin-storybook": ["eslint-plugin-storybook@0.12.0", "https://registry.npmmirror.com/eslint-plugin-storybook/-/eslint-plugin-storybook-0.12.0.tgz", { "dependencies": { "@storybook/csf": "^0.1.11", "@typescript-eslint/utils": "^8.8.1", "ts-dedent": "^2.2.0" }, "peerDependencies": { "eslint": ">=8" } }, "sha512-Lg5I0+npTgiYgZ4KSvGWGDFZi3eOCNJPaWX0c9rTEEXC5wvooOClsP9ZtbI4hhFKyKgYR877KiJxbRTSJq9gWA=="],
+    "eslint-plugin-storybook": ["eslint-plugin-storybook@9.0.7", "https://registry.npmmirror.com/eslint-plugin-storybook/-/eslint-plugin-storybook-9.0.7.tgz", { "dependencies": { "@storybook/csf": "^0.1.11", "@typescript-eslint/utils": "^8.8.1", "ts-dedent": "^2.2.0" }, "peerDependencies": { "eslint": ">=8" } }, "sha512-da9oIFo2ww+/PWAsTrpeEPUmhel6Ej1++SwBvdf+SV0H6+rOPbzJGOh367hdOvkwKCbGdKRmw+JmXFCQfHCpqw=="],
 
     "eslint-scope": ["eslint-scope@8.3.0", "https://registry.npmmirror.com/eslint-scope/-/eslint-scope-8.3.0.tgz", { "dependencies": { "esrecurse": "^4.3.0", "estraverse": "^5.2.0" } }, "sha512-pUNxi75F8MJ/GdeKtVLSbYg4ZI34J6C0C7sbL4YOp2exGwen7ZsuBqKzUhXd0qMQ362yET3z+uPwKeg/0C2XCQ=="],
 
