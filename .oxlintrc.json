@@ -85,11 +85,12 @@
 		"typescript/no-non-null-assertion": "off",
 
 		"import/exports-last": "off",
+		"import/group-exports": "off",
 		"import/max-dependencies": "off",
 		"import/no-anonymous-default-export": "off",
-		"import/no-namespace": "off",
-		"import/group-exports": "off",
 		"import/no-cycle": "off",
+		"import/no-namespace": "off",
+		"import/prefer-default-export": "off",
 
 		"unicorn/no-anonymous-default-export": "off",
 		"unicorn/no-empty-file": "off",
