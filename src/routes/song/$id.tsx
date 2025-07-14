@@ -23,7 +23,7 @@ export const Route = createFileRoute("/song/$id")({
 
 function RouteComponent() {
 	const params = Route.useParams()
-	const songId = Number.parseInt(params().id, 10)
+	const songId = v.parse(EntityId, Number.parseInt(params().id, 10))
 	const query = useQuery(() => SongQueryOption.findById(songId))
 
 	return (
