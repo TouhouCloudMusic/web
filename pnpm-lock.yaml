@@ -69,14 +69,14 @@ importers:
         specifier: ^3.0.5
         version: 3.0.5
       marked:
-        specifier: ^15.0.11
-        version: 15.0.12
+        specifier: ^16.0.0
+        version: 16.0.0
       marked-footnote:
         specifier: ^1.2.4
-        version: 1.4.0(marked@15.0.12)
+        version: 1.4.0(marked@16.0.0)
       marked-shiki:
         specifier: ^1.2.0
-        version: 1.2.0(marked@15.0.12)(shiki@3.8.0)
+        version: 1.2.0(marked@16.0.0)(shiki@3.8.0)
       openapi-fetch:
         specifier: ^0.14.0
         version: 0.14.0
@@ -3268,9 +3268,9 @@ packages:
       marked: '>=7.0.0'
       shiki: '>=1.0.0'
 
-  marked@15.0.12:
-    resolution: {integrity: sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA==}
-    engines: {node: '>= 18'}
+  marked@16.0.0:
+    resolution: {integrity: sha512-MUKMXDjsD/eptB7GPzxo4xcnLS6oo7/RHimUMHEDRhUooPwmN9BEpMl7AEOJv3bmso169wHI2wUF9VQgL7zfmA==}
+    engines: {node: '>= 20'}
     hasBin: true
 
   math-intrinsics@1.1.0:
@@ -7778,16 +7778,16 @@ snapshots:
       punycode.js: 2.3.1
       uc.micro: 2.1.0
 
-  marked-footnote@1.4.0(marked@15.0.12):
+  marked-footnote@1.4.0(marked@16.0.0):
     dependencies:
-      marked: 15.0.12
+      marked: 16.0.0
 
-  marked-shiki@1.2.0(marked@15.0.12)(shiki@3.8.0):
+  marked-shiki@1.2.0(marked@16.0.0)(shiki@3.8.0):
     dependencies:
-      marked: 15.0.12
+      marked: 16.0.0
       shiki: 3.8.0
 
-  marked@15.0.12: {}
+  marked@16.0.0: {}
 
   math-intrinsics@1.1.0: {}
 
