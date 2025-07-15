@@ -64,7 +64,9 @@ function TitleNCreditName() {
 	return (
 		<div>
 			<div class="flex items-baseline gap-2">
-				<h1 class="text-xl font-semibold">{context.song.title}</h1>{" "}
+				<h1 class="text-xl font-medium text-slate-1000">
+					{context.song.title}
+				</h1>{" "}
 				<Show when={localizedTitle()}>
 					<span class="text-secondary">[{localizedTitle()!.title}]</span>
 				</Show>
