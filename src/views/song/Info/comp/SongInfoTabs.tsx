@@ -4,7 +4,7 @@ import { For } from "solid-js"
 
 import { CreditList } from "~/components/domain/credit"
 import { Image } from "~/components/image"
-import { groupSongCreditsByArtist } from "~/domain/song"
+import { SongCreditUtils } from "~/domain/song"
 import { assertContext } from "~/utils/context"
 
 import { SongInfoPageContext } from ".."
@@ -56,7 +56,7 @@ function CreditCard() {
 			<CreditList
 				credits={
 					// This tab will hidden if credits is undefined or empty
-					groupSongCreditsByArtist(ctx.song.credits!)
+					SongCreditUtils.groupByArtist(ctx.song.credits!)
 				}
 			/>
 		</ul>
