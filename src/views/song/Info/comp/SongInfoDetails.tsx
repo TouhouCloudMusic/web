@@ -7,14 +7,14 @@ import { Info } from "~/components/common/Info"
 import { Image } from "~/components/image"
 import { assertContext } from "~/utils/context"
 
-import { SongContext } from ".."
+import { SongInfoPageContext } from ".."
 
-export function SongPageBasicInfo() {
+export function SongInfoDetails() {
 	return (
 		<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
 			<CoverImage />
 			<div class="flex flex-col">
-				<TitleNCreditName />
+				<TitleAndCreditName />
 				<div class="mt-4 h-48 space-y-4">
 					<Languages />
 				</div>
@@ -28,7 +28,7 @@ export function SongPageBasicInfo() {
 // - Better fallback
 //
 function CoverImage() {
-	const context = assertContext(SongContext)
+	const context = assertContext(SongInfoPageContext)
 	return (
 		<Image.Root>
 			<div class="isolate size-64">
@@ -48,8 +48,8 @@ function CoverImage() {
 	)
 }
 
-function TitleNCreditName() {
-	const context = assertContext(SongContext)
+function TitleAndCreditName() {
+	const context = assertContext(SongInfoPageContext)
 	const localizedTitle = createMemo(
 		() =>
 			context.song.localized_titles?.find(
@@ -104,7 +104,7 @@ function TitleNCreditName() {
 }
 
 function Languages() {
-	const context = assertContext(SongContext)
+	const context = assertContext(SongInfoPageContext)
 
 	return (
 		<Show when={context.song.languages?.length}>

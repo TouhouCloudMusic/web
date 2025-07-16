@@ -4,21 +4,21 @@ import { createContext, Suspense } from "solid-js"
 import type { Song } from "~/api/song"
 import { PageLayout } from "~/layout/PageLayout"
 
-import { SongPageBasicInfo } from "./comp/SongInfo"
+import { SongInfoDetails } from "./comp/SongInfoDetails"
 import { SongInfoTabs } from "./comp/SongInfoTabs"
 
-export type SongContext = {
+export type SongInfoPageContext = {
 	song: Song
 }
 
-export const SongContext = createContext<SongContext>()
+export const SongInfoPageContext = createContext<SongInfoPageContext>()
 
 type SongInfoPageProps = {
 	song: Song
 }
 
 export function SongInfoPage(props: SongInfoPageProps) {
-	const contextValue: SongContext = {
+	const contextValue: SongInfoPageContext = {
 		get song() {
 			return props.song
 		},
@@ -27,12 +27,12 @@ export function SongInfoPage(props: SongInfoPageProps) {
 	return (
 		<PageLayout class="p-9">
 			<Suspense fallback={<div>Loading...</div>}>
-				<SongContext.Provider value={contextValue}>
+				<SongInfoPageContext.Provider value={contextValue}>
 					<div class="flex flex-col gap-8">
-						<SongPageBasicInfo />
+						<SongInfoDetails />
 						<SongInfoTabs />
 					</div>
-				</SongContext.Provider>
+				</SongInfoPageContext.Provider>
 			</Suspense>
 		</PageLayout>
 	)

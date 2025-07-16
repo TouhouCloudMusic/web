@@ -7,7 +7,7 @@ import { Image } from "~/components/image"
 import { groupSongCreditsByArtist } from "~/domain/song"
 import { assertContext } from "~/utils/context"
 
-import { SongContext } from ".."
+import { SongInfoPageContext } from ".."
 
 const TABS = [
 	"Releases",
@@ -16,8 +16,8 @@ const TABS = [
 ] as const
 type Tabs = (typeof TABS)[number]
 export function SongInfoTabs() {
-	const ctx = assertContext(SongContext)
-	const visiableTabs = () =>
+	const ctx = assertContext(SongInfoPageContext)
+	const visibleTabs = () =>
 		TABS.filter((tab) => {
 			switch (tab) {
 				case "Releases":
@@ -33,7 +33,7 @@ export function SongInfoTabs() {
 	return (
 		<Tab.Root>
 			<Tab.List>
-				<For each={visiableTabs()}>
+				<For each={visibleTabs()}>
 					{(tabType) => (
 						<li>
 							{/* TODO: Refactor this to a component */}
@@ -59,7 +59,7 @@ export function SongInfoTabs() {
 }
 
 function CreditTab() {
-	const ctx = assertContext(SongContext)
+	const ctx = assertContext(SongInfoPageContext)
 
 	return (
 		<ul class="flex flex-col gap-4 py-4 pl-4">
@@ -73,7 +73,7 @@ function CreditTab() {
 	)
 }
 function ReleaseTab() {
-	const ctx = assertContext(SongContext)
+	const ctx = assertContext(SongInfoPageContext)
 
 	return (
 		<div class="grid grid-cols-2 gap-4 py-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
