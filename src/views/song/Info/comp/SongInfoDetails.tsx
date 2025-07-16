@@ -4,6 +4,7 @@ import { Link } from "@tanstack/solid-router"
 import { createMemo, For, Match, Show, Switch } from "solid-js"
 
 import { Info } from "~/components/common/Info"
+import { Intersperse } from "~/components/common/Intersperse"
 import { Image } from "~/components/image"
 import { assertContext } from "~/utils/context"
 
@@ -104,18 +105,21 @@ function TitleAndCreditName() {
 }
 
 function Languages() {
-	const context = assertContext(SongInfoPageContext)
+	const ctx = assertContext(SongInfoPageContext)
 
 	return (
-		<Show when={context.song.languages?.length}>
+		<Show when={ctx.song.languages?.length}>
 			<div class="flex flex-col">
 				<Info.Label>
 					<Trans>Languages</Trans>
 				</Info.Label>
-				<ul class="flex flex-wrap gap-2">
-					<For each={context.song.languages}>
+				<ul class="flex">
+					<Intersperse
+						list={ctx.song.languages}
+						separator={<>,&nbsp;</>}
+					>
 						{(lang) => <li>{lang.name}</li>}
-					</For>
+					</Intersperse>
 				</ul>
 			</div>
 		</Show>
