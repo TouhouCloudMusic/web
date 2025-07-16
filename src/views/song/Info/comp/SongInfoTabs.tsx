@@ -1,5 +1,5 @@
 /* @refresh skip */
-import { For, Show } from "solid-js"
+import { For } from "solid-js"
 
 import { Tab } from "~/components/common"
 import { CreditList } from "~/components/domain/credit"
@@ -61,12 +61,14 @@ export function SongInfoTabs() {
 function CreditTab() {
 	const ctx = assertContext(SongContext)
 
-	/** This tab will hidden if credits is undefined or empty */
-	const groupedCredits = () => groupSongCreditsByArtist(ctx.song.credits!)
-
 	return (
 		<ul class="flex flex-col gap-4 py-4 pl-4">
-			<CreditList credits={groupedCredits()} />
+			<CreditList
+				credits={
+					// This tab will hidden if credits is undefined or empty
+					groupSongCreditsByArtist(ctx.song.credits!)
+				}
+			/>
 		</ul>
 	)
 }
