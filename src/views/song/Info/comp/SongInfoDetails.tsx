@@ -64,10 +64,10 @@ function TitleAndCreditName() {
 	)
 	return (
 		<div>
-			<div class="flex items-baseline gap-2">
-				<h1 class="text-xl font-medium text-slate-1000">
+			<div class="mb-2 flex flex-wrap items-baseline">
+				<h1 class="mr-2 text-xl font-medium text-slate-1000">
 					{context.song.title}
-				</h1>{" "}
+				</h1>
 				<Show when={localizedTitle()}>
 					<span class="text-secondary">[{localizedTitle()!.title}]</span>
 				</Show>
@@ -113,7 +113,7 @@ function Languages() {
 				<Info.Label>
 					<Trans>Languages</Trans>
 				</Info.Label>
-				<ul class="flex">
+				<ul class="flex flex-wrap">
 					<Intersperse
 						list={ctx.song.languages}
 						separator={<>,&nbsp;</>}
