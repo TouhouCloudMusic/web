@@ -2,8 +2,6 @@
 import { Trans } from "@lingui-solid/solid/macro"
 import { For } from "solid-js"
 
-import { Tab } from "~/components/common"
-import { Info } from "~/components/common/Info"
 import { CreditList } from "~/components/domain/credit"
 import { Image } from "~/components/image"
 import { groupSongCreditsByArtist } from "~/domain/song"
@@ -18,7 +16,7 @@ import { SongInfoPageContext } from ".."
 // ] as const
 // type Tabs = (typeof TABS)[number]
 export function SongInfoTabs() {
-	const ctx = assertContext(SongInfoPageContext)
+	// const ctx = assertContext(SongInfoPageContext)
 	// const visibleTabs = () =>
 	// 	TABS.filter((tab) => {
 	// 		switch (tab) {
