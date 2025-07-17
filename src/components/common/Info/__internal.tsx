@@ -1,39 +1,38 @@
-import type { ComponentProps, ParentProps } from "solid-js"
-import { mergeProps } from "solid-js"
+import type { ComponentProps, JSX, ParentProps } from "solid-js"
+import { mergeProps, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-type ListProps = ParentProps<ComponentProps<"div">>
+import { Intersperse } from "../Intersperse"
 
-const LIST_CLASS = ""
+type ListProps<T> = {
+	items: T[] | null | undefined
+	separator?: string | JSX.Element
+	children: (item: T, index: () => number) => JSX.Element
+} & Omit<ComponentProps<"ul">, "children">
 
-export function List(props: ListProps) {
-	let finalProps = mergeProps(props, {
+const LIST_CLASS = "flex flex-wrap"
+
+export function List<T>(props: ListProps<T>) {
+	const [listProps, ulProps] = splitProps(props, [
+		"items",
+		"separator",
+		"children",
+	])
+	const ulProps2 = mergeProps(ulProps, {
 		get class() {
-			if (props.class) {
-				return twMerge(LIST_CLASS, props.class)
-			}
-
-			return LIST_CLASS
+			return ulProps.class ? LIST_CLASS : twMerge(LIST_CLASS, props.class)
 		},
 	})
-	return <div {...finalProps}></div>
-}
-
-type ItemProps = ComponentProps<"div">
-
-const ITEM_CLASS = ""
-
-export function Item(props: ItemProps) {
-	let finalProps = mergeProps(props, {
-		get class() {
-			if (props.class) {
-				return twMerge(ITEM_CLASS, props.class)
-			}
-
-			return ITEM_CLASS
-		},
-	})
-	return <div {...finalProps}></div>
+	return (
+		<ul {...ulProps2}>
+			<Intersperse
+				list={listProps.items}
+				separator={listProps.separator ?? <>,&nbsp;</>}
+			>
+				{listProps.children}
+			</Intersperse>
+		</ul>
+	)
 }
 
 type LabelProps = ParentProps<ComponentProps<"div">>

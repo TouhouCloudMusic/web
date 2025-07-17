@@ -2,7 +2,7 @@ import type { JSX } from "solid-js"
 import { For } from "solid-js"
 
 export function Intersperse<T>(props: {
-	list: T[] | undefined
+	list: T[] | null | undefined
 	separator?: JSX.Element
 	children: (item: T, index: () => number) => JSX.Element
 }) {
