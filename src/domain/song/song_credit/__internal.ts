@@ -3,23 +3,24 @@ import type { SongCredit } from "~/api/song"
 import type { GroupedSongCredit } from "."
 
 export function groupByArtist(self: SongCredit[]): GroupedSongCredit[] {
-	const map = new Map<number, GroupedSongCredit>()
+	let arr: GroupedSongCredit[] = []
+	// Map of id and index
+	let map = new Map<number, number>()
 
+	let lastIndex = -1
 	for (const credit of self) {
 		const artistId = credit.artist.id
 		const role = credit.role
 
-		const group = map.get(artistId)
-
-		if (group) {
-			group.roles.push(role)
+		const index = map.get(artistId)
+		if (index !== undefined) {
+			arr[index]!.roles.push(role)
 		} else {
-			map.set(artistId, { artist: credit.artist, roles: [role] })
+			arr.push({ artist: credit.artist, roles: [role] })
+			lastIndex++
+			map.set(artistId, lastIndex)
 		}
 	}
 
-	return map
-		.values()
-		.toArray()
-		.sort((a, b) => a.artist.name.localeCompare(b.artist.name))
+	return arr
 }
