@@ -1,13 +1,15 @@
 import { Trans } from "@lingui-solid/solid/macro"
-import { createContext, Suspense } from "solid-js"
+import { createContext, Show, Suspense } from "solid-js"
 
 import type { Song } from "~/api/song"
 import { Tab } from "~/components/common"
 import { PageLayout } from "~/layout/PageLayout"
+import { assertContext } from "~/utils/context"
 
 import { SongInfoCoverImage } from "./comp/SongInfoCoverImage"
 import { SongInfoCredit } from "./comp/SongInfoCredit"
 import { SongInfoLanguages } from "./comp/SongInfoLanguages"
+import { SongInfoLyrics } from "./comp/SongInfoLyrics"
 import { SongInfoRelease } from "./comp/SongInfoRelease"
 import { SongInfoTitleAndCreditName } from "./comp/SongInfoTitleAndCreditName"
 
@@ -29,16 +31,14 @@ export function SongInfoPage(props: SongInfoPageProps) {
 	}
 
 	return (
-		<PageLayout class="p-9">
+		<PageLayout class="p-8">
 			<Suspense fallback={<div>Loading...</div>}>
 				<SongInfoPageContext.Provider value={contextValue}>
-					<div class="grid grid-cols-[auto_1fr] gap-6">
+					<div class="grid grid-cols-[auto_1fr] gap-8">
 						<SongInfoCoverImage />
-						<div class="flex flex-col gap-4">
+						<div class="flex flex-col gap-y-4">
 							<SongInfoTitleAndCreditName />
-							<div class="space-y-4">
-								<SongInfoLanguages />
-							</div>
+							<SongInfoLanguages />
 						</div>
 						<div class="col-span-full">
 							<SongInfoTabs />
@@ -50,11 +50,17 @@ export function SongInfoPage(props: SongInfoPageProps) {
 	)
 }
 
-const TRIGGER_CLASS = "text-md px-6 py-2.5 text-slate-800"
+// TODO:
+// - sync tabs style for other info page
+// - fix primary color
+//
+
+const TRIGGER_CLASS = "py-4"
 function SongInfoTabs() {
+	const ctx = assertContext(SongInfoPageContext)
 	return (
 		<Tab.Root>
-			<Tab.List class="grid-cols-3">
+			<Tab.List class="mx-4 grid-cols-3 gap-12 border-b border-slate-200">
 				<Tab.Trigger
 					value={"Release"}
 					class={TRIGGER_CLASS}
@@ -67,16 +73,25 @@ function SongInfoTabs() {
 				>
 					<Trans>Credits</Trans>
 				</Tab.Trigger>
+				<Show when={ctx.song.lyrics}>
+					<Tab.Trigger
+						value={"Lyrics"}
+						class={TRIGGER_CLASS}
+					>
+						<Trans>Lyrics</Trans>
+					</Tab.Trigger>
+				</Show>
 				<Tab.Indicator />
 			</Tab.List>
-			<div class="pt-4">
-				<Tab.Content value="Release">
-					<SongInfoRelease />
-				</Tab.Content>
-				<Tab.Content value="Credits">
-					<SongInfoCredit />
-				</Tab.Content>
-			</div>
+			<Tab.Content value="Release">
+				<SongInfoRelease />
+			</Tab.Content>
+			<Tab.Content value="Credits">
+				<SongInfoCredit />
+			</Tab.Content>
+			<Tab.Content value="Lyrics">
+				<SongInfoLyrics />
+			</Tab.Content>
 		</Tab.Root>
 	)
 }

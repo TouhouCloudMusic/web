@@ -20,7 +20,7 @@ export function List<T>(props: ListProps<T>) {
 	])
 	const ulProps2 = mergeProps(ulProps, {
 		get class() {
-			return ulProps.class ? LIST_CLASS : twMerge(LIST_CLASS, props.class)
+			return props.class ? twMerge(LIST_CLASS, props.class) : LIST_CLASS
 		},
 	})
 	return (
@@ -37,7 +37,7 @@ export function List<T>(props: ListProps<T>) {
 
 type LabelProps = ParentProps<ComponentProps<"div">>
 
-const LABEL_CLASS = "text-sm text-tertiary"
+const LABEL_CLASS = "text-sm text-tertiary tracking-wide"
 
 export function Label(props: LabelProps) {
 	let finalProps = mergeProps(props, {

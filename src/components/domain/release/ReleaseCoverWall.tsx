@@ -38,7 +38,7 @@ export function ReleaseCoverWall(props: ReleaseCoverWallProps) {
 					</div>
 					<div class="text-center">
 						{/* TODO: Release Link */}
-						<p class="line-clamp-2 text-sm text-gray-1100 hover:underline">
+						<p class="line-clamp-2 text-sm text-primary underline-offset-4 hover:underline">
 							{release.title}
 						</p>
 					</div>

@@ -1,4 +1,5 @@
 /* @refresh skip */
+import { Trans } from "@lingui-solid/solid/macro"
 import { Link } from "@tanstack/solid-router"
 import { createMemo, For, Match, Show, Switch } from "solid-js"
 
@@ -18,41 +19,44 @@ export function SongInfoTitleAndCreditName() {
 			)[0],
 	)
 	return (
-		<div>
-			<div class="mb-2 flex flex-wrap items-baseline">
-				<h1 class="mr-2 text-xl font-medium text-slate-1000">
+		<header class="space-y-4">
+			<div>
+				<h1 class="text-3xl leading-tight font-light tracking-tight text-primary">
 					{context.song.title}
 				</h1>
 				<Show when={localizedTitle()}>
-					<span class="text-secondary">[{localizedTitle()!.title}]</span>
+					<div class="text-base font-light tracking-wide text-tertiary">
+						{localizedTitle()!.title}
+					</div>
 				</Show>
 			</div>
-			<div>
-				<Switch>
-					{/* TODO: Credit name */}
-					<Match when={context.song.artists?.length}>
-						<ul class="flex flex-wrap">
+
+			<Switch>
+				{/* TODO: Credit name */}
+				<Match when={context.song.artists?.length}>
+					<div>
+						{/* TODO: use Info.Label */}
+						<div class="text-xs font-medium tracking-wider text-tertiary">
+							<Trans>Artist</Trans>
+						</div>
+						<ul class="flex flex-wrap gap-x-4 gap-y-1">
 							<For each={context.song.artists}>
-								{(artist, index) => (
+								{(artist) => (
 									<li>
-										{/* TODO: Link style */}
 										<Link
 											to="/artist/$id"
 											params={{ id: artist.id.toString() }}
-											class="text-blue-600 hover:underline"
+											class="text-lg font-light text-secondary underline-offset-4 transition-all duration-200 hover:underline"
 										>
 											{artist.name}
 										</Link>
-										{index() < context.song.artists!.length - 1 && (
-											<span class="text-secondary">,&nbsp;</span>
-										)}
 									</li>
 								)}
 							</For>
 						</ul>
-					</Match>
-				</Switch>
-			</div>
-		</div>
+					</div>
+				</Match>
+			</Switch>
+		</header>
 	)
 }

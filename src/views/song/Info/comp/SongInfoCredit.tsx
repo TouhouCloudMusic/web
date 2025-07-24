@@ -9,7 +9,7 @@ export function SongInfoCredit() {
 	const ctx = assertContext(SongInfoPageContext)
 
 	return (
-		<ul class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+		<ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 			<CreditList
 				credits={
 					// This tab will hidden if credits is undefined or empty

@@ -13,6 +13,16 @@
 		"restriction": "warn",
 		"nursery": "warn"
 	},
+	"settings": {
+		"jsx-a11y": {
+			"labelAttributes": {
+				"for": ["for"]
+			}
+		},
+		"labelAttributes": {
+			"for": ["for"]
+		}
+	},
 	"rules": {
 		// False Positives
 		"array-callback-return": ["off", { "allowImplicitReturn": true }],
@@ -107,7 +117,9 @@
 		],
 		"unicorn/switch-case-braces": "off",
 
-		"promise/prefer-await-to-then": "off"
+		"promise/prefer-await-to-then": "off",
+
+		"jsx-a11y/label-has-associated-control": "off"
 	},
 	"plugins": [
 		"import",

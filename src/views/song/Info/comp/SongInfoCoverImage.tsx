@@ -12,7 +12,7 @@ export function SongInfoCoverImage() {
 	const context = assertContext(SongInfoPageContext)
 	return (
 		<Image.Root>
-			<div class="isolate size-64">
+			<div class="isolate size-64 overflow-hidden bg-slate-50">
 				<Image.Fallback>
 					{(state) =>
 						state != Image.State.Ok && (
@@ -22,7 +22,7 @@ export function SongInfoCoverImage() {
 				</Image.Fallback>
 				<Image.Img
 					src={context.song.releases?.[0]?.cover_art_url ?? undefined}
-					class="size-full"
+					class="size-full object-cover"
 				/>
 			</div>
 		</Image.Root>

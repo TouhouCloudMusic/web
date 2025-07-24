@@ -11,7 +11,7 @@ export function SongInfoRelease() {
 	return (
 		<Show when={ctx.song.releases}>
 			{(releases) => (
-				<div class="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+				<div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
 					<ReleaseCoverWall releases={releases()} />
 				</div>
 			)}
