@@ -1,8 +1,8 @@
-/* @refresh skip */
 import { Trans } from "@lingui-solid/solid/macro"
 import { createContext, Suspense } from "solid-js"
 
 import type { Song } from "~/api/song"
+import { Tab } from "~/components/common"
 import { PageLayout } from "~/layout/PageLayout"
 
 import { SongInfoCoverImage } from "./comp/SongInfoCoverImage"
@@ -32,33 +32,51 @@ export function SongInfoPage(props: SongInfoPageProps) {
 		<PageLayout class="p-9">
 			<Suspense fallback={<div>Loading...</div>}>
 				<SongInfoPageContext.Provider value={contextValue}>
-					<div class="flex flex-col gap-8">
-						<div class="grid h-fit grid-cols-[auto_1fr] space-x-8">
-							<SongInfoCoverImage />
-							<div class="flex flex-col">
-								<SongInfoTitleAndCreditName />
-								<div class="mt-4 h-48 space-y-4">
-									<SongInfoLanguages />
-								</div>
+					<div class="grid grid-cols-[auto_1fr] gap-6">
+						<SongInfoCoverImage />
+						<div class="flex flex-col gap-4">
+							<SongInfoTitleAndCreditName />
+							<div class="space-y-4">
+								<SongInfoLanguages />
 							</div>
 						</div>
-						<div class="grid gap-x-8 py-4 text-secondary lg:grid-cols-[1fr_auto]">
-							<div class="flex flex-col gap-4">
-								<h1 class="font-medium">
-									<Trans>Release</Trans>
-								</h1>
-								<SongInfoRelease />
-							</div>
-							<div class="flex flex-col gap-4">
-								<h1 class="font-medium">
-									<Trans>Credits</Trans>
-								</h1>
-								<SongInfoCredit />
-							</div>
+						<div class="col-span-full">
+							<SongInfoTabs />
 						</div>
 					</div>
 				</SongInfoPageContext.Provider>
 			</Suspense>
 		</PageLayout>
+	)
+}
+
+const TRIGGER_CLASS = "text-md px-6 py-2.5 text-slate-800"
+function SongInfoTabs() {
+	return (
+		<Tab.Root>
+			<Tab.List class="grid-cols-3">
+				<Tab.Trigger
+					value={"Release"}
+					class={TRIGGER_CLASS}
+				>
+					<Trans>Release</Trans>
+				</Tab.Trigger>
+				<Tab.Trigger
+					value={"Credits"}
+					class={TRIGGER_CLASS}
+				>
+					<Trans>Credits</Trans>
+				</Tab.Trigger>
+				<Tab.Indicator />
+			</Tab.List>
+			<div class="pt-4">
+				<Tab.Content value="Release">
+					<SongInfoRelease />
+				</Tab.Content>
+				<Tab.Content value="Credits">
+					<SongInfoCredit />
+				</Tab.Content>
+			</div>
+		</Tab.Root>
 	)
 }
