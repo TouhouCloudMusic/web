@@ -13,16 +13,7 @@
 		"restriction": "warn",
 		"nursery": "warn"
 	},
-	"settings": {
-		"jsx-a11y": {
-			"labelAttributes": {
-				"for": ["for"]
-			}
-		},
-		"labelAttributes": {
-			"for": ["for"]
-		}
-	},
+	"settings": {},
 	"rules": {
 		// False Positives
 		"array-callback-return": ["off", { "allowImplicitReturn": true }],
