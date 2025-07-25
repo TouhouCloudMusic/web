@@ -270,7 +270,11 @@ const mockData: Song = {
 		{
 			id: 1,
 			song_id: 1,
-			language_id: 1,
+			language: {
+				id: 1,
+				code: "ja",
+				name: "Japanese",
+			},
 			content: `東の国の眠らない夜に
 幻想の扉が開かれて
 古き良き調べが響いている
@@ -286,16 +290,15 @@ const mockData: Song = {
 変わらない想いを胸に秘めて
 今日という日を大切にしよう`,
 			is_main: true,
-			language: {
-				id: 1,
-				code: "ja",
-				name: "Japanese",
-			},
 		},
 		{
 			id: 2,
 			song_id: 1,
-			language_id: 2,
+			language: {
+				id: 2,
+				code: "en",
+				name: "English",
+			},
 			content: `In the sleepless night of the eastern land
 The door to fantasy opens wide
 Ancient melodies echo through the air
@@ -311,16 +314,15 @@ Teaching us the flow of time
 With unchanging feelings in our hearts
 Let's treasure this precious day`,
 			is_main: false,
-			language: {
-				id: 2,
-				code: "en",
-				name: "English",
-			},
 		},
 		{
 			id: 3,
 			song_id: 1,
-			language_id: 3,
+			language: {
+				id: 3,
+				code: "zh-Hans",
+				name: "Simplified Chinese",
+			},
 			content: `在东方国度的不眠之夜
 幻想之门缓缓开启
 古老的旋律在空中回响
@@ -336,11 +338,6 @@ Let's treasure this precious day`,
 怀着不变的情感在心中
 让我们珍惜这宝贵的一天`,
 			is_main: false,
-			language: {
-				id: 3,
-				code: "zh-Hans",
-				name: "Simplified Chinese",
-			},
 		},
 	],
 }

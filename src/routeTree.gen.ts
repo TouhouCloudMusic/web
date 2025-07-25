@@ -14,9 +14,12 @@ import { Route as FeedsRouteImport } from './routes/feeds'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as SongRouteImport } from './routes/_song'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SongMockRouteImport } from './routes/song/mock'
 import { Route as SongIdRouteImport } from './routes/song/$id'
+import { Route as ReleaseMockRouteImport } from './routes/release/mock'
+import { Route as ReleaseKeywordRouteImport } from './routes/release/$keyword'
 import { Route as ArtistNewRouteImport } from './routes/artist/new'
 import { Route as ArtistIdRouteImport } from './routes/artist/$id'
 import { Route as userTest_avatar_uploadRouteImport } from './routes/(user)/test_avatar_upload'
@@ -49,6 +52,10 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SongRoute = SongRouteImport.update({
+  id: '/_song',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -62,6 +69,16 @@ const SongMockRoute = SongMockRouteImport.update({
 const SongIdRoute = SongIdRouteImport.update({
   id: '/song/$id',
   path: '/song/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReleaseMockRoute = ReleaseMockRouteImport.update({
+  id: '/release/mock',
+  path: '/release/mock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReleaseKeywordRoute = ReleaseKeywordRouteImport.update({
+  id: '/release/$keyword',
+  path: '/release/$keyword',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArtistNewRoute = ArtistNewRouteImport.update({
@@ -106,6 +123,8 @@ export interface FileRoutesByFullPath {
   '/test_avatar_upload': typeof userTest_avatar_uploadRoute
   '/artist/$id': typeof ArtistIdRoute
   '/artist/new': typeof ArtistNewRoute
+  '/release/$keyword': typeof ReleaseKeywordRoute
+  '/release/mock': typeof ReleaseMockRoute
   '/song/$id': typeof SongIdRoute
   '/song/mock': typeof SongMockRoute
   '/profile/$username': typeof userProfileUsernameRoute
@@ -122,6 +141,8 @@ export interface FileRoutesByTo {
   '/test_avatar_upload': typeof userTest_avatar_uploadRoute
   '/artist/$id': typeof ArtistIdRoute
   '/artist/new': typeof ArtistNewRoute
+  '/release/$keyword': typeof ReleaseKeywordRoute
+  '/release/mock': typeof ReleaseMockRoute
   '/song/$id': typeof SongIdRoute
   '/song/mock': typeof SongMockRoute
   '/profile/$username': typeof userProfileUsernameRoute
@@ -130,6 +151,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_song': typeof SongRoute
   '/about': typeof AboutRoute
   '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
@@ -139,6 +161,8 @@ export interface FileRoutesById {
   '/(user)/test_avatar_upload': typeof userTest_avatar_uploadRoute
   '/artist/$id': typeof ArtistIdRoute
   '/artist/new': typeof ArtistNewRoute
+  '/release/$keyword': typeof ReleaseKeywordRoute
+  '/release/mock': typeof ReleaseMockRoute
   '/song/$id': typeof SongIdRoute
   '/song/mock': typeof SongMockRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
@@ -157,6 +181,8 @@ export interface FileRouteTypes {
     | '/test_avatar_upload'
     | '/artist/$id'
     | '/artist/new'
+    | '/release/$keyword'
+    | '/release/mock'
     | '/song/$id'
     | '/song/mock'
     | '/profile/$username'
@@ -173,6 +199,8 @@ export interface FileRouteTypes {
     | '/test_avatar_upload'
     | '/artist/$id'
     | '/artist/new'
+    | '/release/$keyword'
+    | '/release/mock'
     | '/song/$id'
     | '/song/mock'
     | '/profile/$username'
@@ -180,6 +208,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_song'
     | '/about'
     | '/articles'
     | '/auth'
@@ -189,6 +218,8 @@ export interface FileRouteTypes {
     | '/(user)/test_avatar_upload'
     | '/artist/$id'
     | '/artist/new'
+    | '/release/$keyword'
+    | '/release/mock'
     | '/song/$id'
     | '/song/mock'
     | '/(user)/profile_/$username'
@@ -197,6 +228,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SongRoute: typeof SongRoute
   AboutRoute: typeof AboutRoute
   ArticlesRoute: typeof ArticlesRoute
   AuthRoute: typeof AuthRoute
@@ -206,6 +238,8 @@ export interface RootRouteChildren {
   userTest_avatar_uploadRoute: typeof userTest_avatar_uploadRoute
   ArtistIdRoute: typeof ArtistIdRoute
   ArtistNewRoute: typeof ArtistNewRoute
+  ReleaseKeywordRoute: typeof ReleaseKeywordRoute
+  ReleaseMockRoute: typeof ReleaseMockRoute
   SongIdRoute: typeof SongIdRoute
   SongMockRoute: typeof SongMockRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
@@ -249,6 +283,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_song': {
+      id: '/_song'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof SongRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -268,6 +309,20 @@ declare module '@tanstack/solid-router' {
       path: '/song/$id'
       fullPath: '/song/$id'
       preLoaderRoute: typeof SongIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/release/mock': {
+      id: '/release/mock'
+      path: '/release/mock'
+      fullPath: '/release/mock'
+      preLoaderRoute: typeof ReleaseMockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/release/$keyword': {
+      id: '/release/$keyword'
+      path: '/release/$keyword'
+      fullPath: '/release/$keyword'
+      preLoaderRoute: typeof ReleaseKeywordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/artist/new': {
@@ -317,6 +372,7 @@ declare module '@tanstack/solid-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SongRoute: SongRoute,
   AboutRoute: AboutRoute,
   ArticlesRoute: ArticlesRoute,
   AuthRoute: AuthRoute,
@@ -326,6 +382,8 @@ const rootRouteChildren: RootRouteChildren = {
   userTest_avatar_uploadRoute: userTest_avatar_uploadRoute,
   ArtistIdRoute: ArtistIdRoute,
   ArtistNewRoute: ArtistNewRoute,
+  ReleaseKeywordRoute: ReleaseKeywordRoute,
+  ReleaseMockRoute: ReleaseMockRoute,
   SongIdRoute: SongIdRoute,
   SongMockRoute: SongMockRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
