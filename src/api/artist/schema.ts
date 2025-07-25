@@ -72,3 +72,5 @@ export type NewArtistCorrectionOut = If<
 	o_NewArtistCorrection,
 	never
 >
+
+export type SimpleArtist = OpenApiSchema["SimpleArtist"]
