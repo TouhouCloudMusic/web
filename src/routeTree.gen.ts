@@ -8,293 +8,329 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LibraryRouteImport } from './routes/library'
+import { Route as FeedsRouteImport } from './routes/feeds'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as SongMockRouteImport } from './routes/song/mock'
+import { Route as SongIdRouteImport } from './routes/song/$id'
+import { Route as ArtistNewRouteImport } from './routes/artist/new'
+import { Route as ArtistIdRouteImport } from './routes/artist/$id'
+import { Route as userTest_avatar_uploadRouteImport } from './routes/(user)/test_avatar_upload'
+import { Route as userProfileRouteImport } from './routes/(user)/profile'
+import { Route as userProfileEditRouteImport } from './routes/(user)/profile_.edit'
+import { Route as userProfileUsernameRouteImport } from './routes/(user)/profile_.$username'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SongImport } from './routes/song'
-import { Route as AuthImport } from './routes/auth'
-import { Route as AboutImport } from './routes/about'
-import { Route as IndexImport } from './routes/index'
-import { Route as ReleaseKeywordImport } from './routes/release.$keyword'
-import { Route as userTestavataruploadImport } from './routes/(user)/test_avatar_upload'
-import { Route as userProfileImport } from './routes/(user)/profile'
-import { Route as userProfileEditImport } from './routes/(user)/profile_.edit'
-import { Route as userProfileUsernameImport } from './routes/(user)/profile_.$username'
-
-// Create/Update Routes
-
-const SongRoute = SongImport.update({
-  id: '/song',
-  path: '/song',
-  getParentRoute: () => rootRoute,
+const LibraryRoute = LibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AuthRoute = AuthImport.update({
+const FeedsRoute = FeedsRouteImport.update({
+  id: '/feeds',
+  path: '/feeds',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const AboutRoute = AboutImport.update({
+const ArticlesRoute = ArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ReleaseKeywordRoute = ReleaseKeywordImport.update({
-  id: '/release/$keyword',
-  path: '/release/$keyword',
-  getParentRoute: () => rootRoute,
+const SongMockRoute = SongMockRouteImport.update({
+  id: '/song/mock',
+  path: '/song/mock',
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const userTestavataruploadRoute = userTestavataruploadImport.update({
+const SongIdRoute = SongIdRouteImport.update({
+  id: '/song/$id',
+  path: '/song/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistNewRoute = ArtistNewRouteImport.update({
+  id: '/artist/new',
+  path: '/artist/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistIdRoute = ArtistIdRouteImport.update({
+  id: '/artist/$id',
+  path: '/artist/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const userTest_avatar_uploadRoute = userTest_avatar_uploadRouteImport.update({
   id: '/(user)/test_avatar_upload',
   path: '/test_avatar_upload',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const userProfileRoute = userProfileImport.update({
+const userProfileRoute = userProfileRouteImport.update({
   id: '/(user)/profile',
   path: '/profile',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const userProfileEditRoute = userProfileEditImport.update({
+const userProfileEditRoute = userProfileEditRouteImport.update({
   id: '/(user)/profile_/edit',
   path: '/profile/edit',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const userProfileUsernameRoute = userProfileUsernameImport.update({
+const userProfileUsernameRoute = userProfileUsernameRouteImport.update({
   id: '/(user)/profile_/$username',
   path: '/profile/$username',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/solid-router' {
-  interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
-      parentRoute: typeof rootRoute
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/song': {
-      id: '/song'
-      path: '/song'
-      fullPath: '/song'
-      preLoaderRoute: typeof SongImport
-      parentRoute: typeof rootRoute
-    }
-    '/(user)/profile': {
-      id: '/(user)/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof userProfileImport
-      parentRoute: typeof rootRoute
-    }
-    '/(user)/test_avatar_upload': {
-      id: '/(user)/test_avatar_upload'
-      path: '/test_avatar_upload'
-      fullPath: '/test_avatar_upload'
-      preLoaderRoute: typeof userTestavataruploadImport
-      parentRoute: typeof rootRoute
-    }
-    '/release/$keyword': {
-      id: '/release/$keyword'
-      path: '/release/$keyword'
-      fullPath: '/release/$keyword'
-      preLoaderRoute: typeof ReleaseKeywordImport
-      parentRoute: typeof rootRoute
-    }
-    '/(user)/profile_/$username': {
-      id: '/(user)/profile_/$username'
-      path: '/profile/$username'
-      fullPath: '/profile/$username'
-      preLoaderRoute: typeof userProfileUsernameImport
-      parentRoute: typeof rootRoute
-    }
-    '/(user)/profile_/edit': {
-      id: '/(user)/profile_/edit'
-      path: '/profile/edit'
-      fullPath: '/profile/edit'
-      preLoaderRoute: typeof userProfileEditImport
-      parentRoute: typeof rootRoute
-    }
-  }
-}
-
-// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
-  '/song': typeof SongRoute
+  '/feeds': typeof FeedsRoute
+  '/library': typeof LibraryRoute
   '/profile': typeof userProfileRoute
-  '/test_avatar_upload': typeof userTestavataruploadRoute
-  '/release/$keyword': typeof ReleaseKeywordRoute
+  '/test_avatar_upload': typeof userTest_avatar_uploadRoute
+  '/artist/$id': typeof ArtistIdRoute
+  '/artist/new': typeof ArtistNewRoute
+  '/song/$id': typeof SongIdRoute
+  '/song/mock': typeof SongMockRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
-
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
-  '/song': typeof SongRoute
+  '/feeds': typeof FeedsRoute
+  '/library': typeof LibraryRoute
   '/profile': typeof userProfileRoute
-  '/test_avatar_upload': typeof userTestavataruploadRoute
-  '/release/$keyword': typeof ReleaseKeywordRoute
+  '/test_avatar_upload': typeof userTest_avatar_uploadRoute
+  '/artist/$id': typeof ArtistIdRoute
+  '/artist/new': typeof ArtistNewRoute
+  '/song/$id': typeof SongIdRoute
+  '/song/mock': typeof SongMockRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/articles': typeof ArticlesRoute
   '/auth': typeof AuthRoute
-  '/song': typeof SongRoute
+  '/feeds': typeof FeedsRoute
+  '/library': typeof LibraryRoute
   '/(user)/profile': typeof userProfileRoute
-  '/(user)/test_avatar_upload': typeof userTestavataruploadRoute
-  '/release/$keyword': typeof ReleaseKeywordRoute
+  '/(user)/test_avatar_upload': typeof userTest_avatar_uploadRoute
+  '/artist/$id': typeof ArtistIdRoute
+  '/artist/new': typeof ArtistNewRoute
+  '/song/$id': typeof SongIdRoute
+  '/song/mock': typeof SongMockRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
   '/(user)/profile_/edit': typeof userProfileEditRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/articles'
     | '/auth'
-    | '/song'
+    | '/feeds'
+    | '/library'
     | '/profile'
     | '/test_avatar_upload'
-    | '/release/$keyword'
+    | '/artist/$id'
+    | '/artist/new'
+    | '/song/$id'
+    | '/song/mock'
     | '/profile/$username'
     | '/profile/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/articles'
     | '/auth'
-    | '/song'
+    | '/feeds'
+    | '/library'
     | '/profile'
     | '/test_avatar_upload'
-    | '/release/$keyword'
+    | '/artist/$id'
+    | '/artist/new'
+    | '/song/$id'
+    | '/song/mock'
     | '/profile/$username'
     | '/profile/edit'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/articles'
     | '/auth'
-    | '/song'
+    | '/feeds'
+    | '/library'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
-    | '/release/$keyword'
+    | '/artist/$id'
+    | '/artist/new'
+    | '/song/$id'
+    | '/song/mock'
     | '/(user)/profile_/$username'
     | '/(user)/profile_/edit'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ArticlesRoute: typeof ArticlesRoute
   AuthRoute: typeof AuthRoute
-  SongRoute: typeof SongRoute
+  FeedsRoute: typeof FeedsRoute
+  LibraryRoute: typeof LibraryRoute
   userProfileRoute: typeof userProfileRoute
-  userTestavataruploadRoute: typeof userTestavataruploadRoute
-  ReleaseKeywordRoute: typeof ReleaseKeywordRoute
+  userTest_avatar_uploadRoute: typeof userTest_avatar_uploadRoute
+  ArtistIdRoute: typeof ArtistIdRoute
+  ArtistNewRoute: typeof ArtistNewRoute
+  SongIdRoute: typeof SongIdRoute
+  SongMockRoute: typeof SongMockRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
+}
+
+declare module '@tanstack/solid-router' {
+  interface FileRoutesByPath {
+    '/library': {
+      id: '/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof LibraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feeds': {
+      id: '/feeds'
+      path: '/feeds'
+      fullPath: '/feeds'
+      preLoaderRoute: typeof FeedsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/song/mock': {
+      id: '/song/mock'
+      path: '/song/mock'
+      fullPath: '/song/mock'
+      preLoaderRoute: typeof SongMockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/song/$id': {
+      id: '/song/$id'
+      path: '/song/$id'
+      fullPath: '/song/$id'
+      preLoaderRoute: typeof SongIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artist/new': {
+      id: '/artist/new'
+      path: '/artist/new'
+      fullPath: '/artist/new'
+      preLoaderRoute: typeof ArtistNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artist/$id': {
+      id: '/artist/$id'
+      path: '/artist/$id'
+      fullPath: '/artist/$id'
+      preLoaderRoute: typeof ArtistIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)/test_avatar_upload': {
+      id: '/(user)/test_avatar_upload'
+      path: '/test_avatar_upload'
+      fullPath: '/test_avatar_upload'
+      preLoaderRoute: typeof userTest_avatar_uploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)/profile': {
+      id: '/(user)/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof userProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)/profile_/edit': {
+      id: '/(user)/profile_/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof userProfileEditRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(user)/profile_/$username': {
+      id: '/(user)/profile_/$username'
+      path: '/profile/$username'
+      fullPath: '/profile/$username'
+      preLoaderRoute: typeof userProfileUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ArticlesRoute: ArticlesRoute,
   AuthRoute: AuthRoute,
-  SongRoute: SongRoute,
+  FeedsRoute: FeedsRoute,
+  LibraryRoute: LibraryRoute,
   userProfileRoute: userProfileRoute,
-  userTestavataruploadRoute: userTestavataruploadRoute,
-  ReleaseKeywordRoute: ReleaseKeywordRoute,
+  userTest_avatar_uploadRoute: userTest_avatar_uploadRoute,
+  ArtistIdRoute: ArtistIdRoute,
+  ArtistNewRoute: ArtistNewRoute,
+  SongIdRoute: SongIdRoute,
+  SongMockRoute: SongMockRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/about",
-        "/auth",
-        "/song",
-        "/(user)/profile",
-        "/(user)/test_avatar_upload",
-        "/release/$keyword",
-        "/(user)/profile_/$username",
-        "/(user)/profile_/edit"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/about": {
-      "filePath": "about.tsx"
-    },
-    "/auth": {
-      "filePath": "auth.tsx"
-    },
-    "/song": {
-      "filePath": "song.tsx"
-    },
-    "/(user)/profile": {
-      "filePath": "(user)/profile.tsx"
-    },
-    "/(user)/test_avatar_upload": {
-      "filePath": "(user)/test_avatar_upload.tsx"
-    },
-    "/release/$keyword": {
-      "filePath": "release.$keyword.tsx"
-    },
-    "/(user)/profile_/$username": {
-      "filePath": "(user)/profile_.$username.tsx"
-    },
-    "/(user)/profile_/edit": {
-      "filePath": "(user)/profile_.edit.tsx"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
