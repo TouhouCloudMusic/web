@@ -12,7 +12,7 @@ import { NewArtistCorrection as NewArtistCorrectionSchema } from "~/api/artist/s
 import { Button } from "~/components/button"
 import { PageLayout } from "~/layout/PageLayout"
 
-import { AliasesFieldArray } from "./comp/Aliases.tsx"
+import { ArtistFormAliasesField } from "./comp/Aliases.tsx"
 import { ArtistFormNameField } from "./comp/ArtistName.tsx"
 import { ArtistFormArtistTypeField } from "./comp/ArtistType.tsx"
 import { ArtistFormDateFields } from "./comp/Date.tsx"
@@ -109,7 +109,7 @@ function Form(props: Props) {
 
 			<LocalizedNamesFieldArray formStore={formStore} />
 
-			<AliasesFieldArray formStore={formStore} />
+			<ArtistFormAliasesField formStore={formStore} />
 
 			<TextAliasesFieldArray formStore={formStore} />
 

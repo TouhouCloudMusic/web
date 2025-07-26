@@ -12,7 +12,7 @@ type AliasesFieldArrayProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
 
-export function AliasesFieldArray(props: AliasesFieldArrayProps) {
+export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 	return (
 		<M.FieldArray
 			of={props.formStore}
@@ -20,57 +20,27 @@ export function AliasesFieldArray(props: AliasesFieldArrayProps) {
 		>
 			{(fieldArray) => (
 				<div class="w-96">
-					<div class="mb-4 flex place-content-between items-center gap-4">
-						<FormComp.Label class="m-0">Aliases</FormComp.Label>
-						<Button
-							variant="Tertiary"
-							class="h-max p-2"
-							onClick={() => {
-								M.insert(props.formStore, "data.aliases", {
-									// @ts-expect-error
-									value: undefined,
-								})
-							}}
-						>
-							<PlusIcon class="size-4" />
-						</Button>
-					</div>
+					<AliasesFieldLabel
+						onClick={() => {
+							M.insert(props.formStore, "data.aliases", {
+								// @ts-expect-error
+								value: undefined,
+							})
+						}}
+					/>
 					<ul class="flex flex-col gap-2">
 						<For each={fieldArray.items}>
 							{(_, idx) => (
 								<>
-									<li class="flex gap-2">
-										<M.Field
-											of={props.formStore}
-											name={`data.aliases.${idx()}`}
-										>
-											{(field, fieldProps) => (
-												<InputField.Root class="grow">
-													<InputField.Input
-														{...fieldProps}
-														id={field.name}
-														type="number"
-														class="no-spinner"
-														placeholder="Alias Artist ID"
-														value={field.value}
-													/>
-													<InputField.Error message={field.error} />
-												</InputField.Root>
-											)}
-										</M.Field>
-										<Button
-											variant="Tertiary"
-											size="Sm"
-											class="row-span-2 w-fit"
-											onClick={() => {
-												M.remove(props.formStore, "data.aliases", {
-													at: idx(),
-												})
-											}}
-										>
-											<Cross1Icon />
-										</Button>
-									</li>
+									<AliasListItem
+										formStore={props.formStore}
+										index={idx()}
+										onRemove={() => {
+											M.remove(props.formStore, "data.aliases", {
+												at: idx(),
+											})
+										}}
+									/>
 									{idx() < fieldArray.items.length - 1 && <Divider horizonal />}
 								</>
 							)}
@@ -79,5 +49,63 @@ export function AliasesFieldArray(props: AliasesFieldArrayProps) {
 				</div>
 			)}
 		</M.FieldArray>
+	)
+}
+
+type AliasesHeaderProps = {
+	onClick: () => void
+}
+
+function AliasesFieldLabel(props: AliasesHeaderProps) {
+	return (
+		<div class="mb-4 flex place-content-between items-center gap-4">
+			<FormComp.Label class="m-0">Aliases</FormComp.Label>
+			<Button
+				variant="Tertiary"
+				class="h-max p-2"
+				onClick={props.onClick}
+			>
+				<PlusIcon class="size-4" />
+			</Button>
+		</div>
+	)
+}
+
+type AliasListItemProps = {
+	formStore: M.FormStore<NewArtistCorrection>
+	index: number
+	onRemove: () => void
+}
+
+function AliasListItem(props: AliasListItemProps) {
+	return (
+		<li class="flex gap-2">
+			<M.Field
+				of={props.formStore}
+				name={`data.aliases.${props.index}`}
+			>
+				{(field, fieldProps) => (
+					<InputField.Root class="grow">
+						<InputField.Input
+							{...fieldProps}
+							id={field.name}
+							type="number"
+							class="no-spinner"
+							placeholder="Alias Artist ID"
+							value={field.value}
+						/>
+						<InputField.Error message={field.error} />
+					</InputField.Root>
+				)}
+			</M.Field>
+			<Button
+				variant="Tertiary"
+				size="Sm"
+				class="row-span-2 w-fit"
+				onClick={props.onRemove}
+			>
+				<Cross1Icon />
+			</Button>
+		</li>
 	)
 }
