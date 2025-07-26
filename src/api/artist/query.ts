@@ -24,6 +24,17 @@ export function findById(id: number) {
 	})
 }
 
+export function findByKeyword(keyword: string) {
+	return queryOptions({
+		queryKey: ["artist::keyword", keyword],
+		queryFn: async () => {
+			const artists = await F.__findByKeyword(keyword)
+			return artists
+		},
+		throwOnError: true,
+	})
+}
+
 export function appearances(id: number) {
 	return infiniteQueryOptions({
 		queryKey: ["artist::appearances", id],

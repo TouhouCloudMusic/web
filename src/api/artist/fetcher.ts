@@ -133,3 +133,13 @@ export async function __discographiesInit(
 
 	return handleApiResponse(res)
 }
+
+export async function __findByKeyword(keyword: string) {
+	const res = await FetchClient.GET("/artist", {
+		params: {
+			query: { keyword },
+		},
+	})
+
+	return handleApiResponse(res)
+}
