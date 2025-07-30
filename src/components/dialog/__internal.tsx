@@ -56,18 +56,19 @@ export type ContentProps<T extends ValidComponent = "div"> = PolymorphicProps<
 	DialogContentProps<T>
 >
 
-export function Content<T extends ValidComponent = "div">(
-	props: ContentProps<T>,
-) {
-	const CLASS = `
-  bg-primary fixed z-50 m-auto rounded-md p-4 shadow-lg shadow-gray-300
+const CONTENT_CLASS = `
+  bg-primary fixed z-50 m-auto
   left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
   animate-scale-fade-out data-expanded:animate-scale-fade-in
   `
+// rounded-md p-4 shadow-lg shadow-gray-300
 
+export function Content<T extends ValidComponent = "div">(
+	props: ContentProps<T>,
+) {
 	let local_props = mergeProps(props, {
 		get class() {
-			return twMerge(CLASS, props["class"])
+			return twMerge(CONTENT_CLASS, props["class"])
 		},
 	})
 

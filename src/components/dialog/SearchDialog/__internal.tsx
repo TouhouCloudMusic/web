@@ -18,7 +18,12 @@ export type LabelProps = {
 
 export function Label(props: LabelProps) {
 	return (
-		<Dialog.Title class={twMerge("text-lg font-medium", props.class)}>
+		<Dialog.Title
+			class={twMerge(
+				"text-2xl font-light tracking-tight text-primary",
+				props.class,
+			)}
+		>
 			{props.children}
 		</Dialog.Title>
 	)
@@ -26,13 +31,18 @@ export function Label(props: LabelProps) {
 
 export type InputProps = JSX.InputHTMLAttributes<HTMLInputElement>
 
-const INPUT_CLASS = `focus-within:rounded-md px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none
-border-0 bg-slate-100 pl-8 ring-0`
+const INPUT_CLASS = `
+pl-7 py-1
+border-b border-slate-400 hover:border-reimu-600 focus:border-reimu-600
+placeholder:font-light placeholder:text-tertiary outline-none
+tracking-tighter
+transition-all duration-150
+`
 
 export function Input(props: InputProps) {
 	const inputProps = mergeProps(props, {
 		get class() {
-			return props.class ? twMerge(INPUT_CLASS, props.class) : INPUT_CLASS
+			return twMerge(INPUT_CLASS, props.class)
 		},
 	})
 	return (
@@ -44,7 +54,7 @@ export function Input(props: InputProps) {
 }
 
 const CONTENT_CLASS =
-	"flex max-h-[min(48rem,50%)] min-h-128 max-w-sm flex-col px-0 pb-8"
+	"flex min-h-128 flex-col h-192 w-128 max-w-[90vw] rounded p-6"
 
 export function Content(props: Dialog.ContentProps) {
 	const finalProps = mergeProps(props, {
@@ -61,7 +71,7 @@ export function Content(props: Dialog.ContentProps) {
 }
 
 export type ListProps = JSX.HTMLAttributes<HTMLUListElement>
-const LIST_CLASS = "border-y-1.5 w-full overflow-auto px-4"
+const LIST_CLASS = "overflow-auto has-first:border-y border-slate-300 mb-4"
 export function List(props: ListProps) {
 	const listProps = mergeProps(props, {
 		get class() {
