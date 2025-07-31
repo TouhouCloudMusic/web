@@ -3,13 +3,10 @@ import { mergeProps } from "solid-js"
 import { MagnifyingGlassIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
-import { Dialog } from ".."
+import { Dialog } from "~/components/dialog"
 
-export type RootProps = Dialog.RootProps
-
-export function Root(props: RootProps) {
-	return <Dialog.Root {...props} />
-}
+export { Root } from "~/components/dialog/__internal"
+export type { RootProps } from "~/components/dialog/__internal"
 
 export type LabelProps = {
 	children: JSX.Element

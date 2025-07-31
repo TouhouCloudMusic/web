@@ -1,9 +1,10 @@
 import { Cross2Icon, PlusIcon } from "solid-radix-icons"
 import type { Meta, StoryObj } from "storybook-solidjs"
 
-import { Button } from "../button/index.tsx"
-import { SearchDialog } from "./SearchDialog"
-import { Dialog } from "./index.ts"
+import { Button } from "~/components/button"
+import { Dialog } from "~/components/dialog"
+
+import { SearchDialog } from "."
 
 // Create a wrapper component for the story
 function SearchDialogExample() {
