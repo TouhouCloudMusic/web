@@ -22,6 +22,30 @@ export async function __create(opt: __CreataOption) {
 	throw new Error(response.statusText)
 }
 
+export interface __UpdateOption {
+	id: number
+	data: NewArtistCorrectionOut
+}
+export async function __update(opt: __UpdateOption) {
+	const { data, error, response } = await FetchClient.POST(`/artist/{id}`, {
+		params: {
+			path: {
+				id: opt.id,
+			},
+		},
+		body: opt.data,
+	})
+	if (data) {
+		return data
+	}
+
+	if (error) {
+		throw new Error(error.message)
+	}
+
+	throw new Error(response.statusText)
+}
+
 export async function __findById(id: number) {
 	const res = await FetchClient.GET(`/artist/{id}`, {
 		params: {
@@ -104,6 +128,16 @@ export async function __discographiesInit(
 			query: {
 				limit,
 			},
+		},
+	})
+
+	return handleApiResponse(res)
+}
+
+export async function __findByKeyword(keyword: string) {
+	const res = await FetchClient.GET("/artist", {
+		params: {
+			query: { keyword },
 		},
 	})
 

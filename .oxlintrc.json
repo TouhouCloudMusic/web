@@ -16,6 +16,7 @@
 	"settings": {},
 	"rules": {
 		// False Positives
+		"arrow-body-style": "off",
 		"array-callback-return": ["off", { "allowImplicitReturn": true }],
 		"curly": "off",
 		"id-length": "off",
@@ -121,5 +122,13 @@
 		"typescript",
 		"unicorn",
 		"vitest"
+	],
+	"overrides": [
+		{
+			"files": ["*.stories.tsx"],
+			"rules": {
+				"import/no-default-export": "off"
+			}
+		}
 	]
 }
