@@ -79,29 +79,28 @@ type AliasListItemProps = {
 
 function AliasListItem(props: AliasListItemProps) {
 	return (
-		<li class="flex gap-2">
+		<li class="grid h-fit grid-cols-[1fr_auto]">
 			<M.Field
 				of={props.formStore}
 				name={`data.aliases.${props.index}`}
 			>
 				{(field, fieldProps) => (
-					<InputField.Root class="grow">
-						<InputField.Input
+					<>
+						<input
 							{...fieldProps}
-							id={field.name}
 							type="number"
-							class="no-spinner"
-							placeholder="Alias Artist ID"
+							hidden
 							value={field.value}
 						/>
-						<InputField.Error message={field.error} />
-					</InputField.Root>
+						<div>{field.value}</div>
+					</>
 				)}
 			</M.Field>
+
 			<Button
 				variant="Tertiary"
 				size="Sm"
-				class="row-span-2 w-fit"
+				class=""
 				onClick={props.onRemove}
 			>
 				<Cross1Icon />
