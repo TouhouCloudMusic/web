@@ -17,7 +17,7 @@ export function Label(props: LabelProps) {
 	return (
 		<Dialog.Title
 			class={twMerge(
-				"text-2xl font-light tracking-tight text-primary",
+				"text-3xl font-extralight tracking-tight text-primary",
 				props.class,
 			)}
 		>
