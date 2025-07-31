@@ -21,7 +21,7 @@ export function ArtistSearchDialog(props: ArtistSearchDialogProps) {
 
 	const onInput = R.debounce(
 		{
-			delay: 200,
+			delay: 300,
 		},
 		(e: Event) => {
 			setSearchKeyword((e.target as HTMLInputElement).value)
