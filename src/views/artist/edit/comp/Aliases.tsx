@@ -1,12 +1,12 @@
 import * as M from "@modular-forms/solid"
 import { For } from "solid-js"
+import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 
 import type { Artist } from "~/api/artist"
 import type { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
-import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
 import { ArtistSearchDialog } from "./ArtistSearchDialog"
@@ -16,6 +16,39 @@ type AliasesFieldArrayProps = {
 }
 
 export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
+	let [aliasStore, setAliasStore] = createStore({
+		items: [] as Artist[],
+	})
+
+	let handleSelect = (artist: Artist) => {
+		const currentAliases =
+			M.getValue(props.formStore, "data.aliases", {
+				shouldActive: false,
+			}) ?? []
+
+		if (!currentAliases.includes(artist.id)) {
+			setAliasStore(
+				produce((s) => {
+					s.items.push(artist)
+				}),
+			)
+			M.insert(props.formStore, "data.aliases", {
+				value: artist.id,
+			})
+		}
+	}
+
+	let handleRemove = (idx: number) => {
+		setAliasStore(
+			produce((s) => {
+				s.items.splice(idx, 1)
+			}),
+		)
+		M.remove(props.formStore, "data.aliases", {
+			at: idx,
+		})
+	}
+
 	return (
 		<M.FieldArray
 			of={props.formStore}
@@ -23,7 +56,12 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 		>
 			{(fieldArray) => (
 				<div class="w-96">
-					<AliasesFieldLabel formStore={props.formStore} />
+					<div class="mb-4 flex place-content-between items-center gap-4">
+						<FormComp.Label class="m-0">Aliases</FormComp.Label>
+						<div class="flex gap-2">
+							<ArtistSearchDialog onSelect={handleSelect} />
+						</div>
+					</div>
 					<ul class="flex flex-col gap-2">
 						<For each={fieldArray.items}>
 							{(_, idx) => (
@@ -31,11 +69,8 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 									<AliasListItem
 										formStore={props.formStore}
 										index={idx()}
-										onRemove={() => {
-											M.remove(props.formStore, "data.aliases", {
-												at: idx(),
-											})
-										}}
+										onRemove={() => handleRemove(idx())}
+										artist={aliasStore.items[idx()]!}
 									/>
 									{idx() < fieldArray.items.length - 1 && <Divider horizonal />}
 								</>
@@ -48,33 +83,11 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 	)
 }
 
-type AliasesHeaderProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
-
-function AliasesFieldLabel(props: AliasesHeaderProps) {
-	let handleSelect = (artist: Artist) => {
-		const currentAliases = M.getValue(props.formStore, "data.aliases") ?? []
-		if (!currentAliases.includes(artist.id)) {
-			M.insert(props.formStore, "data.aliases", {
-				value: artist.id,
-			})
-		}
-	}
-	return (
-		<div class="mb-4 flex place-content-between items-center gap-4">
-			<FormComp.Label class="m-0">Aliases</FormComp.Label>
-			<div class="flex gap-2">
-				<ArtistSearchDialog onSelect={handleSelect} />
-			</div>
-		</div>
-	)
-}
-
 type AliasListItemProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 	index: number
 	onRemove: () => void
+	artist: Artist
 }
 
 function AliasListItem(props: AliasListItemProps) {
@@ -92,7 +105,7 @@ function AliasListItem(props: AliasListItemProps) {
 							hidden
 							value={field.value}
 						/>
-						<div>{field.value}</div>
+						<div>{props.artist.name}</div>
 					</>
 				)}
 			</M.Field>
