@@ -11,8 +11,8 @@ import type { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
+import { SearchDialog } from "~/components/composite/form/SearchDialog"
 import { Dialog } from "~/components/dialog"
-import { SearchDialog } from "~/components/dialog/SearchDialog"
 import { Divider } from "~/components/divider"
 
 type AliasesFieldArrayProps = {
@@ -145,7 +145,7 @@ function ArtistSearchDialog(props: ArtistSearchDialogProps) {
 	}
 
 	return (
-		<SearchDialog.Root defaultOpen>
+		<SearchDialog.Root>
 			<Dialog.Trigger
 				as={Button}
 				variant="Tertiary"
