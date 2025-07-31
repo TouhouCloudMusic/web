@@ -124,15 +124,15 @@ function ArtistSearchDialog(props: ArtistSearchDialogProps) {
 		},
 	)
 
-	const searchQuery = createMemo(() => {
+	const searchTerm = createMemo(() => {
 		const keyword = searchKeyword().trim()
-		return keyword.length > 0 ? keyword : null
+		return keyword.length > 1 ? keyword : null
 	})
 
 	const artistsQuery = useQuery(() => ({
-		...ArtistQueryOption.findByKeyword(searchQuery()!),
+		...ArtistQueryOption.findByKeyword(searchTerm()!),
 		keepPreviousData: true,
-		enabled: searchQuery() !== null,
+		enabled: searchTerm() !== null,
 	}))
 
 	const handleSelect = (artist: SimpleArtist) => {
