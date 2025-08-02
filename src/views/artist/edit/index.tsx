@@ -36,29 +36,8 @@ type Props =
 
 export function EditArtistPage(props: Props) {
 	return (
-		<PageLayout class="grid auto-rows-min grid-cols-24">
-			<div class="col-span-full grid h-24 grid-cols-subgrid border-b-1 border-slate-300">
-				<div class="col-span-full col-start-2 -col-end-2 flex items-center gap-4">
-					<Button
-						class="px-0"
-						variant="Tertiary"
-						size="Sm"
-						onClick={() => {
-							history.back()
-						}}
-					>
-						<ArrowLeftIcon class="size-6" />
-					</Button>
-					<h1 class="text-2xl">
-						<Show
-							when={props.type === "new"}
-							fallback={<Trans>Edit Artist</Trans>}
-						>
-							<Trans>Create Artist</Trans>
-						</Show>
-					</h1>
-				</div>
-			</div>
+		<PageLayout class="grid grid-rows-[1fr_auto_1fr]">
+			<PageHeader type={props.type} />
 			<Suspense
 				fallback={
 					<div>
@@ -69,6 +48,33 @@ export function EditArtistPage(props: Props) {
 				<Form {...props} />
 			</Suspense>
 		</PageLayout>
+	)
+}
+
+function PageHeader(props: { type: Props["type"] }) {
+	return (
+		<div class="border-b-1 border-slate-300 p-8">
+			<div class="flex items-center gap-4">
+				<Button
+					class="size-6 p-0"
+					variant="Tertiary"
+					size="Sm"
+					onClick={() => {
+						history.back()
+					}}
+				>
+					<ArrowLeftIcon class="size-6" />
+				</Button>
+				<h1 class="text-2xl font-light tracking-tighter">
+					<Show
+						when={props.type === "new"}
+						fallback={<Trans>Edit Artist</Trans>}
+					>
+						<Trans>Create Artist</Trans>
+					</Show>
+				</h1>
+			</div>
+		</div>
 	)
 }
 
@@ -99,7 +105,7 @@ function Form(props: Props) {
 
 	return (
 		<Form
-			class="col-span-full col-start-2 -col-end-2 flex flex-col gap-16 pt-12 pb-32"
+			class="flex flex-col gap-y-4 px-8 pt-8"
 			shouldActive={false}
 			onSubmit={handleSubmit}
 		>

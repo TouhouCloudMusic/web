@@ -23,11 +23,11 @@ export function ArtistFormArtistTypeField(
 					<FormComp.Label for="artist_type">
 						<Trans>Artist Type</Trans>
 					</FormComp.Label>
-					<div class="w-fit rounded-sm border border-slate-300">
+					<div class="w-fit rounded-sm border border-slate-300 font-light">
 						<select
 							{...fieldProps}
 							id="artist_type"
-							class="h-8 w-fit px-1 whitespace-nowrap"
+							class="box-border h-8 w-full min-w-max rounded px-1 whitespace-nowrap focus:outline-2 focus:outline-reimu-600"
 						>
 							<option value="">
 								<Trans>-- Please select artist type --</Trans>
@@ -44,7 +44,6 @@ export function ArtistFormArtistTypeField(
 							</For>
 						</select>
 					</div>
-					<FormComp.ErrorMessage message={field.error} />
 				</div>
 			)}
 		</M.Field>
