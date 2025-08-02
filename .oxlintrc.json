@@ -30,7 +30,10 @@
 		"no-unused-vars": "warn",
 		"no-magic-numbers": [
 			"error",
-			{ "ignore": [-1, 0, 1], "ignoreArrayIndexes": true }
+			{
+				"ignore": [-1, 0, 1, 12, 24, 60, 1000, 3600],
+				"ignoreArrayIndexes": true
+			}
 		],
 		"no-void": "off",
 		"no-case-declarations": "off",
