@@ -12,7 +12,7 @@ type TextAliasesFieldArrayProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
 
-export function TextAliasesFieldArray(props: TextAliasesFieldArrayProps) {
+export function ArtistFormTextAliases(props: TextAliasesFieldArrayProps) {
 	return (
 		<M.FieldArray
 			of={props.formStore}

@@ -12,7 +12,7 @@ type LocalizedNamesFieldArrayProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
 
-export function LocalizedNamesFieldArray(props: LocalizedNamesFieldArrayProps) {
+export function ArtistFormLocalizedNames(props: LocalizedNamesFieldArrayProps) {
 	return (
 		<M.FieldArray
 			of={props.formStore}

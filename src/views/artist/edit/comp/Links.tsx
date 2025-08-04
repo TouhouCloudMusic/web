@@ -12,7 +12,7 @@ type LinksFieldArrayProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
 
-export function LinksFieldArray(props: LinksFieldArrayProps) {
+export function ArtistFormLinks(props: LinksFieldArrayProps) {
 	return (
 		<M.FieldArray
 			of={props.formStore}

@@ -12,7 +12,7 @@ type ArtistFormFormActionsProps = {
 	mutation: ReturnType<typeof ArtistMutation.getInstance>
 }
 
-export function ArtistFormFormActions(props: ArtistFormFormActionsProps) {
+export function ArtistFormActions(props: ArtistFormFormActionsProps) {
 	const { t } = useLingui()
 
 	return (

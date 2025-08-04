@@ -16,12 +16,12 @@ import { ArtistFormAliasesField } from "./comp/Aliases.tsx"
 import { ArtistFormNameField } from "./comp/ArtistName.tsx"
 import { ArtistFormArtistTypeField } from "./comp/ArtistType.tsx"
 import { ArtistFormDateFields } from "./comp/Date.tsx"
-import { ArtistFormFormActions } from "./comp/FormActions.tsx"
-import { LinksFieldArray } from "./comp/Links.tsx"
-import { LocalizedNamesFieldArray } from "./comp/LocalizedNames.tsx"
+import { ArtistFormActions } from "./comp/FormActions.tsx"
+import { ArtistFormLinks } from "./comp/Links.tsx"
+import { ArtistFormLocalizedNames } from "./comp/LocalizedNames.tsx"
 import { ArtistFormLocationFields } from "./comp/Locations.tsx"
-import { MembershipFieldArray } from "./comp/Membership.tsx"
-import { TextAliasesFieldArray } from "./comp/TextAliases.tsx"
+import { ArtistFormMembership } from "./comp/Membership.tsx"
+import { ArtistFormTextAliases } from "./comp/TextAliases.tsx"
 import { useArtistFormInitialValues } from "./hook/useFormInitialValues.tsx"
 import { useArtistFormSubmission } from "./hook/useFormSubmission.tsx"
 
@@ -105,7 +105,7 @@ function Form(props: Props) {
 
 	return (
 		<Form
-			class="flex flex-col gap-y-4 px-8 pt-8"
+			class="flex flex-col gap-y-8 px-8 pt-8"
 			shouldActive={false}
 			onSubmit={handleSubmit}
 		>
@@ -113,21 +113,21 @@ function Form(props: Props) {
 
 			<ArtistFormArtistTypeField formStore={formStore} />
 
-			<LocalizedNamesFieldArray formStore={formStore} />
+			<ArtistFormLocalizedNames formStore={formStore} />
 
 			<ArtistFormAliasesField formStore={formStore} />
 
-			<TextAliasesFieldArray formStore={formStore} />
+			<ArtistFormTextAliases formStore={formStore} />
 
 			<ArtistFormDateFields formStore={formStore} />
 
 			<ArtistFormLocationFields formStore={formStore} />
 
-			<MembershipFieldArray formStore={formStore} />
+			<ArtistFormMembership formStore={formStore} />
 
-			<LinksFieldArray formStore={formStore} />
+			<ArtistFormLinks formStore={formStore} />
 
-			<ArtistFormFormActions
+			<ArtistFormActions
 				formStore={formStore}
 				mutation={mutation}
 			/>

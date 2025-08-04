@@ -14,7 +14,7 @@ type MembershipProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
 
-export function MembershipFieldArray(props: MembershipProps) {
+export function ArtistFormMembership(props: MembershipProps) {
 	return (
 		<M.FieldArray
 			of={props.formStore}
