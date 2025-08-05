@@ -21,10 +21,9 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 	})
 
 	let handleSelect = (artist: Artist) => {
-		const currentAliases =
-			M.getValue(props.formStore, "data.aliases", {
-				shouldActive: false,
-			}) ?? []
+		const currentAliases = M.getValues(props.formStore, "data.aliases", {
+			shouldActive: false,
+		})
 
 		if (!currentAliases.includes(artist.id)) {
 			setAliasStore(
