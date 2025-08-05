@@ -43,16 +43,18 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 			dayjs(`${store.y}-${store.m}`).daysInMonth()
 		:	undefined,
 	)
+
 	const setYear = (val?: number) => {
 		if (val && val > THIS_YEAR) {
 			val = THIS_YEAR
 		}
-
 		setStore("y", val)
 	}
+
 	const setMonth = (val?: number) => {
 		setStore("m", val)
 	}
+
 	const setDay = (val?: number) => {
 		if (val && val > maxDay()!) {
 			val = maxDay()

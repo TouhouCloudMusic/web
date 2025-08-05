@@ -16,7 +16,6 @@ export function ArtistFormDateFields(props: ArtistFormDateFieldsProps) {
 			<DateWithPrecision
 				label={t`Start date`}
 				setValue={(v) => {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					M.setValue(props.formStore, "data.start_date", v)
 				}}
 				error={M.getError(props.formStore, "data.start_date", {
@@ -27,7 +26,6 @@ export function ArtistFormDateFields(props: ArtistFormDateFieldsProps) {
 			<DateWithPrecision
 				label={t`End date`}
 				setValue={(v) => {
-					// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 					M.setValue(props.formStore, "data.end_date", v)
 				}}
 				error={M.getError(props.formStore, "data.end_date", {
