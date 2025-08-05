@@ -10,6 +10,7 @@ import { FormComp } from "~/components/common/form"
 import { Divider } from "~/components/divider"
 
 import { ArtistSearchDialog } from "./ArtistSearchDialog"
+import { FieldArrayFallback } from "./FieldArrayFallback"
 
 type AliasesFieldArrayProps = {
 	formStore: M.FormStore<NewArtistCorrection>
@@ -54,15 +55,18 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 			name="data.aliases"
 		>
 			{(fieldArray) => (
-				<div class="w-96">
+				<div class="flex min-h-32 w-96 flex-col">
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">Aliases</FormComp.Label>
 						<div class="flex gap-2">
 							<ArtistSearchDialog onSelect={handleSelect} />
 						</div>
 					</div>
-					<ul class="flex flex-col gap-2">
-						<For each={fieldArray.items}>
+					<ul class="flex h-full flex-col gap-2">
+						<For
+							each={fieldArray.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<>
 									<AliasListItem

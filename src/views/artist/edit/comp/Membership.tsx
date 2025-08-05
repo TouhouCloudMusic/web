@@ -10,6 +10,8 @@ import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
+import { FieldArrayFallback } from "./FieldArrayFallback"
+
 type MembershipProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
@@ -26,7 +28,7 @@ export function ArtistFormMembership(props: MembershipProps) {
 					return !type || type == "Unknown"
 				})
 				return (
-					<div class="w-96">
+					<div class="flex min-h-32 w-96 flex-col">
 						<div class="mb-4 flex place-content-between items-center gap-4">
 							<FormComp.Label class="m-0">Membership</FormComp.Label>
 							<Button
@@ -43,8 +45,11 @@ export function ArtistFormMembership(props: MembershipProps) {
 								<PlusIcon class="size-4" />
 							</Button>
 						</div>
-						<ul class="flex flex-col gap-2">
-							<For each={fields.items}>
+						<ul class="flex h-full flex-col gap-2">
+							<For
+								each={fields.items}
+								fallback={<FieldArrayFallback />}
+							>
 								{(_, idx) => {
 									onMount(() => {
 										// @ts-expect-error

@@ -8,6 +8,8 @@ import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
+import { FieldArrayFallback } from "./FieldArrayFallback"
+
 type LinksFieldArrayProps = {
 	formStore: M.FormStore<NewArtistCorrection>
 }
@@ -19,7 +21,7 @@ export function ArtistFormLinks(props: LinksFieldArrayProps) {
 			name="data.links"
 		>
 			{(fieldArray) => (
-				<div class="w-96">
+				<div class="flex min-h-32 w-96 flex-col">
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">Links</FormComp.Label>
 						<Button
@@ -34,8 +36,11 @@ export function ArtistFormLinks(props: LinksFieldArrayProps) {
 							<PlusIcon class="size-4" />
 						</Button>
 					</div>
-					<ul class="flex flex-col gap-2">
-						<For each={fieldArray.items}>
+					<ul class="flex h-full flex-col gap-2">
+						<For
+							each={fieldArray.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<>
 									<li class="flex gap-2">

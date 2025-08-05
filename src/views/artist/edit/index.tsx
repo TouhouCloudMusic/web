@@ -105,7 +105,7 @@ function Form(props: Props) {
 
 	return (
 		<Form
-			class="flex flex-col gap-y-8 px-8 pt-8"
+			class="flex flex-col space-y-8 px-8 pt-8"
 			shouldActive={false}
 			onSubmit={handleSubmit}
 		>
