@@ -6,7 +6,7 @@ import { twMerge } from "tailwind-merge"
 export type LabelProps = ComponentProps<"label">
 
 // @tw
-export const LABEL_CLASSNAME = "font-light text-lg mb-2"
+export const LABEL_CLASSNAME = "font-light text-lg mb-2 block"
 
 export function Label(props: LabelProps) {
 	const localProps = mergeProps(props, {
