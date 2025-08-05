@@ -12,6 +12,7 @@ import { Dialog } from "~/components/dialog"
 
 type ArtistSearchDialogProps = {
 	onSelect: (artist: Artist) => void
+	disabled?: boolean
 }
 
 export function ArtistSearchDialog(props: ArtistSearchDialogProps) {
@@ -45,6 +46,7 @@ export function ArtistSearchDialog(props: ArtistSearchDialogProps) {
 				as={Button}
 				variant="Tertiary"
 				class="h-max p-2"
+				disabled={props.disabled}
 			>
 				<PlusIcon class="size-4 text-slate-600" />
 			</Dialog.Trigger>
