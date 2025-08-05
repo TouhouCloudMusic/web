@@ -65,7 +65,7 @@ function PageHeader(props: { type: Props["type"] }) {
 				>
 					<ArrowLeftIcon class="size-6" />
 				</Button>
-				<h1 class="text-2xl font-light tracking-tighter">
+				<h1 class="text-2xl font-light">
 					<Show
 						when={props.type === "new"}
 						fallback={<Trans>Edit Artist</Trans>}
