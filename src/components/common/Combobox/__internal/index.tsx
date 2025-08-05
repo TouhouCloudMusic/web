@@ -1,7 +1,7 @@
 import { Combobox } from "@kobalte/core"
 import { createSignal, mergeProps, createEffect, onCleanup } from "solid-js"
 import type { ComponentProps, JSX } from "solid-js"
-import { CaretDownIcon } from "solid-radix-icons"
+import { CaretSortIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
 import { tw } from "~/utils"
@@ -78,7 +78,8 @@ export const INPUT_CLASS = tw(`
   outline-transparent -outline-offset-1
   aria-invalid:border-reimu-600
   transition-all duration-100
-  pl-2 h-8 flex-1
+  pl-2 flex-1 h-8
+
 `)
 
 export type InputProps = ComponentProps<typeof Combobox.Input>
@@ -98,7 +99,7 @@ export const HiddenSelect = Combobox.HiddenSelect
 // Trigger Component
 export const TRIGGER_CLASS = tw(`
 	absolute z-10 right-0
-	h-full px-2
+	h-full mx-2
 `)
 
 export type TriggerProps = ComponentProps<typeof Combobox.Trigger>
@@ -129,7 +130,7 @@ export function Icon(props: IconProps) {
 
 	return (
 		<Combobox.Icon {...finalProps}>
-			<CaretDownIcon class="text-secondary" />
+			<CaretSortIcon class="size-5 text-secondary" />
 		</Combobox.Icon>
 	)
 }

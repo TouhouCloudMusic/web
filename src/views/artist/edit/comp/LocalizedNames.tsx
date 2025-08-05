@@ -125,7 +125,6 @@ function LanguageCombobox(props: {
 			optionTextValue="name"
 			optionLabel="name"
 			onChange={onChange}
-			preventScroll
 			itemComponent={(props) => (
 				<Combobox.Item item={props.item}>
 					<Combobox.ItemLabel>{props.item.rawValue.name}</Combobox.ItemLabel>
