@@ -1,10 +1,11 @@
 import * as v from "valibot"
 
-import type { Expand, SafeOmit, Eq, If, Extend } from "~/types"
+import type { Expand, SafeOmit, Eq, If, Extend, RevExact } from "~/types"
 import type { ExternalSchema } from "~/types/valibot"
 
 import type { OpenApiSchema } from ".."
 import { NewCorrection } from "../correction"
+import type { paths } from "../openapi"
 import { DateWithPrecision } from "../shared"
 import {
 	EntityId,
@@ -74,3 +75,6 @@ export type NewArtistCorrectionOut = If<
 >
 
 export type SimpleArtist = OpenApiSchema["SimpleArtist"]
+export type ArtistCommonFilter = RevExact<
+	SafeOmit<paths["/artist"]["get"]["parameters"]["query"], "keyword">
+>
