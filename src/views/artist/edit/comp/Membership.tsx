@@ -9,6 +9,7 @@ import type { ArtistCommonFilter } from "~/api/artist"
 import type { Artist } from "~/api/artist"
 import type { Tenure } from "~/api/artist/schema"
 import { Button } from "~/components/button"
+import { Intersperse } from "~/components/common/Intersperse"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
@@ -20,27 +21,24 @@ import { FieldArrayFallback } from "./FieldArrayFallback"
 export function ArtistFormMembership() {
 	let context = useArtistForm()
 	let { formStore } = context
-	let [membershipStore, setMembershipStore] = createStore({
-		items: [] as Artist[],
-	})
+
+	let [membership, setMembership] = createStore<Artist[]>([])
 
 	let handleSelect = (artist: Artist) => {
-		const exist = membershipStore.items.some(
-			(membership) => membership.id === artist.id,
-		)
+		const exist = membership.some((membership) => membership.id === artist.id)
 		if (!exist) {
-			setMembershipStore(
+			setMembership(
 				produce((s) => {
-					s.items.push(artist)
+					s.push(artist)
 				}),
 			)
 		}
 	}
 
 	let handleRemove = (idx: number) => {
-		setMembershipStore(
+		setMembership(
 			produce((s) => {
-				s.items.splice(idx, 1)
+				s.splice(idx, 1)
 			}),
 		)
 	}
@@ -52,7 +50,7 @@ export function ArtistFormMembership() {
 	})
 
 	let exclusion = createMemo(() => {
-		let arr = membershipStore.items.map((x) => x.id)
+		let arr = membership.map((x) => x.id)
 		if (context.artistId) {
 			arr.push(context.artistId)
 		}
@@ -80,23 +78,19 @@ export function ArtistFormMembership() {
 				</div>
 			</div>
 			<ul class="flex h-full flex-col gap-2">
-				<For
-					each={membershipStore.items}
+				<Intersperse
+					each={membership}
+					separator={<Divider horizonal />}
 					fallback={<FieldArrayFallback />}
 				>
 					{(artist, idx) => (
-						<>
-							<MembershipListItem
-								index={idx()}
-								onRemove={() => handleRemove(idx())}
-								artist={artist}
-							/>
-							{idx() < membershipStore.items.length - 1 && (
-								<Divider horizonal />
-							)}
-						</>
+						<MembershipListItem
+							index={idx()}
+							onRemove={() => handleRemove(idx())}
+							artist={artist}
+						/>
 					)}
-				</For>
+				</Intersperse>
 			</ul>
 		</div>
 	)
