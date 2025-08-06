@@ -1,11 +1,11 @@
 import * as M from "@modular-forms/solid"
-import { For } from "solid-js"
+import { createMemo } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 
-import type { Artist } from "~/api/artist"
-import type { NewArtistCorrection } from "~/api/artist/schema"
+import type { Artist, ArtistCommonFilter } from "~/api/artist"
 import { Button } from "~/components/button"
+import { Intersperse } from "~/components/common/Intersperse"
 import { FormComp } from "~/components/common/form"
 import { Divider } from "~/components/divider"
 
@@ -13,73 +13,68 @@ import { useArtistForm } from "../context"
 import { ArtistSearchDialog } from "./ArtistSearchDialog"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-export function ArtistFormAliasesField() {
-	const { formStore } = useArtistForm()
-	let [aliasStore, setAliasStore] = createStore({
-		items: [] as Artist[],
-	})
+export const ArtistFormAliasesField = () => {
+	let [aliases, setAliases] = createStore<Artist[]>([])
 
 	let handleSelect = (artist: Artist) => {
-		const currentAliases = M.getValues(formStore, "data.aliases", {
-			shouldActive: false,
-		})
-
-		if (!currentAliases.includes(artist.id)) {
-			setAliasStore(
+		if (!aliases.some((x) => x.id == artist.id)) {
+			setAliases(
 				produce((s) => {
-					s.items.push(artist)
+					s.push(artist)
 				}),
 			)
-			M.insert(formStore, "data.aliases", {
-				value: artist.id,
-			})
 		}
 	}
 
 	let handleRemove = (idx: number) => {
-		setAliasStore(
+		setAliases(
 			produce((s) => {
-				s.items.splice(idx, 1)
+				s.splice(idx, 1)
 			}),
 		)
-		M.remove(formStore, "data.aliases", {
-			at: idx,
-		})
 	}
 
+	let { formStore } = useArtistForm()
+
+	let filter = createMemo<ArtistCommonFilter>(() => {
+		let exclusion = aliases.map((x) => x.id)
+		let ty = M.getValue(formStore, "data.artist_type", {
+			shouldActive: false,
+		})
+		let artist_type = ty ? [ty] : undefined
+		return {
+			artist_type,
+			exclusion,
+		}
+	})
+
 	return (
-		<M.FieldArray
-			of={formStore}
-			name="data.aliases"
-		>
-			{(fieldArray) => (
-				<div class="flex min-h-32 w-96 flex-col">
-					<div class="mb-4 flex place-content-between items-center gap-4">
-						<FormComp.Label class="m-0">Aliases</FormComp.Label>
-						<div class="flex gap-2">
-							<ArtistSearchDialog onSelect={handleSelect} />
-						</div>
-					</div>
-					<ul class="flex h-full flex-col gap-2">
-						<For
-							each={fieldArray.items}
-							fallback={<FieldArrayFallback />}
-						>
-							{(_, idx) => (
-								<>
-									<AliasListItem
-										index={idx()}
-										onRemove={() => handleRemove(idx())}
-										artist={aliasStore.items[idx()]!}
-									/>
-									{idx() < fieldArray.items.length - 1 && <Divider horizonal />}
-								</>
-							)}
-						</For>
-					</ul>
+		<div class="flex min-h-32 w-96 flex-col">
+			<div class="mb-4 flex place-content-between items-center gap-4">
+				<FormComp.Label class="m-0">Aliases</FormComp.Label>
+				<div class="flex gap-2">
+					<ArtistSearchDialog
+						onSelect={handleSelect}
+						filter={filter()}
+					/>
 				</div>
-			)}
-		</M.FieldArray>
+			</div>
+			<ul class="flex h-full flex-col gap-2">
+				<Intersperse
+					each={aliases}
+					separator={<Divider horizonal />}
+					fallback={<FieldArrayFallback />}
+				>
+					{(alias, idx) => (
+						<AliasListItem
+							index={idx()}
+							onRemove={() => handleRemove(idx())}
+							artist={alias}
+						/>
+					)}
+				</Intersperse>
+			</ul>
+		</div>
 	)
 }
 
@@ -89,8 +84,8 @@ type AliasListItemProps = {
 	artist: Artist
 }
 
-function AliasListItem(props: AliasListItemProps) {
-	const { formStore } = useArtistForm()
+const AliasListItem = (props: AliasListItemProps) => {
+	let { formStore } = useArtistForm()
 	return (
 		<li class="grid h-fit grid-cols-[1fr_auto]">
 			<M.Field
@@ -113,7 +108,6 @@ function AliasListItem(props: AliasListItemProps) {
 			<Button
 				variant="Tertiary"
 				size="Sm"
-				class=""
 				onClick={props.onRemove}
 			>
 				<Cross1Icon />

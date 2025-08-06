@@ -13,7 +13,15 @@
 		"restriction": "warn",
 		"nursery": "warn"
 	},
-	"settings": {},
+	"settings": {
+		"jsx-a11y": {
+			"attributes": {
+				"for": ["for"]
+			},
+			"polymorphicPropName": "as"
+		}
+	},
+
 	"rules": {
 		// False Positives
 		"arrow-body-style": "off",
@@ -112,9 +120,7 @@
 		],
 		"unicorn/switch-case-braces": "off",
 
-		"promise/prefer-await-to-then": "off",
-
-		"jsx-a11y/label-has-associated-control": "off"
+		"promise/prefer-await-to-then": "off"
 	},
 	"plugins": [
 		"import",
@@ -123,8 +129,7 @@
 		"oxc",
 		"promise",
 		"typescript",
-		"unicorn",
-		"vitest"
+		"unicorn"
 	],
 	"overrides": [
 		{
@@ -132,6 +137,11 @@
 			"rules": {
 				"import/no-default-export": "off"
 			}
+		},
+		{
+			"files": ["*.test.ts", "*.test.tsx"],
+			"plugins": ["vitest"],
+			"rules": {}
 		}
 	]
 }
