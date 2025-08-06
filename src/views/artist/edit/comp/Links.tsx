@@ -8,16 +8,14 @@ import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
+import { useArtistForm } from "../context"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-type LinksFieldArrayProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
-
-export function ArtistFormLinks(props: LinksFieldArrayProps) {
+export function ArtistFormLinks() {
+	const { formStore } = useArtistForm()
 	return (
 		<M.FieldArray
-			of={props.formStore}
+			of={formStore}
 			name="data.links"
 		>
 			{(fieldArray) => (
@@ -28,7 +26,7 @@ export function ArtistFormLinks(props: LinksFieldArrayProps) {
 							variant="Tertiary"
 							class="h-max p-2"
 							onClick={() => {
-								M.insert(props.formStore, "data.links", {
+								M.insert(formStore, "data.links", {
 									value: "", // Default value for a new link
 								})
 							}}
@@ -45,7 +43,7 @@ export function ArtistFormLinks(props: LinksFieldArrayProps) {
 								<>
 									<li class="flex gap-2">
 										<M.Field
-											of={props.formStore}
+											of={formStore}
 											name={`data.links.${idx()}`}
 										>
 											{(field, fieldProps) => (
@@ -66,7 +64,7 @@ export function ArtistFormLinks(props: LinksFieldArrayProps) {
 											size="Sm"
 											class="row-span-2 w-fit"
 											onClick={() => {
-												M.remove(props.formStore, "data.links", {
+												M.remove(formStore, "data.links", {
 													at: idx(),
 												})
 											}}

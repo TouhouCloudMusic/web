@@ -8,16 +8,14 @@ import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
+import { useArtistForm } from "../context"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-type TextAliasesFieldArrayProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
-
-export function ArtistFormTextAliases(props: TextAliasesFieldArrayProps) {
+export function ArtistFormTextAliases() {
+	const { formStore } = useArtistForm()
 	return (
 		<M.FieldArray
-			of={props.formStore}
+			of={formStore}
 			name="data.text_aliases"
 		>
 			{(fieldArray) => (
@@ -28,7 +26,7 @@ export function ArtistFormTextAliases(props: TextAliasesFieldArrayProps) {
 							variant="Tertiary"
 							class="h-max p-2"
 							onClick={() => {
-								M.insert(props.formStore, "data.text_aliases", {
+								M.insert(formStore, "data.text_aliases", {
 									value: "", // Default for new text alias
 								})
 							}}
@@ -45,7 +43,7 @@ export function ArtistFormTextAliases(props: TextAliasesFieldArrayProps) {
 								<>
 									<li class="flex gap-2">
 										<M.Field
-											of={props.formStore}
+											of={formStore}
 											name={`data.text_aliases.${idx()}`}
 										>
 											{(field, fieldProps) => (
@@ -65,7 +63,7 @@ export function ArtistFormTextAliases(props: TextAliasesFieldArrayProps) {
 											size="Sm"
 											class="row-span-2 w-fit"
 											onClick={() => {
-												M.remove(props.formStore, "data.text_aliases", {
+												M.remove(formStore, "data.text_aliases", {
 													at: idx(),
 												})
 											}}

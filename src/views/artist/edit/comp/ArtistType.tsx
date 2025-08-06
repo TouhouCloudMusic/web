@@ -5,18 +5,16 @@ import { For } from "solid-js"
 import type { ArtistType, NewArtistCorrection } from "~/api/artist/schema"
 import { FormComp } from "~/components/common/form"
 
-type ArtistFormArtistTypeFieldProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
+import { useArtistForm } from "../context"
 
-export function ArtistFormArtistTypeField(
-	props: ArtistFormArtistTypeFieldProps,
-) {
+export function ArtistFormArtistTypeField() {
+	const { formStore } = useArtistForm()
+
 	return (
 		<M.Field
 			name="data.artist_type"
 			type="string"
-			of={props.formStore}
+			of={formStore}
 		>
 			{(field, fieldProps) => (
 				<div class="flex flex-col">

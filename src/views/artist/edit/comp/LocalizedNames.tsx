@@ -12,28 +12,26 @@ import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
+import { useArtistForm } from "../context"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-type LocalizedNamesFieldArrayProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
-
-export function ArtistFormLocalizedNames(props: LocalizedNamesFieldArrayProps) {
+export function ArtistFormLocalizedNames() {
+	const { formStore } = useArtistForm()
 	let langs = useQuery(() => LanguagesQuery.findAll())
 
 	let insert = () =>
-		M.insert(props.formStore, "data.localized_names", {
+		M.insert(formStore, "data.localized_names", {
 			// @ts-expect-error
 			value: { language_id: undefined, name: "" },
 		})
 	let remove = (idx: number) =>
-		M.remove(props.formStore, "data.localized_names", {
+		M.remove(formStore, "data.localized_names", {
 			at: idx,
 		})
 
 	return (
 		<M.FieldArray
-			of={props.formStore}
+			of={formStore}
 			name="data.localized_names"
 		>
 			{(fieldArray) => (
@@ -56,7 +54,7 @@ export function ArtistFormLocalizedNames(props: LocalizedNamesFieldArrayProps) {
 							{(_, idx) => (
 								<li class="grid grid-cols-[1fr_auto] grid-rows-2 gap-2">
 									<M.Field
-										of={props.formStore}
+										of={formStore}
 										name={`data.localized_names.${idx()}.name`}
 									>
 										{(field, fieldProps) => (
@@ -73,7 +71,6 @@ export function ArtistFormLocalizedNames(props: LocalizedNamesFieldArrayProps) {
 									</M.Field>
 
 									<LanguageCombobox
-										formStore={props.formStore}
 										index={idx()}
 										langs={langs.data!}
 									/>
@@ -97,23 +94,17 @@ export function ArtistFormLocalizedNames(props: LocalizedNamesFieldArrayProps) {
 }
 
 // oxlint-disable-next-line max-lines-per-function
-function LanguageCombobox(props: {
-	index: number
-	langs: Language[]
-	formStore: M.FormStore<NewArtistCorrection>
-}) {
+function LanguageCombobox(props: { index: number; langs: Language[] }) {
+	const { formStore } = useArtistForm()
 	let onChange = (v: Language | null) => {
 		if (v) {
 			M.setValue(
-				props.formStore,
+				formStore,
 				`data.localized_names.${props.index}.language_id`,
 				v.id,
 			)
 		} else {
-			M.reset(
-				props.formStore,
-				`data.localized_names.${props.index}.language_id`,
-			)
+			M.reset(formStore, `data.localized_names.${props.index}.language_id`)
 		}
 	}
 

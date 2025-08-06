@@ -5,6 +5,7 @@ import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 import * as v from "valibot"
 
+import type { ArtistCommonFilter } from "~/api/artist"
 import type { Artist } from "~/api/artist"
 import type { NewArtistCorrection, Tenure } from "~/api/artist/schema"
 import { Button } from "~/components/button"
@@ -12,14 +13,12 @@ import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"
 
+import { useArtistForm } from "../context"
 import { ArtistSearchDialog } from "./ArtistSearchDialog"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-type MembershipProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
-
-export function ArtistFormMembership(props: MembershipProps) {
+export function ArtistFormMembership() {
+	const { formStore } = useArtistForm()
 	let [membershipStore, setMembershipStore] = createStore({
 		items: [] as Artist[],
 	})
@@ -45,10 +44,25 @@ export function ArtistFormMembership(props: MembershipProps) {
 		)
 	}
 
+	let type = createMemo(() => M.getValue(formStore, "data.artist_type"))
+
 	let isDisabled = createMemo(() => {
-		let type = M.getValue(props.formStore, "data.artist_type")
-		return !type || type == "Unknown"
+		return !type() || type() == "Unknown"
 	})
+
+	let exclusion = createMemo(() =>
+		membershipStore.items.map((x) => x.id).concat([]),
+	)
+
+	let filter = createMemo<ArtistCommonFilter>(() => {
+		let ty = type()
+		return {
+			// TODO: make this optional
+			artist_type: ty ? [ty] : [],
+			exclusion: exclusion(),
+		}
+	})
+
 	return (
 		<div class="flex min-h-32 w-96 flex-col">
 			<div class="mb-4 flex place-content-between items-center gap-4">
@@ -57,6 +71,7 @@ export function ArtistFormMembership(props: MembershipProps) {
 					<ArtistSearchDialog
 						onSelect={handleSelect}
 						disabled={isDisabled()}
+						filter={filter()}
 					/>
 				</div>
 			</div>
@@ -79,7 +94,6 @@ export function ArtistFormMembership(props: MembershipProps) {
 						return (
 							<>
 								<MembershipListItem
-									formStore={props.formStore}
 									index={idx()}
 									onRemove={() => handleRemove(idx())}
 									artist={artist}
@@ -118,17 +132,17 @@ const TENURE_STRING_SCHMEA = v.message(
 )
 
 type MembershipListItemProps = {
-	formStore: M.FormStore<NewArtistCorrection>
 	index: number
 	onRemove: () => void
 	artist: Artist
 }
 
 function MembershipListItem(props: MembershipListItemProps) {
+	const { formStore } = useArtistForm()
 	return (
 		<li class="grid grid-cols-[1fr_auto] gap-2">
 			<M.Field
-				of={props.formStore}
+				of={formStore}
 				name={`data.memberships.${props.index}.artist_id`}
 				type="number"
 			>
@@ -155,7 +169,7 @@ function MembershipListItem(props: MembershipListItemProps) {
 							return Number.parseInt(v, 10)
 						})
 						M.setValues(
-							props.formStore,
+							formStore,
 							`data.memberships.${props.index}.roles`,
 							result,
 						)
@@ -164,10 +178,7 @@ function MembershipListItem(props: MembershipListItemProps) {
 				{/* <InputField.Error message={} /> */}
 			</InputField.Root>
 
-			<TenureField
-				index={props.index}
-				formStore={props.formStore}
-			/>
+			<TenureField index={props.index} />
 
 			<Button
 				variant="Tertiary"
@@ -181,10 +192,8 @@ function MembershipListItem(props: MembershipListItemProps) {
 	)
 }
 
-function TenureField(props: {
-	index: number
-	formStore: M.FormStore<NewArtistCorrection>
-}) {
+function TenureField(props: { index: number }) {
+	const { formStore } = useArtistForm()
 	const [error, setError] =
 		createSignal<v.InferIssue<typeof TENURE_STRING_SCHMEA>[]>()
 
@@ -200,7 +209,7 @@ function TenureField(props: {
 
 					if (result.success) {
 						M.setValues(
-							props.formStore,
+							formStore,
 							`data.memberships.${props.index}.tenure`,
 							result.output,
 						)

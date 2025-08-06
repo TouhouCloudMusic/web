@@ -22,6 +22,7 @@ import { ArtistFormLocalizedNames } from "./comp/LocalizedNames.tsx"
 import { ArtistFormLocationFields } from "./comp/Locations.tsx"
 import { ArtistFormMembership } from "./comp/Membership.tsx"
 import { ArtistFormTextAliases } from "./comp/TextAliases.tsx"
+import { ArtistFormProvider } from "./context"
 import { useArtistFormInitialValues } from "./hook/useFormInitialValues.tsx"
 import { useArtistFormSubmission } from "./hook/useFormSubmission.tsx"
 
@@ -104,33 +105,41 @@ function Form(props: Props) {
 	})
 
 	return (
-		<Form
-			class="flex flex-col space-y-8 px-8 pt-8"
-			shouldActive={false}
-			onSubmit={handleSubmit}
+		<ArtistFormProvider
+			value={{
+				get artistId() {
+					if (props.type == "edit") {
+						return props.artist.id
+					}
+				},
+				formStore,
+			}}
 		>
-			<ArtistFormNameField formStore={formStore} />
+			<Form
+				class="flex flex-col space-y-8 px-8 pt-8"
+				shouldActive={false}
+				onSubmit={handleSubmit}
+			>
+				<ArtistFormNameField />
 
-			<ArtistFormArtistTypeField formStore={formStore} />
+				<ArtistFormArtistTypeField />
 
-			<ArtistFormLocalizedNames formStore={formStore} />
+				<ArtistFormLocalizedNames />
 
-			<ArtistFormAliasesField formStore={formStore} />
+				<ArtistFormAliasesField />
 
-			<ArtistFormTextAliases formStore={formStore} />
+				<ArtistFormTextAliases />
 
-			<ArtistFormDateFields formStore={formStore} />
+				<ArtistFormDateFields />
 
-			<ArtistFormLocationFields formStore={formStore} />
+				<ArtistFormLocationFields />
 
-			<ArtistFormMembership formStore={formStore} />
+				<ArtistFormMembership />
 
-			<ArtistFormLinks formStore={formStore} />
+				<ArtistFormLinks />
 
-			<ArtistFormActions
-				formStore={formStore}
-				mutation={mutation}
-			/>
-		</Form>
+				<ArtistFormActions mutation={mutation} />
+			</Form>
+		</ArtistFormProvider>
 	)
 }

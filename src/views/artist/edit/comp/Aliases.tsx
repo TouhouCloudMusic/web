@@ -9,20 +9,18 @@ import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
 import { Divider } from "~/components/divider"
 
+import { useArtistForm } from "../context"
 import { ArtistSearchDialog } from "./ArtistSearchDialog"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-type AliasesFieldArrayProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
-
-export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
+export function ArtistFormAliasesField() {
+	const { formStore } = useArtistForm()
 	let [aliasStore, setAliasStore] = createStore({
 		items: [] as Artist[],
 	})
 
 	let handleSelect = (artist: Artist) => {
-		const currentAliases = M.getValues(props.formStore, "data.aliases", {
+		const currentAliases = M.getValues(formStore, "data.aliases", {
 			shouldActive: false,
 		})
 
@@ -32,7 +30,7 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 					s.items.push(artist)
 				}),
 			)
-			M.insert(props.formStore, "data.aliases", {
+			M.insert(formStore, "data.aliases", {
 				value: artist.id,
 			})
 		}
@@ -44,14 +42,14 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 				s.items.splice(idx, 1)
 			}),
 		)
-		M.remove(props.formStore, "data.aliases", {
+		M.remove(formStore, "data.aliases", {
 			at: idx,
 		})
 	}
 
 	return (
 		<M.FieldArray
-			of={props.formStore}
+			of={formStore}
 			name="data.aliases"
 		>
 			{(fieldArray) => (
@@ -70,7 +68,6 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 							{(_, idx) => (
 								<>
 									<AliasListItem
-										formStore={props.formStore}
 										index={idx()}
 										onRemove={() => handleRemove(idx())}
 										artist={aliasStore.items[idx()]!}
@@ -87,17 +84,17 @@ export function ArtistFormAliasesField(props: AliasesFieldArrayProps) {
 }
 
 type AliasListItemProps = {
-	formStore: M.FormStore<NewArtistCorrection>
 	index: number
 	onRemove: () => void
 	artist: Artist
 }
 
 function AliasListItem(props: AliasListItemProps) {
+	const { formStore } = useArtistForm()
 	return (
 		<li class="grid h-fit grid-cols-[1fr_auto]">
 			<M.Field
-				of={props.formStore}
+				of={formStore}
 				name={`data.aliases.${props.index}`}
 			>
 				{(field, fieldProps) => (

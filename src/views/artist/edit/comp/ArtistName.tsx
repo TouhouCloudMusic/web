@@ -4,15 +4,15 @@ import * as M from "@modular-forms/solid"
 import type { NewArtistCorrection } from "~/api/artist/schema"
 import { InputField } from "~/components/common/form/Input"
 
-type ArtistFormNameFieldProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
+import { useArtistForm } from "../context"
 
-export function ArtistFormNameField(props: ArtistFormNameFieldProps) {
+export function ArtistFormNameField() {
+	const { formStore } = useArtistForm()
+
 	return (
 		<M.Field
 			name="data.name"
-			of={props.formStore}
+			of={formStore}
 		>
 			{(field, fieldProps) => (
 				<InputField.Root class="w-96">

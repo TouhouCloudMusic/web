@@ -4,8 +4,8 @@ import * as R from "radash"
 import { createSignal, For, createMemo, Suspense } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 
-import type { Artist } from "~/api/artist"
 import { ArtistQueryOption } from "~/api/artist"
+import type { Artist, ArtistCommonFilter } from "~/api/artist"
 import { Button } from "~/components/button"
 import { SearchDialog } from "~/components/composite/form/SearchDialog"
 import { Dialog } from "~/components/dialog"
@@ -13,6 +13,7 @@ import { Dialog } from "~/components/dialog"
 type ArtistSearchDialogProps = {
 	onSelect: (artist: Artist) => void
 	disabled?: boolean
+	filter?: ArtistCommonFilter
 }
 
 export function ArtistSearchDialog(props: ArtistSearchDialogProps) {
@@ -35,7 +36,7 @@ export function ArtistSearchDialog(props: ArtistSearchDialogProps) {
 	})
 
 	const artistsQuery = useQuery(() => ({
-		...ArtistQueryOption.findByKeyword(searchTerm()!),
+		...ArtistQueryOption.findByKeyword(searchTerm()!, props.filter),
 		keepPreviousData: true,
 		enabled: searchTerm() !== null,
 	}))

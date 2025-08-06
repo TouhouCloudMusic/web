@@ -4,11 +4,10 @@ import * as M from "@modular-forms/solid"
 import type { NewArtistCorrection } from "~/api/artist/schema"
 import { DateWithPrecision } from "~/components/composite/form/DateWithPrecision"
 
-type ArtistFormDateFieldsProps = {
-	formStore: M.FormStore<NewArtistCorrection>
-}
+import { useArtistForm } from "../context"
 
-export function ArtistFormDateFields(props: ArtistFormDateFieldsProps) {
+export function ArtistFormDateFields() {
+	const { formStore } = useArtistForm()
 	const { t } = useLingui()
 
 	return (
@@ -16,9 +15,9 @@ export function ArtistFormDateFields(props: ArtistFormDateFieldsProps) {
 			<DateWithPrecision
 				label={t`Start date`}
 				setValue={(v) => {
-					M.setValue(props.formStore, "data.start_date", v)
+					M.setValue(formStore, "data.start_date", v)
 				}}
-				error={M.getError(props.formStore, "data.start_date", {
+				error={M.getError(formStore, "data.start_date", {
 					shouldActive: false,
 				})}
 			/>
@@ -26,9 +25,9 @@ export function ArtistFormDateFields(props: ArtistFormDateFieldsProps) {
 			<DateWithPrecision
 				label={t`End date`}
 				setValue={(v) => {
-					M.setValue(props.formStore, "data.end_date", v)
+					M.setValue(formStore, "data.end_date", v)
 				}}
-				error={M.getError(props.formStore, "data.end_date", {
+				error={M.getError(formStore, "data.end_date", {
 					shouldActive: false,
 				})}
 			/>

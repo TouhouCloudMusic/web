@@ -7,19 +7,21 @@ import { Button } from "~/components/button"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 
+import { useArtistForm } from "../context"
+
 type ArtistFormFormActionsProps = {
-	formStore: M.FormStore<NewArtistCorrection>
 	mutation: ReturnType<typeof ArtistMutation.getInstance>
 }
 
 export function ArtistFormActions(props: ArtistFormFormActionsProps) {
+	const { formStore } = useArtistForm()
 	const { t } = useLingui()
 
 	return (
 		<>
 			<M.Field
 				name="description"
-				of={props.formStore}
+				of={formStore}
 			>
 				{(field, fieldProps) => (
 					<InputField.Root>
@@ -37,7 +39,7 @@ export function ArtistFormActions(props: ArtistFormFormActionsProps) {
 
 			<M.Field
 				name="type"
-				of={props.formStore}
+				of={formStore}
 			>
 				{(field, fieldProps) => (
 					<InputField.Root>
@@ -56,14 +58,14 @@ export function ArtistFormActions(props: ArtistFormFormActionsProps) {
 				<Button
 					variant="Primary"
 					type="submit"
-					disabled={props.mutation.isPending || props.formStore.submitting}
+					disabled={props.mutation.isPending || formStore.submitting}
 				>
-					{props.mutation.isPending || props.formStore.submitting ?
+					{props.mutation.isPending || formStore.submitting ?
 						t`Loading`
 					:	t`Submit`}
 				</Button>
 
-				<FormComp.ErrorMessage message={props.formStore.response.message} />
+				<FormComp.ErrorMessage message={formStore.response.message} />
 				<FormComp.ErrorMessage
 					class="text-lg"
 					message={
