@@ -1,7 +1,7 @@
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useQuery } from "@tanstack/solid-query"
-import * as R from "radash"
-import { createSignal, For, createMemo, Suspense } from "solid-js"
+import { debounce, id } from "@thc/toolkit"
+import { createSignal, For, createMemo, Suspense, type JSX } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 
 import { ArtistQueryOption } from "~/api/artist"
@@ -16,31 +16,29 @@ type ArtistSearchDialogProps = {
 	filter?: ArtistCommonFilter
 }
 
-export function ArtistSearchDialog(props: ArtistSearchDialogProps) {
+export function ArtistSearchDialog(
+	props: ArtistSearchDialogProps,
+): JSX.Element {
 	const { t } = useLingui()
 
 	const [searchKeyword, setSearchKeyword] = createSignal("")
 
-	const onInput = R.debounce(
-		{
-			delay: 300,
-		},
-		(e: Event) => {
-			setSearchKeyword((e.target as HTMLInputElement).value)
-		},
-	)
+	// oxlint-disable-next-line no-magic-numbers
+	const onInput = debounce(300, (e: Event) => {
+		setSearchKeyword((e.target as HTMLInputElement).value)
+	})
 
 	const searchTerm = createMemo(() => {
 		const keyword = searchKeyword().trim()
-		return keyword.length > 1 ? keyword : null
+		return keyword.length > 1 ? keyword : undefined
 	})
 
 	const artistsQuery = useQuery(() => ({
 		...ArtistQueryOption.findByKeyword(searchTerm()!, {
 			artist_type: props.filter?.artist_type,
 		}),
-		keepPreviousData: true,
-		enabled: searchTerm() !== null,
+		placeholderData: id,
+		enabled: Boolean(searchTerm()),
 	}))
 
 	return (

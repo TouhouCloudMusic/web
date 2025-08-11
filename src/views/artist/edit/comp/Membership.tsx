@@ -1,14 +1,21 @@
+// @refresh-reload
 // oxlint-disable max-lines-per-function
+import { useLingui } from "@lingui-solid/solid/macro"
 import * as M from "@modular-forms/solid"
-import { createEffect, createMemo, createSignal, For, onMount } from "solid-js"
+import { useQuery } from "@tanstack/solid-query"
+import { debounce, id } from "@thc/toolkit"
+import { createMemo, createSignal, For, Suspense } from "solid-js"
+import type { JSX } from "solid-js"
 import { createStore, produce } from "solid-js/store"
-import { Cross1Icon } from "solid-radix-icons"
+import { CheckIcon, Cross1Icon } from "solid-radix-icons"
 import * as v from "valibot"
 
 import type { ArtistCommonFilter } from "~/api/artist"
 import type { Artist } from "~/api/artist"
 import type { Tenure } from "~/api/artist/schema"
+import { CreditRoleQueryOption, type CreditRoleSummary } from "~/api/credit"
 import { Button } from "~/components/button"
+import { Combobox } from "~/components/common/Combobox"
 import { Intersperse } from "~/components/common/Intersperse"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
@@ -18,7 +25,7 @@ import { useArtistForm } from "../context"
 import { ArtistSearchDialog } from "./ArtistSearchDialog"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
-export function ArtistFormMembership() {
+export function ArtistFormMembership(): JSX.Element {
 	let context = useArtistForm()
 	let { formStore } = context
 
@@ -46,7 +53,7 @@ export function ArtistFormMembership() {
 	let type = createMemo(() => M.getValue(formStore, "data.artist_type"))
 
 	let isDisabled = createMemo(() => {
-		return !type() || type() == "Unknown"
+		return !type() || type() === "Unknown"
 	})
 
 	let exclusion = createMemo(() => {
@@ -145,24 +152,7 @@ function MembershipListItem(props: MembershipListItemProps) {
 				)}
 			</M.Field>
 
-			<InputField.Root class="row-start-2">
-				<InputField.Input
-					id={`memberships.${props.index}.roles`}
-					placeholder="Role IDs, e.g. `1,2,3`"
-					onChange={(e) => {
-						const value = e.target.value
-						const result = value.split(",").map((v) => {
-							return Number.parseInt(v, 10)
-						})
-						M.setValues(
-							formStore,
-							`data.memberships.${props.index}.roles`,
-							result,
-						)
-					}}
-				/>
-				{/* <InputField.Error message={} /> */}
-			</InputField.Root>
+			<MembershipRoleField index={props.index} />
 
 			<TenureField index={props.index} />
 
@@ -207,5 +197,158 @@ function TenureField(props: { index: number }) {
 				{(issue) => <InputField.Error message={issue.message} />}
 			</For>
 		</InputField.Root>
+	)
+}
+
+export function MembershipRoleField(props: { index: number }): JSX.Element {
+	const SEARCH_DEBOUNCE_MS = 300
+	const { t } = useLingui()
+	const { formStore } = useArtistForm()
+
+	let [searchTerm, setSearchTerm] = createSignal("")
+
+	let searchTermTrimmed = createMemo(() => {
+		const kw = searchTerm().trim()
+		return kw.length > 1 ? kw : undefined
+	})
+
+	let setSearchTermDebounced = debounce(SEARCH_DEBOUNCE_MS, (val: string) =>
+		setSearchTerm(val),
+	)
+
+	let [roles, setRoles] = createStore<CreditRoleSummary[]>()
+
+	let rolesQuery = useQuery(() => ({
+		...CreditRoleQueryOption.findByKeyword(searchTermTrimmed()!),
+		placeholderData: id,
+		enabled: Boolean(searchTermTrimmed()?.length),
+	}))
+
+	let options = createMemo(() => {
+		let data = rolesQuery.isSuccess ? rolesQuery.data : []
+
+		return data.filter((role) => !roles.some((x) => x.id === role.id))
+	})
+
+	let path = () => `data.memberships.${props.index}.roles` as const
+
+	let addRole = (role: CreditRoleSummary) => {
+		setRoles(
+			produce((roles) => {
+				roles.push(role)
+			}),
+		)
+		M.insert(formStore, path(), {
+			value: role.id,
+		})
+	}
+
+	let removeRole = (index: number) => {
+		setRoles(
+			produce((s) => {
+				s.splice(index, 1)
+			}),
+		)
+		M.remove(formStore, path(), {
+			at: index,
+		})
+	}
+
+	return (
+		<div class="row-start-2">
+			<Suspense>
+				<Combobox.Root
+					options={options()}
+					optionValue="id"
+					optionTextValue="name"
+					open={Boolean(
+						rolesQuery.isSuccess &&
+							rolesQuery.data.length &&
+							rolesQuery.isEnabled,
+					)}
+					onChange={(role) => {
+						if (role) {
+							addRole(role)
+						}
+					}}
+					itemComponent={(props) => (
+						<Combobox.Item item={props.item}>
+							<Combobox.ItemLabel>
+								{props.item.rawValue.name}
+							</Combobox.ItemLabel>
+							<Combobox.ItemIndicator>
+								<CheckIcon />
+							</Combobox.ItemIndicator>
+						</Combobox.Item>
+					)}
+				>
+					<Combobox.Control>
+						<Combobox.MultiInputContainer class="flex flex-row flex-wrap gap-1 p-1">
+							<For each={roles}>
+								{(role, index) => (
+									<RoleBadge
+										role={role}
+										index={index()}
+										path={path()}
+										removeRole={() => removeRole(index())}
+									/>
+								)}
+							</For>
+							<Combobox.MultiInput
+								placeholder={t`Search roles...`}
+								value={searchTerm()}
+								aria-label={t`Search credit role`}
+								class="w-fit pl-1"
+								onInput={(e) => setSearchTermDebounced(e.currentTarget.value)}
+							/>
+						</Combobox.MultiInputContainer>
+					</Combobox.Control>
+
+					<Combobox.Portal>
+						<Combobox.Content>
+							<Combobox.Listbox />
+						</Combobox.Content>
+					</Combobox.Portal>
+				</Combobox.Root>
+			</Suspense>
+		</div>
+	)
+}
+
+function RoleBadge(props: {
+	path: `data.memberships.${number}.roles`
+	index: number
+	role: CreditRoleSummary
+	removeRole: () => void
+}) {
+	const { t } = useLingui()
+
+	let { formStore } = useArtistForm()
+	return (
+		<M.Field
+			of={formStore}
+			name={`${props.path}.${props.index}`}
+		>
+			{(field, fieldProps) => (
+				<li class="flex items-center space-x-1 rounded border border-slate-300 px-2 py-1 hover:border-reimu-600">
+					<input
+						{...fieldProps}
+						type="number"
+						hidden
+						value={field.value}
+					/>
+					<span>{props.role.name}</span>
+					<button
+						type="button"
+						class="text-gray-600"
+						aria-label={t`Remove role`}
+						title={t`Remove role`}
+						onClick={() => props.removeRole()}
+					>
+						<Cross1Icon class="size-4" />
+					</button>
+				</li>
+			)}
+		</M.Field>
 	)
 }

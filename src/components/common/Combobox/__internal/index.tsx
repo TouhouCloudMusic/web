@@ -1,6 +1,6 @@
 import { Combobox } from "@kobalte/core"
 import { createSignal, mergeProps, createEffect, onCleanup } from "solid-js"
-import type { ComponentProps, JSX } from "solid-js"
+import type { ComponentProps, JSX, ValidComponent } from "solid-js"
 import { CaretSortIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -53,12 +53,12 @@ export const CONTROL_CLASS = tw(`
   grid grid-cols-1 relative
 `)
 
-export type ControlProps = ComponentProps<typeof Combobox.Control>
+export type ControlProps = ComponentProps<typeof Combobox.Control<"div">>
 
-export function Control(props: ControlProps) {
+export function Control(props: ControlProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
-			return twMerge(CONTROL_CLASS, props["class"] as string)
+			return twMerge(CONTROL_CLASS, props.class)
 		},
 	})
 
@@ -66,10 +66,11 @@ export function Control(props: ControlProps) {
 }
 
 // TODO: Replace it with common input
-export const INPUT_CLASS = tw(`
-  text-slate-900 focus:text-primary
-  bg-primary
-  border border-slate-300
+
+const INPUT_BASE_CLASS = tw(`
+	text-slate-900 focus:text-primary,
+	bg-primary
+	border border-slate-300
   disabled:bg-slate-50
   rounded-sm
   outline-[1.5px]
@@ -78,16 +79,43 @@ export const INPUT_CLASS = tw(`
   outline-transparent -outline-offset-1
   aria-invalid:border-reimu-600
   transition-all duration-100
-  pl-2 flex-1 h-8
-
 `)
 
-export type InputProps = ComponentProps<typeof Combobox.Input>
+export const INPUT_CLASS = INPUT_BASE_CLASS.concat(
+	// @tw
+	" px-2 h-8 ",
+)
 
-export function Input(props: InputProps) {
+export type InputProps<T extends ValidComponent = "input"> = ComponentProps<
+	typeof Combobox.Input<T>
+>
+
+export function Input(props: InputProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
-			return twMerge(INPUT_CLASS, props["class"] as string)
+			return twMerge(INPUT_CLASS, props.class)
+		},
+	})
+
+	return <Combobox.Input {...finalProps} />
+}
+
+export function MultiInputContainer(props: ComponentProps<"ul">): JSX.Element {
+	const finalProps = mergeProps(props, {
+		get class() {
+			return twMerge(INPUT_BASE_CLASS, "min-h-fit h-8", props.class)
+		},
+	})
+
+	return <ul {...finalProps}></ul>
+}
+
+const RESET_INPUT_CLASS = "focus:outline-none"
+
+export function MultiInput(props: InputProps): JSX.Element {
+	const finalProps = mergeProps(props, {
+		get class() {
+			return twMerge(RESET_INPUT_CLASS, props.class)
 		},
 	})
 

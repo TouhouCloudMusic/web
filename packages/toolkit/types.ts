@@ -1,1 +1,1 @@
-export type VoidFn = () => void
+export type VoidFn<Args extends unknown[] = []> = (...args: Args) => void

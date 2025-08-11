@@ -1,16 +1,26 @@
 import type { VoidFn } from "./types"
 
-export type DebouncedFn = {
-	(): void
+export type DebouncedFn<Args extends unknown[] = never[]> = {
+	(...args: Args): void
 	cancel(): void
 }
-export function debounce(timeout: number): (fn: VoidFn) => DebouncedFn
-export function debounce(fn: VoidFn): (timeout: number) => DebouncedFn
-export function debounce(fn: VoidFn, timeout: number): DebouncedFn
-export function debounce(timeout: number, fn: VoidFn): DebouncedFn
 export function debounce(
-	arg1: number | VoidFn,
-	arg2?: number | VoidFn,
+	timeout: number,
+): <T extends unknown[]>(fn: VoidFn<T>) => DebouncedFn<T>
+export function debounce<T extends unknown[]>(
+	fn: VoidFn<T>,
+): (timeout: number) => DebouncedFn<T>
+export function debounce<T extends unknown[]>(
+	fn: VoidFn<T>,
+	timeout: number,
+): DebouncedFn<T>
+export function debounce<T extends unknown[]>(
+	timeout: number,
+	fn: VoidFn<T>,
+): DebouncedFn<T>
+export function debounce<T extends unknown[]>(
+	arg1: number | VoidFn<T>,
+	arg2?: number | VoidFn<T>,
 	// oxlint-disable-next-line no-explicit-any
 ): any {
 	// oxlint-disable-next-line no-undef
@@ -18,7 +28,7 @@ export function debounce(
 
 	if (argsLength === 2) {
 		if (typeof arg1 === "number") {
-			return createDebounced(arg2 as VoidFn, arg1)
+			return createDebounced(arg2 as VoidFn<T>, arg1)
 		} else if (typeof arg1 === "function") {
 			return createDebounced(arg1, arg2 as number)
 		}
@@ -31,19 +41,25 @@ export function debounce(
 	}
 }
 
-function createDebounced(fn: VoidFn, timeout: number): DebouncedFn {
-	let timer: ReturnType<typeof setTimeout> | null = null
+function createDebounced<T extends unknown[]>(
+	fn: VoidFn<T>,
+	timeout: number,
+): DebouncedFn<T> {
+	let timer: ReturnType<typeof setTimeout> | undefined = undefined
 	return Object.assign(
-		() => {
+		(...args: T) => {
 			if (timer) {
 				clearTimeout(timer)
 			}
-			timer = setTimeout(fn, timeout)
+			timer = setTimeout(() => {
+				fn(...args)
+			}, timeout)
 		},
 		{
 			cancel() {
 				if (timer) {
 					clearTimeout(timer)
+					timer = undefined
 				}
 			},
 		},
