@@ -10,10 +10,10 @@ import { createStore, produce } from "solid-js/store"
 import { CheckIcon, Cross1Icon } from "solid-radix-icons"
 import * as v from "valibot"
 
-import type { ArtistCommonFilter } from "~/api/artist"
-import type { Artist } from "~/api/artist"
+import type { Artist, ArtistCommonFilter } from "~/api/artist"
 import type { Tenure } from "~/api/artist/schema"
-import { CreditRoleQueryOption, type CreditRoleSummary } from "~/api/credit"
+import { CreditRoleQueryOption } from "~/api/credit"
+import type { CreditRoleSummary } from "~/api/credit"
 import { Button } from "~/components/button"
 import { Combobox } from "~/components/common/Combobox"
 import { Intersperse } from "~/components/common/Intersperse"
@@ -29,25 +29,31 @@ export function ArtistFormMembership(): JSX.Element {
 	let context = useArtistForm()
 	let { formStore } = context
 
-	let [membership, setMembership] = createStore<Artist[]>([])
+	let [membershipStore, setMembershipStore] = createStore([] as Artist[])
 
-	let handleSelect = (artist: Artist) => {
-		const exist = membership.some((membership) => membership.id === artist.id)
-		if (!exist) {
-			setMembership(
+	let membership = {
+		get inner() {
+			return membershipStore
+		},
+		push: (artist: Artist): void => {
+			const exist = membershipStore.some(
+				(membership) => membership.id === artist.id,
+			)
+			if (!exist) {
+				setMembershipStore(
+					produce((s) => {
+						s.push(artist)
+					}),
+				)
+			}
+		},
+		remove: (idx: number): void => {
+			setMembershipStore(
 				produce((s) => {
-					s.push(artist)
+					s.splice(idx, 1)
 				}),
 			)
-		}
-	}
-
-	let handleRemove = (idx: number) => {
-		setMembership(
-			produce((s) => {
-				s.splice(idx, 1)
-			}),
-		)
+		},
 	}
 
 	let type = createMemo(() => M.getValue(formStore, "data.artist_type"))
@@ -57,7 +63,7 @@ export function ArtistFormMembership(): JSX.Element {
 	})
 
 	let exclusion = createMemo(() => {
-		let arr = membership.map((x) => x.id)
+		let arr = membershipStore.map((x) => x.id)
 		if (context.artistId) {
 			arr.push(context.artistId)
 		}
@@ -78,7 +84,7 @@ export function ArtistFormMembership(): JSX.Element {
 				<FormComp.Label class="m-0">Membership</FormComp.Label>
 				<div class="flex gap-2">
 					<ArtistSearchDialog
-						onSelect={handleSelect}
+						onSelect={membership.push}
 						disabled={isDisabled()}
 						filter={filter()}
 					/>
@@ -86,14 +92,14 @@ export function ArtistFormMembership(): JSX.Element {
 			</div>
 			<ul class="flex h-full flex-col gap-2">
 				<Intersperse
-					each={membership}
+					each={membership.inner}
 					separator={<Divider horizonal />}
 					fallback={<FieldArrayFallback />}
 				>
 					{(artist, idx) => (
 						<MembershipListItem
 							index={idx()}
-							onRemove={() => handleRemove(idx())}
+							onRemove={() => membership.remove(idx())}
 							artist={artist}
 						/>
 					)}
@@ -216,7 +222,7 @@ export function MembershipRoleField(props: { index: number }): JSX.Element {
 		setSearchTerm(val),
 	)
 
-	let [roles, setRoles] = createStore<CreditRoleSummary[]>()
+	let [roles, setRoles] = createStore<CreditRoleSummary[]>([])
 
 	let rolesQuery = useQuery(() => ({
 		...CreditRoleQueryOption.findByKeyword(searchTermTrimmed()!),
