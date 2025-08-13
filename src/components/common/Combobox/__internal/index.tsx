@@ -10,7 +10,7 @@ import {
 	ComboboxScrollContext,
 	createComboboxScrollContext,
 	useComboboxScroll,
-} from "./viewmodel"
+} from "./scroll"
 
 function ComboboxScrollProvider(props: { children: JSX.Element }) {
 	let contextValue = createComboboxScrollContext()
@@ -23,7 +23,7 @@ function ComboboxScrollProvider(props: { children: JSX.Element }) {
 
 export function Root<Opt, OptGroup>(
 	props: ComponentProps<typeof Combobox.Root<Opt, OptGroup, "div">>,
-) {
+): JSX.Element {
 	return (
 		<ComboboxScrollProvider>
 			<Combobox.Root {...props} />
@@ -38,7 +38,7 @@ export const LABEL_CLASS = tw(`
 
 export type LabelProps = ComponentProps<typeof Combobox.Label>
 
-export function Label(props: LabelProps) {
+export function Label(props: LabelProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(LABEL_CLASS, props["class"] as string)
@@ -132,7 +132,7 @@ export const TRIGGER_CLASS = tw(`
 
 export type TriggerProps = ComponentProps<typeof Combobox.Trigger>
 
-export function Trigger(props: TriggerProps) {
+export function Trigger(props: TriggerProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(TRIGGER_CLASS, props["class"] as string)
@@ -149,7 +149,7 @@ export const ICON_CLASS = tw(`
 
 export type IconProps = ComponentProps<typeof Combobox.Icon>
 
-export function Icon(props: IconProps) {
+export function Icon(props: IconProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(ICON_CLASS, props["class"] as string)
@@ -170,7 +170,7 @@ export const DESCRIPTION_CLASS = tw(`
 
 export type DescriptionProps = ComponentProps<typeof Combobox.Description>
 
-export function Description(props: DescriptionProps) {
+export function Description(props: DescriptionProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(DESCRIPTION_CLASS, props["class"] as string)
@@ -187,7 +187,7 @@ export const ERROR_MESSAGE_CLASS = tw(`
 
 export type ErrorMessageProps = ComponentProps<typeof Combobox.ErrorMessage>
 
-export function ErrorMessage(props: ErrorMessageProps) {
+export function ErrorMessage(props: ErrorMessageProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(ERROR_MESSAGE_CLASS, props["class"] as string)
@@ -204,7 +204,7 @@ export const PORTAL_CLASS = tw(`
 
 export type PortalProps = ComponentProps<typeof Combobox.Portal>
 
-export function Portal(props: PortalProps) {
+export function Portal(props: PortalProps): JSX.Element {
 	return <Combobox.Portal {...props} />
 }
 
@@ -221,7 +221,7 @@ export const CONTENT_CLASS = tw(`
 
 export type ContentProps = ComponentProps<typeof Combobox.Content>
 
-export function Content(props: ContentProps) {
+export function Content(props: ContentProps): JSX.Element {
 	const scrollContext = useComboboxScroll()
 
 	const finalProps = mergeProps(props, {
@@ -246,7 +246,7 @@ export const ARROW_CLASS = tw(`
 
 export type ArrowProps = ComponentProps<typeof Combobox.Arrow>
 
-export function Arrow(props: ArrowProps) {
+export function Arrow(props: ArrowProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(ARROW_CLASS, props["class"] as string)
@@ -263,7 +263,7 @@ export const LISTBOX_CLASS = tw(`
 
 export type ListboxProps = ComponentProps<typeof Combobox.Listbox<"ul">>
 
-export function Listbox(props: ListboxProps) {
+export function Listbox(props: ListboxProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(LISTBOX_CLASS, props.class)
@@ -286,9 +286,9 @@ export const ITEM_CLASS = tw(`
 
 export type ItemProps = ComponentProps<typeof Combobox.Item<"li">>
 
-export function Item(props: ItemProps) {
+export function Item(props: ItemProps): JSX.Element {
 	const scrollContext = useComboboxScroll()
-	// oxlint-disable-next-line init-declarations
+
 	let [itemRef, setItemRef] = createSignal<HTMLElement>()
 
 	const finalProps = mergeProps(props, {
@@ -297,6 +297,7 @@ export function Item(props: ItemProps) {
 		},
 		ref(el: HTMLLIElement) {
 			setItemRef(el)
+
 			if (typeof props.ref === "function") {
 				props.ref(el)
 			}
@@ -311,7 +312,7 @@ export function Item(props: ItemProps) {
 			if (Object.hasOwn(ref.dataset, "highlighted")) {
 				scrollContext.setHighlightedItem(ref)
 			} else if (scrollContext.highlightedItem() === ref) {
-				scrollContext.setHighlightedItem(null)
+				scrollContext.setHighlightedItem()
 			}
 		})
 
@@ -324,7 +325,7 @@ export function Item(props: ItemProps) {
 			observer.disconnect()
 
 			if (scrollContext.highlightedItem() === ref) {
-				scrollContext.setHighlightedItem(null)
+				scrollContext.setHighlightedItem()
 			}
 		})
 	})
@@ -338,7 +339,7 @@ export const ITEM_LABEL_CLASS = tw(`
 
 export type ItemLabelProps = ComponentProps<typeof Combobox.ItemLabel<"div">>
 
-export function ItemLabel(props: ItemLabelProps) {
+export function ItemLabel(props: ItemLabelProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(ITEM_LABEL_CLASS, props.class)
@@ -356,7 +357,7 @@ export type ItemIndicatorProps = ComponentProps<
 	typeof Combobox.ItemIndicator<"div">
 >
 
-export function ItemIndicator(props: ItemIndicatorProps) {
+export function ItemIndicator(props: ItemIndicatorProps): JSX.Element {
 	const finalProps = mergeProps(props, {
 		get class() {
 			return twMerge(ITEM_LABEL_CLASS, props.class)

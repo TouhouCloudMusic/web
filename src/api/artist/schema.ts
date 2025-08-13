@@ -1,6 +1,6 @@
 import * as v from "valibot"
 
-import type { Expand, SafeOmit, Eq, If, Extend, RevExact } from "~/types"
+import type { Expand, SafeOmit, Eq, If, Extend } from "~/types"
 import type { ExternalSchema } from "~/types/valibot"
 
 import type { OpenApiSchema } from ".."
@@ -31,6 +31,7 @@ export type ArtistType = If<
 	o_ArtistType,
 	never
 >
+
 export const Tenure = v.object({
 	join_year: v.nullish(Year),
 	leave_year: v.nullish(Year),
@@ -75,6 +76,7 @@ export type NewArtistCorrectionOut = If<
 >
 
 export type SimpleArtist = OpenApiSchema["SimpleArtist"]
-export type ArtistCommonFilter = RevExact<
-	SafeOmit<paths["/artist"]["get"]["parameters"]["query"], "keyword">
+export type ArtistCommonFilter = SafeOmit<
+	paths["/artist"]["get"]["parameters"]["query"],
+	"keyword"
 >

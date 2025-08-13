@@ -9,9 +9,17 @@ import {
 	useContext,
 } from "solid-js"
 
+type ComboboxScrollContextValue = {
+	scrollContainer: Accessor<HTMLElement | undefined>
+	setScrollContainer: Setter<HTMLElement | undefined>
+	highlightedItem: Accessor<HTMLElement | undefined>
+	setHighlightedItem: Setter<HTMLElement | undefined>
+	scrollToItem: (item: HTMLElement) => void
+}
+
 export const ComboboxScrollContext = createContext<ComboboxScrollContextValue>()
 
-export function useComboboxScroll() {
+export function useComboboxScroll(): ComboboxScrollContextValue {
 	const context = useContext(ComboboxScrollContext)
 	if (!context) {
 		throw new Error(
@@ -21,24 +29,14 @@ export function useComboboxScroll() {
 	return context
 }
 
-type ComboboxScrollContextValue = {
-	scrollContainer: Accessor<HTMLElement | null>
-	setScrollContainer: Setter<HTMLElement | null>
-	highlightedItem: Accessor<HTMLElement | null>
-	setHighlightedItem: Setter<HTMLElement | null>
-	scrollToItem: (item: HTMLElement) => void
-}
-
 const isTargetKey = (e: KeyboardEvent) => {
 	return e.code === "ArrowUp" || e.code === "ArrowDown"
 }
 
 const SCROLL_DELAY = 150
 export function createComboboxScrollContext(): ComboboxScrollContextValue {
-	const [scrollContainer, setScrollContainer] =
-		createSignal<HTMLElement | null>(null)
-	const [highlightedItem, setHighlightedItem] =
-		createSignal<HTMLElement | null>(null)
+	const [scrollContainer, setScrollContainer] = createSignal<HTMLElement>()
+	const [highlightedItem, setHighlightedItem] = createSignal<HTMLElement>()
 	const [scrollBehavior, setScrollBehavior] =
 		createSignal<ScrollBehavior>("smooth")
 

@@ -3,28 +3,28 @@ import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import * as M from "@modular-forms/solid"
 import { createForm } from "@modular-forms/solid"
 import { useBlocker } from "@tanstack/solid-router"
+import type { JSX } from "solid-js"
 import { Show, Suspense } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
 
 import type { Artist } from "~/api/artist"
-import type { NewArtistCorrection } from "~/api/artist/schema"
-import { NewArtistCorrection as NewArtistCorrectionSchema } from "~/api/artist/schema"
+import { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/button"
 import { PageLayout } from "~/layout/PageLayout"
 
-import { ArtistFormAliasesField } from "./comp/Aliases.tsx"
-import { ArtistFormNameField } from "./comp/ArtistName.tsx"
-import { ArtistFormArtistTypeField } from "./comp/ArtistType.tsx"
-import { ArtistFormDateFields } from "./comp/Date.tsx"
-import { ArtistFormActions } from "./comp/FormActions.tsx"
+import { ArtistFormAliasesField } from "./comp/Aliases"
+import { ArtistFormNameField } from "./comp/ArtistName"
+import { ArtistFormArtistTypeField } from "./comp/ArtistType"
+import { ArtistFormDateFields } from "./comp/Date"
+import { ArtistFormActions } from "./comp/FormActions"
 import { ArtistFormLinks } from "./comp/Links.tsx"
-import { ArtistFormLocalizedNames } from "./comp/LocalizedNames.tsx"
-import { ArtistFormLocationFields } from "./comp/Locations.tsx"
-import { ArtistFormMembership } from "./comp/Membership.tsx"
-import { ArtistFormTextAliases } from "./comp/TextAliases.tsx"
+import { ArtistFormLocalizedNames } from "./comp/LocalizedNames"
+import { ArtistFormLocationFields } from "./comp/Locations"
+import { ArtistFormMembership } from "./comp/Membership"
+import { ArtistFormTextAliases } from "./comp/TextAliases"
 import { ArtistFormProvider } from "./context"
-import { useArtistFormInitialValues } from "./hook/useFormInitialValues.tsx"
-import { useArtistFormSubmission } from "./hook/useFormSubmission.tsx"
+import { useArtistFormInitialValues } from "./hook/useFormInitialValues"
+import { useArtistFormSubmission } from "./hook/useFormSubmission"
 
 type Props =
 	| {
@@ -35,9 +35,9 @@ type Props =
 			artist: Artist
 	  }
 
-export function EditArtistPage(props: Props) {
+export function EditArtistPage(props: Props): JSX.Element {
 	return (
-		<PageLayout class="grid grid-rows-[1fr_auto_1fr]">
+		<PageLayout class="grid grid-rows-[auto_1fr_auto]">
 			<PageHeader type={props.type} />
 			<Suspense
 				fallback={
@@ -85,7 +85,7 @@ function Form(props: Props) {
 	const { handleSubmit, mutation } = useArtistFormSubmission(props)
 
 	const [formStore, { Form }] = createForm<NewArtistCorrection>({
-		validate: M.valiForm(NewArtistCorrectionSchema),
+		validate: M.valiForm(NewArtistCorrection),
 		initialValues,
 	})
 
@@ -116,7 +116,7 @@ function Form(props: Props) {
 			}}
 		>
 			<Form
-				class="flex flex-col space-y-8 px-8 pt-8"
+				class="flex grow flex-col space-y-8 px-8 pt-8"
 				shouldActive={false}
 				onSubmit={handleSubmit}
 			>
