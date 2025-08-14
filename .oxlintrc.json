@@ -121,6 +121,7 @@
 		"typescript/ban-ts-comment": "off",
 		"typescript/consistent-type-definitions": "off",
 		"typescript/explicit-function-return-type": "off",
+		"typescript/explicit-module-boundary-types": "off",
 		"typescript/no-non-null-assertion": "off",
 		"typescript/prefer-enum-initializers": "off",
 
@@ -129,6 +130,7 @@
 			"warn",
 			{
 				"cases": {
+					"camelCase": true,
 					"snakeCase": true,
 					"pascalCase": true
 				}
@@ -147,7 +149,10 @@
 		{
 			"files": ["*.test.ts", "*.test.tsx"],
 			"plugins": ["vitest"],
-			"rules": {}
+			"rules": {
+				"max-lines-per-function": "off",
+				"vitest/prefer-to-be-truthy": "off"
+			}
 		}
 	]
 }

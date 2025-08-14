@@ -1,6 +1,4 @@
 /* eslint-disable solid/reactivity */
-import type * as M from "@modular-forms/solid"
-
 import type { Artist } from "~/api/artist"
 import type { NewArtistCorrection } from "~/api/artist/schema"
 
@@ -13,9 +11,7 @@ type Props =
 			artist: Artist
 	  }
 
-export function useArtistFormInitialValues(
-	props: Props,
-): M.PartialValues<NewArtistCorrection> {
+export function useArtistFormInitialValues(props: Props): NewArtistCorrection {
 	return props.type == "new" ?
 			{
 				type: "Create",
@@ -49,14 +45,14 @@ export function useArtistFormInitialValues(
 								value: new Date(props.artist.start_date.value),
 								precision: props.artist.start_date.precision,
 							}
-						:	null,
+						:	undefined,
 					end_date:
 						props.artist.end_date ?
 							{
 								value: new Date(props.artist.end_date.value),
 								precision: props.artist.end_date.precision,
 							}
-						:	null,
+						:	undefined,
 					links: props.artist.links ?? [],
 					start_location: props.artist.start_location,
 					current_location: props.artist.current_location,
