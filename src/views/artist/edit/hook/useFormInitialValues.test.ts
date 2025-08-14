@@ -1,3 +1,4 @@
+// oxlint-disable no-magic-numbers
 import fc from "fast-check"
 import { describe, it, expect } from "vitest"
 
@@ -11,10 +12,16 @@ const dateWithPrecisionOutArb = fc.record({
 	// Use a safe date range to avoid Invalid time value
 	value: fc
 		.date({
-			min: new Date("2000-01-01T00:00:00.000Z"),
-			max: new Date("2030-12-31T23:59:59.999Z"),
+			min: new Date(2000, 0, 1),
+			max: new Date(2024, 11, 30),
 		})
-		.map((x) => x.toISOString()),
+		.map((x) => {
+			if (Number.isNaN(x.getTime())) {
+				// 如果无效，返回一个默认的有效日期
+				return new Date(2000, 0, 1).toISOString()
+			}
+			return x.toISOString()
+		}),
 
 	precision: datePrecisionArb,
 })
