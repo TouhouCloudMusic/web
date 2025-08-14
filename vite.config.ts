@@ -47,14 +47,7 @@ export default defineConfig(({ mode }) => {
 			target: "esnext",
 		},
 		test: {
-			projects: [
-				"packages/*",
-				".",
-				{
-					extends: true,
-					include: ["src/**/*.test.{ts,tsx}", "test/**/*.test.{ts,tsx}"],
-				},
-			],
+			projects: ["packages/*", "."],
 		},
 	}
 })
