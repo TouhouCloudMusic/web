@@ -1,19 +1,17 @@
-/* @refresh skip */
+/* @refresh reload */
 import { Link } from "@tanstack/solid-router"
+import type { ComponentProps, Resource } from "solid-js"
 import {
-	type ComponentProps,
 	createContext,
 	createSignal,
 	ErrorBoundary,
 	For,
 	Match,
 	mergeProps,
-	type Resource,
 	Show,
 	Suspense,
 	Switch,
 } from "solid-js"
-import type { DOMElement } from "solid-js/jsx-runtime"
 import { twJoin, twMerge } from "tailwind-merge"
 
 import type { UserRole, UserProfile } from "~/api/user"
@@ -107,14 +105,7 @@ function Content() {
 							<ProfileButton />
 						</div>
 						<ul class="mt-1 flex gap-2">
-							<For
-								each={context.user()?.roles.concat([
-									{
-										id: 123,
-										name: "Moderator",
-									},
-								])}
-							>
+							<For each={context.user()?.roles}>
 								{(role) => (
 									<li>
 										<RoleBadge role={role.name} />
@@ -168,7 +159,7 @@ function ProfileAvatar() {
 			<div class="flex aspect-square h-fit w-4/5 rounded-full bg-white">
 				<Avatar
 					class="m-auto size-[calc(100%-var(--avatar-border)*2)]"
-					user={context.user}
+					user={context.user()}
 				/>
 			</div>
 		</div>
@@ -188,7 +179,7 @@ function ProfileButton(props: ProfileButtonProps) {
 					(
 						e: MouseEvent & {
 							currentTarget: HTMLButtonElement
-							target: DOMElement
+							target: Element
 						},
 						// eslint-disable-next-line solid/reactivity
 					) => {
@@ -202,7 +193,7 @@ function ProfileButton(props: ProfileButtonProps) {
 					(
 						e: MouseEvent & {
 							currentTarget: HTMLButtonElement
-							target: DOMElement
+							target: Element
 						},
 						// eslint-disable-next-line solid/reactivity
 					) => {
@@ -287,23 +278,24 @@ function Bio() {
 	)
 }
 
-function RoleBadge(props: { role: UserRole }) {
-	function matchColor(role: UserRole) {
-		switch (role) {
-			case "Admin": {
-				// @tw
-				return "bg-reimu-100 text-reimu-700"
-			}
-			case "Moderator": {
-				// @tw
-				return "bg-purple-100/80 text-purple-800/75"
-			}
-			case "User": {
-				return ""
-			}
+function matchColor(role: UserRole) {
+	// oxlint-disable-next-line default-case
+	switch (role) {
+		case "Admin": {
+			// @tw
+			return "bg-reimu-100 text-reimu-700"
+		}
+		case "Moderator": {
+			// @tw
+			return "bg-purple-100/80 text-purple-800/75"
+		}
+		case "User": {
+			return ""
 		}
 	}
+}
 
+function RoleBadge(props: { role: UserRole }) {
 	return (
 		<Show when={props.role != "User"}>
 			<div

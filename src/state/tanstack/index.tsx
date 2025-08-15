@@ -1,3 +1,4 @@
+// oxlint-disable no-magic-numbers
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query"
 import { SolidQueryDevtools } from "@tanstack/solid-query-devtools"
 import type { ParentProps } from "solid-js"

@@ -1,26 +1,17 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { FileField } from "@kobalte/core/file-field"
 import { createForm, valiForm } from "@modular-forms/solid"
-import {
-	createEffect,
-	createMemo,
-	createSignal,
-	JSX,
-	Match,
-	onCleanup,
-	type Setter,
-	Show,
-	Switch,
-	type ValidComponent,
-} from "solid-js"
-import { createMutable, createStore } from "solid-js/store"
+import { Option } from "@thc/toolkit/data"
+import type { Setter, ValidComponent } from "solid-js"
+import { createMemo, createSignal, onCleanup, Show } from "solid-js"
+import { createMutable } from "solid-js/store"
 import * as v from "valibot"
 
+import type { components } from "~/api/openapi"
 import { Card } from "~/components/atomic/Card"
 import { Avatar } from "~/components/atomic/avatar"
 import { Button } from "~/components/atomic/button"
 import { Dialog } from "~/components/dialog"
-import type { components } from "~/data/openapi"
 import { PageLayout } from "~/layout/PageLayout"
 import { useCurrentUser } from "~/state/user"
 import type { Replace } from "~/types"
@@ -38,8 +29,13 @@ export function EditProfile() {
 			<div class="col-span-22 col-start-2 grid grid-cols-[1fr_auto] pt-6">
 				<div>
 					<div>{user.name}</div>
+					{/* TODO: locales */}
 					<div>{new Date(user.last_login).toLocaleString("zh-CN")}</div>
-					<div>{user.roles.join(", ")}</div>
+					<div>
+						{Option.of(user.roles)
+							.map((x) => x.map((y) => y.name).join(", "))
+							.getOrUndef()}
+					</div>
 				</div>
 				<div>
 					<Avatar
@@ -64,7 +60,7 @@ const UploadAvatarFormSchema = v.object({
 } satisfies GenericValibotSchema<UploadAvatarForm>)
 
 function UploadAvatarFormDialog() {
-	let [_, { Form, Field }] = createForm<UploadAvatarForm>({
+	let [_, __] = createForm<UploadAvatarForm>({
 		validate: valiForm(UploadAvatarFormSchema),
 	})
 	let [show, setShow, ref] = createClickOutside()
@@ -198,9 +194,9 @@ export function UploadAvatarFormContent(props: {
 
 function UploadAvatarFormCanvas(props: { file: File }) {
 	let url = createMemo(() => {
-		let url = window.URL.createObjectURL(props.file)
+		let url = globalThis.URL.createObjectURL(props.file)
 
-		onCleanup(() => window.URL.revokeObjectURL(url))
+		onCleanup(() => globalThis.URL.revokeObjectURL(url))
 
 		return url
 	})
