@@ -1,7 +1,7 @@
 import type { ParentProps, Signal } from "solid-js"
 import { createContext, createSignal, Suspense } from "solid-js"
 
-import { useContextUnsave } from "~/utils/context"
+import { assertContext, useContextUnsave } from "~/utils/context"
 
 export enum AppTheme {
 	Light,
@@ -47,7 +47,7 @@ export class ThemeStore {
 }
 
 export const ThemeContext = createContext<ThemeStore>()
-export const useTheme = () => useContextUnsave(ThemeContext)
+export const useTheme = () => assertContext(ThemeContext)
 
 export function ThemeProvider(props: ParentProps) {
 	return (
