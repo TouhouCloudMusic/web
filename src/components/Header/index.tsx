@@ -1,6 +1,11 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { useLingui } from "@lingui-solid/solid/macro"
 import { Link } from "@tanstack/solid-router"
+import {
+	BellAlertIcon,
+	BellIcon,
+	BellSlashIcon,
+} from "@thc/icons/heroicons/24/outline.tsx"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
@@ -12,11 +17,6 @@ import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 import { Divider } from "../atomic/Divider.tsx"
 import { Avatar } from "../atomic/avatar/index.tsx"
 import { Dialog } from "../dialog/index.ts"
-import {
-	BellAlertIcon,
-	BellIcon,
-	BellSlashIcon,
-} from "../icons/heroicons/24/outline.tsx"
 import { LeftSidebar } from "./LeftSidebar"
 import { RightSidebar } from "./RightSidebar"
 
