@@ -13,7 +13,7 @@ import {
 } from "solid-radix-icons"
 
 import { ListItem, Sidebar } from "~/components/Sidebar"
-import { useUserCtx } from "~/state/user"
+import { useCurrentUser } from "~/state/user"
 
 import { Divider } from "../atomic/Divider"
 import { Avatar } from "../atomic/avatar"
@@ -25,7 +25,7 @@ export type Props = {
 }
 
 export function RightSidebar(props: Props) {
-	const userCtx = useUserCtx()
+	const userCtx = useCurrentUser()
 
 	return (
 		<>

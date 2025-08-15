@@ -3,7 +3,7 @@ import { createResource } from "solid-js"
 
 import { UserQuery } from "~/api"
 import { AuthGuard } from "~/components/route"
-import { useUserCtx } from "~/state/user"
+import { useCurrentUser } from "~/state/user"
 import { Profile } from "~/views/user/Profile"
 
 export const Route = createFileRoute("/(user)/profile")({
@@ -11,7 +11,7 @@ export const Route = createFileRoute("/(user)/profile")({
 })
 
 function RouteComponent() {
-	const userCtx = useUserCtx()
+	const userCtx = useCurrentUser()
 	const queryResult = UserQuery.profile({
 		"params.username": undefined,
 		current_user: userCtx.user,

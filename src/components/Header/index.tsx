@@ -11,7 +11,7 @@ import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
 import type { UserProfile } from "~/api/user"
 import { Button } from "~/components/atomic/button/index.tsx"
-import { NotificationState, useUserCtx } from "~/state/user"
+import { NotificationState, useCurrentUser } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
 import { Divider } from "../atomic/Divider.tsx"
@@ -59,7 +59,7 @@ export function Header() {
 						class="h-6"
 					/>
 					<Show
-						when={useUserCtx().user}
+						when={useCurrentUser().user}
 						fallback={<UnauthenticatedButtons />}
 					>
 						{(user) => <AuthenticatedContent user={user()} />}
@@ -111,7 +111,7 @@ function SearchBar() {
 }
 
 function NotificationButton() {
-	let notification_state = createMemo(() => useUserCtx().notification_state)
+	let notification_state = createMemo(() => useCurrentUser().notification_state)
 	return (
 		<Button
 			variant="Tertiary"

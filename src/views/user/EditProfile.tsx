@@ -22,14 +22,14 @@ import { Button } from "~/components/atomic/button"
 import { Dialog } from "~/components/dialog"
 import type { components } from "~/data/openapi"
 import { PageLayout } from "~/layout/PageLayout"
-import { useUserCtx } from "~/state/user"
+import { useCurrentUser } from "~/state/user"
 import type { Replace } from "~/types"
 import type { ExternalSchema as GenericValibotSchema } from "~/types/valibot"
 import { createCropperBoundary } from "~/utils/adapter/cropper"
 import { createClickOutside } from "~/utils/solid/createClickOutside"
 
 export function EditProfile() {
-	let user_ctx = useUserCtx()
+	let user_ctx = useCurrentUser()
 
 	let user = createMutable(user_ctx.user!)
 
