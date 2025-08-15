@@ -1,1 +1,1 @@
-export * as InputField from "./__impl"
+export * as InputField from "./__internal"

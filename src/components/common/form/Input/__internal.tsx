@@ -1,23 +1,20 @@
-import { type PolymorphicProps, TextField as K_TextField } from "@kobalte/core"
+import type { PolymorphicProps } from "@kobalte/core"
+import { TextField as K_TextField } from "@kobalte/core"
 import type {
 	TextFieldTextAreaProps,
 	TextFieldInputProps,
 	TextFieldRootProps,
 } from "@kobalte/core/text-field"
-import {
-	createContext,
-	createEffect,
-	mergeProps,
-	type ValidComponent,
-} from "solid-js"
+import type { ValidComponent } from "solid-js"
+import { createContext, createEffect, mergeProps } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { twMerge } from "tailwind-merge"
 
 import type { SafeOmit } from "~/types"
-import { tw } from "~/utils"
 import { assertContext } from "~/utils/context"
 
 import { FormComp } from ".."
+import { INPUT_BASE_CLASSNAME, INPUT_CLASSNAME } from "../../Input"
 import { LABEL_CLASSNAME } from "../label"
 
 const TEXT_INPUT_CLASS = `flex flex-col`
@@ -89,27 +86,6 @@ export function Root<T extends ValidComponent = "div">(props: RootProps<T>) {
 	)
 }
 
-export const INPUT_BASE_CLASSNAME = tw(`
-		text-slate-900 focus:text-primary
-		bg-primary
-		border border-slate-300
-
-		disabled:bg-slate-50
-
-		rounded-sm
-
-		outline-[1.5px]
-		not-disabled:hover:outline-reimu-500
-		focus:outline-reimu-600
-
-		outline-transparent -outline-offset-1
-		aria-invalid:border-reimu-600
-
-		transition-all duration-100
-	`)
-
-export const INPUT_CLASSNAME = twMerge(INPUT_BASE_CLASSNAME, `pl-2 h-8`)
-
 export function Input(
 	props: PolymorphicProps<"input", TextFieldInputProps<"input">>,
 ) {
@@ -123,9 +99,7 @@ export function Input(
 
 	const finalProps = mergeProps(props, {
 		get class() {
-			return props.class ?
-					twMerge(INPUT_CLASSNAME, props.class)
-				:	INPUT_CLASSNAME
+			return twMerge(INPUT_CLASSNAME, props.class)
 		},
 	})
 
@@ -186,7 +160,7 @@ export function Error(props: FormComp.ErrorMessageProps) {
 	const context = assertContext(Context)
 
 	createEffect(() => {
-		context.setValid(!(props.children ?? props.messagee))
+		context.setValid(!(props.children ?? props.message))
 	})
 
 	return <FormComp.ErrorMessage {...props} />
