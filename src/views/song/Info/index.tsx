@@ -4,7 +4,7 @@ import { createContext, Show, Suspense } from "solid-js"
 import type { Song } from "~/api/song"
 import { Tab } from "~/components/atomic"
 import { PageLayout } from "~/layout/PageLayout"
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid/assertContext"
 
 import { SongInfoCoverImage } from "./comp/SongInfoCoverImage"
 import { SongInfoCredit } from "./comp/SongInfoCredit"

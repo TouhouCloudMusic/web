@@ -1,7 +1,7 @@
 import type { ParentProps, Signal } from "solid-js"
 import { createContext, createSignal, Suspense } from "solid-js"
 
-import { assertContext, useContextUnsave } from "~/utils/context"
+import { assertContext, useContextUnsave } from "~/utils/solid/assertContext"
 
 export enum AppTheme {
 	Light,

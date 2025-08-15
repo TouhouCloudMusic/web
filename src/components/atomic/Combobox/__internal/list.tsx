@@ -3,7 +3,7 @@ import type { JSX, ParentProps } from "solid-js"
 import { createContext } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid"
 
 export type ComboboxListContext = {
 	all(): HTMLElement[]

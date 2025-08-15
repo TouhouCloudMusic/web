@@ -22,8 +22,8 @@ import { Button } from "~/components/atomic/button"
 import { Markdown } from "~/components/markdown"
 import { PageLayout } from "~/layout/PageLayout"
 import { imgUrl } from "~/utils/adapter/static_file"
-import { assertContext } from "~/utils/context"
 import { callHandlerUnion } from "~/utils/dom/event"
+import { assertContext } from "~/utils/solid/assertContext"
 
 type Props = {
 	data: Resource<UserProfile>

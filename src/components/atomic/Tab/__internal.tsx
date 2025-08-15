@@ -3,7 +3,7 @@ import * as K_Tab from "@kobalte/core/tabs"
 import { createContext, mergeProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid/assertContext"
 
 export type RootProps = PolymorphicProps<"div", K_Tab.TabsRootProps<"div">> & {
 	orientation?: "horizontal" | "vertical"

@@ -1,4 +1,9 @@
-import type { Eq } from "~/types"
+type Eq<A, B> =
+	A extends B ?
+		B extends A ?
+			true
+		:	false
+	:	false
 
 type PlainObject = Record<string, unknown>
 export type DeepMerge<Objects extends PlainObject[], Result = {}> =

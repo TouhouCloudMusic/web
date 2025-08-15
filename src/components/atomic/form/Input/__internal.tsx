@@ -11,7 +11,7 @@ import { createStore, produce } from "solid-js/store"
 import { twMerge } from "tailwind-merge"
 
 import type { SafeOmit } from "~/types"
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid/assertContext"
 
 import { FormComp } from ".."
 import { INPUT_BASE_CLASSNAME, INPUT_CLASSNAME } from "../../Input"

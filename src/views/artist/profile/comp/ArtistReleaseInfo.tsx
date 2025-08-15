@@ -17,7 +17,7 @@ import type { ReleaseType } from "~/api"
 import type { Credit, Discography } from "~/api/artist"
 import { Tab } from "~/components/atomic/Tab"
 import { Button } from "~/components/atomic/button"
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
 

@@ -8,7 +8,7 @@ import { ArrowLeftIcon } from "solid-radix-icons"
 import type { Artist } from "~/api/artist"
 import { DateWithPrecision } from "~/api/shared"
 import { Button } from "~/components/atomic/button"
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
 
