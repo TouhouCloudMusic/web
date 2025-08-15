@@ -4,7 +4,7 @@ import { createSignal, For } from "solid-js"
 import { CardStackIcon, ClockIcon, HeartIcon } from "solid-radix-icons"
 
 import { ListItem, Sidebar } from "~/components/Sidebar"
-import { Player } from "~/components/player"
+import { Player } from "~/components/__legacy/player"
 
 export const Route = createFileRoute("/library")({
 	component: LibraryPage,

@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/solid-router"
 import { For } from "solid-js"
 import { BookmarkIcon } from "solid-radix-icons"
 
-import { Player } from "~/components/player"
+import { Player } from "~/components/__legacy/player"
 
 export const Route = createFileRoute("/articles")({
 	component: ArticlesPage,
