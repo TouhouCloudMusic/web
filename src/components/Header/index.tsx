@@ -9,9 +9,9 @@ import { Button } from "~/components/atomic/button/index.tsx"
 import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
+import { Divider } from "../atomic/Divider.tsx"
 import { Avatar } from "../atomic/avatar/index.tsx"
 import { Dialog } from "../dialog/index.ts"
-import { Divider } from "../divider"
 import {
 	BellAlertIcon,
 	BellIcon,
