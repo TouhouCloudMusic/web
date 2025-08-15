@@ -1,7 +1,3 @@
-/**
- * 图片裁剪工具适配器
- */
-
 // 创建裁剪边界
 export function createCropperBoundary() {
 	return {
