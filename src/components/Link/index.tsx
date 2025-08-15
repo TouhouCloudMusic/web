@@ -1,5 +1,6 @@
 import { createMemo, type JSX, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
+
 import { type SafeOmit } from "~/types"
 
 interface LinkProps<T extends Entity>

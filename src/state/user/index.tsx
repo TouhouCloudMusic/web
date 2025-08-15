@@ -1,5 +1,6 @@
 import { createContext, onMount, type ParentProps } from "solid-js"
 import { createMutable } from "solid-js/store"
+
 import { FetchClient, type UserProfile } from "~/api"
 import { assertContext } from "~/utils/context"
 

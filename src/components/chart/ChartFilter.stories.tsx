@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "storybook-solidjs"
+
 import { StoryLayout } from "~/utils/adapter/storybook"
 
 import { ChartFilter } from "."

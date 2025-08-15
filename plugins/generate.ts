@@ -1,6 +1,6 @@
 import fs from "node:fs/promises"
-import openApiGen, { astToString } from "openapi-typescript"
 import path from "node:path"
+import openApiGen, { astToString } from "openapi-typescript"
 import ts from "typescript"
 import type { Plugin } from "vite"
 

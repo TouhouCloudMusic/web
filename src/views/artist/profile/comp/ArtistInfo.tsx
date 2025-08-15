@@ -1,16 +1,16 @@
 /* @refresh skip */
 import { useLingui } from "@lingui-solid/solid/macro"
+import { useNavigate } from "@tanstack/solid-router"
 import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
+import { ArrowLeftIcon } from "solid-radix-icons"
 
 import type { Artist } from "~/api/artist"
 import { DateWithPrecision } from "~/api/shared"
-import { assertContext } from "~/utils/context"
 import { Button } from "~/components/button"
-import { ArrowLeftIcon } from "solid-radix-icons"
+import { assertContext } from "~/utils/context"
 
 import { ArtistContext } from ".."
-import { useNavigate } from "@tanstack/solid-router"
 
 export function ArtistInfo() {
 	const { t } = useLingui()
@@ -40,11 +40,18 @@ export function ArtistInfo() {
 				<Links />
 			</div>
 			{/* Test */}
-			<Button class="mt-4 w-fit" variant="Tertiary" size="Sm" onClick={() => {
-				void navigator({
-					to: "/artist/" + context.artist.id + "/edit",
-				})
-			}}>Edit</Button>
+			<Button
+				class="mt-4 w-fit"
+				variant="Tertiary"
+				size="Sm"
+				onClick={() => {
+					void navigator({
+						to: "/artist/" + context.artist.id + "/edit",
+					})
+				}}
+			>
+				Edit
+			</Button>
 		</div>
 	)
 }
