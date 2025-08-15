@@ -1,8 +1,8 @@
 import { For } from "solid-js"
 
 import type { Location as LocationType } from "~/api/shared/schema"
-import { FormComp } from "~/components/common/form"
-import { InputField } from "~/components/common/form/Input"
+import { FormComp } from "~/components/atomic/form"
+import { InputField } from "~/components/atomic/form/Input"
 
 export type LocationProps = {
 	label: string

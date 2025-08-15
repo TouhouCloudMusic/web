@@ -7,9 +7,9 @@ import { For } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
 
 import type { NewArtistCorrection } from "~/api/artist/schema"
-import { FormComp } from "~/components/common"
-import { Button } from "~/components/common/button"
-import { InputField } from "~/components/common/form/Input"
+import { FormComp } from "~/components/atomic"
+import { Button } from "~/components/atomic/button"
+import { InputField } from "~/components/atomic/form/Input"
 
 import { useArtistForm } from "../../context"
 

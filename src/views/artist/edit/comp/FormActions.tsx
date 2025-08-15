@@ -3,9 +3,9 @@ import * as M from "@modular-forms/solid"
 
 import type { ArtistMutation } from "~/api/artist"
 import type { NewArtistCorrection } from "~/api/artist/schema"
-import { Button } from "~/components/common/button"
-import { FormComp } from "~/components/common/form"
-import { InputField } from "~/components/common/form/Input"
+import { Button } from "~/components/atomic/button"
+import { FormComp } from "~/components/atomic/form"
+import { InputField } from "~/components/atomic/form/Input"
 
 import { useArtistForm } from "../context"
 

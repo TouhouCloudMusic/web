@@ -3,7 +3,7 @@ import * as M from "@modular-forms/solid"
 import { For } from "solid-js"
 
 import type { ArtistType, NewArtistCorrection } from "~/api/artist/schema"
-import { FormComp } from "~/components/common/form"
+import { FormComp } from "~/components/atomic/form"
 
 import { useArtistForm } from "../context"
 

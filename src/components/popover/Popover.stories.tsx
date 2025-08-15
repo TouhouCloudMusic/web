@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "storybook-solidjs"
 
-import { Button } from "~/components/common/button"
+import { Button } from "~/components/atomic/button"
 
 import { Popover } from "."
 

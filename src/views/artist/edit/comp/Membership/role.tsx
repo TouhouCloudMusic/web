@@ -11,7 +11,7 @@ import { CheckIcon, Cross1Icon } from "solid-radix-icons"
 
 import { CreditRoleQueryOption } from "~/api/credit"
 import type { CreditRoleSummary } from "~/api/credit"
-import { Combobox } from "~/components/common/Combobox"
+import { Combobox } from "~/components/atomic/Combobox"
 
 import { useArtistForm } from "../../context"
 

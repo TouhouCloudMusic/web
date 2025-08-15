@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "storybook-solidjs"
 import { logImage } from "~/utils/log"
 
 import { Dialog } from "."
-import { Button } from "../common/button"
+import { Button } from "../atomic/button"
 import { ImageUploadDialog } from "./ImageUploadDialog"
 
 const meta = {

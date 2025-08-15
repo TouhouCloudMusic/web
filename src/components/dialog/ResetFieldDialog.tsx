@@ -1,6 +1,6 @@
 import { createMemo } from "solid-js"
 
-import { Button } from "../common/button/index.tsx"
+import { Button } from "../atomic/button/index.tsx"
 import { ArrowPathIcon } from "../icons/heroicons/24/outline.tsx"
 import { AlertDialog } from "./AlertDialog"
 

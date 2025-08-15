@@ -1,7 +1,7 @@
 import { Cross2Icon, PlusIcon } from "solid-radix-icons"
 import type { Meta, StoryObj } from "storybook-solidjs"
 
-import { Button } from "~/components/common/button"
+import { Button } from "~/components/atomic/button"
 import { Dialog } from "~/components/dialog"
 
 import { SearchDialog } from "."

@@ -9,7 +9,7 @@ import { ArrowLeftIcon } from "solid-radix-icons"
 
 import type { Artist } from "~/api/artist"
 import { NewArtistCorrection } from "~/api/artist/schema"
-import { Button } from "~/components/common/button/index.tsx"
+import { Button } from "~/components/atomic/button/index.tsx"
 import { PageLayout } from "~/layout/PageLayout"
 
 import { ArtistFormAliasesField } from "./comp/Aliases"

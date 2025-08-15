@@ -2,7 +2,7 @@ import { Trans } from "@lingui-solid/solid/macro"
 import { createContext, Show, Suspense } from "solid-js"
 
 import type { Song } from "~/api/song"
-import { Tab } from "~/components/common"
+import { Tab } from "~/components/atomic"
 import { PageLayout } from "~/layout/PageLayout"
 import { assertContext } from "~/utils/context"
 

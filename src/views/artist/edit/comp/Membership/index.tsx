@@ -6,9 +6,9 @@ import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 
 import type { Artist, ArtistCommonFilter } from "~/api/artist"
-import { Intersperse } from "~/components/common/Intersperse"
-import { Button } from "~/components/common/button"
-import { FormComp } from "~/components/common/form"
+import { Intersperse } from "~/components/atomic/Intersperse"
+import { Button } from "~/components/atomic/button"
+import { FormComp } from "~/components/atomic/form"
 import { Divider } from "~/components/divider"
 
 import { useArtistForm } from "../../context"

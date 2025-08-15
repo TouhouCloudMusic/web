@@ -23,7 +23,7 @@ import { createUrl } from "~/lib/reactivity"
 import type { NestedPartial } from "~/types"
 import { createAtom } from "~/utils/createAtom"
 
-import { Button } from "../common/button"
+import { Button } from "../atomic/button"
 
 export type ImageDropProps<DeepMerge extends boolean = true> = {
 	/** @param base64 the base64 string of the image */

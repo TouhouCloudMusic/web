@@ -5,8 +5,8 @@ import type { FormStore } from "@modular-forms/solid"
 import { Show } from "solid-js"
 
 import type { AuthSchema } from "~/api"
-import { Button } from "~/components/common/button"
-import { FormComp } from "~/components/common/form"
+import { Button } from "~/components/atomic/button"
+import { FormComp } from "~/components/atomic/form"
 
 import type { AuthFormMode } from "../store"
 import { useAuthForm } from "../store"

@@ -10,7 +10,7 @@ import type {
 import { mergeProps, type ValidComponent } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { Button } from "~/components/common/button"
+import { Button } from "~/components/atomic/button"
 
 export type RootProps = PopoverRootProps
 

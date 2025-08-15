@@ -4,8 +4,8 @@ import { createStore } from "solid-js/store"
 
 import type { DateWithPrecision as TDateWithPrecision } from "~/api"
 import type { DatePrecision } from "~/api/shared/schema"
-import { FormComp } from "~/components/common/form"
-import { InputField } from "~/components/common/form/Input"
+import { FormComp } from "~/components/atomic/form"
+import { InputField } from "~/components/atomic/form/Input"
 
 export interface DateWithPrecisionProps {
 	label: string
