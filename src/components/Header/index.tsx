@@ -5,11 +5,11 @@ import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
 import type { UserProfile } from "~/api/user"
-import { Button } from "~/components/button"
+import { Button } from "~/components/common/button/index.tsx"
 import { NotificationState, useUserCtx } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
-import { Avatar } from "../avatar/index.tsx"
+import { Avatar } from "../common/avatar/index.tsx"
 import { Dialog } from "../dialog/index.ts"
 import { Divider } from "../divider"
 import {

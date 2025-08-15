@@ -15,8 +15,8 @@ import {
 import { ListItem, Sidebar } from "~/components/Sidebar"
 import { useUserCtx } from "~/state/user"
 
-import { Avatar } from "../avatar"
-import { Button } from "../button"
+import { Avatar } from "../common/avatar"
+import { Button } from "../common/button"
 import { Divider } from "../divider"
 
 export type Props = {

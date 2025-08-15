@@ -6,7 +6,7 @@ import { PlusIcon } from "solid-radix-icons"
 
 import { ArtistQueryOption } from "~/api/artist"
 import type { Artist, ArtistCommonFilter } from "~/api/artist"
-import { Button } from "~/components/button"
+import { Button } from "~/components/common/button"
 import { SearchDialog } from "~/components/composite/form/SearchDialog"
 import { Dialog } from "~/components/dialog"
 

@@ -2,7 +2,7 @@ import { createSignal } from "solid-js"
 import type { Meta, StoryObj } from "storybook-solidjs"
 
 import { Dialog } from "."
-import { Button } from "../button"
+import { Button } from "../common/button"
 import { AlertDialog } from "./AlertDialog"
 
 const meta = {

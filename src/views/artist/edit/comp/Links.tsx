@@ -3,7 +3,7 @@ import { For } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 
 import type { NewArtistCorrection } from "~/api/artist/schema"
-import { Button } from "~/components/button"
+import { Button } from "~/components/common/button"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 import { Divider } from "~/components/divider"

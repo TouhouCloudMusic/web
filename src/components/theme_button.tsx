@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge"
 
 import { AppTheme, useTheme } from "~/state/theme"
 
-import { Button } from "./button"
+import { Button } from "./common/button"
 
 // @tw
 const defaultStyle = `flex place-content-center items-center`

@@ -1,7 +1,7 @@
 import { type JSX, Show, splitProps } from "solid-js"
 
 import { Dialog } from "."
-import { Button } from "../button"
+import { Button } from "../common/button"
 
 export interface AlertDialogProps
 	extends Exclude<Dialog.RootProps, "children"> {

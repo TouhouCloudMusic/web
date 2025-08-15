@@ -7,8 +7,8 @@ import { For } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
 
 import type { NewArtistCorrection } from "~/api/artist/schema"
-import { Button } from "~/components/button"
 import { FormComp } from "~/components/common"
+import { Button } from "~/components/common/button"
 import { InputField } from "~/components/common/form/Input"
 
 import { useArtistForm } from "../../context"

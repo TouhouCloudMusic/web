@@ -1,7 +1,7 @@
 import { type Ref, type ParentProps, createMemo, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { Button, type Props as ButtonProps } from "../button"
+import { Button, type Props as ButtonProps } from "../common/button"
 
 export function Sidebar(
 	props: ParentProps & {

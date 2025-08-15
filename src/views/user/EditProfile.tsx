@@ -16,9 +16,9 @@ import {
 import { createMutable, createStore } from "solid-js/store"
 import * as v from "valibot"
 
-import { Avatar } from "~/components/avatar"
-import { Button } from "~/components/button"
 import { Card } from "~/components/card"
+import { Avatar } from "~/components/common/avatar"
+import { Button } from "~/components/common/button"
 import { Dialog } from "~/components/dialog"
 import type { components } from "~/data/openapi"
 import { PageLayout } from "~/layout/PageLayout"

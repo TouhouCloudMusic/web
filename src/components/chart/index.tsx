@@ -9,8 +9,8 @@ import {
 import { PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
-import { Button } from "../button"
 import { Card, type Props as CardProps } from "../card"
+import { Button } from "../common/button"
 import { Input } from "../input"
 
 export type FilterTag = {

@@ -3,7 +3,7 @@ import * as M from "@modular-forms/solid"
 
 import type { ArtistMutation } from "~/api/artist"
 import type { NewArtistCorrection } from "~/api/artist/schema"
-import { Button } from "~/components/button"
+import { Button } from "~/components/common/button"
 import { FormComp } from "~/components/common/form"
 import { InputField } from "~/components/common/form/Input"
 

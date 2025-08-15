@@ -6,8 +6,8 @@ import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 
 import type { Artist, ArtistCommonFilter } from "~/api/artist"
-import { Button } from "~/components/button"
 import { Intersperse } from "~/components/common/Intersperse"
+import { Button } from "~/components/common/button"
 import { FormComp } from "~/components/common/form"
 import { Divider } from "~/components/divider"
 
