@@ -1,5 +1,5 @@
 /* @refresh skip */
-import { CreditList } from "~/components/domain/credit"
+import { CreditList } from "~/components/display/credit"
 import { SongCreditStatics } from "~/domain/song"
 import { assertContext } from "~/utils/context"
 

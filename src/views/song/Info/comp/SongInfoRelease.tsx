@@ -1,7 +1,7 @@
 /* @refresh skip */
 import { Show } from "solid-js"
 
-import { ReleaseCoverWall } from "~/components/domain/release/ReleaseCoverWall"
+import { ReleaseCoverWall } from "~/components/display/release/ReleaseCoverWall"
 import { assertContext } from "~/utils/context"
 
 import { SongInfoPageContext } from ".."
