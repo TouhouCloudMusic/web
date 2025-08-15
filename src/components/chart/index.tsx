@@ -9,7 +9,7 @@ import {
 import { PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
-import { Card, type Props as CardProps } from "../card"
+import { Card, type Props as CardProps } from "../common/Card"
 import { Button } from "../common/button"
 import { Input } from "../input"
 

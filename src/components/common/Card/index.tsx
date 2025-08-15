@@ -1,4 +1,5 @@
-import { createMemo, type JSX } from "solid-js"
+import type { JSX } from "solid-js"
+import { createMemo } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
 export type Props = JSX.HTMLAttributes<HTMLDivElement>
