@@ -1,4 +1,4 @@
-import { type IconProps } from "../../index"
+import type { IconProps } from "../../index"
 
 export function BellIcon(props: IconProps) {
 	return (

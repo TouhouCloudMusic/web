@@ -55,12 +55,11 @@ function AppErrorBoundary(props: ParentProps) {
 	if (!import.meta.env.DEV) {
 		// eslint-disable-next-line solid/components-return-once
 		return <>{props.children}</>
-	} else {
-		// eslint-disable-next-line solid/components-return-once
-		return (
-			<ErrorBoundary fallback={(e: Error) => <ErrorPage msg={e.stack} />}>
-				{props.children}
-			</ErrorBoundary>
-		)
 	}
+	// eslint-disable-next-line solid/components-return-once
+	return (
+		<ErrorBoundary fallback={(e: Error) => <ErrorPage msg={e.stack} />}>
+			{props.children}
+		</ErrorBoundary>
+	)
 }

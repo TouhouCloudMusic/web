@@ -16,8 +16,8 @@ export function sortMemberList<T extends Member>(
 ): Option.Option<T[]> {
 	const get_join_year = (m: T) => m.active_year?.[0].lower
 	const get_leave_year = (m: T): number | null => {
-		if (!m.active_year) return null
-		else return m.active_year[m.active_year.length - 1].upper ?? null
+		if (!m.active_year) return
+		return m.active_year[m.active_year.length - 1].upper ?? undefined
 	}
 
 	const compareFn = (a: T, b: T) => {
@@ -26,8 +26,8 @@ export function sortMemberList<T extends Member>(
 		const b_join_year = get_join_year(b)
 		const b_leave_year = get_leave_year(b)
 
-		const a_has_left = a_leave_year == null
-		const b_has_left = b_leave_year == null
+		const a_has_left = a_leave_year == undefined
+		const b_has_left = b_leave_year == undefined
 
 		// 现役成员排前面
 		if (a_has_left !== b_has_left) {

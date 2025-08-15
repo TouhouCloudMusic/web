@@ -31,11 +31,13 @@ export class ThemeStore {
 		this.signal[1](theme)
 
 		switch (theme) {
-			case AppTheme.Dark:
+			case AppTheme.Dark: {
 				this.setDocumentTheme()
 				break
-			default:
+			}
+			default: {
 				this.setDocumentTheme()
+			}
 		}
 	}
 
@@ -59,19 +61,20 @@ export function ThemeProvider(props: ParentProps) {
 
 function fromString(str: string) {
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-	if (AppTheme.Dark == parseInt(str)) {
+	if (AppTheme.Dark == Number.parseInt(str)) {
 		return AppTheme.Dark
-	} else {
-		return AppTheme.Light
 	}
+	return AppTheme.Light
 }
 
 function toString(theme: AppTheme) {
 	switch (theme) {
-		case AppTheme.Dark:
+		case AppTheme.Dark: {
 			return "dark"
-		default:
+		}
+		default: {
 			return "light"
+		}
 	}
 }
 
@@ -82,9 +85,9 @@ function toString(theme: AppTheme) {
 // }
 
 function setDocumentTheme(theme: AppTheme) {
-	document.getElementById("app")!.classList.add("notransition")
+	document.querySelector("#app")!.classList.add("notransition")
 	document.documentElement.setAttribute("data-mode", toString(theme))
 	setTimeout(() => {
-		document.getElementById("app")!.classList.remove("notransition")
+		document.querySelector("#app")!.classList.remove("notransition")
 	}, 0)
 }

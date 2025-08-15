@@ -79,31 +79,40 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K>(
 ): K
 export function pipe(x: unknown, ...fns: ((x: unknown) => unknown)[]): unknown {
 	switch (fns.length) {
-		case 1:
+		case 1: {
 			return fns[0]!(x)
-		case 2:
+		}
+		case 2: {
 			return fns[1]!(fns[0]!(x))
-		case 3:
+		}
+		case 3: {
 			return fns[2]!(fns[1]!(fns[0]!(x)))
-		case 4:
+		}
+		case 4: {
 			return fns[3]!(fns[2]!(fns[1]!(fns[0]!(x))))
-		case 5:
+		}
+		case 5: {
 			return fns[4]!(fns[3]!(fns[2]!(fns[1]!(fns[0]!(x)))))
-		case 6:
+		}
+		case 6: {
 			return fns[5]!(fns[4]!(fns[3]!(fns[2]!(fns[1]!(fns[0]!(x))))))
-		case 7:
+		}
+		case 7: {
 			return fns[6]!(fns[5]!(fns[4]!(fns[3]!(fns[2]!(fns[1]!(fns[0]!(x)))))))
-		case 8:
+		}
+		case 8: {
 			return fns[7]!(
 				fns[6]!(fns[5]!(fns[4]!(fns[3]!(fns[2]!(fns[1]!(fns[0]!(x))))))),
 			)
-		case 9:
+		}
+		case 9: {
 			return fns[8]!(
 				fns[7]!(
 					fns[6]!(fns[5]!(fns[4]!(fns[3]!(fns[2]!(fns[1]!(fns[0]!(x))))))),
 				),
 			)
-		case 10:
+		}
+		case 10: {
 			return fns[9]!(
 				fns[8]!(
 					fns[7]!(
@@ -111,6 +120,7 @@ export function pipe(x: unknown, ...fns: ((x: unknown) => unknown)[]): unknown {
 					),
 				),
 			)
+		}
 		default: {
 			let res = x
 			for (const fn of fns) {

@@ -28,11 +28,10 @@ export function useAuthForm() {
 			return createFormStore<AuthSchema.SignIn>({
 				validate: valiForm(AuthSchema.SignIn),
 			}) as FormStore<AuthSchema.SignIn>
-		} else {
-			return createFormStore<AuthSchema.SignUp>({
-				validate: valiForm(AuthSchema.SignUp),
-			}) as FormStore<AuthSchema.SignUp>
 		}
+		return createFormStore<AuthSchema.SignUp>({
+			validate: valiForm(AuthSchema.SignUp),
+		}) as FormStore<AuthSchema.SignUp>
 	})
 
 	const userCtx = useUserCtx()

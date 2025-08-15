@@ -6,7 +6,7 @@ export function createCroppie(
 	options: () => Croppie.CroppieOptions,
 ) {
 	const croppie = createMemo(() => {
-		return elm() ? new Croppie(elm()!, options()) : null
+		return elm() ? new Croppie(elm()!, options()) : undefined
 	})
 
 	onCleanup(() => {

@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query"
 import { SolidQueryDevtools } from "@tanstack/solid-query-devtools"
-import { type ParentProps } from "solid-js"
+import type { ParentProps } from "solid-js"
 
 export const TanstackQueryClinet = new QueryClient({
 	defaultOptions: {

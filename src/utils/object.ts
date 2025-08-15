@@ -1,4 +1,4 @@
-import { type Eq } from "~/types"
+import type { Eq } from "~/types"
 
 type PlainObject = Record<string, unknown>
 export type DeepMerge<Objects extends PlainObject[], Result = {}> =
@@ -31,15 +31,15 @@ export function deepMerge<
 >(target: T, ...source: U): DeepMerge<[T, ...U]> {
 	if (source.length === 0) {
 		return target as any
-	} else if (source.length === 1) {
-		return mergeTwoMut(structuredClone(target), source[0]!)
-	} else {
-		let ret = structuredClone(target) as unknown as DeepMerge<[T, ...U]>
-		for (const s of source) {
-			ret = mergeTwoMut(ret, s)
-		}
-		return ret
 	}
+	if (source.length === 1) {
+		return mergeTwoMut(structuredClone(target), source[0]!)
+	}
+	let ret = structuredClone(target) as unknown as DeepMerge<[T, ...U]>
+	for (const s of source) {
+		ret = mergeTwoMut(ret, s)
+	}
+	return ret
 }
 
 function mergeTwoMut(target: PlainObject, source: PlainObject): any {

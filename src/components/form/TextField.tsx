@@ -3,10 +3,10 @@ import {
 	type PolymorphicProps,
 	TextField as _TextField,
 } from "@kobalte/core"
-import {
-	type TextFieldInputProps,
-	type TextFieldLabelProps,
-	type TextFieldRootProps,
+import type {
+	TextFieldInputProps,
+	TextFieldLabelProps,
+	TextFieldRootProps,
 } from "@kobalte/core/text-field"
 import { mergeProps, type ValidComponent } from "solid-js"
 import { twMerge } from "tailwind-merge"

@@ -31,11 +31,11 @@ export class UserStore {
 	get notification_state() {
 		if (this.ctx?.config?.mute_notifications === true) {
 			return NotificationState.Muted
-		} else if ((this.ctx?.notifications?.length ?? 0) > 0) {
-			return NotificationState.Unread
-		} else {
-			return NotificationState.None
 		}
+		if ((this.ctx?.notifications?.length ?? 0) > 0) {
+			return NotificationState.Unread
+		}
+		return NotificationState.None
 	}
 
 	get user() {

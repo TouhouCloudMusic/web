@@ -3,7 +3,7 @@
 	"env": {
 		"browser": true
 	},
-	"ignorePatterns": ["src/locale/**"],
+	"ignorePatterns": ["src/locale/**", "**.gen.ts"],
 	"categories": {
 		"correctness": "error",
 		"suspicious": "warn",
@@ -109,6 +109,7 @@
 		"import/no-anonymous-default-export": "off",
 		"import/no-cycle": "off",
 		"import/no-namespace": "off",
+		"import/no-unassigned-imports": ["error", { "allow": ["**/*.css"] }],
 		"import/prefer-default-export": "off",
 
 		"oxc/no-barrel-file": "off",
@@ -143,6 +144,7 @@
 		{
 			"files": ["*.stories.tsx"],
 			"rules": {
+				"no-magic-numbers": "off",
 				"import/no-default-export": "off"
 			}
 		},

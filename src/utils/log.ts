@@ -10,6 +10,6 @@ export function logImage(url: string, size = 1) {
 			"line-height: 0;",
 		].join(" ")
 
-		console.log("%c ", style)
+		console.log("%c", style)
 	}
 }

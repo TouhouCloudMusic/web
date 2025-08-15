@@ -107,10 +107,12 @@ function Membership() {
 	const context = assertContext(ArtistContext)
 	const label = createMemo(() => {
 		switch (context.artist.artist_type) {
-			case "Solo":
+			case "Solo": {
 				return t`Member Of`
-			case "Multiple":
+			}
+			case "Multiple": {
 				return t`Members`
+			}
 			// Unreachable
 		}
 	})

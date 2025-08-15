@@ -20,7 +20,7 @@ import {
 import { createCroppie } from "~/lib/adapter/croppie"
 import { deepMerge } from "~/lib/object"
 import { createUrl } from "~/lib/reactivity"
-import { type NestedPartial } from "~/types"
+import type { NestedPartial } from "~/types"
 import { createAtom } from "~/utils/createAtom"
 
 import { Button } from "../button"
@@ -90,9 +90,8 @@ export function ImageCropper<T extends boolean = true>(
 				DEFAULT_OPTION as Croppie.CroppieOptions & Record<string, unknown>,
 				props.croppieOption,
 			)
-		} else {
-			return Object.assign({}, DEFAULT_OPTION, props.croppieOption)
 		}
+		return { ...DEFAULT_OPTION, ...props.croppieOption }
 	})
 
 	const [store, setStore] = createStore<ImageDropStore>({
@@ -131,8 +130,8 @@ export function ImageCropper<T extends boolean = true>(
 			})
 			setStore("croppedImage", result)
 			props.onSave(result)
-		} catch (e) {
-			store.onError(e)
+		} catch (error) {
+			store.onError(error)
 		}
 	}
 

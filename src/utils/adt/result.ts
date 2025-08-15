@@ -43,19 +43,17 @@ export class Result<T, E = unknown> {
 	unwrap(): T {
 		if (import.meta.env.DEV) {
 			if (this.isOk()) return this.value as T
-			else
-				throw new Error(
-					`Unwrap a Ok on an ${this.isErr() ? "Err" : "unknown"} value`,
-				)
+			throw new Error(
+				`Unwrap a Ok on an ${this.isErr() ? "Err" : "unknown"} value`,
+			)
 		} else return this.$value as T
 	}
 	unwrapErr(): E {
 		if (import.meta.env.DEV) {
 			if (this.isErr()) return this.$error as E
-			else
-				throw new Error(
-					`Unwrap an Err on a ${this.isOk() ? "Ok" : "unknown"} value`,
-				)
+			throw new Error(
+				`Unwrap an Err on a ${this.isOk() ? "Ok" : "unknown"} value`,
+			)
 		} else return this.$error as E
 	}
 }

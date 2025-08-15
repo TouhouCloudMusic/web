@@ -1,4 +1,4 @@
-import { type ComponentProps, type ParentProps } from "solid-js"
+import type { ComponentProps, ParentProps } from "solid-js"
 
 export type FormLayoutProps = ParentProps<ComponentProps<"div">>
 

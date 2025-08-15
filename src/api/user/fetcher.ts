@@ -22,7 +22,8 @@ export async function userProfile({
 
 	if (res.data) {
 		return res.data.data
-	} else if (res.error) {
+	}
+	if (res.error) {
 		throw new Error(res.error.message)
 		// oxlint-disable-next-line no-magic-numbers
 	} else if (res.response.status === 404) {

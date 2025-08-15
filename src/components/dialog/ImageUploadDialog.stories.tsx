@@ -1,5 +1,5 @@
 import { createSignal } from "solid-js"
-import { type Meta, type StoryObj } from "storybook-solidjs"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 import { logImage } from "~/utils/log"
 

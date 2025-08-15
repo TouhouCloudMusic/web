@@ -1,7 +1,7 @@
 import { createMemo, type JSX, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { type SafeOmit } from "~/types"
+import type { SafeOmit } from "~/types"
 
 interface LinkProps<T extends Entity>
 	extends JSX.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -17,16 +17,21 @@ export function Link<T extends Entity>(props: LinkProps<T>) {
 
 	const href = () => {
 		switch (props.to) {
-			case "artist":
+			case "artist": {
 				return `/artist/${props.params.id}`
-			case "user":
+			}
+			case "user": {
 				return `/user/${props.params.id}`
-			case "song":
+			}
+			case "song": {
 				return `/song/${props.params.id}`
-			case "release":
+			}
+			case "release": {
 				return `/release/${props.params.id}`
-			default:
+			}
+			default: {
 				return `/${props.to}`
+			}
 		}
 	}
 

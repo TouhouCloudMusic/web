@@ -10,7 +10,7 @@ export function ResetFieldDialogTrigger(props: {
 	onReset: () => void
 }) {
 	const fieldNameWithoutUnderscore = createMemo(() =>
-		props.fieldName.replace(/_/g, " "),
+		props.fieldName.replaceAll("_", " "),
 	)
 	return (
 		<AlertDialog

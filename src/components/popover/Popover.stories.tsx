@@ -1,4 +1,4 @@
-import { type Meta, type StoryObj } from "storybook-solidjs"
+import type { Meta, StoryObj } from "storybook-solidjs"
 
 import { Button } from "~/components/button"
 

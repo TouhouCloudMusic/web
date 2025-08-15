@@ -1,5 +1,5 @@
 import baka from "~/components/avatar/baka.jpg"
-import { type UserContext } from "~/state/user"
+import type { UserContext } from "~/state/user"
 
 export const USER_CIRNO = {
 	name: "Cirno",

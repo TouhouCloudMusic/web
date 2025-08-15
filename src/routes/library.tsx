@@ -186,7 +186,7 @@ function LibraryPage() {
 
 	const renderContent = () => {
 		switch (activeTab()) {
-			case "albums":
+			case "albums": {
 				return (
 					<div class="grid grid-cols-4 gap-6">
 						<For each={albums}>
@@ -211,7 +211,8 @@ function LibraryPage() {
 						</For>
 					</div>
 				)
-			case "artists":
+			}
+			case "artists": {
 				return (
 					<div class="grid grid-cols-5 gap-5">
 						<For each={artists}>
@@ -235,7 +236,8 @@ function LibraryPage() {
 						</For>
 					</div>
 				)
-			case "songs":
+			}
+			case "songs": {
 				return (
 					<div class="overflow-hidden rounded-lg bg-white shadow-sm">
 						<table class="w-full table-auto">
@@ -277,8 +279,10 @@ function LibraryPage() {
 						</table>
 					</div>
 				)
-			default:
-				return null
+			}
+			default: {
+				return
+			}
 		}
 	}
 

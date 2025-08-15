@@ -1,4 +1,4 @@
-import { type JSX } from "solid-js"
+import type { JSX } from "solid-js"
 
 import { Dialog } from "."
 import { ImageCropper, type ImageDropProps } from "../form/ImageCropper"

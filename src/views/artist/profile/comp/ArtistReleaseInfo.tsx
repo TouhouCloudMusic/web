@@ -56,12 +56,15 @@ function Inner() {
 				<For
 					each={TABS.filter((tab) => {
 						switch (tab) {
-							case "Appearance":
+							case "Appearance": {
 								return context.appearances.data.length
-							case "Credit":
+							}
+							case "Credit": {
 								return context.credits.data.length
-							default:
+							}
+							default: {
 								return true
+							}
 						}
 					})}
 				>

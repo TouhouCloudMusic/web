@@ -1,5 +1,6 @@
 import { Navigate } from "@tanstack/solid-router"
-import { ParentProps, Show } from "solid-js"
+import type { ParentProps } from "solid-js"
+import { Show } from "solid-js"
 
 import { useUserCtx } from "~/state/user"
 

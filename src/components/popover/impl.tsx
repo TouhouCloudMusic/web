@@ -1,11 +1,11 @@
-import { type PolymorphicProps } from "@kobalte/core"
+import type { PolymorphicProps } from "@kobalte/core"
 import { Popover, type PopoverArrowProps } from "@kobalte/core/popover"
-import {
-	type PopoverCloseButtonProps,
-	type PopoverContentProps,
-	type PopoverDescriptionProps,
-	type PopoverTitleProps,
-	type PopoverRootProps,
+import type {
+	PopoverCloseButtonProps,
+	PopoverContentProps,
+	PopoverDescriptionProps,
+	PopoverTitleProps,
+	PopoverRootProps,
 } from "@kobalte/core/popover"
 import { mergeProps, type ValidComponent } from "solid-js"
 import { twMerge } from "tailwind-merge"

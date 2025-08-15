@@ -23,7 +23,7 @@ function FeedsPage() {
 			likes: 142,
 			comments: 38,
 			shares: 12,
-			media: null,
+			media: undefined,
 		},
 		{
 			id: 2,
@@ -74,7 +74,7 @@ function FeedsPage() {
 			likes: 78,
 			comments: 52,
 			shares: 5,
-			media: null,
+			media: undefined,
 		},
 		{
 			id: 5,

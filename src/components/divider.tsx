@@ -17,9 +17,8 @@ export function Divider(props: Props) {
 	let direction_class = () => {
 		if (props.vertical) {
 			return "w-[0.5px] h-full"
-		} else {
-			return "h-[0.5px] w-full"
 		}
+		return "h-[0.5px] w-full"
 	}
 
 	let [_, other_props] = splitProps(props, ["class"])
