@@ -1,22 +1,22 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { useLingui } from "@lingui-solid/solid/macro"
 import { Link } from "@tanstack/solid-router"
-import { createMemo, Match, Show, Switch } from "solid-js"
-import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
-
-import type { UserProfile } from "~/api/user"
-import { Button } from "~/components/button"
-import { NotificationState, useUserCtx } from "~/state/user"
-import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
-
-import { Avatar } from "../avatar/index.tsx"
-import { Dialog } from "../dialog/index.ts"
-import { Divider } from "../divider"
 import {
 	BellAlertIcon,
 	BellIcon,
 	BellSlashIcon,
-} from "../icons/heroicons/24/outline.tsx"
+} from "@thc/icons/heroicons/24/outline.tsx"
+import { createMemo, Match, Show, Switch } from "solid-js"
+import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
+
+import type { UserProfile } from "~/api/user"
+import { Button } from "~/components/atomic/button/index.tsx"
+import { NotificationState, useCurrentUser } from "~/state/user"
+import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
+
+import { Divider } from "../atomic/Divider.tsx"
+import { Avatar } from "../atomic/avatar/index.tsx"
+import { Dialog } from "../dialog/index.ts"
 import { LeftSidebar } from "./LeftSidebar"
 import { RightSidebar } from "./RightSidebar"
 
@@ -59,7 +59,7 @@ export function Header() {
 						class="h-6"
 					/>
 					<Show
-						when={useUserCtx().user}
+						when={useCurrentUser().user}
 						fallback={<UnauthenticatedButtons />}
 					>
 						{(user) => <AuthenticatedContent user={user()} />}
@@ -111,7 +111,7 @@ function SearchBar() {
 }
 
 function NotificationButton() {
-	let notification_state = createMemo(() => useUserCtx().notification_state)
+	let notification_state = createMemo(() => useCurrentUser().notification_state)
 	return (
 		<Button
 			variant="Tertiary"

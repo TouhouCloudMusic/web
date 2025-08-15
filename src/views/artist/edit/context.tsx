@@ -3,7 +3,7 @@ import { createContext } from "solid-js"
 import type { ParentProps } from "solid-js"
 
 import type { NewArtistCorrection } from "~/api/artist/schema"
-import { assertContext } from "~/utils/context"
+import { assertContext } from "~/utils/solid/assertContext"
 
 export type ArtistEditFormContextValue = {
 	artistId: number | undefined

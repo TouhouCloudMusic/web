@@ -1,7 +1,11 @@
-import { createContext, onMount, type ParentProps } from "solid-js"
+import type { ParentProps } from "solid-js"
+import { createContext, onMount } from "solid-js"
 import { createMutable } from "solid-js/store"
-import { FetchClient, type UserProfile } from "~/api"
-import { assertContext } from "~/utils/context"
+
+import type { UserProfile } from "~/api"
+import { FetchClient } from "~/api"
+import { dbg } from "~/utils/log"
+import { assertContext } from "~/utils/solid/assertContext"
 
 export const enum NotificationState {
 	None,
@@ -11,7 +15,7 @@ export const enum NotificationState {
 
 export class UserStore {
 	constructor(private ctx: UserContext) {
-		return createMutable(this)
+		createMutable(this)
 	}
 
 	private isLoading = false
@@ -30,11 +34,11 @@ export class UserStore {
 	get notification_state() {
 		if (this.ctx?.config?.mute_notifications === true) {
 			return NotificationState.Muted
-		} else if ((this.ctx?.notifications?.length ?? 0) > 0) {
-			return NotificationState.Unread
-		} else {
-			return NotificationState.None
 		}
+		if (this.ctx?.notifications?.length) {
+			return NotificationState.Unread
+		}
+		return NotificationState.None
 	}
 
 	get user() {
@@ -52,14 +56,18 @@ export class UserStore {
 	}
 
 	async sign_out() {
-		let res = await FetchClient.GET("/sign_out")
-		if (res.response.status != 200) {
-			console.log("Sign out failed", res.error)
+		let res = await FetchClient.GET("/sign-out")
+		if (!res.response.ok) {
+			dbg("Sign out failed", res.error)
 
 			throw res.error
 		}
 		this.ctx = undefined
 	}
+}
+
+export type UserConfig = {
+	mute_notifications: boolean
 }
 
 export type UserContext =
@@ -70,13 +78,9 @@ export type UserContext =
 	  }
 	| undefined
 
-export type UserConfig = {
-	mute_notifications: boolean
-}
+const UserContext = createContext<UserStore>()
 
-const USER_CONTEXT = createContext<UserStore>()
-
-export const useUserCtx = () => assertContext(USER_CONTEXT)
+export const useCurrentUser = () => assertContext(UserContext, "UserContext")
 
 export function UserContextProvider(props: ParentProps) {
 	let store = new UserStore(undefined)
@@ -84,8 +88,6 @@ export function UserContextProvider(props: ParentProps) {
 		void store.trySignIn()
 	})
 	return (
-		<USER_CONTEXT.Provider value={store}>
-			{props.children}
-		</USER_CONTEXT.Provider>
+		<UserContext.Provider value={store}>{props.children}</UserContext.Provider>
 	)
 }

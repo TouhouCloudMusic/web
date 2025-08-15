@@ -9,7 +9,7 @@ import { getRouteApi, useNavigate } from "@tanstack/solid-router"
 import { createEffect, createMemo, createSignal } from "solid-js"
 
 import { FetchClient, AuthSchema } from "~/api"
-import { useUserCtx } from "~/state/user"
+import { useCurrentUser } from "~/state/user"
 
 export type AuthFormMode = "sign_in" | "sign_up"
 
@@ -28,14 +28,13 @@ export function useAuthForm() {
 			return createFormStore<AuthSchema.SignIn>({
 				validate: valiForm(AuthSchema.SignIn),
 			}) as FormStore<AuthSchema.SignIn>
-		} else {
-			return createFormStore<AuthSchema.SignUp>({
-				validate: valiForm(AuthSchema.SignUp),
-			}) as FormStore<AuthSchema.SignUp>
 		}
+		return createFormStore<AuthSchema.SignUp>({
+			validate: valiForm(AuthSchema.SignUp),
+		}) as FormStore<AuthSchema.SignUp>
 	})
 
-	const userCtx = useUserCtx()
+	const userCtx = useCurrentUser()
 	const nav = useNavigate()
 
 	const handleSubmit: SubmitHandler<AuthSchema.SignIn> = async (values, _) => {

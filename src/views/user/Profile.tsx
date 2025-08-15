@@ -13,16 +13,17 @@ import {
 	Suspense,
 	Switch,
 } from "solid-js"
-import { type DOMElement } from "solid-js/jsx-runtime"
+import type { DOMElement } from "solid-js/jsx-runtime"
 import { twJoin, twMerge } from "tailwind-merge"
-import { type UserRole, type UserProfile } from "~/api/user"
-import { Avatar } from "~/components/avatar"
-import { Button } from "~/components/button"
+
+import type { UserRole, UserProfile } from "~/api/user"
+import { Avatar } from "~/components/atomic/avatar"
+import { Button } from "~/components/atomic/button"
 import { Markdown } from "~/components/markdown"
 import { PageLayout } from "~/layout/PageLayout"
 import { imgUrl } from "~/utils/adapter/static_file"
-import { assertContext } from "~/utils/context"
 import { callHandlerUnion } from "~/utils/dom/event"
+import { assertContext } from "~/utils/solid/assertContext"
 
 type Props = {
 	data: Resource<UserProfile>
@@ -50,11 +51,11 @@ export function Profile(props: Props) {
 		get userType() {
 			if (props.isCurrentUser) {
 				return UserType.Current
-			} else if (this.user()?.is_following) {
-				return UserType.Following
-			} else {
-				return UserType.Unfollowed
 			}
+			if (this.user()?.is_following) {
+				return UserType.Following
+			}
+			return UserType.Unfollowed
 		},
 	}
 
@@ -289,14 +290,17 @@ function Bio() {
 function RoleBadge(props: { role: UserRole }) {
 	function matchColor(role: UserRole) {
 		switch (role) {
-			case "Admin":
+			case "Admin": {
 				// @tw
 				return "bg-reimu-100 text-reimu-700"
-			case "Moderator":
+			}
+			case "Moderator": {
 				// @tw
 				return "bg-purple-100/80 text-purple-800/75"
-			case "User":
+			}
+			case "User": {
 				return ""
+			}
 		}
 	}
 

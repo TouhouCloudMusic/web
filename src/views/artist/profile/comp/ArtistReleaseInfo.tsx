@@ -15,9 +15,9 @@ import { twJoin, twMerge } from "tailwind-merge"
 import { RELEASE_TYPES, DateWithPrecision } from "~/api"
 import type { ReleaseType } from "~/api"
 import type { Credit, Discography } from "~/api/artist"
-import { Button } from "~/components/button"
-import { Tab } from "~/components/common/Tab"
-import { assertContext } from "~/utils/context"
+import { Tab } from "~/components/atomic/Tab"
+import { Button } from "~/components/atomic/button"
+import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
 
@@ -56,12 +56,15 @@ function Inner() {
 				<For
 					each={TABS.filter((tab) => {
 						switch (tab) {
-							case "Appearance":
+							case "Appearance": {
 								return context.appearances.data.length
-							case "Credit":
+							}
+							case "Credit": {
 								return context.credits.data.length
-							default:
+							}
+							default: {
 								return true
+							}
 						}
 					})}
 				>

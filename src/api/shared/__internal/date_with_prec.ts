@@ -45,11 +45,11 @@ export function display(date?: Out | null): string | undefined {
 	const [year, month, day] = date.value.split("-")
 	if (date.precision == "Year") {
 		return year!
-	} else if (date.precision == "Month") {
-		return `${year!}-${month!}`
-	} else {
-		return `${year!}-${month!}-${day!}`
 	}
+	if (date.precision == "Month") {
+		return `${year!}-${month!}`
+	}
+	return `${year!}-${month!}-${day!}`
 }
 
 function toPlainDate(date: Date): string {

@@ -1,6 +1,6 @@
 import fs from "node:fs/promises"
-import openApiGen, { astToString } from "openapi-typescript"
 import path from "node:path"
+import openApiGen, { astToString } from "openapi-typescript"
 import ts from "typescript"
 import type { Plugin } from "vite"
 
@@ -77,12 +77,15 @@ export async function generateOpenApi(base_url: string) {
 			}
 
 			switch (types.length) {
-				case 0:
+				case 0: {
 					return
-				case 1:
+				}
+				case 1: {
 					return types[0]
-				default:
+				}
+				default: {
 					return ts.factory.createUnionTypeNode(types)
+				}
 			}
 		},
 	})
