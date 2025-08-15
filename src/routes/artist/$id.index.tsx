@@ -10,7 +10,7 @@ import { ArtistQueryOption } from "~/api/artist"
 import type { ReleaseType } from "~/api/release"
 import { RELEASE_TYPES } from "~/api/release"
 import { EntityId } from "~/api/shared/schema"
-import { TanstackQueryClinet } from "~/state/tanstack"
+import { QUERY_CLIENT } from "~/state/tanstack"
 import { ArtistProfilePage } from "~/views/artist/profile"
 
 export const Route = createFileRoute("/artist/$id/")({
@@ -18,7 +18,7 @@ export const Route = createFileRoute("/artist/$id/")({
 	loader: async ({ params: { id } }) => {
 		const parsedId = v.parse(EntityId, Number.parseInt(id, 10))
 
-		return await TanstackQueryClinet.ensureQueryData(
+		return await QUERY_CLIENT.ensureQueryData(
 			ArtistQueryOption.findById(parsedId),
 		)
 	},

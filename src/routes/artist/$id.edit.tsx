@@ -5,7 +5,7 @@ import * as v from "valibot"
 
 import { ArtistQueryOption } from "~/api/artist"
 import { EntityId } from "~/api/shared/schema"
-import { TanstackQueryClinet } from "~/state/tanstack"
+import { QUERY_CLIENT } from "~/state/tanstack"
 import { EditArtistPage } from "~/views/artist/edit"
 
 export const Route = createFileRoute("/artist/$id/edit")({
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/artist/$id/edit")({
 	loader: async ({ params: { id } }) => {
 		const parsedId = v.parse(EntityId, Number.parseInt(id, 10))
 
-		return await TanstackQueryClinet.ensureQueryData(
+		return await QUERY_CLIENT.ensureQueryData(
 			ArtistQueryOption.findById(parsedId),
 		)
 	},
