@@ -2,7 +2,7 @@ import type { ComponentProps, JSX, ParentProps } from "solid-js"
 import { mergeProps, splitProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { Intersperse } from "../Intersperse"
+import { Intersperse } from "../../data/Intersperse"
 
 type ListProps<T> = {
 	items: T[] | null | undefined
