@@ -1,7 +1,7 @@
 import type { ParentProps, Signal } from "solid-js"
 import { createContext, createSignal, Suspense } from "solid-js"
 
-import { assertContext, useContextUnsave } from "~/utils/solid/assertContext"
+import { assertContext } from "~/utils/solid/assertContext"
 
 export enum AppTheme {
 	Light,
@@ -59,14 +59,6 @@ export function ThemeProvider(props: ParentProps) {
 	)
 }
 
-function fromString(str: string) {
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-enum-comparison
-	if (AppTheme.Dark == Number.parseInt(str)) {
-		return AppTheme.Dark
-	}
-	return AppTheme.Light
-}
-
 function toString(theme: AppTheme) {
 	switch (theme) {
 		case AppTheme.Dark: {
@@ -78,15 +70,9 @@ function toString(theme: AppTheme) {
 	}
 }
 
-// function setThemeCookie(theme: AppTheme) {
-//   Cookie.set("app_theme", String(theme), {
-//     expires: dayjs().add(30, "days").toDate(),
-//   })
-// }
-
 function setDocumentTheme(theme: AppTheme) {
 	document.querySelector("#app")!.classList.add("notransition")
-	document.documentElement.setAttribute("data-mode", toString(theme))
+	document.documentElement.dataset["mode"] = toString(theme)
 	setTimeout(() => {
 		document.querySelector("#app")!.classList.remove("notransition")
 	}, 0)
