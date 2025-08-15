@@ -1,17 +1,12 @@
-import {
-	type Accessor,
-	createMemo,
-	For,
-	type JSX,
-	Show,
-	splitProps,
-} from "solid-js"
+import type { Accessor, JSX } from "solid-js"
+import { createMemo, For, Show, splitProps } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
-import { Card, type Props as CardProps } from "../common/Card"
+import type { Props as CardProps } from "../common/Card"
+import { Card } from "../common/Card"
+import { Input } from "../common/Input"
 import { Button } from "../common/button"
-import { Input } from "../input"
 
 export type FilterTag = {
 	id: number
