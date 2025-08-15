@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/solid-query"
 import { createFileRoute } from "@tanstack/solid-router"
+import { ObjExt } from "@thc/toolkit/data"
 import { createEffect } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import * as v from "valibot"
@@ -10,7 +11,6 @@ import type { ReleaseType } from "~/api/release"
 import { RELEASE_TYPES } from "~/api/release"
 import { EntityId } from "~/api/shared/schema"
 import { TanstackQueryClinet } from "~/state/tanstack"
-import { Obj } from "~/utils/data"
 import { ArtistProfilePage } from "~/views/artist/profile"
 
 export const Route = createFileRoute("/artist/$id/")({
@@ -46,14 +46,14 @@ function RouteComponent() {
 	)
 
 	const [discographyMap, setDiscographyMap] = createStore(
-		Obj.fromEntries(RELEASE_TYPES.map((ty) => [ty, [] as Discography[]])),
+		ObjExt.fromEntries(RELEASE_TYPES.map((ty) => [ty, [] as Discography[]])),
 	)
 
-	const discography = Obj.fromEntries(
+	const discography = ObjExt.fromEntries(
 		RELEASE_TYPES.map((type) => [
 			type,
 			useInfiniteQuery(() =>
-				Obj.merge(ArtistQueryOption.discography(artistId, type), {
+				ObjExt.merge(ArtistQueryOption.discography(artistId, type), {
 					initialPageParam: 0,
 					getNextPageParam: (last) => last.next_cursor,
 				}),

@@ -4,8 +4,7 @@ import {
 	useQuery,
 } from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
-
-import { Str } from "~/utils/data"
+import { StrExt } from "@thc/toolkit/data"
 
 import type { ReleaseType } from "../release"
 import * as F from "./fetcher"
@@ -88,7 +87,7 @@ export function discography(id: number, releaseType: ReleaseType) {
 			if (context.pageParam === 0) {
 				const query = useQuery(() => discographyInit(id))
 				const res = await query.promise
-				return res[Str.toLowerCase(releaseType)]
+				return res[StrExt.toLowerCase(releaseType)]
 			}
 
 			const discographies = await F.__discographies(id, releaseType, {
