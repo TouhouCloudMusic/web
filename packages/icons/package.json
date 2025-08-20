@@ -13,7 +13,7 @@
 	"exports": {
 		".": "./index.ts",
 		"./vue_theme": "./vue_theme/index.ts",
-		"./heroicons/24": "./heroicons/24/index.ts",
+		"./heroicons/24/outline": "./heroicons/24/outline/index.ts",
 		"./custom": "./custom/index.tsx"
 	}
 }
