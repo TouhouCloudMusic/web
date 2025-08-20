@@ -1,4 +1,5 @@
 import "cropperjs"
+import { ParentProps } from "solid-js"
 
 export type SelectionProps = {
 	x?: number
@@ -18,7 +19,7 @@ export type SelectionProps = {
 	precise?: boolean
 }
 
-export function Selection(props: SelectionProps) {
+export function Selection(props: ParentProps<SelectionProps>) {
 	// @ts-expect-error
 	return <cropper-selection {...props} />
 }

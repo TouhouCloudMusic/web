@@ -1,6 +1,7 @@
 import "cropperjs"
+import type { JSX } from "solid-js"
 
-export interface ShadeProps {
+export interface ShadeProps extends JSX.HTMLAttributes<HTMLElement> {
 	x?: number
 	y?: number
 	width?: number

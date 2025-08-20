@@ -2,6 +2,7 @@ import { Dialog as K_Dialog } from "@kobalte/core"
 import { FileField } from "@kobalte/core/file-field"
 import { createForm, valiForm } from "@modular-forms/solid"
 import { Option } from "@thc/toolkit/data"
+import { Cropper } from "solid-cropper"
 import type { Setter, ValidComponent } from "solid-js"
 import { createMemo, createSignal, onCleanup, Show } from "solid-js"
 import { createMutable } from "solid-js/store"
@@ -16,7 +17,6 @@ import { PageLayout } from "~/layout/PageLayout"
 import { useCurrentUser } from "~/state/user"
 import type { Replace } from "~/types"
 import type { ExternalSchema as GenericValibotSchema } from "~/types/valibot"
-import { createCropperBoundary } from "~/utils/adapter/cropper"
 import { createClickOutside } from "~/utils/solid/createClickOutside"
 
 export function EditProfile() {
@@ -201,38 +201,38 @@ function UploadAvatarFormCanvas(props: { file: File }) {
 		return url
 	})
 
-	let store = createCropperBoundary("image")
+	// let store = createCropperBoundary("image")
 
 	return (
-		<cropper-canvas
+		<Cropper.Canvas
 			background
 			class="size-88"
-			ref={store.setCanvasRef}
+			// ref={store.setCanvasRef}
 		>
-			<cropper-image
+			<Cropper.Image
 				src={url()}
 				alt="TODO"
 				scalable
 				rotatable
 				translatable
 				skewable
-				ref={store.setImageRef}
-			></cropper-image>
-			<cropper-shade hidden></cropper-shade>
+				// ref={store.setImageRef}
+			/>
+			<Cropper.Shade hidden />
 
-			<cropper-selection
+			<Cropper.Selection
 				aspect-ratio={1}
 				initial-coverage={0.75}
 				keyboard
 				precise
 				// dynamic
-				ref={store.setSelectionRef}
+				// ref={store.setSelectionRef}
 			>
-				<cropper-handle
+				<Cropper.Handle
 					action="move"
 					plain
-				></cropper-handle>
-			</cropper-selection>
-		</cropper-canvas>
+				/>
+			</Cropper.Selection>
+		</Cropper.Canvas>
 	)
 }

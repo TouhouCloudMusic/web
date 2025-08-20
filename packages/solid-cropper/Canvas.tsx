@@ -1,6 +1,7 @@
 import "cropperjs"
+import type { ComponentProps, ParentProps } from "solid-js"
 
-export type CanvasProps = {
+export interface CanvasProps extends ComponentProps<"canvas"> {
 	/**
 	 * Indicates whether this element has a grid background.
 	 * @default false

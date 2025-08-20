@@ -14,6 +14,7 @@
 		"@floating-ui/dom": "^1.7.3",
 		"@formisch/solid": "^0.3.0",
 		"@kobalte/core": "^0.13.11",
+		"solid-cropper": "workspace:*",
 		"@lingui-solid/solid": "^5.1.4",
 		"@modular-forms/solid": "^0.25.1",
 		"@shikijs/markdown-it": "^3.11.0",

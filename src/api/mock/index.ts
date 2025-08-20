@@ -11,5 +11,6 @@ export const USER_CTX: UserContext = {
 	user: {
 		name: "Cirno",
 		avatar_url: baka,
+		last_login: "",
 	},
 }
