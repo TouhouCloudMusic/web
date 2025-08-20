@@ -5,7 +5,7 @@ import {
 	BellAlertIcon,
 	BellIcon,
 	BellSlashIcon,
-} from "@thc/icons/heroicons/24/outline.tsx"
+} from "@thc/icons/heroicons/24/outline"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 

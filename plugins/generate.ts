@@ -6,9 +6,15 @@ import type { Plugin } from "vite"
 
 const OPENAPI_OUTPUT_DIR = "./src/api"
 
-export const generatePlugin = (base_url?: string): Plugin => ({
+export const generatePlugin = (
+	base_url?: string,
+	isTest?: boolean,
+): Plugin => ({
 	name: "generate",
 	async buildStart() {
+		if (isTest) {
+			return
+		}
 		if (!base_url) {
 			console.log("base_url is not defined, skipping constants generation")
 			return
@@ -21,8 +27,9 @@ export const generatePlugin = (base_url?: string): Plugin => ({
 			console.log("File generated successfully")
 		} catch (error) {
 			let msg
+
 			if (error instanceof Error) {
-				msg = error.message
+				msg = error.stack
 			} else {
 				msg = error
 			}
