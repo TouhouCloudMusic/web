@@ -1,26 +1,30 @@
-import type { UserProfile, SignInError, SignOutError, SignUpError } from "~/gen"
-import { signIn, signOut, signUp } from "~/gen"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult } from "~/shared"
-import { apiResultFrom, apiResultFromMessage } from "~/shared"
+import { adaptApiResult, adaptApiResultMessage } from "~/shared"
 
-type OptSignIn = Parameters<typeof signIn>
-type OptSignOut = Parameters<typeof signOut>
-type OptSignUp = Parameters<typeof signUp>
+export async function signin(options: {
+	body: operations["sign_in"]["requestBody"]["content"]["application/json"]
+}): Promise<ApiResult<components["schemas"]["UserProfile"], unknown>> {
+	const res = await FetchClient.POST("/sign-in", {
+		body: options.body,
+	})
 
-export async function signin(
-	...option: OptSignIn
-): Promise<ApiResult<UserProfile, SignInError>> {
-	return apiResultFrom(await signIn(...option))
+	return adaptApiResult(res)
 }
 
-export async function signup(
-	...option: OptSignUp
-): Promise<ApiResult<UserProfile, SignUpError>> {
-	return apiResultFrom(await signUp(...option))
+export async function signup(options: {
+	body: operations["sign_up"]["requestBody"]["content"]["application/json"]
+}): Promise<ApiResult<components["schemas"]["UserProfile"], unknown>> {
+	const res = await FetchClient.POST("/sign-up", {
+		body: options.body,
+	})
+
+	return adaptApiResult(res)
 }
 
-export async function signout(
-	...option: OptSignOut
-): Promise<ApiResult<string, SignOutError>> {
-	return apiResultFromMessage(await signOut(...option))
+export async function signout(): Promise<ApiResult<string, unknown>> {
+	const res = await FetchClient.GET("/sign-out", {})
+
+	return adaptApiResultMessage(res)
 }

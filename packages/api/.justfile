@@ -1,4 +1,11 @@
 set dotenv-load
 
 gen:
-  pnpx @hey-api/openapi-ts -i $SERVER_URL/openapi.json -o src/gen
+  rm -rf ./src/gen/index.ts
+  pnpx openapi-typescript $API_SCHEMA -o ./src/gen/index.ts \
+  --alphabetize \
+  --array-length \
+  --make-paths-enum \
+  --export-type \
+  --root-types \
+  --root-types-no-schema-prefix

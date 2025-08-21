@@ -1,19 +1,26 @@
-import type { UserProfile, ProfileError, ProfileWithNameError } from "~/gen"
-import { profile, profileWithName } from "~/gen"
-import type { ApiResult } from "~/shared"
-import { apiResultFrom } from "~/shared"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
+import type { ApiResultOptional } from "~/shared"
+import { adaptApiResultOptional } from "~/shared"
 
-type OptProfile = Parameters<typeof profile>
-type OptProfileWithName = Parameters<typeof profileWithName>
+export async function profile(): Promise<
+	ApiResultOptional<components["schemas"]["UserProfile"], unknown>
+> {
+	const res = await FetchClient.GET("/profile", {})
 
-export async function current(
-	...option: OptProfile
-): Promise<ApiResult<UserProfile, ProfileError>> {
-	return apiResultFrom(await profile(...option))
+	return adaptApiResultOptional(res)
 }
 
-export async function findByName(
-	...option: OptProfileWithName
-): Promise<ApiResult<UserProfile, ProfileWithNameError>> {
-	return apiResultFrom(await profileWithName(...option))
+export async function profileWithName(options: {
+	path: operations["profile_with_name"]["parameters"]["path"]
+}): Promise<ApiResultOptional<components["schemas"]["UserProfile"], unknown>> {
+	const res = await FetchClient.GET("/profile/{name}", {
+		params: { path: options.path },
+	})
+
+	return adaptApiResultOptional(res)
 }
+
+// Legacy aliases
+export const current = profile
+export const findByName = profileWithName

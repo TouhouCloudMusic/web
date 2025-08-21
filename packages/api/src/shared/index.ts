@@ -1,4 +1,6 @@
-import { either as E, option as O } from "fp-ts"
+import { pipe } from "@thc/toolkit"
+import type { ADTEnum } from "@thc/toolkit/types"
+import { Either as E, Option as O } from "effect"
 
 type OkResponse<T> = {
 	status: string
@@ -23,30 +25,6 @@ type RawResponse = {
 export type ApiResponse<T> = OkResponse<T> | MessageResponse | ErrResponse
 export type ApiResponseNonExhaustive<T> = ApiResponse<T> & RawResponse
 
-type ClientResponse<T, E> = (
-	| {
-			data: OkResponse<T>
-			error?: undefined
-	  }
-	| {
-			data: undefined
-			error?: E
-	  }
-) &
-	RawResponse
-
-type ClientMessageResponse<E> = (
-	| {
-			data: MessageResponse
-			error?: undefined
-	  }
-	| {
-			data: undefined
-			error?: E
-	  }
-) &
-	RawResponse
-
 export type ApiError<E> =
 	| {
 			type: "Server"
@@ -57,17 +35,18 @@ export type ApiError<E> =
 			error: string
 	  }
 
-export type ApiResult<T, E = ErrResponse> = E.Either<ApiError<E>, T>
+export type ApiResult<T, E = ErrResponse> = E.Either<T, ApiError<E>>
 export type ApiResultOptional<T, E = ErrResponse> = E.Either<
-	ApiError<E>,
-	O.Option<NonNullable<T>>
+	O.Option<NonNullable<T>>,
+	ApiError<E>
 >
 
 type RestError<E> = {
 	error?: E
-} & RawResponse
+	response: Response
+}
 
-function handleError<T, E>(res: RestError<E>): ApiResult<T, E> {
+function handleError<E>(res: RestError<E>): E.Either<never, ApiError<E>> {
 	if (res.error) {
 		return E.left({
 			type: "Server",
@@ -81,32 +60,60 @@ function handleError<T, E>(res: RestError<E>): ApiResult<T, E> {
 	})
 }
 
-export function apiResultFrom<T = string, E = never>(
-	res: ClientResponse<T, E>,
+type FetchResponse<T, E> = ADTEnum<
+	[
+		{
+			data: OkResponse<T>
+		},
+		{
+			error: E
+		},
+	]
+> & {
+	response: Response
+}
+
+export function adaptApiResult<T, E>(
+	res: FetchResponse<T, E>,
 ): ApiResult<T, E> {
-	if (res.data !== undefined) {
+	if (res.data) {
 		return E.right(res.data.data)
 	}
 
 	return handleError(res)
 }
 
-export function apiResultFromOptional<T, E>(
-	res: ClientResponse<T, E>,
+export function adaptApiResultOptional<T, E = unknown>(
+	res: FetchResponse<T, E>,
 ): ApiResult<O.Option<NonNullable<T>>, E> {
-	if (res.data !== undefined) {
+	if (res.data) {
 		return E.right(O.fromNullable(res.data.data))
 	}
 
 	return handleError(res)
 }
 
-export function apiResultFromMessage<E>(
-	res: ClientMessageResponse<E>,
-): ApiResult<string, E> {
-	if (res.data !== undefined) {
-		return E.right(res.data.message)
-	}
+type FetchMessageResponse<E> = ADTEnum<
+	[
+		{
+			data: {
+				message: string
+			}
+		},
+		{
+			error: E
+		},
+	]
+> & {
+	response: Response
+}
 
-	return handleError(res)
+export function adaptApiResultMessage<E>(
+	res: FetchMessageResponse<E>,
+): ApiResult<string, E> {
+	return pipe(
+		E.fromNullable(res.data, () => res),
+		E.map((d) => d.message),
+		E.orElse((e) => handleError(e)),
+	)
 }

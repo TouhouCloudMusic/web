@@ -1,64 +1,24 @@
-import { either as E } from "fp-ts"
-
-import type {
-	Release,
-	Message,
-	FindReleaseByIdError,
-	FindReleaseByKeywordError,
-	CreateReleaseError,
-	UpdateReleaseError,
-	UploadReleaseCoverArtError,
-} from "~/gen"
-import {
-	findReleaseById,
-	findReleaseByKeyword,
-	createRelease,
-	updateRelease,
-	uploadReleaseCoverArt,
-} from "~/gen"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult, ApiResultOptional } from "~/shared"
-import { apiResultFrom, apiResultFromOptional } from "~/shared"
+import { adaptApiResult, adaptApiResultOptional } from "~/shared"
 
-type OptFindOne = Parameters<typeof findReleaseById>
-export async function findOne(
-	...option: OptFindOne
-): Promise<ApiResultOptional<Release, FindReleaseByIdError>> {
-	return apiResultFromOptional(await findReleaseById(...option))
+export async function findReleaseById(options: {
+	path: operations["find_release_by_id"]["parameters"]["path"]
+}): Promise<ApiResultOptional<components["schemas"]["Release"], unknown>> {
+	const res = await FetchClient.GET("/release/{id}", {
+		params: { path: options.path },
+	})
+
+	return adaptApiResultOptional(res)
 }
 
-type OptFindMany = Parameters<typeof findReleaseByKeyword>
-export async function findMany(
-	...option: OptFindMany
-): Promise<ApiResult<Release[], FindReleaseByKeywordError>> {
-	return apiResultFrom(await findReleaseByKeyword(...option))
-}
+export async function findReleaseByKeyword(options: {
+	query: operations["find_release_by_keyword"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["Release"][], unknown>> {
+	const res = await FetchClient.GET("/release", {
+		params: { query: options.query },
+	})
 
-type OptCreate = Parameters<typeof createRelease>
-export async function create(
-	...option: OptCreate
-): Promise<ApiResult<Message, CreateReleaseError>> {
-	const res = await createRelease(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
-}
-
-type OptUpdate = Parameters<typeof updateRelease>
-export async function update(
-	...option: OptUpdate
-): Promise<ApiResult<Message, UpdateReleaseError>> {
-	const res = await updateRelease(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
-}
-
-type OptUpload = Parameters<typeof uploadReleaseCoverArt>
-export async function uploadCoverArt(
-	...option: OptUpload
-): Promise<ApiResult<Message, UploadReleaseCoverArtError>> {
-	const res = await uploadReleaseCoverArt(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
+	return adaptApiResult(res)
 }

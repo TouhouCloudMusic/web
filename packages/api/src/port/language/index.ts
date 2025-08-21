@@ -1,12 +1,12 @@
-import type { Language, LanguageListError } from "~/gen"
-import { languageList } from "~/gen"
+import type { components } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult } from "~/shared"
-import { apiResultFrom } from "~/shared"
+import { adaptApiResult } from "~/shared"
 
-type Opt = Parameters<typeof languageList>
+export async function findAll(): Promise<
+	ApiResult<components["schemas"]["Language"][], unknown>
+> {
+	const res = await FetchClient.GET("/languages", {})
 
-export async function findAll(
-	...option: Opt
-): Promise<ApiResult<Language[], LanguageListError>> {
-	return apiResultFrom(await languageList(...option))
+	return adaptApiResult(res)
 }

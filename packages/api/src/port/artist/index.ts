@@ -1,105 +1,99 @@
-import { either as E } from "fp-ts"
-
-import type {
-	Artist,
-	InitDiscography,
-	Message,
-	PaginatedCredit,
-	PaginatedDiscography,
-	CreateArtistError,
-	FindArtistApperancesError,
-	FindArtistByIdError,
-	FindArtistDiscographiesByTypeError,
-	FindArtistDiscographiesInitError,
-	FindManyArtistError,
-	GetArtistCreditsError,
-	UploadArtistProfileImageError,
-	UpsertArtistCorrectionError,
-} from "~/gen"
-import {
-	createArtist,
-	findArtistApperances,
-	findArtistById,
-	findArtistDiscographiesByType,
-	findArtistDiscographiesInit,
-	findManyArtist,
-	getArtistCredits,
-	uploadArtistProfileImage,
-	upsertArtistCorrection,
-} from "~/gen"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult, ApiResultOptional } from "~/shared"
-import { apiResultFrom, apiResultFromOptional } from "~/shared"
+import {
+	adaptApiResult,
+	adaptApiResultOptional,
+	adaptApiResultMessage,
+} from "~/shared"
 
-type OptFindOne = Parameters<typeof findArtistById>
-export async function findOne(
-	...option: OptFindOne
-): Promise<ApiResultOptional<Artist, FindArtistByIdError>> {
-	return apiResultFromOptional(await findArtistById(...option))
+export async function findOne(options: {
+	path: operations["find_artist_by_id"]["parameters"]["path"]
+	query?: operations["find_artist_by_id"]["parameters"]["query"]
+}): Promise<ApiResultOptional<components["schemas"]["Artist"], unknown>> {
+	const res = await FetchClient.GET("/artist/{id}", {
+		params: { path: options.path, query: options.query },
+	})
+
+	return adaptApiResultOptional(res)
 }
 
-type OptFindMany = Parameters<typeof findManyArtist>
-export async function findMany(
-	...option: OptFindMany
-): Promise<ApiResult<Artist[], FindManyArtistError>> {
-	return apiResultFrom(await findManyArtist(...option))
+export async function findMany(options: {
+	query: operations["find_many_artist"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["Artist"][], unknown>> {
+	const res = await FetchClient.GET("/artist", {
+		params: { query: options.query },
+	})
+
+	return adaptApiResult(res)
 }
 
-type OptCreate = Parameters<typeof createArtist>
-export async function create(
-	...option: OptCreate
-): Promise<ApiResult<Message, CreateArtistError>> {
-	const res = await createArtist(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: res.response.statusText })
+export async function create(options: {
+	body: operations["create_artist"]["requestBody"]["content"]["application/json"]
+}): Promise<ApiResult<string, unknown>> {
+	const res = await FetchClient.POST("/artist", {
+		body: options.body,
+	})
+
+	return adaptApiResultMessage(res)
 }
 
-type OptUpsert = Parameters<typeof upsertArtistCorrection>
-export async function upsertCorrection(
-	...option: OptUpsert
-): Promise<ApiResult<Message, UpsertArtistCorrectionError>> {
-	const res = await upsertArtistCorrection(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: res.response.statusText })
+export async function upsertCorrection(options: {
+	path: operations["upsert_artist_correction"]["parameters"]["path"]
+	body: operations["upsert_artist_correction"]["requestBody"]["content"]["application/json"]
+}): Promise<ApiResult<string, unknown>> {
+	const res = await FetchClient.POST("/artist/{id}", {
+		params: { path: options.path },
+		body: options.body,
+	})
+
+	return adaptApiResultMessage(res)
 }
 
-type OptAppear = Parameters<typeof findArtistApperances>
-export async function appearances(
-	...option: OptAppear
-): Promise<ApiResult<PaginatedDiscography, FindArtistApperancesError>> {
-	return apiResultFrom(await findArtistApperances(...option))
-}
-
-type OptCredits = Parameters<typeof getArtistCredits>
-export async function credits(
-	...option: OptCredits
-): Promise<ApiResult<PaginatedCredit, GetArtistCreditsError>> {
-	return apiResultFrom(await getArtistCredits(...option))
-}
-
-type OptDiscByType = Parameters<typeof findArtistDiscographiesByType>
-export async function discographiesByType(
-	...option: OptDiscByType
-): Promise<
-	ApiResult<PaginatedDiscography, FindArtistDiscographiesByTypeError>
+export async function findAppearances(options: {
+	path: operations["find_artist_apperances"]["parameters"]["path"]
+	query: operations["find_artist_apperances"]["parameters"]["query"]
+}): Promise<
+	ApiResult<components["schemas"]["Paginated_Discography"], unknown>
 > {
-	return apiResultFrom(await findArtistDiscographiesByType(...option))
+	const res = await FetchClient.GET("/artist/{id}/appearances", {
+		params: { path: options.path, query: options.query },
+	})
+
+	return adaptApiResult(res)
 }
 
-type OptDiscInit = Parameters<typeof findArtistDiscographiesInit>
-export async function discographiesInit(
-	...option: OptDiscInit
-): Promise<ApiResult<InitDiscography, FindArtistDiscographiesInitError>> {
-	return apiResultFrom(await findArtistDiscographiesInit(...option))
+export async function getCredits(options: {
+	path: operations["get_artist_credits"]["parameters"]["path"]
+	query: operations["get_artist_credits"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["Paginated_Credit"], unknown>> {
+	const res = await FetchClient.GET("/artist/{id}/credits", {
+		params: { path: options.path, query: options.query },
+	})
+
+	return adaptApiResult(res)
 }
 
-type OptUploadProfile = Parameters<typeof uploadArtistProfileImage>
-export async function uploadProfileImage(
-	...option: OptUploadProfile
-): Promise<ApiResult<Message, UploadArtistProfileImageError>> {
-	const res = await uploadArtistProfileImage(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
+export async function findDiscographiesByType(options: {
+	path: operations["find_artist_discographies_by_type"]["parameters"]["path"]
+	query: operations["find_artist_discographies_by_type"]["parameters"]["query"]
+}): Promise<
+	ApiResult<components["schemas"]["Paginated_Discography"], unknown>
+> {
+	const res = await FetchClient.GET("/artist/{id}/discographies", {
+		params: { path: options.path, query: options.query },
+	})
+
+	return adaptApiResult(res)
+}
+
+export async function findDiscographiesInit(options: {
+	path: operations["find_artist_discographies_init"]["parameters"]["path"]
+	query: operations["find_artist_discographies_init"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["InitDiscography"], unknown>> {
+	const res = await FetchClient.GET("/artist/{id}/discographies/init", {
+		params: { path: options.path, query: options.query },
+	})
+
+	return adaptApiResult(res)
 }

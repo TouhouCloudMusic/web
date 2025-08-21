@@ -1,52 +1,24 @@
-import { either as E } from "fp-ts"
-
-import type {
-	SongLyrics,
-	Message,
-	FindOneSongLyricsError,
-	FindManySongLyricsError,
-	CreateSongLyricsError,
-	UpdateSongLyricsError,
-} from "~/gen"
-import {
-	findOneSongLyrics,
-	findManySongLyrics,
-	createSongLyrics,
-	updateSongLyrics,
-} from "~/gen"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult, ApiResultOptional } from "~/shared"
-import { apiResultFrom, apiResultFromOptional } from "~/shared"
+import { adaptApiResult, adaptApiResultOptional } from "~/shared"
 
-type OptFindOne = Parameters<typeof findOneSongLyrics>
-export async function findOne(
-	...option: OptFindOne
-): Promise<ApiResultOptional<SongLyrics, FindOneSongLyricsError>> {
-	return apiResultFromOptional(await findOneSongLyrics(...option))
+export async function findOneSongLyrics(options: {
+	query: operations["find_one_song_lyrics"]["parameters"]["query"]
+}): Promise<ApiResultOptional<components["schemas"]["SongLyrics"], unknown>> {
+	const res = await FetchClient.GET("/song-lyrics", {
+		params: { query: options.query },
+	})
+
+	return adaptApiResultOptional(res)
 }
 
-type OptFindMany = Parameters<typeof findManySongLyrics>
-export async function findMany(
-	...option: OptFindMany
-): Promise<ApiResult<SongLyrics[], FindManySongLyricsError>> {
-	return apiResultFrom(await findManySongLyrics(...option))
-}
+export async function findManySongLyrics(options: {
+	query: operations["find_many_song_lyrics"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["SongLyrics"][], unknown>> {
+	const res = await FetchClient.GET("/song-lyrics/many", {
+		params: { query: options.query },
+	})
 
-type OptCreate = Parameters<typeof createSongLyrics>
-export async function create(
-	...option: OptCreate
-): Promise<ApiResult<Message, CreateSongLyricsError>> {
-	const res = await createSongLyrics(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
-}
-
-type OptUpdate = Parameters<typeof updateSongLyrics>
-export async function update(
-	...option: OptUpdate
-): Promise<ApiResult<Message, UpdateSongLyricsError>> {
-	const res = await updateSongLyrics(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
+	return adaptApiResult(res)
 }

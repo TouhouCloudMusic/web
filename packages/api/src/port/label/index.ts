@@ -1,52 +1,24 @@
-import { either as E } from "fp-ts"
-
-import type {
-	Label,
-	Message,
-	FindLabelByIdError,
-	FindLabelByKeywordError,
-	CreateLabelError,
-	UpsertLabelCorrectionError,
-} from "~/gen"
-import {
-	findLabelById,
-	findLabelByKeyword,
-	createLabel,
-	upsertLabelCorrection,
-} from "~/gen"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult, ApiResultOptional } from "~/shared"
-import { apiResultFrom, apiResultFromOptional } from "~/shared"
+import { adaptApiResult, adaptApiResultOptional } from "~/shared"
 
-type OptFindOne = Parameters<typeof findLabelById>
-export async function findOne(
-	...option: OptFindOne
-): Promise<ApiResultOptional<Label, FindLabelByIdError>> {
-	return apiResultFromOptional(await findLabelById(...option))
+export async function findLabelById(options: {
+	path: operations["find_label_by_id"]["parameters"]["path"]
+}): Promise<ApiResultOptional<components["schemas"]["Label"], unknown>> {
+	const res = await FetchClient.GET("/label/{id}", {
+		params: { path: options.path },
+	})
+
+	return adaptApiResultOptional(res)
 }
 
-type OptFindMany = Parameters<typeof findLabelByKeyword>
-export async function findMany(
-	...option: OptFindMany
-): Promise<ApiResult<Label[], FindLabelByKeywordError>> {
-	return apiResultFrom(await findLabelByKeyword(...option))
-}
+export async function findLabelByKeyword(options: {
+	query: operations["find_label_by_keyword"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["Label"][], unknown>> {
+	const res = await FetchClient.GET("/label", {
+		params: { query: options.query },
+	})
 
-type OptCreate = Parameters<typeof createLabel>
-export async function create(
-	...option: OptCreate
-): Promise<ApiResult<Message, CreateLabelError>> {
-	const res = await createLabel(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
-}
-
-type OptUpsert = Parameters<typeof upsertLabelCorrection>
-export async function upsertCorrection(
-	...option: OptUpsert
-): Promise<ApiResult<Message, UpsertLabelCorrectionError>> {
-	const res = await upsertLabelCorrection(...option)
-	if (res.data !== undefined) return E.right(res.data)
-	if (res.error) return E.left({ type: "Server", error: res.error })
-	return E.left({ type: "Response", error: "Unknown Error" })
+	return adaptApiResult(res)
 }

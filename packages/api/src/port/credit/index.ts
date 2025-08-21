@@ -1,24 +1,24 @@
-import type {
-	CreditRole,
-	CreditRoleSummary,
-	FindCreditRoleByIdError,
-	FindManyCreditRolesSummaryError,
-} from "~/gen"
-import { findCreditRoleById, findManyCreditRolesSummary } from "~/gen"
+import type { components, operations } from "~/gen"
+import { FetchClient } from "~/http"
 import type { ApiResult, ApiResultOptional } from "~/shared"
-import { apiResultFrom, apiResultFromOptional } from "~/shared"
+import { adaptApiResult, adaptApiResultOptional } from "~/shared"
 
-type OptFindById = Parameters<typeof findCreditRoleById>
-type OptFindSummary = Parameters<typeof findManyCreditRolesSummary>
+export async function findCreditRoleById(options: {
+	path: operations["find_credit_role_by_id"]["parameters"]["path"]
+}): Promise<ApiResultOptional<components["schemas"]["CreditRole"], unknown>> {
+	const res = await FetchClient.GET("/credit-role/{id}", {
+		params: { path: options.path },
+	})
 
-export async function findOne(
-	...option: OptFindById
-): Promise<ApiResultOptional<CreditRole, FindCreditRoleByIdError>> {
-	return apiResultFromOptional(await findCreditRoleById(...option))
+	return adaptApiResultOptional(res)
 }
 
-export async function summary(
-	...option: OptFindSummary
-): Promise<ApiResult<CreditRoleSummary[], FindManyCreditRolesSummaryError>> {
-	return apiResultFrom(await findManyCreditRolesSummary(...option))
+export async function findManyCreditRolesSummary(options: {
+	query: operations["find_many_credit_roles_summary"]["parameters"]["query"]
+}): Promise<ApiResult<components["schemas"]["CreditRoleSummary"][], unknown>> {
+	const res = await FetchClient.GET("/credit-role/summary", {
+		params: { query: options.query },
+	})
+
+	return adaptApiResult(res)
 }
