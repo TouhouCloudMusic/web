@@ -81,6 +81,7 @@
 		// Disable this, as type import is not recognized.
 		// We use the import plugin instead.
 		"no-duplicate-imports": "off",
+		"no-else-return": "off",
 		"no-empty-function": [
 			"warn",
 			{

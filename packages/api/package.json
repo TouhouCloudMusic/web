@@ -9,5 +9,9 @@
 	"packageManager": "pnpm@10.13.1",
 	"exports": {
 		".": "./src/index.ts"
+	},
+	"dependencies": {
+		"fp-ts": "*",
+		"@thc/toolkit": "workspace:*"
 	}
 }
