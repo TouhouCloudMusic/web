@@ -1,10 +1,5 @@
 import fs from "node:fs/promises"
-import path from "node:path"
-import openApiGen, { astToString } from "openapi-typescript"
-import ts from "typescript"
 import type { Plugin } from "vite"
-
-const OPENAPI_OUTPUT_DIR = "./src/api"
 
 export const generatePlugin = (
 	base_url?: string,
@@ -20,10 +15,7 @@ export const generatePlugin = (
 			return
 		}
 		try {
-			await Promise.all([
-				generateConstants(base_url),
-				generateOpenApi(base_url),
-			])
+			await generateConstants(base_url)
 			console.log("File generated successfully")
 		} catch (error) {
 			let msg
@@ -48,60 +40,4 @@ async function generateConstants(base_url: string) {
 	const content = await response.text()
 
 	return fs.writeFile("src/constant/server.ts", content)
-}
-
-export async function generateOpenApi(base_url: string) {
-	const UNDEF = ts.factory.createTypeReferenceNode(
-		ts.factory.createIdentifier("undefined"),
-	)
-	const BLOB = ts.factory.createTypeReferenceNode(
-		ts.factory.createIdentifier("Blob"),
-	)
-	const NULL = ts.factory.createLiteralTypeNode(ts.factory.createNull())
-
-	let api_doc_url = new URL("openapi.json", base_url)
-
-	// Make sure server is running
-	let json = (await fetch(api_doc_url).then((res) => res.json())) as string
-
-	let ast = await openApiGen(json, {
-		exportType: true,
-
-		transform(schemaObject, _metadata) {
-			let types: ts.TypeNode[] = []
-
-			if (
-				schemaObject.oneOf?.includes({
-					type: "null",
-				}) ||
-				schemaObject.nullable
-			) {
-				types.push(UNDEF, NULL)
-			}
-
-			if (schemaObject.format === "binary") {
-				types.push(BLOB)
-			}
-
-			switch (types.length) {
-				case 0: {
-					return
-				}
-				case 1: {
-					return types[0]
-				}
-				default: {
-					return ts.factory.createUnionTypeNode(types)
-				}
-			}
-		},
-	})
-
-	let schema = astToString(ast)
-
-	await fs.writeFile(
-		path.join(OPENAPI_OUTPUT_DIR, "openapi.ts"),
-		schema,
-		"utf8",
-	)
 }
