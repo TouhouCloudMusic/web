@@ -1,10 +1,10 @@
 /* @refresh skip */
 import { createContext, Suspense } from "solid-js"
 
-import type { Artist, Discography, Appearance, Credit } from "~/api/artist"
-import type { ReleaseType } from "~/api/release"
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
+import type { Artist, Discography, Appearance, Credit } from "~/query/artist"
+import type { ReleaseType } from "~/query/release"
 import type { InfiniteQuery } from "~/types/query"
 
 import { ArtistInfo } from "./comp/ArtistInfo"

@@ -2,10 +2,10 @@ import dayjs from "dayjs"
 import { createEffect, createMemo, on } from "solid-js"
 import { createStore } from "solid-js/store"
 
-import type { DateWithPrecision as TDateWithPrecision } from "~/api"
-import type { DatePrecision } from "~/api/shared/schema"
 import { FormComp } from "~/components/atomic/form"
 import { InputField } from "~/components/atomic/form/Input"
+import type { DatePrecision } from "~/domain/shared"
+import type { DateWithPrecision as TDateWithPrecision } from "~/query"
 
 export interface DateWithPrecisionProps {
 	label: string

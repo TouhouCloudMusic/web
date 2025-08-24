@@ -4,11 +4,11 @@ import { debounce, id } from "@thc/toolkit"
 import { createSignal, For, createMemo, Suspense, type JSX } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 
-import { ArtistQueryOption } from "~/api/artist"
-import type { Artist, ArtistCommonFilter } from "~/api/artist"
 import { Button } from "~/components/atomic/button"
 import { Dialog } from "~/components/dialog"
 import { SearchDialog } from "~/components/form/SearchDialog"
+import { ArtistQueryOption } from "~/query/artist"
+import type { Artist, ArtistCommonFilter } from "~/query/artist"
 
 type ArtistSearchDialogProps = {
 	onSelect: (artist: Artist) => void

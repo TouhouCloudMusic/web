@@ -1,11 +1,11 @@
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import * as M from "@modular-forms/solid"
 
-import type { ArtistMutation } from "~/api/artist"
-import type { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/atomic/button"
 import { FormComp } from "~/components/atomic/form"
 import { InputField } from "~/components/atomic/form/Input"
+import type { NewArtistCorrection } from "~/domain/artist/schema"
+import type { ArtistMutation } from "~/query/artist"
 
 import { useArtistForm } from "../context"
 

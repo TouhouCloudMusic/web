@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/solid-router"
 
-import type { Song } from "~/api/song"
+import type { Song } from "~/query/song"
 import { SongInfoPage } from "~/views/song/Info"
 
 export const Route = createFileRoute("/song/mock")({

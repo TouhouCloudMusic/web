@@ -5,9 +5,9 @@ import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
 
-import type { Artist } from "~/api/artist"
-import { DateWithPrecision } from "~/api/shared"
 import { Button } from "~/components/atomic/button"
+import { DateWithPrecision } from "~/domain/shared"
+import type { Artist } from "~/query/artist"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."

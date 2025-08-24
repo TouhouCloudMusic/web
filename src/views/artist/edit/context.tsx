@@ -2,7 +2,7 @@ import type { FormStore } from "@modular-forms/solid"
 import { createContext } from "solid-js"
 import type { ParentProps } from "solid-js"
 
-import type { NewArtistCorrection } from "~/api/artist/schema"
+import type { NewArtistCorrection } from "~/query/artist/schema"
 import { assertContext } from "~/utils/solid/assertContext"
 
 export type ArtistEditFormContextValue = {

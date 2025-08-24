@@ -2,11 +2,11 @@ import * as M from "@modular-forms/solid"
 import { For } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 
-import type { NewArtistCorrection } from "~/api/artist/schema"
 import { Divider } from "~/components/atomic/Divider"
 import { Button } from "~/components/atomic/button"
 import { FormComp } from "~/components/atomic/form"
 import { InputField } from "~/components/atomic/form/Input"
+import type { NewArtistCorrection } from "~/domain/artist/schema"
 
 import { useArtistForm } from "../context"
 import { FieldArrayFallback } from "./FieldArrayFallback"

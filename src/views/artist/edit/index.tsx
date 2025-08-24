@@ -7,10 +7,10 @@ import type { JSX } from "solid-js"
 import { Show, Suspense } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
 
-import type { Artist } from "~/api/artist"
-import { NewArtistCorrection } from "~/api/artist/schema"
 import { Button } from "~/components/atomic/button/index.tsx"
+import { NewArtistCorrection } from "~/domain/artist/schema"
 import { PageLayout } from "~/layout/PageLayout"
+import type { Artist } from "~/query/artist"
 
 import { ArtistFormAliasesField } from "./comp/Aliases"
 import { ArtistFormNameField } from "./comp/ArtistName"

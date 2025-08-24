@@ -1,1 +1,1 @@
-export * as CreditQueryOption from "./query"
+export * as CreditRoleQueryOption from "./query"

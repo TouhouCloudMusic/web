@@ -1,9 +1,9 @@
+import { UserApi, AuthApi } from "@thc/api"
 import type { ParentProps } from "solid-js"
 import { createContext, onMount } from "solid-js"
 import { createMutable } from "solid-js/store"
 
-import type { UserProfile } from "~/api"
-import { FetchClient } from "~/api"
+import type { UserProfile } from "~/query"
 import { dbg } from "~/utils/log"
 import { assertContext } from "~/utils/solid/assertContext"
 
@@ -21,12 +21,12 @@ export class UserStore {
 	private isLoading = false
 
 	async trySignIn() {
-		let res = await FetchClient.GET("/profile")
+		const result = await UserApi.profile()
 
 		this.isLoading = false
-		if (res.data?.data) {
+		if (result.status === "Ok" && result.data) {
 			this.ctx = {
-				user: res.data.data,
+				user: result.data,
 			}
 		}
 	}
@@ -56,11 +56,11 @@ export class UserStore {
 	}
 
 	async sign_out() {
-		let res = await FetchClient.GET("/sign-out")
-		if (!res.response.ok) {
-			dbg("Sign out failed", res.error)
+		const result = await AuthApi.signout()
+		if (result.status !== "Ok") {
+			dbg("Sign out failed", result.error)
 
-			throw res.error
+			throw result.error
 		}
 		this.ctx = undefined
 	}

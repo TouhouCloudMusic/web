@@ -3,8 +3,8 @@ import { createFileRoute, useNavigate } from "@tanstack/solid-router"
 import { createEffect } from "solid-js"
 import * as v from "valibot"
 
-import { ArtistQueryOption } from "~/api/artist"
-import { EntityId } from "~/api/shared/schema"
+import { EntityId } from "~/domain/shared"
+import { ArtistQueryOption } from "~/query/artist"
 import { QUERY_CLIENT } from "~/state/tanstack"
 import { EditArtistPage } from "~/views/artist/edit"
 

@@ -1,10 +1,9 @@
-import type { PaginatedDiscography } from "@thc/api"
-
 export type Pagination = {
 	cursor: number
 	limit: number
 }
 
-export type Paginated<T> = Omit<PaginatedDiscography, "items"> & {
+export type Paginated<T> = {
 	items: T[]
+	next_cursor?: number | null
 }

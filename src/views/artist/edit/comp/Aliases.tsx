@@ -3,11 +3,11 @@ import { createMemo } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 
-import type { Artist, ArtistCommonFilter } from "~/api/artist"
 import { Divider } from "~/components/atomic/Divider"
 import { Button } from "~/components/atomic/button"
 import { FormComp } from "~/components/atomic/form"
 import { Intersperse } from "~/components/data/Intersperse"
+import type { Artist, ArtistCommonFilter } from "~/query/artist"
 
 import { useArtistForm } from "../context"
 import { ArtistSearchDialog } from "./ArtistSearchDialog"

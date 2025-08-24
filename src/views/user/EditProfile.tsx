@@ -1,14 +1,14 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { FileField } from "@kobalte/core/file-field"
 import { createForm, valiForm } from "@modular-forms/solid"
-import { Option } from "@thc/toolkit/data"
+import type { components } from "@thc/api"
+import { Option } from "effect"
 import { Cropper } from "solid-cropper"
 import type { Setter, ValidComponent } from "solid-js"
 import { createMemo, createSignal, onCleanup, Show } from "solid-js"
 import { createMutable } from "solid-js/store"
 import * as v from "valibot"
 
-import type { components } from "~/api/openapi"
 import { Card } from "~/components/atomic/Card"
 import { Avatar } from "~/components/atomic/avatar"
 import { Button } from "~/components/atomic/button"
@@ -32,9 +32,9 @@ export function EditProfile() {
 					{/* TODO: locales */}
 					<div>{new Date(user.last_login).toLocaleString("zh-CN")}</div>
 					<div>
-						{Option.of(user.roles)
-							.map((x) => x.map((y) => y.name).join(", "))
-							.getOrUndef()}
+						{Option.fromNullable(user.roles)
+							.pipe(Option.map((x) => x.map((y) => y.name).join(", ")))
+							.pipe(Option.getOrUndefined)}
 					</div>
 				</div>
 				<div>

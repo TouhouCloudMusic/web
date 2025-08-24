@@ -6,10 +6,10 @@ import type { JSX } from "solid-js"
 import { For } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
 
-import type { NewArtistCorrection } from "~/api/artist/schema"
 import { FormComp } from "~/components/atomic"
 import { Button } from "~/components/atomic/button"
 import { InputField } from "~/components/atomic/form/Input"
+import type { NewArtistCorrection } from "~/domain/artist/schema"
 
 import { useArtistForm } from "../../context"
 

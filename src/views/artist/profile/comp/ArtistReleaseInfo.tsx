@@ -12,11 +12,12 @@ import {
 import { Dynamic } from "solid-js/web"
 import { twJoin, twMerge } from "tailwind-merge"
 
-import { RELEASE_TYPES, DateWithPrecision } from "~/api"
-import type { ReleaseType } from "~/api"
-import type { Credit, Discography } from "~/api/artist"
 import { Tab } from "~/components/atomic/Tab"
 import { Button } from "~/components/atomic/button"
+import { RELEASE_TYPES } from "~/domain/release"
+import { DateWithPrecision } from "~/domain/shared"
+import type { ReleaseType } from "~/query"
+import type { Credit, Discography } from "~/query/artist"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."

@@ -9,9 +9,9 @@ import type { JSX } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { CheckIcon, Cross1Icon } from "solid-radix-icons"
 
-import { CreditRoleQueryOption } from "~/api/credit"
-import type { CreditRoleSummary } from "~/api/credit"
 import { Combobox } from "~/components/atomic/Combobox"
+import { CreditRoleQueryOption } from "~/query/credit"
+import type { CreditRoleSummary } from "~/query/credit"
 
 import { useArtistForm } from "../../context"
 

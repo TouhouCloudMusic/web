@@ -9,8 +9,8 @@ import {
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
-import type { UserProfile } from "~/api/user"
 import { Button } from "~/components/atomic/button/index.tsx"
+import type { UserProfile } from "~/query/user"
 import { NotificationState, useCurrentUser } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 
