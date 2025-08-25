@@ -2,8 +2,7 @@
 import fc from "fast-check"
 import { describe, it, expect } from "vitest"
 
-import type { Artist } from "~/query/artist"
-
+import type { Artist } from "../@thc/query/artist"
 import { useArtistFormInitialValues } from "./useFormInitialValues"
 
 const datePrecisionArb = fc.constantFrom("Day", "Month", "Year")

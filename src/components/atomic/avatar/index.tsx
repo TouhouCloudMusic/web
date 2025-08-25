@@ -1,8 +1,8 @@
+import type { UserProfile } from "@thc/api"
 import type { JSX } from "solid-js"
 import { createSignal, Show, splitProps, Suspense } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import type { UserProfile } from "~/query/user"
 import { imgUrl } from "~/utils/adapter/static_file"
 
 // 默认头像路径

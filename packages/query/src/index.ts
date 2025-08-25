@@ -1,6 +1,5 @@
 export * from "./artist"
 export * from "./credit"
 export * from "./language"
-export * from "./shared"
 export * from "./song"
 export * from "./user"

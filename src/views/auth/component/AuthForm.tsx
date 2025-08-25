@@ -2,11 +2,11 @@ import { Tabs } from "@kobalte/core/tabs"
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { Field, Form } from "@modular-forms/solid"
 import type { FormStore } from "@modular-forms/solid"
+import type { AuthSchema } from "@thc/query"
 import { Show } from "solid-js"
 
 import { Button } from "~/components/atomic/button"
 import { FormComp } from "~/components/atomic/form"
-import type { AuthSchema } from "~/query"
 
 import type { AuthFormMode } from "../store"
 import { useAuthForm } from "../store"

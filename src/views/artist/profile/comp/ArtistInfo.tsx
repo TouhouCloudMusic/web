@@ -7,10 +7,10 @@ import { ArrowLeftIcon } from "solid-radix-icons"
 
 import { Button } from "~/components/atomic/button"
 import { DateWithPrecision } from "~/domain/shared"
-import type { Artist } from "~/query/artist"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
+import type { Artist } from "../@thc/query/artist"
 
 export function ArtistInfo() {
 	const { t } = useLingui()

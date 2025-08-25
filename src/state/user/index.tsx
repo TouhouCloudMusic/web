@@ -1,9 +1,9 @@
 import { UserApi, AuthApi } from "@thc/api"
+import type { UserProfile } from "@thc/queryy"
 import type { ParentProps } from "solid-js"
 import { createContext, onMount } from "solid-js"
 import { createMutable } from "solid-js/store"
 
-import type { UserProfile } from "~/query"
 import { dbg } from "~/utils/log"
 import { assertContext } from "~/utils/solid/assertContext"
 

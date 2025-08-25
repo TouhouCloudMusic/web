@@ -7,8 +7,9 @@ import { PlusIcon } from "solid-radix-icons"
 import { Button } from "~/components/atomic/button"
 import { Dialog } from "~/components/dialog"
 import { SearchDialog } from "~/components/form/SearchDialog"
-import { ArtistQueryOption } from "~/query/artist"
-import type { Artist, ArtistCommonFilter } from "~/query/artist"
+
+import { ArtistQueryOption } from "../@thc/query/artist"
+import type { Artist, ArtistCommonFilter } from "../@thc/query/artist"
 
 type ArtistSearchDialogProps = {
 	onSelect: (artist: Artist) => void

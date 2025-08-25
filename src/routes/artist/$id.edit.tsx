@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/solid-query"
 import { createFileRoute, useNavigate } from "@tanstack/solid-router"
+import { ArtistQueryOption } from "@thc/queryy/artist"
 import { createEffect } from "solid-js"
 import * as v from "valibot"
 
 import { EntityId } from "~/domain/shared"
-import { ArtistQueryOption } from "~/query/artist"
 import { QUERY_CLIENT } from "~/state/tanstack"
 import { EditArtistPage } from "~/views/artist/edit"
 

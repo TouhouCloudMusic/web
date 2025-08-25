@@ -16,11 +16,11 @@ import { Tab } from "~/components/atomic/Tab"
 import { Button } from "~/components/atomic/button"
 import { RELEASE_TYPES } from "~/domain/release"
 import { DateWithPrecision } from "~/domain/shared"
-import type { ReleaseType } from "~/query"
-import type { Credit, Discography } from "~/query/artist"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
+import type { ReleaseType } from "../@thc/query"
+import type { Credit, Discography } from "../@thc/query/artist"
 
 // TODO: Add links after other pages are completed
 

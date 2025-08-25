@@ -1,8 +1,7 @@
 import { useQuery, queryOptions } from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
+import type { UserProfile } from "@thc/api"
 import { UserApi } from "@thc/api"
-
-import type { UserProfile } from "./index"
 
 export type Option = {
 	"params.username"?: string | undefined

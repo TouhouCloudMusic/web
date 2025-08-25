@@ -1,5 +1,6 @@
 /* @refresh reload */
 import { Link } from "@tanstack/solid-router"
+import type { UserRole, UserProfile } from "@thc/queryy/user"
 import type { ComponentProps, Resource } from "solid-js"
 import {
 	createContext,
@@ -18,7 +19,6 @@ import { Avatar } from "~/components/atomic/avatar"
 import { Button } from "~/components/atomic/button"
 import { Markdown } from "~/components/markdown"
 import { PageLayout } from "~/layout/PageLayout"
-import type { UserRole, UserProfile } from "~/query/user"
 import { imgUrl } from "~/utils/adapter/static_file"
 import { callHandlerUnion } from "~/utils/dom/event"
 import { assertContext } from "~/utils/solid/assertContext"

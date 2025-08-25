@@ -26,6 +26,7 @@
 		"@tanstack/solid-query-devtools": "^5.85.5",
 		"@tanstack/solid-router": "^1.131.27",
 		"@thc/api": "workspace:*",
+		"@thc/query": "workspace:*",
 		"@thc/icons": "workspace:*",
 		"@thc/toolkit": "workspace:*",
 		"arktype": "^2.1.20",

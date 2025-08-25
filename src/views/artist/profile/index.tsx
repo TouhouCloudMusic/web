@@ -1,9 +1,9 @@
 /* @refresh skip */
+import type { Artist, Discography, Appearance, Credit } from "@thc/query/artist"
 import { createContext, Suspense } from "solid-js"
 
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
-import type { Artist, Discography, Appearance, Credit } from "~/query/artist"
 import type { ReleaseType } from "~/query/release"
 import type { InfiniteQuery } from "~/types/query"
 

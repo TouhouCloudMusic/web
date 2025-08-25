@@ -4,11 +4,9 @@ import {
 	useQuery,
 } from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
+import type { ArtistCommonFilter, ReleaseType } from "@thc/api"
 import { ArtistApi } from "@thc/api"
 import { StrExt } from "@thc/toolkit/data"
-
-import type { ReleaseType } from "../release"
-import type { ArtistCommonFilter } from "./schema"
 
 export function findById(id: number, filter?: ArtistCommonFilter) {
 	return queryOptions({

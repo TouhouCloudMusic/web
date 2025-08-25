@@ -6,11 +6,11 @@ import {
 	BellIcon,
 	BellSlashIcon,
 } from "@thc/icons/heroicons/24/outline"
+import type { UserProfile } from "@thc/queryy/user/index.ts"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
 import { Button } from "~/components/atomic/button/index.tsx"
-import type { UserProfile } from "~/query/user"
 import { NotificationState, useCurrentUser } from "~/state/user"
 import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
 

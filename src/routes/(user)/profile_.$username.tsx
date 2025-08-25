@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/solid-router"
+import { UserQuery } from "@thc/queryy"
 import { createResource } from "solid-js"
 
-import { UserQuery } from "~/query"
 import { QUERY_CLIENT } from "~/state/tanstack"
 import { Profile } from "~/views/user/Profile"
 

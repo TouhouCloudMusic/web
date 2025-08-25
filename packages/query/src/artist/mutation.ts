@@ -1,15 +1,13 @@
 import { useMutation } from "@tanstack/solid-query"
+import type { NewCorrectionNewArtist } from "@thc/api"
 import { ArtistApi } from "@thc/api"
 
-import type { NewArtistCorrection } from "./schema"
-
+type Parmas =
+	| { type: "Create"; data: NewCorrectionNewArtist }
+	| { type: "Update"; id: number; data: NewCorrectionNewArtist }
 export const getInstance = () =>
 	useMutation(() => ({
-		mutationFn: (
-			params:
-				| { type: "Create"; data: NewArtistCorrection }
-				| { type: "Update"; id: number; data: NewArtistCorrection },
-		) => {
+		mutationFn: (params: Parmas) => {
 			if (params.type === "Create")
 				return ArtistApi.create({
 					body: params.data,
@@ -21,7 +19,6 @@ export const getInstance = () =>
 				})
 			}
 		},
-
 		mutationKey: [`artist::mutate`],
 		throwOnError: false,
 	}))

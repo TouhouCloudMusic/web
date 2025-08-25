@@ -10,9 +10,9 @@ import { createStore, produce } from "solid-js/store"
 import { CheckIcon, Cross1Icon } from "solid-radix-icons"
 
 import { Combobox } from "~/components/atomic/Combobox"
-import { CreditRoleQueryOption } from "~/query/credit"
-import type { CreditRoleSummary } from "~/query/credit"
 
+import { CreditRoleQueryOption } from "../../@thc/query/credit"
+import type { CreditRoleSummary } from "../../@thc/query/credit"
 import { useArtistForm } from "../../context"
 
 export function MembershipRoleField(props: { index: number }): JSX.Element {

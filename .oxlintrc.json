@@ -142,6 +142,7 @@
 			}
 		],
 		"unicorn/no-anonymous-default-export": "off",
+		"unicorn/no-array-reduce": "off",
 		"unicorn/prefer-spread": "off"
 	},
 	"overrides": [

@@ -5,7 +5,8 @@ import * as v from "valibot"
 
 import type { NewArtistCorrection } from "~/domain/artist/schema"
 import { NewArtistCorrection as NewArtistCorrectionSchema } from "~/domain/artist/schema"
-import { ArtistMutation } from "~/query/artist"
+
+import { ArtistMutation } from "../@thc/query/artist"
 
 type Props =
 	| {
