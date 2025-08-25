@@ -73,7 +73,7 @@ importers:
         version: 1.4.0(marked@16.1.1)
       marked-shiki:
         specifier: ^1.2.0
-        version: 1.2.0(marked@16.1.1)(shiki@3.9.2)
+        version: 1.2.1(marked@16.1.1)(shiki@3.9.2)
       openapi-fetch:
         specifier: ^0.14.0
         version: 0.14.0
@@ -3749,8 +3749,8 @@ packages:
     peerDependencies:
       marked: '>=7.0.0'
 
-  marked-shiki@1.2.0:
-    resolution: {integrity: sha512-N924hp8veE6Mc91g5/kCNVoTU7TkeJfB2G2XEWb+k1fVA0Bck2T0rVt93d39BlOYH6ohP4Q9BFlPk+UkblhXbg==}
+  marked-shiki@1.2.1:
+    resolution: {integrity: sha512-yHxYQhPY5oYaIRnROn98foKhuClark7M373/VpLxiy5TrDu9Jd/LsMwo8w+U91Up4oDb9IXFrP0N1MFRz8W/DQ==}
     peerDependencies:
       marked: '>=7.0.0'
       shiki: '>=1.0.0'
@@ -8658,7 +8658,7 @@ snapshots:
     dependencies:
       marked: 16.1.1
 
-  marked-shiki@1.2.0(marked@16.1.1)(shiki@3.9.2):
+  marked-shiki@1.2.1(marked@16.1.1)(shiki@3.9.2):
     dependencies:
       marked: 16.1.1
       shiki: 3.9.2
