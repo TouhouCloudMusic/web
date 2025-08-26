@@ -101,7 +101,7 @@ function TenureEntry(props: {
 									type="number"
 									class="no-spinner"
 									placeholder={idx == 0 ? t`Join year` : t`Leave year`}
-									value={field.value}
+									value={field.value ?? undefined}
 								/>
 								<InputField.Error>{field.error}</InputField.Error>
 							</InputField.Root>

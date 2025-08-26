@@ -1,18 +1,20 @@
-import { pipe } from "@thc/toolkit"
 import type { ADTEnum } from "@thc/toolkit/types"
 import { Either as E, Option as O } from "effect"
+import type { Either } from "effect/Either"
 
-type OkResponse<T> = {
+import type { operations } from "../gen"
+
+export type OkResponse<T> = {
 	status: string
 	data: T
 }
 
-type MessageResponse = {
+export type MessageResponse = {
 	status: "Ok"
 	message: string
 }
 
-type ErrResponse = {
+export type ErrResponse = {
 	status: "Err"
 	message: string
 }
@@ -46,18 +48,20 @@ type RestError<E> = {
 	response: Response
 }
 
-function handleError<E>(res: RestError<E>): E.Either<never, ApiError<E>> {
+function handleError<E>(
+	res: RestError<E>,
+): Either<never, ApiError<NonNullable<E>>> {
 	if (res.error) {
 		return E.left({
 			type: "Server",
 			error: res.error,
-		})
+		} as const)
+	} else {
+		return E.left({
+			type: "Response",
+			error: res.response.statusText,
+		} as const)
 	}
-
-	return E.left({
-		type: "Response",
-		error: res.response.statusText,
-	})
 }
 
 type FetchResponse<T, E> = ADTEnum<
@@ -75,7 +79,7 @@ type FetchResponse<T, E> = ADTEnum<
 
 export function adaptApiResult<T, E>(
 	res: FetchResponse<T, E>,
-): ApiResult<T, E> {
+): E.Either<T, ApiError<NonNullable<E>>> {
 	if (res.data) {
 		return E.right(res.data.data)
 	}
@@ -85,7 +89,7 @@ export function adaptApiResult<T, E>(
 
 export function adaptApiResultOptional<T, E = unknown>(
 	res: FetchResponse<T, E>,
-): ApiResult<O.Option<NonNullable<T>>, E> {
+) {
 	if (res.data) {
 		return E.right(O.fromNullable(res.data.data))
 	}
@@ -108,12 +112,44 @@ type FetchMessageResponse<E> = ADTEnum<
 	response: Response
 }
 
-export function adaptApiResultMessage<E>(
-	res: FetchMessageResponse<E>,
-): ApiResult<string, E> {
-	return pipe(
-		E.fromNullable(res.data, () => res),
-		E.map((d) => d.message),
-		E.orElse((e) => handleError(e)),
-	)
+export function adaptApiResultMessage<E>(res: FetchMessageResponse<E>) {
+	if (res.data) {
+		return E.right(res.data.message)
+	}
+	return handleError(res)
 }
+
+export type Query<K extends keyof operations> =
+	operations[K]["parameters"]["query"]
+export type Path<K extends keyof operations> =
+	operations[K]["parameters"]["path"]
+export type Body<K extends keyof operations> =
+	operations[K]["requestBody"] extends infer R ?
+		R extends NonNullable<operations[K]["requestBody"]> ?
+			R["content"][keyof R["content"]] extends infer C ?
+				C extends Record<string, unknown> ?
+					C
+				:	never
+			:	never
+		:	never
+	:	never
+
+// oxlint-disable-next-line no-empty-object-type ban-types
+type IsOptional<T, K extends keyof T> = {} extends Pick<T, K> ? true : false
+
+type AreAllKeysOptional<T> =
+	// Empty object
+	keyof T extends never ? true
+	: IsOptional<T, keyof T> extends true ? true
+	: false
+
+export type Opt<K extends keyof operations> = MakeOpt<"query", Query<K>> &
+	MakeOpt<"path", Path<K>> &
+	MakeOpt<"body", Body<K>>
+
+type MakeOpt<
+	Key extends string,
+	T extends Record<string, unknown> | undefined,
+> =
+	AreAllKeysOptional<T> extends true ? { [key in Key]?: T }
+	:	{ [key in Key]: T }

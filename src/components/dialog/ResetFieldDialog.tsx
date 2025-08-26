@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from "@thc/icons/heroicons/24/outline.tsx"
 import { createMemo } from "solid-js"
 
-import { Button } from "../atomic/button/index.tsx"
+import { Button } from "../atomic/button"
 import { AlertDialog } from "./AlertDialog"
 
 export function ResetFieldDialogTrigger(props: {

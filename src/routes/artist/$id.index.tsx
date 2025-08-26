@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/solid-query"
 import { createFileRoute } from "@tanstack/solid-router"
 import type { ReleaseType, Discography } from "@thc/api"
-import { ArtistQueryOption } from "@thc/queryy/artist"
+import { ArtistQueryOption } from "@thc/query"
 import { ObjExt } from "@thc/toolkit/data"
 import { createEffect } from "solid-js"
 import { createStore, produce } from "solid-js/store"

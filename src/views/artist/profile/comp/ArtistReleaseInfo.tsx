@@ -1,5 +1,11 @@
 /* @refresh skip */
 import { Trans } from "@lingui-solid/solid/macro"
+import type {
+	ArtistCredit,
+	CreditRoleRef,
+	Discography,
+	ReleaseType,
+} from "@thc/api"
 import type { ComponentProps, JSX, ParentProps } from "solid-js"
 import {
 	createMemo,
@@ -19,8 +25,6 @@ import { DateWithPrecision } from "~/domain/shared"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
-import type { ReleaseType } from "../@thc/query"
-import type { Credit, Discography } from "../@thc/query/artist"
 
 // TODO: Add links after other pages are completed
 
@@ -87,7 +91,7 @@ function Inner() {
 				value="Discography"
 				class="w-full border-t border-slate-300"
 			>
-				<Discography />
+				<DiscographyTab />
 			</Tab.Content>
 			<Tab.Content<ArtistReleaseType>
 				value="Appearance"
@@ -119,7 +123,7 @@ function Inner() {
 	)
 }
 
-function Discography() {
+function DiscographyTab() {
 	const context = assertContext(ArtistContext)
 	const [selectedType, setSelectedType] = createSignal<ReleaseType>("Album")
 
@@ -178,7 +182,7 @@ function Discography() {
 	)
 }
 
-function ArtistReleaseList<T extends Discography | Credit>(props: {
+function ArtistReleaseList<T extends Discography | CreditRoleRef>(props: {
 	data?: T[] | undefined
 	hasNext: boolean
 	next: () => Promise<void>
@@ -240,7 +244,7 @@ function DiscographyItem(props: { item: Discography }) {
 	)
 }
 
-function CreditItem(props: { item: Credit }) {
+function CreditItem(props: { item: ArtistCredit }) {
 	return (
 		<ItemLayout>
 			<div class="flex whitespace-pre">
@@ -261,7 +265,7 @@ function CreditItem(props: { item: Credit }) {
 			</div>
 			<Show when={props.item.release_date}>
 				<ItemSubTitle>
-					{DateWithPrecision.display(props.item.release_date)}
+					{DateWithPrecision.display(props.item.release_date!)}
 				</ItemSubTitle>
 			</Show>
 			<ItemSubTitle

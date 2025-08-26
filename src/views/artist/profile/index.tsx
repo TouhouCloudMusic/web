@@ -1,10 +1,9 @@
 /* @refresh skip */
-import type { Artist, Discography, Appearance, Credit } from "@thc/query/artist"
+import type { Artist, ArtistCredit, Discography, ReleaseType } from "@thc/api"
 import { createContext, Suspense } from "solid-js"
 
 import { Image } from "~/components/image"
 import { PageLayout } from "~/layout/PageLayout"
-import type { ReleaseType } from "~/query/release"
 import type { InfiniteQuery } from "~/types/query"
 
 import { ArtistInfo } from "./comp/ArtistInfo"
@@ -12,28 +11,28 @@ import { ArtistReleaseInfo } from "./comp/ArtistReleaseInfo"
 
 export type ArtistContext = {
 	artist: Artist
-	appearances: InfiniteQuery<Appearance>
+	appearances: InfiniteQuery<Discography>
 	discographies: {
 		data: Record<ReleaseType, Discography[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
 		isLoading: boolean
 	}
-	credits: InfiniteQuery<Credit>
+	credits: InfiniteQuery<ArtistCredit>
 }
 
 export const ArtistContext = createContext<ArtistContext>()
 
 export type ArtistProfilePageProps = {
 	artist: Artist
-	appearances: InfiniteQuery<Appearance>
+	appearances: InfiniteQuery<Discography>
 	discographies: {
 		data: Record<ReleaseType, Discography[]>
 		hasNext(type: ReleaseType): boolean
 		next(type: ReleaseType): Promise<void>
 		isLoading: boolean
 	}
-	credits: InfiniteQuery<Credit>
+	credits: InfiniteQuery<ArtistCredit>
 }
 
 export function ArtistProfilePage(props: ArtistProfilePageProps) {

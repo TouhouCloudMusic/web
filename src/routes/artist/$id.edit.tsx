@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/solid-query"
 import { createFileRoute, useNavigate } from "@tanstack/solid-router"
-import { ArtistQueryOption } from "@thc/queryy/artist"
+import { ArtistQueryOption } from "@thc/query/artist"
 import { createEffect } from "solid-js"
 import * as v from "valibot"
 

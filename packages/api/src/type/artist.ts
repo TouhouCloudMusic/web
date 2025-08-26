@@ -1,4 +1,3 @@
-import type { operations } from "~/gen"
+import type { PaginatedCredit } from "../gen"
 
-export type ArtistCommonFilter =
-	operations["find_artist_by_id"]["parameters"]["query"]
+export type ArtistCredit = PaginatedCredit["items"][number]

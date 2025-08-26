@@ -1,5 +1,5 @@
 import { Trans } from "@lingui-solid/solid/macro"
-import type { Song } from "@thc/query/song"
+import type { Song } from "@thc/api"
 import { createContext, Show, Suspense } from "solid-js"
 
 import { Tab } from "~/components/atomic"

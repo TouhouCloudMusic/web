@@ -1,7 +1,7 @@
 /* eslint-disable solid/reactivity */
-import type { NewArtistCorrection } from "~/query/artist/schema"
+import { Artist } from "@thc/api"
 
-import type { Artist } from "../@thc/query/artist"
+import { NewArtistCorrection } from "~/domain/artist"
 
 type Props =
 	| {

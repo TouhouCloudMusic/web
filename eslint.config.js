@@ -22,15 +22,10 @@ export default [
 	},
 	eslint.configs.recommended,
 	prettier,
-	...tslint.configs.strictTypeChecked,
-	...tslint.configs.stylisticTypeChecked,
+	// ...tslint.configs.strictTypeChecked,
+	// ...tslint.configs.stylisticTypeChecked,
 	...tanstackQuery.configs["flat/recommended"],
-	// base
-	{
-		rules: {
-			"prefer-const": "off",
-		},
-	},
+
 	// typescript
 	tsConfig,
 	// jsx

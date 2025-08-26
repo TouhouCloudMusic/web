@@ -1,5 +1,7 @@
 import * as M from "@modular-forms/solid"
 import { useQuery } from "@tanstack/solid-query"
+import type { Language } from "@thc/query"
+import { LanguagesQuery } from "@thc/query"
 import { For } from "solid-js"
 import { CheckIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
 
@@ -10,8 +12,6 @@ import { FormComp } from "~/components/atomic/form"
 import { InputField } from "~/components/atomic/form/Input"
 import type { NewArtistCorrection } from "~/domain/artist/schema"
 
-import type { Language } from "../@thc/query"
-import { LanguagesQuery } from "../@thc/query"
 import { useArtistForm } from "../context"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/solid-router"
-import type { Song } from "@thc/queryy/song"
+import type { Song } from "@thc/query/song"
 
 import { SongInfoPage } from "~/views/song/Info"
 

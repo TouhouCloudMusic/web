@@ -1,11 +1,8 @@
-import type { components, operations } from "~/gen"
-import { FetchClient } from "~/http"
-import type { ApiResult, ApiResultOptional } from "~/shared"
-import { adaptApiResult, adaptApiResultOptional } from "~/shared"
+import { FetchClient } from "../../http"
+import type { Opt } from "../../shared"
+import { adaptApiResult, adaptApiResultOptional } from "../../shared"
 
-export async function findEventById(options: {
-	path: operations["find_event_by_id"]["parameters"]["path"]
-}): Promise<ApiResultOptional<components["schemas"]["Event"], unknown>> {
+export async function findEventById(options: Opt<"find_event_by_id">) {
 	const res = await FetchClient.GET("/event/{id}", {
 		params: { path: options.path },
 	})
@@ -13,9 +10,9 @@ export async function findEventById(options: {
 	return adaptApiResultOptional(res)
 }
 
-export async function findEventByKeyword(options: {
-	query: operations["find_event_by_keyword"]["parameters"]["query"]
-}): Promise<ApiResult<components["schemas"]["Event"][], unknown>> {
+export async function findEventByKeyword(
+	options: Opt<"find_event_by_keyword">,
+) {
 	const res = await FetchClient.GET("/event", {
 		params: { query: options.query },
 	})

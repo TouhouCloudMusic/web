@@ -1,11 +1,9 @@
-import type { components, operations } from "~/gen"
-import { FetchClient } from "~/http"
-import type { ApiResult, ApiResultOptional } from "~/shared"
-import { adaptApiResult, adaptApiResultOptional } from "~/shared"
+import type { components, operations } from "../../gen"
+import { FetchClient } from "../../http"
+import type { Opt } from "../../shared"
+import { adaptApiResult, adaptApiResultOptional } from "../../shared"
 
-export async function findLabelById(options: {
-	path: operations["find_label_by_id"]["parameters"]["path"]
-}): Promise<ApiResultOptional<components["schemas"]["Label"], unknown>> {
+export async function findLabelById(options: Opt<"find_label_by_id">) {
 	const res = await FetchClient.GET("/label/{id}", {
 		params: { path: options.path },
 	})
@@ -13,9 +11,7 @@ export async function findLabelById(options: {
 	return adaptApiResultOptional(res)
 }
 
-export async function findLabelByKeyword(options: {
-	query: operations["find_label_by_keyword"]["parameters"]["query"]
-}): Promise<ApiResult<components["schemas"]["Label"][], unknown>> {
+export async function findLabelByKeyword(options: Opt<"find_label_by_keyword">) {
 	const res = await FetchClient.GET("/label", {
 		params: { query: options.query },
 	})

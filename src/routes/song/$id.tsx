@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/solid-query"
 import { createFileRoute } from "@tanstack/solid-router"
-import { SongQueryOption } from "@thc/queryy/song"
+import { SongQueryOption } from "@thc/query/song"
 import * as v from "valibot"
 
 import { EntityId } from "~/domain/shared"

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/solid-router"
-import { UserQuery } from "@thc/queryy"
+import { UserQuery } from "@thc/query"
 import { createResource } from "solid-js"
 
 import { AuthGuard } from "~/components/route"

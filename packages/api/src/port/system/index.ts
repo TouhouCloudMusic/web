@@ -1,6 +1,6 @@
 import { Either as E } from "effect"
 
-import { FetchClient } from "~/http"
+import { FetchClient } from "../../http"
 
 export async function healthCheck(): Promise<E.Either<void, Response>> {
 	const res = await FetchClient.GET("/health_check", {})

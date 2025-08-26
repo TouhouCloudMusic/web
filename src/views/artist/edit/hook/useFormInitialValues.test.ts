@@ -1,8 +1,8 @@
 // oxlint-disable no-magic-numbers
+import { Artist } from "@thc/api"
 import fc from "fast-check"
 import { describe, it, expect } from "vitest"
 
-import type { Artist } from "../@thc/query/artist"
 import { useArtistFormInitialValues } from "./useFormInitialValues"
 
 const datePrecisionArb = fc.constantFrom("Day", "Month", "Year")

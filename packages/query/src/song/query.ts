@@ -1,20 +1,15 @@
 import { queryOptions } from "@tanstack/solid-query"
 import { notFound } from "@tanstack/solid-router"
 import { SongApi } from "@thc/api"
+import { Either } from "effect"
 
 export function findById(id: number) {
 	return queryOptions({
 		queryKey: ["song::info", id],
-		queryFn: async () => {
-			const result = await SongApi.findSongById({
+		queryFn: () =>
+			SongApi.findSongById({
 				path: { id },
-			})
-
-			if (result.status === "Ok" && result.data) {
-				return result.data
-			}
-			throw notFound()
-		},
+			}),
 		throwOnError: true,
 	})
 }
@@ -22,16 +17,10 @@ export function findById(id: number) {
 export function findByKeyword(keyword: string) {
 	return queryOptions({
 		queryKey: ["song::info", keyword],
-		queryFn: async () => {
-			const result = await SongApi.findSongByKeyword({
+		queryFn: () =>
+			SongApi.findSongByKeyword({
 				query: { keyword },
-			})
-
-			if (result.status === "Ok") {
-				return result.data
-			}
-			return []
-		},
+			}),
 		throwOnError: true,
 	})
 }

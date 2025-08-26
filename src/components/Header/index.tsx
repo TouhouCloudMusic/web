@@ -1,22 +1,22 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { useLingui } from "@lingui-solid/solid/macro"
 import { Link } from "@tanstack/solid-router"
+import { UserProfile } from "@thc/api"
 import {
 	BellAlertIcon,
 	BellIcon,
 	BellSlashIcon,
 } from "@thc/icons/heroicons/24/outline"
-import type { UserProfile } from "@thc/queryy/user/index.ts"
 import { createMemo, Match, Show, Switch } from "solid-js"
 import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
 
-import { Button } from "~/components/atomic/button/index.tsx"
+import { Button } from "~/components/atomic/button"
 import { NotificationState, useCurrentUser } from "~/state/user"
-import { createClickOutside } from "~/utils/solid/createClickOutside.ts"
+import { createClickOutside } from "~/utils/solid/createClickOutside"
 
-import { Divider } from "../atomic/Divider.tsx"
-import { Avatar } from "../atomic/avatar/index.tsx"
-import { Dialog } from "../dialog/index.ts"
+import { Divider } from "../atomic/Divider"
+import { Avatar } from "../atomic/avatar"
+import { Dialog } from "../dialog"
 import { LeftSidebar } from "./LeftSidebar"
 import { RightSidebar } from "./RightSidebar"
 

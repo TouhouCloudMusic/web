@@ -1,6 +1,6 @@
 /* @refresh reload */
 import { Link } from "@tanstack/solid-router"
-import type { UserRole, UserProfile } from "@thc/queryy/user"
+import type { UserProfile, UserRole, UserRoleEnum } from "@thc/api"
 import type { ComponentProps, Resource } from "solid-js"
 import {
 	createContext,
@@ -278,7 +278,7 @@ function Bio() {
 	)
 }
 
-function matchColor(role: UserRole) {
+function matchColor(role: UserRoleEnum) {
 	// oxlint-disable-next-line default-case
 	switch (role) {
 		case "Admin": {
@@ -295,7 +295,7 @@ function matchColor(role: UserRole) {
 	}
 }
 
-function RoleBadge(props: { role: UserRole }) {
+function RoleBadge(props: { role: UserRoleEnum }) {
 	return (
 		<Show when={props.role != "User"}>
 			<div

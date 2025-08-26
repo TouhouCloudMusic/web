@@ -1,5 +1,6 @@
 /* @refresh reload */
 import * as M from "@modular-forms/solid"
+import type { Artist, ArtistCommonFilter } from "@thc/query"
 import { createMemo } from "solid-js"
 import type { JSX } from "solid-js"
 import { createStore, produce } from "solid-js/store"
@@ -10,7 +11,6 @@ import { Button } from "~/components/atomic/button"
 import { FormComp } from "~/components/atomic/form"
 import { Intersperse } from "~/components/data/Intersperse"
 
-import type { Artist, ArtistCommonFilter } from "../../@thc/query/artist"
 import { useArtistForm } from "../../context"
 import { ArtistSearchDialog } from "../ArtistSearchDialog"
 import { FieldArrayFallback } from "../FieldArrayFallback"

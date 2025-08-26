@@ -1,8 +1,8 @@
 import type { FieldStore, FieldElementProps } from "@modular-forms/solid"
-import type { AuthSchema } from "@thc/query"
 import type { ParentProps } from "solid-js"
 
 import { InputField } from "~/components/atomic/form/Input"
+import { SignIn, SignUp } from "~/domain/auth"
 
 export function FieldLayout(
 	props: ParentProps<{
@@ -26,9 +26,8 @@ export function PasswordField<
 	T extends "password" | "repeated_password",
 >(props: {
 	label: string
-	field: T extends "password" ? FieldStore<AuthSchema.SignIn, T>
-	:	FieldStore<AuthSchema.SignUp, T>
-	props: FieldElementProps<AuthSchema.SignUp, T>
+	field: T extends "password" ? FieldStore<SignIn, T> : FieldStore<SignUp, T>
+	props: FieldElementProps<SignUp, T>
 }) {
 	return (
 		<FieldLayout
@@ -47,8 +46,8 @@ export function PasswordField<
 }
 
 export function UserNameField(props: {
-	field: FieldStore<AuthSchema.SignIn, "username">
-	props: FieldElementProps<AuthSchema.SignIn, "username">
+	field: FieldStore<SignIn, "username">
+	props: FieldElementProps<SignIn, "username">
 }) {
 	return (
 		<FieldLayout

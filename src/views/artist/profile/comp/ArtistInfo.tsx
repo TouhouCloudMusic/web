@@ -1,6 +1,7 @@
 /* @refresh skip */
 import { useLingui } from "@lingui-solid/solid/macro"
 import { useNavigate } from "@tanstack/solid-router"
+import { Artist } from "@thc/api"
 import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"
@@ -10,7 +11,6 @@ import { DateWithPrecision } from "~/domain/shared"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ArtistContext } from ".."
-import type { Artist } from "../@thc/query/artist"
 
 export function ArtistInfo() {
 	const { t } = useLingui()
@@ -106,14 +106,10 @@ function Membership() {
 	const { t } = useLingui()
 	const context = assertContext(ArtistContext)
 	const label = createMemo(() => {
-		switch (context.artist.artist_type) {
-			case "Solo": {
-				return t`Member Of`
-			}
-			case "Multiple": {
-				return t`Members`
-			}
-			// Unreachable
+		if (context.artist.artist_type === "Solo") {
+			return t`Member Of`
+		} else if (context.artist.artist_type === "Multiple") {
+			return t`Members`
 		}
 	})
 	return (

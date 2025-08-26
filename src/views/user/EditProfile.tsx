@@ -1,7 +1,6 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { FileField } from "@kobalte/core/file-field"
 import { createForm, valiForm } from "@modular-forms/solid"
-import type { components } from "@thc/api"
 import { Option } from "effect"
 import { Cropper } from "solid-cropper"
 import type { Setter, ValidComponent } from "solid-js"
@@ -15,8 +14,6 @@ import { Button } from "~/components/atomic/button"
 import { Dialog } from "~/components/dialog"
 import { PageLayout } from "~/layout/PageLayout"
 import { useCurrentUser } from "~/state/user"
-import type { Replace } from "~/types"
-import type { ExternalSchema as GenericValibotSchema } from "~/types/valibot"
 import { createClickOutside } from "~/utils/solid/createClickOutside"
 
 export function EditProfile() {
@@ -49,18 +46,12 @@ export function EditProfile() {
 	)
 }
 
-type UploadAvatarForm = Replace<
-	components["schemas"]["UploadAvatar"],
-	Blob,
-	File
->
-
 const UploadAvatarFormSchema = v.object({
 	data: v.file(),
-} satisfies GenericValibotSchema<UploadAvatarForm>)
+})
 
 function UploadAvatarFormDialog() {
-	let [_, __] = createForm<UploadAvatarForm>({
+	let [_, __] = createForm({
 		validate: valiForm(UploadAvatarFormSchema),
 	})
 	let [show, setShow, ref] = createClickOutside()
@@ -101,7 +92,7 @@ export function UploadAvatarFormContent(props: {
     rounded-md
   `
 
-	let [_, { Form, Field }] = createForm<UploadAvatarForm>({
+	let [_, { Form, Field }] = createForm({
 		validate: valiForm(UploadAvatarFormSchema),
 	})
 

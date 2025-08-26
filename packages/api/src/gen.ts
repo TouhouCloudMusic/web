@@ -625,6 +625,10 @@ export type components = {
             /** @description Aliases without own page */
             text_aliases?: string[] | null;
         };
+        ArtistCommonFilter: {
+            artist_type?: components["schemas"]["ArtistType"][];
+            exclusion?: number[];
+        };
         ArtistReleaseArtist: {
             /** Format: int32 */
             id: number;
@@ -1219,6 +1223,7 @@ export type components = {
 };
 export type AlternativeName = components['schemas']['AlternativeName'];
 export type Artist = components['schemas']['Artist'];
+export type ArtistCommonFilter = components['schemas']['ArtistCommonFilter'];
 export type ArtistReleaseArtist = components['schemas']['ArtistReleaseArtist'];
 export type ArtistType = components['schemas']['ArtistType'];
 export type AuthCredential = components['schemas']['AuthCredential'];

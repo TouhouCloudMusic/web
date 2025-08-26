@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"allowImportingTsExtensions": true,
+		// "allowImportingTsExtensions": true,
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
@@ -17,6 +17,7 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"target": "ESNext"
+		"target": "ESNext",
+		"outDir": "./dist"
 	}
 }

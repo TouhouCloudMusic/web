@@ -3,10 +3,10 @@ import {
 	queryOptions,
 	useQuery,
 } from "@tanstack/solid-query"
-import { notFound } from "@tanstack/solid-router"
 import type { ArtistCommonFilter, ReleaseType } from "@thc/api"
 import { ArtistApi } from "@thc/api"
 import { StrExt } from "@thc/toolkit/data"
+import { Either } from "effect"
 
 export function findById(id: number, filter?: ArtistCommonFilter) {
 	return queryOptions({
@@ -17,10 +17,7 @@ export function findById(id: number, filter?: ArtistCommonFilter) {
 				query: filter,
 			})
 
-			if (result.status === "Ok" && result.data) {
-				return result.data
-			}
-			throw notFound()
+			return result
 		},
 		throwOnError: true,
 	})
@@ -34,10 +31,7 @@ export function findByKeyword(keyword: string, filter?: ArtistCommonFilter) {
 				query: { keyword, ...filter },
 			})
 
-			if (result.status === "Ok") {
-				return result.data
-			}
-			return []
+			return result
 		},
 		throwOnError: true,
 	})
@@ -49,16 +43,13 @@ export function appearances(id: number) {
 		queryFn: async (context) => {
 			const result = await ArtistApi.findAppearances({
 				path: { id },
-				query: { cursor: context.pageParam },
+				query: { cursor: context.pageParam, limit: 10 },
 			})
 
-			if (result.status === "Ok") {
-				return result.data
-			}
-			throw new Error("Failed to fetch appearances")
+			return result
 		},
 		initialPageParam: 0,
-		getNextPageParam: (last) => last.next_cursor,
+		getNextPageParam: (last) => Either.getOrUndefined(last)?.next_cursor,
 		throwOnError: true,
 	})
 }
@@ -69,13 +60,15 @@ export function credits(id: number) {
 		queryFn: async (context) => {
 			const result = await ArtistApi.getCredits({
 				path: { id },
-				query: { cursor: context.pageParam },
+				query: { cursor: context.pageParam, limit: 10 },
 			})
 
-			if (result.status === "Ok") {
-				return result.data
-			}
-			throw new Error("Failed to fetch credits")
+			return Either.match(result, {
+				onLeft: () => {
+					throw new Error("Failed to fetch credits")
+				},
+				onRight: (data) => data,
+			})
 		},
 		initialPageParam: 0,
 		getNextPageParam: (last) => last.next_cursor,
@@ -105,7 +98,7 @@ export function discography(id: number, releaseType: ReleaseType) {
 			if (context.pageParam === 0) {
 				const query = useQuery(() => discographyInit(id))
 				const res = await query.promise
-				return res[StrExt.toLowerCase(releaseType)]
+				return Either.map(res, (data) => data[StrExt.toLowerCase(releaseType)])
 			}
 
 			const result = await ArtistApi.findDiscographiesByType({
@@ -113,15 +106,13 @@ export function discography(id: number, releaseType: ReleaseType) {
 				query: {
 					cursor: context.pageParam,
 					release_type: releaseType,
+					limit: 10,
 				},
 			})
 
-			if (result.status === "Ok") {
-				return result.data
-			}
-			throw new Error("Failed to fetch discographies")
+			return result
 		},
-		getNextPageParam: (last) => last.next_cursor,
+		getNextPageParam: (last) => Either.getOrUndefined(last)?.next_cursor,
 		initialPageParam: 0,
 		throwOnError: true,
 	})
@@ -133,13 +124,10 @@ export function discographyInit(id: number, limit?: number) {
 		queryFn: async () => {
 			const result = await ArtistApi.findDiscographiesInit({
 				path: { id },
-				query: limit ? { limit } : {},
+				query: limit ? { limit } : { limit: 10 },
 			})
 
-			if (result.status === "Ok") {
-				return result.data
-			}
-			throw new Error("Failed to fetch discographies init")
+			return result
 		},
 		throwOnError: true,
 	})

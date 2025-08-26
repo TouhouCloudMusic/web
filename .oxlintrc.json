@@ -33,7 +33,7 @@
 
 	"rules": {
 		"array-callback-return": [
-			"warn",
+			"off",
 			{
 				"allowImplicitReturn": true
 			}
@@ -122,6 +122,7 @@
 		"oxc/no-rest-spread-properties": "off",
 
 		"promise/prefer-await-to-then": "off",
+		"promise/prefer-await-to-callbacks": "off",
 
 		"typescript/ban-ts-comment": "off",
 		"typescript/consistent-type-definitions": "off",
@@ -143,6 +144,7 @@
 		],
 		"unicorn/no-anonymous-default-export": "off",
 		"unicorn/no-array-reduce": "off",
+		"unicorn/no-array-method-this-argument": "off",
 		"unicorn/prefer-spread": "off"
 	},
 	"overrides": [

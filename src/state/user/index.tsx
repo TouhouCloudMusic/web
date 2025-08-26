@@ -1,5 +1,6 @@
+import type { UserProfile } from "@thc/api"
 import { UserApi, AuthApi } from "@thc/api"
-import type { UserProfile } from "@thc/queryy"
+import { Either as E, Option } from "effect"
 import type { ParentProps } from "solid-js"
 import { createContext, onMount } from "solid-js"
 import { createMutable } from "solid-js/store"
@@ -24,11 +25,20 @@ export class UserStore {
 		const result = await UserApi.profile()
 
 		this.isLoading = false
-		if (result.status === "Ok" && result.data) {
-			this.ctx = {
-				user: result.data,
-			}
-		}
+
+		E.match(result, {
+			onLeft: (_) => {
+				// TODO: handle error
+			},
+
+			onRight: (right) => {
+				Option.map(right, (user) => {
+					this.ctx = {
+						user,
+					}
+				})
+			},
+		})
 	}
 
 	get notification_state() {
@@ -57,12 +67,13 @@ export class UserStore {
 
 	async sign_out() {
 		const result = await AuthApi.signout()
-		if (result.status !== "Ok") {
-			dbg("Sign out failed", result.error)
 
-			throw result.error
-		}
 		this.ctx = undefined
+		E.mapLeft(result, (error) => {
+			dbg("Sign out failed", error)
+
+			throw error
+		})
 	}
 }
 

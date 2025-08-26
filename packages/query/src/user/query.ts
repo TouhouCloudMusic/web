@@ -31,10 +31,7 @@ export function profileOption({
 					})
 				:	await UserApi.profile()
 
-			if (result.status === "Ok" && result.data) {
-				return result.data
-			}
-			throw notFound()
+			return result
 		},
 		throwOnError: true,
 	})

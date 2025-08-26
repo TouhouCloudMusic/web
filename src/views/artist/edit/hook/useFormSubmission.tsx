@@ -1,12 +1,11 @@
 import * as M from "@modular-forms/solid"
 import { useNavigate } from "@tanstack/solid-router"
 import type { Artist } from "@thc/api"
+import { ArtistMutation } from "@thc/query"
 import * as v from "valibot"
 
 import type { NewArtistCorrection } from "~/domain/artist/schema"
 import { NewArtistCorrection as NewArtistCorrectionSchema } from "~/domain/artist/schema"
-
-import { ArtistMutation } from "../@thc/query/artist"
 
 type Props =
 	| {
