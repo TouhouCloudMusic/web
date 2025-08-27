@@ -162,32 +162,35 @@ export type Query<K extends keyof operations> =
 export type Path<K extends keyof operations> =
 	operations[K]["parameters"]["path"]
 export type Body<K extends keyof operations> =
-	operations[K]["requestBody"] extends infer R ?
-		R extends NonNullable<operations[K]["requestBody"]> ?
-			R["content"][keyof R["content"]] extends infer C ?
-				C extends Record<string, unknown> ?
-					C
-				:	never
-			:	never
-		:	never
-	:	never
+	operations[K]["requestBody"] extends infer R
+		? R extends NonNullable<operations[K]["requestBody"]>
+			? R["content"][keyof R["content"]] extends infer C
+				? C extends Record<string, unknown>
+					? C
+					: never
+				: never
+			: never
+		: never
 
 // oxlint-disable-next-line no-empty-object-type ban-types
 type IsOptional<T, K extends keyof T> = {} extends Pick<T, K> ? true : false
 
 type AreAllKeysOptional<T> =
 	// Empty object
-	keyof T extends never ? true
-	: IsOptional<T, keyof T> extends true ? true
-	: false
+	keyof T extends never
+		? true
+		: IsOptional<T, keyof T> extends true
+			? true
+			: false
 
-export type Opt<K extends keyof operations> = MakeOpt<"query", Query<K>> &
-	MakeOpt<"path", Path<K>> &
-	MakeOpt<"body", Body<K>>
+export type Opt<K extends keyof operations> = MakeOpt<"query", Query<K>>
+	& MakeOpt<"path", Path<K>>
+	& MakeOpt<"body", Body<K>>
 
 type MakeOpt<
 	Key extends string,
 	T extends Record<string, unknown> | undefined,
 > =
-	AreAllKeysOptional<T> extends true ? { [key in Key]?: T }
-	:	{ [key in Key]: T }
+	AreAllKeysOptional<T> extends true
+		? { [key in Key]?: T }
+		: { [key in Key]: T }

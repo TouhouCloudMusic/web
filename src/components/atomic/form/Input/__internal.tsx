@@ -40,9 +40,9 @@ type RootProps<T extends ValidComponent = "div"> = PolymorphicProps<
 export function Root<T extends ValidComponent = "div">(props: RootProps<T>) {
 	const localProps = mergeProps(props, {
 		get class() {
-			return props["class"] ?
-					twMerge(TEXT_INPUT_CLASS, props["class"])
-				:	TEXT_INPUT_CLASS
+			return props["class"]
+				? twMerge(TEXT_INPUT_CLASS, props["class"])
+				: TEXT_INPUT_CLASS
 		},
 	})
 
@@ -126,9 +126,9 @@ export function Textarea(
 
 	const finalProps = mergeProps(props, {
 		get class() {
-			return props.class ?
-					twMerge(TEXT_AREA_CLASSNAME, props.class)
-				:	TEXT_AREA_CLASSNAME
+			return props.class
+				? twMerge(TEXT_AREA_CLASSNAME, props.class)
+				: TEXT_AREA_CLASSNAME
 		},
 	})
 
@@ -144,9 +144,9 @@ export function Label(props: LabelProps) {
 
 	const localProps = mergeProps(props, {
 		get class() {
-			return props.class ?
-					twMerge(LABEL_CLASSNAME, props.class)
-				:	LABEL_CLASSNAME
+			return props.class
+				? twMerge(LABEL_CLASSNAME, props.class)
+				: LABEL_CLASSNAME
 		},
 		get for() {
 			return context.inputId

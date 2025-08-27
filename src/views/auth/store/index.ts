@@ -36,19 +36,19 @@ export function useAuthForm() {
 
 	const handleSubmit: SubmitHandler<AuthSchema.SignIn> = async (values, _) => {
 		const result =
-			mode() === "sign_in" ?
-				await AuthApi.signin({
-					body: {
-						username: values.username,
-						password: values.password,
-					},
-				})
-			:	await AuthApi.signup({
-					body: {
-						username: values.username,
-						password: values.password,
-					},
-				})
+			mode() === "sign_in"
+				? await AuthApi.signin({
+						body: {
+							username: values.username,
+							password: values.password,
+						},
+					})
+				: await AuthApi.signup({
+						body: {
+							username: values.username,
+							password: values.password,
+						},
+					})
 
 		return Either.match(result, {
 			onLeft: (error) => {

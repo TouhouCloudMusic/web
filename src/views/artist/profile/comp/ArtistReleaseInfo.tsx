@@ -39,9 +39,9 @@ export function ArtistReleaseInfo() {
 			<Show
 				when={
 					!(
-						context.discographies.isLoading ||
-						context.appearances.isLoading ||
-						context.credits.isLoading
+						context.discographies.isLoading
+						|| context.appearances.isLoading
+						|| context.credits.isLoading
 					)
 				}
 				fallback={<div>Loading...</div>}
@@ -213,15 +213,15 @@ function ArtistReleaseList<T extends Discography | CreditRoleRef>(props: {
 function DiscographyItem(props: { item: Discography }) {
 	const context = assertContext(ArtistContext)
 	const subtitle = () => {
-		const displayArtistName =
-			props.item.artist.some((a) => a.name === context.artist.name) ?
-				undefined
-			:	props.item.artist.map((a) => a.name).join(", ")
+		const displayArtistName = props.item.artist.some(
+			(a) => a.name === context.artist.name,
+		)
+			? undefined
+			: props.item.artist.map((a) => a.name).join(", ")
 
-		const releaseDate =
-			props.item.release_date ?
-				DateWithPrecision.display(props.item.release_date)
-			:	undefined
+		const releaseDate = props.item.release_date
+			? DateWithPrecision.display(props.item.release_date)
+			: undefined
 		if (displayArtistName && releaseDate) {
 			return `${displayArtistName} · ${releaseDate}`
 		}
@@ -255,9 +255,7 @@ function CreditItem(props: { item: ArtistCredit }) {
 						{(artist, index) => (
 							<li class={"text-normal leading-6 text-secondary"}>
 								{artist.name}
-								{index() === props.item.roles.length - 1 ?
-									<></>
-								:	" & "}
+								{index() === props.item.roles.length - 1 ? <></> : " & "}
 							</li>
 						)}
 					</For>
@@ -276,9 +274,7 @@ function CreditItem(props: { item: ArtistCredit }) {
 					{(role, index) => (
 						<li>
 							{role.name}
-							{index() === props.item.roles.length - 1 ?
-								<></>
-							:	", "}
+							{index() === props.item.roles.length - 1 ? <></> : ", "}
 						</li>
 					)}
 				</For>

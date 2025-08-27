@@ -11,8 +11,8 @@ export type Props = (
 			vertical?: undefined
 			horizonal: true
 	  }
-) &
-	JSX.HTMLAttributes<HTMLSpanElement>
+)
+	& JSX.HTMLAttributes<HTMLSpanElement>
 
 export function Divider(props: Props) {
 	let direction_class = () => {

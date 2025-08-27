@@ -96,14 +96,14 @@ export function Indicator(props: IndicatorProps) {
 		get class() {
 			const positionClass = () => {
 				if (
-					(!props.position && context.orientation == "horizontal") ||
-					props.position === "bottom"
+					(!props.position && context.orientation == "horizontal")
+					|| props.position === "bottom"
 				) {
 					return "bottom-[-1px] h-[2px]"
 				}
 				if (
-					(!props.position && context.orientation == "vertical") ||
-					props.position === "right"
+					(!props.position && context.orientation == "vertical")
+					|| props.position === "right"
 				) {
 					return "right-[-1px] w-[2px]"
 				}

@@ -41,9 +41,9 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 	const [store, setStore] = createStore<Store>({})
 
 	const maxDay = createMemo(() =>
-		store.y && store.m ?
-			dayjs(`${store.y}-${store.m}`).daysInMonth()
-		:	undefined,
+		store.y && store.m
+			? dayjs(`${store.y}-${store.m}`).daysInMonth()
+			: undefined,
 	)
 
 	const setYear = (val?: number) => {
@@ -84,12 +84,12 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 	createEffect(
 		on(date, (date) => {
 			props.setValue(
-				date ?
-					{
-						value: date,
-						precision: precision()!,
-					}
-				:	undefined,
+				date
+					? {
+							value: date,
+							precision: precision()!,
+						}
+					: undefined,
 			)
 		}),
 	)

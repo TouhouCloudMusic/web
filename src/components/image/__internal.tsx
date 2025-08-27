@@ -123,9 +123,9 @@ export function Fallback(props: FallbackProps) {
 	const context = useContext(ImageContext)!
 	return (
 		<>
-			{typeof props.children == "function" ?
-				props.children(context.state)
-			:	(props.children ?? DEFAULT_FALLBACK)}
+			{typeof props.children == "function"
+				? props.children(context.state)
+				: (props.children ?? DEFAULT_FALLBACK)}
 		</>
 	)
 }

@@ -1,34 +1,33 @@
-type Eq<A, B> =
-	A extends B ?
-		B extends A ?
-			true
-		:	false
-	:	false
+type Eq<A, B> = A extends B ? (B extends A ? true : false) : false
 
 type PlainObject = Record<string, unknown>
-export type DeepMerge<Objects extends PlainObject[], Result = {}> =
-	Objects extends [...infer Rest, infer Last] ?
-		Last extends PlainObject ?
-			Rest extends PlainObject[] ?
-				DeepMerge<
+export type DeepMerge<
+	Objects extends PlainObject[],
+	Result = {},
+> = Objects extends [...infer Rest, infer Last]
+	? Last extends PlainObject
+		? Rest extends PlainObject[]
+			? DeepMerge<
 					Rest,
 					{
-						[K in keyof Result | keyof Last]: K extends keyof Last ?
-							K extends keyof Result ?
-								Last[K] extends PlainObject ?
-									Result[K] extends PlainObject ?
-										DeepMerge<[Result[K], Last[K]]>
-									:	Last[K]
-								: Eq<Last[K], undefined> extends true ? Result[K]
+						[K in keyof Result | keyof Last]: K extends keyof Last
+							? K extends keyof Result
+								? Last[K] extends PlainObject
+									? Result[K] extends PlainObject
+										? DeepMerge<[Result[K], Last[K]]>
+										: Last[K]
+									: Eq<Last[K], undefined> extends true
+										? Result[K]
+										: Last[K]
 								: Last[K]
-							:	Last[K]
-						: K extends keyof Result ? Result[K]
-						: never
+							: K extends keyof Result
+								? Result[K]
+								: never
 					}
 				>
-			:	never
-		:	never
-	:	Result
+			: never
+		: never
+	: Result
 
 export function deepMerge<
 	const T extends PlainObject,
@@ -63,9 +62,9 @@ function mergeTwoMut(target: PlainObject, source: PlainObject): any {
 
 function isPlainObject(obj: any): obj is PlainObject {
 	return (
-		obj !== null &&
-		typeof obj === "object" &&
-		Object.prototype.toString.call(obj) === "[object Object]"
+		obj !== null
+		&& typeof obj === "object"
+		&& Object.prototype.toString.call(obj) === "[object Object]"
 	)
 }
 

@@ -14,9 +14,9 @@ export type ErrorMessageProps = Omit<
 export function ErrorMessage(props: ErrorMessageProps): JSX.Element {
 	const localProps = mergeProps(props, {
 		get class() {
-			return props.class ?
-					twMerge(ERROR_MESSAGE_CLASSNAME, props.class)
-				:	ERROR_MESSAGE_CLASSNAME
+			return props.class
+				? twMerge(ERROR_MESSAGE_CLASSNAME, props.class)
+				: ERROR_MESSAGE_CLASSNAME
 		},
 	})
 	return (

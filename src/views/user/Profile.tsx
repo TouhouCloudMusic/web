@@ -170,8 +170,8 @@ function ProfileButton(props: ProfileButtonProps) {
 
 	const buttonProps = mergeProps(props, {
 		get onMouseOver() {
-			return context.userType === UserType.Following ?
-					(
+			return context.userType === UserType.Following
+				? (
 						e: MouseEvent & {
 							currentTarget: HTMLButtonElement
 							target: Element
@@ -181,11 +181,11 @@ function ProfileButton(props: ProfileButtonProps) {
 						e.target.innerHTML = "Unfollow"
 						callHandlerUnion(e, props.onMouseOver)
 					}
-				:	props.onMouseOver
+				: props.onMouseOver
 		},
 		get onMouseOut() {
-			return context.userType === UserType.Following ?
-					(
+			return context.userType === UserType.Following
+				? (
 						e: MouseEvent & {
 							currentTarget: HTMLButtonElement
 							target: Element
@@ -195,7 +195,7 @@ function ProfileButton(props: ProfileButtonProps) {
 						e.target.innerHTML = "Following"
 						callHandlerUnion(e, props.onMouseEnter)
 					}
-				:	props.onMouseOver
+				: props.onMouseOver
 		},
 	} satisfies ComponentProps<"button">)
 

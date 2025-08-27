@@ -60,9 +60,11 @@ export function ArtistProfilePage(props: ArtistProfilePageProps) {
 							<Image.Root>
 								<Image.Fallback>
 									{(state) =>
-										state == Image.State.Error ?
+										state == Image.State.Error ? (
 											<div class="size-64 bg-slate-100"></div>
-										:	<></>
+										) : (
+											<></>
+										)
 									}
 								</Image.Fallback>
 								<Image.Img src={props.artist.profile_image_url ?? undefined} />

@@ -24,12 +24,11 @@ export function profileOption({
 		queryFn: async () => {
 			if (current_user) return current_user
 
-			const result =
-				params_username ?
-					await UserApi.profileWithName({
+			const result = params_username
+				? await UserApi.profileWithName({
 						path: { name: params_username },
 					})
-				:	await UserApi.profile()
+				: await UserApi.profile()
 
 			return Either.match(result, {
 				onRight: Option.getOrUndefined,

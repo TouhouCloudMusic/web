@@ -60,18 +60,18 @@ export function ArtistFormActions(props: ArtistFormFormActionsProps) {
 					type="submit"
 					disabled={props.mutation.isPending || formStore.submitting}
 				>
-					{props.mutation.isPending || formStore.submitting ?
-						t`Loading`
-					:	t`Submit`}
+					{props.mutation.isPending || formStore.submitting
+						? t`Loading`
+						: t`Submit`}
 				</Button>
 
 				<FormComp.ErrorMessage message={formStore.response.message} />
 				<FormComp.ErrorMessage
 					class="text-lg"
 					message={
-						props.mutation.isError ?
-							t`Error: ${props.mutation.error.message}`
-						:	undefined
+						props.mutation.isError
+							? t`Error: ${props.mutation.error.message}`
+							: undefined
 					}
 				/>
 			</div>

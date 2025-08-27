@@ -35,9 +35,9 @@ export function Navbar() {
 					{(item) => (
 						<button
 							class={`relative py-4 text-sm font-medium whitespace-nowrap transition-colors ${
-								item.active ? "text-rose-600" : (
-									"text-gray-600 hover:text-gray-900"
-								)
+								item.active
+									? "text-rose-600"
+									: "text-gray-600 hover:text-gray-900"
 							}`}
 							onClick={() => setActive(item.id)}
 						>

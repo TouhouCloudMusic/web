@@ -115,8 +115,8 @@ function Membership() {
 	return (
 		<Show
 			when={
-				context.artist.artist_type !== "Unknown" &&
-				context.artist.memberships?.length
+				context.artist.artist_type !== "Unknown"
+				&& context.artist.memberships?.length
 			}
 		>
 			<div>
