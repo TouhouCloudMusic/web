@@ -40,7 +40,7 @@ export function MembershipRoleField(props: { index: number }): JSX.Element {
 	}))
 
 	let options = createMemo(() => {
-		let data = rolesQuery.isSuccess ? rolesQuery.data : []
+		let data = rolesQuery.data ?? []
 
 		return data.filter((role) => !roles.some((x) => x.id === role.id))
 	})

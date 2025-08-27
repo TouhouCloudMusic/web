@@ -17,11 +17,18 @@ type Story = StoryObj<typeof avatar.Avatar>
 
 export const Avatar: Story = {
 	args: {
-		src: baka,
+		user: {
+			avatar_url: baka,
+			name: "baka",
+			last_login: "",
+		},
 	},
 }
 export const Fallback: Story = {
 	args: {
-		username: "Cirno",
+		user: {
+			name: "Cirno",
+			last_login: "",
+		},
 	},
 }

@@ -1,11 +1,13 @@
-import type { DateWithPrecision as TDateWithPrecision } from "@thc/query"
 import dayjs from "dayjs"
 import { createEffect, createMemo, on } from "solid-js"
 import { createStore } from "solid-js/store"
 
 import { FormComp } from "~/components/atomic/form"
 import { InputField } from "~/components/atomic/form/Input"
-import type { DatePrecision } from "~/domain/shared"
+import type {
+	DatePrecision,
+	DateWithPrecision as TDateWithPrecision,
+} from "~/domain/shared"
 
 export interface DateWithPrecisionProps {
 	label: string

@@ -1,6 +1,6 @@
 import * as M from "@modular-forms/solid"
 import { useQuery } from "@tanstack/solid-query"
-import type { Language } from "@thc/query"
+import type { Language } from "@thc/api"
 import { LanguagesQuery } from "@thc/query"
 import { For } from "solid-js"
 import { CheckIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
@@ -72,7 +72,7 @@ export function ArtistFormLocalizedNames() {
 
 									<LanguageCombobox
 										index={idx()}
-										langs={langs.data!}
+										langs={langs.data ?? []}
 									/>
 									<Button
 										variant="Tertiary"

@@ -41,6 +41,7 @@
 		"arrow-body-style": "off",
 		"curly": "off",
 		"eqeqeq": ["off", "smart"],
+		"func-names": "off",
 		"func-style": [
 			"error",
 			"declaration",

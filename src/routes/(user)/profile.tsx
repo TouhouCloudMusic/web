@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/solid-query"
 import { createFileRoute } from "@tanstack/solid-router"
 import { UserQuery } from "@thc/query"
-import { createResource } from "solid-js"
+import { Show } from "solid-js"
 
 import { AuthGuard } from "~/components/route"
 import { useCurrentUser } from "~/state/user"
@@ -12,22 +13,23 @@ export const Route = createFileRoute("/(user)/profile")({
 
 function RouteComponent() {
 	const userCtx = useCurrentUser()
-	const queryResult = UserQuery.profile({
-		"params.username": undefined,
-		current_user: userCtx.user,
-	})
-
-	const [data] = createResource(() =>
-		// Have to do this to avoid error but idk why
-		queryResult.promise.then((v) => v),
+	const query = useQuery(() =>
+		UserQuery.profileOption({
+			"params.username": undefined,
+			current_user: userCtx.user,
+		}),
 	)
 
 	return (
 		<AuthGuard>
-			<Profile
-				isCurrentUser={true}
-				data={data}
-			/>
+			<Show when={query.data}>
+				{(data) => (
+					<Profile
+						isCurrentUser={true}
+						data={data()}
+					/>
+				)}
+			</Show>
 		</AuthGuard>
 	)
 }

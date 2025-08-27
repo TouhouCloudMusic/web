@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/solid-query"
 import { createFileRoute, useNavigate } from "@tanstack/solid-router"
-import { ArtistQueryOption } from "@thc/query/artist"
-import { createEffect } from "solid-js"
+import { ArtistQueryOption } from "@thc/query"
+import { Option as O } from "effect"
+import { createEffect, Show } from "solid-js"
 import * as v from "valibot"
 
 import { EntityId } from "~/domain/shared"
@@ -27,7 +28,7 @@ function RouteComponent() {
 
 	const nav = useNavigate()
 	createEffect(() => {
-		if (!query.data && !query.isPending) {
+		if (query.isError) {
 			// TODO: Show error message
 			void nav({
 				to: "/",
@@ -36,9 +37,13 @@ function RouteComponent() {
 	})
 
 	return (
-		<EditArtistPage
-			type="edit"
-			artist={query.data!}
-		/>
+		<Show when={query.data}>
+			{(a) => (
+				<EditArtistPage
+					type="edit"
+					artist={O.getOrThrow(a())}
+				/>
+			)}
+		</Show>
 	)
 }

@@ -16,8 +16,12 @@ export function findById(id: number, filter?: ArtistCommonFilter) {
 				path: { id },
 				query: filter,
 			})
-
-			return result
+			return Either.match(result, {
+				onRight: (data) => data,
+				onLeft: (error) => {
+					throw error
+				},
+			})
 		},
 		throwOnError: true,
 	})
@@ -30,8 +34,12 @@ export function findByKeyword(keyword: string, filter?: ArtistCommonFilter) {
 			const result = await ArtistApi.findMany({
 				query: { keyword, ...filter },
 			})
-
-			return result
+			return Either.match(result, {
+				onRight: (data) => data,
+				onLeft: (error) => {
+					throw error
+				},
+			})
 		},
 		throwOnError: true,
 	})
@@ -45,11 +53,15 @@ export function appearances(id: number) {
 				path: { id },
 				query: { cursor: context.pageParam, limit: 10 },
 			})
-
-			return result
+			return Either.match(result, {
+				onRight: (data) => data,
+				onLeft: (error) => {
+					throw error
+				},
+			})
 		},
 		initialPageParam: 0,
-		getNextPageParam: (last) => Either.getOrUndefined(last)?.next_cursor,
+		getNextPageParam: (last) => last?.next_cursor,
 		throwOnError: true,
 	})
 }
@@ -62,12 +74,11 @@ export function credits(id: number) {
 				path: { id },
 				query: { cursor: context.pageParam, limit: 10 },
 			})
-
 			return Either.match(result, {
-				onLeft: () => {
-					throw new Error("Failed to fetch credits")
-				},
 				onRight: (data) => data,
+				onLeft: (error) => {
+					throw error
+				},
 			})
 		},
 		initialPageParam: 0,
@@ -98,7 +109,7 @@ export function discography(id: number, releaseType: ReleaseType) {
 			if (context.pageParam === 0) {
 				const query = useQuery(() => discographyInit(id))
 				const res = await query.promise
-				return Either.map(res, (data) => data[StrExt.toLowerCase(releaseType)])
+				return res[StrExt.toLowerCase(releaseType)]
 			}
 
 			const result = await ArtistApi.findDiscographiesByType({
@@ -110,9 +121,14 @@ export function discography(id: number, releaseType: ReleaseType) {
 				},
 			})
 
-			return result
+			return Either.match(result, {
+				onRight: (data) => data,
+				onLeft: (error) => {
+					throw error
+				},
+			})
 		},
-		getNextPageParam: (last) => Either.getOrUndefined(last)?.next_cursor,
+		getNextPageParam: (last) => last?.next_cursor,
 		initialPageParam: 0,
 		throwOnError: true,
 	})
@@ -126,8 +142,12 @@ export function discographyInit(id: number, limit?: number) {
 				path: { id },
 				query: limit ? { limit } : { limit: 10 },
 			})
-
-			return result
+			return Either.match(result, {
+				onRight: (data) => data,
+				onLeft: (error) => {
+					throw error
+				},
+			})
 		},
 		throwOnError: true,
 	})

@@ -7,6 +7,7 @@ import {
 } from "@modular-forms/solid"
 import { getRouteApi, useNavigate } from "@tanstack/solid-router"
 import { AuthApi } from "@thc/api"
+import { Either } from "effect"
 import { createEffect, createMemo, createSignal } from "solid-js"
 
 import * as AuthSchema from "~/domain/auth/schema"
@@ -54,16 +55,19 @@ export function useAuthForm() {
 					},
 				})
 
-		if (result.status === "Err") {
-			throw new FormError<AuthSchema.SignIn>(result.error.message)
-		}
-
-		if (result.status === "Ok" && result.data) {
-			userCtx.sign_in({
-				user: result.data,
-			})
-			return nav({ to: "/" })
-		}
+		return Either.match(result, {
+			onLeft: (error) => {
+				throw new FormError<AuthSchema.SignIn>(error.error)
+			},
+			onRight: (data) => {
+				if (data) {
+					userCtx.sign_in({
+						user: data,
+					})
+					return nav({ to: "/" })
+				}
+			},
+		})
 	}
 
 	return {

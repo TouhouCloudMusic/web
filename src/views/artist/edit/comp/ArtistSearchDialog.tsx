@@ -1,7 +1,7 @@
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useQuery } from "@tanstack/solid-query"
+import type { Artist, ArtistCommonFilter } from "@thc/api"
 import { ArtistQueryOption } from "@thc/query"
-import type { Artist, ArtistCommonFilter } from "@thc/query"
 import { debounce, id } from "@thc/toolkit"
 import { createSignal, For, createMemo, Suspense, type JSX } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"

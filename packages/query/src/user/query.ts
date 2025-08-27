@@ -1,7 +1,7 @@
 import { useQuery, queryOptions } from "@tanstack/solid-query"
-import { notFound } from "@tanstack/solid-router"
 import type { UserProfile } from "@thc/api"
 import { UserApi } from "@thc/api"
+import { Either, Option } from "effect"
 
 export type Option = {
 	"params.username"?: string | undefined
@@ -31,7 +31,12 @@ export function profileOption({
 					})
 				:	await UserApi.profile()
 
-			return result
+			return Either.match(result, {
+				onRight: Option.getOrUndefined,
+				onLeft: (error) => {
+					throw error
+				},
+			})
 		},
 		throwOnError: true,
 	})

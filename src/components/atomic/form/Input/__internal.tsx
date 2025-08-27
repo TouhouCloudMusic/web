@@ -20,15 +20,15 @@ import { LABEL_CLASSNAME } from "../label"
 const TEXT_INPUT_CLASS = `flex flex-col`
 
 interface ContextStore {
-	inputId?: string | undefined
+	inputId?: string
 	valid: boolean
 }
 
 type Context = {
-	required: boolean | undefined
+	required?: boolean
 	setInputId(str: string): void
 	setValid(bool: boolean): void
-} & Required<ContextStore>
+} & ContextStore
 
 const Context = createContext<Context>()
 

@@ -1,5 +1,5 @@
 import * as M from "@modular-forms/solid"
-import type { Artist, ArtistCommonFilter } from "@thc/query"
+import type { Artist, ArtistCommonFilter } from "@thc/api"
 import { createMemo } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"

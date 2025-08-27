@@ -1,6 +1,9 @@
 export * from "./deep_merge"
 
-export function merge<T extends object>(target: T, ...rest: Partial<T>[]): T {
+export function merge<T extends object>(
+	target: T,
+	...rest: Partial<NoInfer<T>>[]
+): T {
 	return Object.assign(target, ...rest) as T
 }
 

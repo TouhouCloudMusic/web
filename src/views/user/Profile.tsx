@@ -24,12 +24,12 @@ import { callHandlerUnion } from "~/utils/dom/event"
 import { assertContext } from "~/utils/solid/assertContext"
 
 type Props = {
-	data: Resource<UserProfile>
+	data: UserProfile
 	isCurrentUser: boolean
 }
 
 type Context = {
-	user: Resource<UserProfile>
+	user: UserProfile
 	userType: UserType
 }
 
@@ -50,7 +50,7 @@ export function Profile(props: Props) {
 			if (props.isCurrentUser) {
 				return UserType.Current
 			}
-			if (this.user()?.is_following) {
+			if (this.user.is_following) {
 				return UserType.Following
 			}
 			return UserType.Unfollowed
@@ -70,19 +70,14 @@ function Content() {
 	return (
 		<PageLayout class="isolate">
 			{/* Profile banner */}
-			<div
-				class={twJoin(
-					"flex h-68 w-full overflow-hidden bg-slate-200",
-					context.user.loading && "animate-pulse",
-				)}
-			>
+			<div class={twJoin("flex h-68 w-full overflow-hidden bg-slate-200")}>
 				<Suspense>
 					<ErrorBoundary
 						fallback={(e) => {
 							return <div>Image Error: {e}</div>
 						}}
 					>
-						<Show when={!context.user.error && context.user.latest?.banner_url}>
+						<Show when={context.user.banner_url}>
 							{(url) => (
 								<img
 									src={imgUrl(url())}
@@ -105,7 +100,7 @@ function Content() {
 							<ProfileButton />
 						</div>
 						<ul class="mt-1 flex gap-2">
-							<For each={context.user()?.roles}>
+							<For each={context.user.roles}>
 								{(role) => (
 									<li>
 										<RoleBadge role={role.name} />
@@ -144,7 +139,7 @@ function UserName() {
 			}
 		>
 			<span class="flex font-inter text-xl font-semibold text-slate-1000">
-				{context.user()?.name}
+				{context.user.name}
 			</span>
 		</Suspense>
 	)
@@ -159,7 +154,7 @@ function ProfileAvatar() {
 			<div class="flex aspect-square h-fit w-4/5 rounded-full bg-white">
 				<Avatar
 					class="m-auto size-[calc(100%-var(--avatar-border)*2)]"
-					user={context.user()}
+					user={context.user}
 				/>
 			</div>
 		</div>
@@ -219,7 +214,7 @@ function ProfileButton(props: ProfileButtonProps) {
 		>
 			{
 				// This is to trigger suspense
-				void context.user()
+				void context.user
 			}
 			<Switch>
 				<Match when={context.userType === UserType.Current}>
@@ -268,7 +263,7 @@ function Bio() {
 			>
 				<Suspense>
 					<Markdown
-						content={ctx.user()?.bio}
+						content={ctx.user.bio}
 						fallback="这个人什么也没有写哦（"
 						onRendered={() => setMdParsing(false)}
 					/>

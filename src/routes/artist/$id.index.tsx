@@ -3,7 +3,8 @@ import { createFileRoute } from "@tanstack/solid-router"
 import type { ReleaseType, Discography } from "@thc/api"
 import { ArtistQueryOption } from "@thc/query"
 import { ObjExt } from "@thc/toolkit/data"
-import { createEffect } from "solid-js"
+import { Option as O } from "effect"
+import { createEffect, Show } from "solid-js"
 import { createStore, produce } from "solid-js/store"
 import * as v from "valibot"
 
@@ -54,7 +55,7 @@ function RouteComponent() {
 			useInfiniteQuery(() =>
 				ObjExt.merge(ArtistQueryOption.discography(artistId, type), {
 					initialPageParam: 0,
-					getNextPageParam: (last) => last.next_cursor,
+					getNextPageParam: (x) => x.next_cursor,
 				}),
 			),
 		]),
@@ -66,8 +67,10 @@ function RouteComponent() {
 			if (query.isSuccess) {
 				setDiscographyMap(
 					produce((v) => {
-						v[type].push(...query.data.pages.at(-1)!.items)
-						// v[type] = query.data.pages.flatMap((p) => p.items)
+						const lastPage = query.data.pages.at(-1)
+						if (lastPage) {
+							v[type].push(...lastPage.items)
+						}
 					}),
 				)
 			}
@@ -75,13 +78,14 @@ function RouteComponent() {
 	}
 
 	return (
-		<>
-			<ArtistProfilePage
-				artist={query.data!}
-				appearances={{
-					get data() {
-						return appearances.data?.pages.flatMap((p) => p.items) ?? []
-					},
+		<Show when={query.data}>
+			{(artist) => (
+				<ArtistProfilePage
+					artist={O.getOrThrow(artist())}
+					appearances={{
+						get data() {
+							return appearances.data?.pages.flatMap((p) => p.items) ?? []
+						},
 					get hasNext() {
 						return appearances.hasNextPage
 					},
@@ -125,6 +129,7 @@ function RouteComponent() {
 					},
 				}}
 			/>
-		</>
+			)}
+		</Show>
 	)
 }

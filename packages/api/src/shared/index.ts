@@ -1,6 +1,5 @@
 import type { ADTEnum } from "@thc/toolkit/types"
 import { Either as E, Option as O } from "effect"
-import type { Either } from "effect/Either"
 
 import type { operations } from "../gen"
 
@@ -43,18 +42,40 @@ export type ApiResultOptional<T, E = ErrResponse> = E.Either<
 	ApiError<E>
 >
 
-type RestError<E> = {
+type RestErrorResponse<E> = {
 	error?: E
 	response: Response
 }
 
-function handleError<E>(
-	res: RestError<E>,
-): Either<never, ApiError<NonNullable<E>>> {
+function serverError<E>(error: E) {
+	return {
+		type: "Server",
+		error,
+	} as const
+}
+
+function responseError<E>(error: E) {
+	return {
+		type: "Response",
+		error,
+	} as const
+}
+
+function handleError<E>(res: RestErrorResponse<E>) {
+	if (res.error) {
+		return serverError(res.error)
+	} else {
+		return responseError(res.response.statusText)
+	}
+}
+
+function handleErrorResult<E extends ErrResponse | undefined>(
+	res: RestErrorResponse<E>,
+) {
 	if (res.error) {
 		return E.left({
 			type: "Server",
-			error: res.error,
+			error: res.error.message,
 		} as const)
 	} else {
 		return E.left({
@@ -77,24 +98,36 @@ type FetchResponse<T, E> = ADTEnum<
 	response: Response
 }
 
-export function adaptApiResult<T, E>(
-	res: FetchResponse<T, E>,
-): E.Either<T, ApiError<NonNullable<E>>> {
+export function adaptApi<T, E>(res: FetchResponse<T, E>) {
 	if (res.data) {
-		return E.right(res.data.data)
+		return res.data
+	} else {
+		return handleError(res)
 	}
-
-	return handleError(res)
 }
 
-export function adaptApiResultOptional<T, E = unknown>(
+export function adaptApiResult<T, E extends ErrResponse | undefined>(
 	res: FetchResponse<T, E>,
 ) {
-	if (res.data) {
-		return E.right(O.fromNullable(res.data.data))
-	}
+	return E.gen(function* () {
+		if (!res.data) {
+			yield* handleErrorResult(res)
+		}
 
-	return handleError(res)
+		return res.data!.data
+	})
+}
+
+export function adaptApiResultOptional<T, E extends ErrResponse | undefined>(
+	res: FetchResponse<T, E>,
+) {
+	return E.gen(function* () {
+		if (!res.data) {
+			yield* handleErrorResult(res)
+		}
+
+		return O.fromNullable(res.data!.data)
+	})
 }
 
 type FetchMessageResponse<E> = ADTEnum<
@@ -112,11 +145,16 @@ type FetchMessageResponse<E> = ADTEnum<
 	response: Response
 }
 
-export function adaptApiResultMessage<E>(res: FetchMessageResponse<E>) {
-	if (res.data) {
-		return E.right(res.data.message)
-	}
-	return handleError(res)
+export function adaptApiResultMessage<E extends ErrResponse | undefined>(
+	res: FetchMessageResponse<E>,
+) {
+	return E.gen(function* () {
+		if (!res.data) {
+			yield* handleErrorResult(res)
+		}
+
+		return res.data!.message
+	})
 }
 
 export type Query<K extends keyof operations> =

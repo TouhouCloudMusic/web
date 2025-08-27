@@ -1,4 +1,4 @@
-import { ArrowPathIcon } from "@thc/icons/heroicons/24/outline.tsx"
+import { ArrowPathIcon } from "@thc/icons/heroicons/24/outline"
 import { createMemo } from "solid-js"
 
 import { Button } from "../atomic/button"
