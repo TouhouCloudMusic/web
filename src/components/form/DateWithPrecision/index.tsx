@@ -128,7 +128,7 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 					/>
 				</InputField.Root>
 			</div>
-			<FormComp.ErrorMessage message={props.error} />
+			<FormComp.ErrorMessage>{props.error}</FormComp.ErrorMessage>
 		</div>
 	)
 }

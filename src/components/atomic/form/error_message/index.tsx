@@ -8,8 +8,6 @@ export type ErrorMessageProps = Omit<
 	JSX.HTMLAttributes<HTMLSpanElement>,
 	"children"
 > & {
-	/** @deprecated use children instead */
-	message?: string | undefined
 	children?: string
 }
 
@@ -22,8 +20,8 @@ export function ErrorMessage(props: ErrorMessageProps): JSX.Element {
 		},
 	})
 	return (
-		<Show when={props.children ?? props.message}>
-			<span {...localProps}>{props.children ?? props.message}</span>
+		<Show when={props.children}>
+			<span {...localProps}>{props.children}</span>
 		</Show>
 	)
 }

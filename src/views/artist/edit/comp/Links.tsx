@@ -55,7 +55,7 @@ export function ArtistFormLinks() {
 														placeholder="Url"
 														value={field.value}
 													/>
-													<InputField.Error message={field.error} />
+													<InputField.Error>{field.error}</InputField.Error>
 												</InputField.Root>
 											)}
 										</M.Field>

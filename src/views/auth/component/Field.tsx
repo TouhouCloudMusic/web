@@ -17,7 +17,7 @@ export function FieldLayout(
 				{props.label}
 			</InputField.Label>
 			{props.children}
-			<InputField.Error message={props.error} />
+			<InputField.Error>{props.error}</InputField.Error>
 		</InputField.Root>
 	)
 }

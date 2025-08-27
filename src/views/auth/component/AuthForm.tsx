@@ -93,7 +93,9 @@ export function AuthForm() {
 
 					{/* TODO: Rememeber me */}
 
-					<FormComp.ErrorMessage message={formStore().response.message} />
+					<FormComp.ErrorMessage>
+						{formStore().response.message}
+					</FormComp.ErrorMessage>
 
 					<Button
 						type="submit"

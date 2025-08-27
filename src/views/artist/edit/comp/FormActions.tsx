@@ -32,7 +32,7 @@ export function ArtistFormActions(props: ArtistFormFormActionsProps) {
 							{...fieldProps}
 							id={field.name}
 						/>
-						<InputField.Error message={field.error} />
+						<InputField.Error>{field.error}</InputField.Error>
 					</InputField.Root>
 				)}
 			</M.Field>
