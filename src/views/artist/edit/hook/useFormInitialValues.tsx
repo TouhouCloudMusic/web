@@ -1,7 +1,7 @@
 /* eslint-disable solid/reactivity */
-import { Artist } from "@thc/api"
+import type { Artist } from "@thc/api"
 
-import { NewArtistCorrection } from "~/domain/artist"
+import type { NewArtistCorrection } from "~/domain/artist"
 
 type Props =
 	| {

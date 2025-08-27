@@ -1,4 +1,5 @@
-import { type ComponentProps, createMemo, Match, Switch } from "solid-js"
+import { createMemo, Match, Switch } from "solid-js"
+import type { ComponentProps } from "solid-js"
 import { MoonIcon, SunIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 

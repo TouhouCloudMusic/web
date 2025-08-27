@@ -1,7 +1,9 @@
-import { type Ref, type ParentProps, createMemo, splitProps } from "solid-js"
+import { createMemo, splitProps } from "solid-js"
+import type { Ref, ParentProps } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { Button, type Props as ButtonProps } from "../atomic/button"
+import { Button } from "../atomic/button"
+import type { Props as ButtonProps } from "../atomic/button"
 
 export function Sidebar(
 	props: ParentProps & {

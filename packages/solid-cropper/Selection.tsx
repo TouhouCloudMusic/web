@@ -1,5 +1,5 @@
 import "cropperjs"
-import { ParentProps } from "solid-js"
+import type { ParentProps } from "solid-js"
 
 export type SelectionProps = {
 	x?: number

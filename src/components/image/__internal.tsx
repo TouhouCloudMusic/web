@@ -1,6 +1,5 @@
 import type { JSX, ParentProps } from "solid-js"
 import {
-	type ComponentProps,
 	mergeProps,
 	createContext,
 	useContext,
@@ -9,6 +8,7 @@ import {
 	splitProps,
 	createMemo,
 } from "solid-js"
+import type { ComponentProps } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Portal } from "solid-js/web"
 import { twMerge } from "tailwind-merge"

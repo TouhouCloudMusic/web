@@ -2,7 +2,7 @@ import type { FieldStore, FieldElementProps } from "@modular-forms/solid"
 import type { ParentProps } from "solid-js"
 
 import { InputField } from "~/components/atomic/form/Input"
-import { SignIn, SignUp } from "~/domain/auth"
+import type { SignIn, SignUp } from "~/domain/auth"
 
 export function FieldLayout(
 	props: ParentProps<{

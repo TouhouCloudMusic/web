@@ -1,4 +1,4 @@
 {
-	"extends": [ "../../.oxlintrc.json" ],
-	"ignorePatterns": [ "src/gen.ts" ]
+	"extends": ["../../.oxlintrc.json"],
+	"ignorePatterns": ["src/gen.ts"]
 }

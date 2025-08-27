@@ -1,4 +1,5 @@
-import { type JSX, Show, splitProps } from "solid-js"
+import { Show, splitProps } from "solid-js"
+import type { JSX } from "solid-js"
 
 import { Dialog } from "."
 import { Button } from "../atomic/button"

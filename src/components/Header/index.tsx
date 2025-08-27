@@ -1,7 +1,7 @@
 import { Dialog as K_Dialog } from "@kobalte/core"
 import { useLingui } from "@lingui-solid/solid/macro"
 import { Link } from "@tanstack/solid-router"
-import { UserProfile } from "@thc/api"
+import type { UserProfile } from "@thc/api"
 import {
 	BellAlertIcon,
 	BellIcon,

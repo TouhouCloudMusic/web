@@ -11,7 +11,9 @@ export async function findLabelById(options: Opt<"find_label_by_id">) {
 	return adaptApiResultOptional(res)
 }
 
-export async function findLabelByKeyword(options: Opt<"find_label_by_keyword">) {
+export async function findLabelByKeyword(
+	options: Opt<"find_label_by_keyword">,
+) {
 	const res = await FetchClient.GET("/label", {
 		params: { query: options.query },
 	})

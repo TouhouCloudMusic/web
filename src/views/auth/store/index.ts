@@ -1,10 +1,5 @@
-import {
-	createFormStore,
-	FormError,
-	valiForm,
-	type SubmitHandler,
-	type FormStore,
-} from "@modular-forms/solid"
+import { createFormStore, FormError, valiForm } from "@modular-forms/solid"
+import type { SubmitHandler, FormStore } from "@modular-forms/solid"
 import { getRouteApi, useNavigate } from "@tanstack/solid-router"
 import { AuthApi } from "@thc/api"
 import { Either } from "effect"

@@ -1,4 +1,5 @@
-import { createMemo, type JSX, splitProps } from "solid-js"
+import { createMemo, splitProps } from "solid-js"
+import type { JSX } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
 import type { SafeOmit } from "~/types"

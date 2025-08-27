@@ -11,7 +11,9 @@ export async function findOneSongLyrics(options: Opt<"find_one_song_lyrics">) {
 	return adaptApiResultOptional(res)
 }
 
-export async function findManySongLyrics(options: Opt<"find_many_song_lyrics">) {
+export async function findManySongLyrics(
+	options: Opt<"find_many_song_lyrics">,
+) {
 	const res = await FetchClient.GET("/song-lyrics/many", {
 		params: { query: options.query },
 	})

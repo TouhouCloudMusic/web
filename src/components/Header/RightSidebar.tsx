@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/solid-router"
-import { createResource, type Ref } from "solid-js"
+import { createResource } from "solid-js"
+import type { Ref } from "solid-js"
 import {
 	BookmarkIcon,
 	Cross1Icon,

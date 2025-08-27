@@ -1,7 +1,7 @@
 /* @refresh skip */
 import { useLingui } from "@lingui-solid/solid/macro"
 import { useNavigate } from "@tanstack/solid-router"
-import { Artist } from "@thc/api"
+import type { Artist } from "@thc/api"
 import type { ParentProps } from "solid-js"
 import { createMemo, Show, For } from "solid-js"
 import { ArrowLeftIcon } from "solid-radix-icons"

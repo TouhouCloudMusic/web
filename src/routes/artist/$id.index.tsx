@@ -86,49 +86,49 @@ function RouteComponent() {
 						get data() {
 							return appearances.data?.pages.flatMap((p) => p.items) ?? []
 						},
-					get hasNext() {
-						return appearances.hasNextPage
-					},
-					async next() {
-						await appearances.fetchNextPage()
-						return
-					},
-					get isLoading() {
-						return appearances.isLoading
-					},
-				}}
-				credits={{
-					get data() {
-						return credits.data?.pages.flatMap((p) => p.items) ?? []
-					},
-					get hasNext() {
-						return credits.hasNextPage
-					},
-					async next() {
-						await credits.fetchNextPage()
-						return
-					},
-					get isLoading() {
-						return credits.isLoading
-					},
-				}}
-				discographies={{
-					get data() {
-						return discographyMap
-					},
-					hasNext(type: ReleaseType) {
-						return discography[type].hasNextPage
-					},
-					async next(type: ReleaseType): Promise<void> {
-						if (discography[type].isFetchingNextPage) return
+						get hasNext() {
+							return appearances.hasNextPage
+						},
+						async next() {
+							await appearances.fetchNextPage()
+							return
+						},
+						get isLoading() {
+							return appearances.isLoading
+						},
+					}}
+					credits={{
+						get data() {
+							return credits.data?.pages.flatMap((p) => p.items) ?? []
+						},
+						get hasNext() {
+							return credits.hasNextPage
+						},
+						async next() {
+							await credits.fetchNextPage()
+							return
+						},
+						get isLoading() {
+							return credits.isLoading
+						},
+					}}
+					discographies={{
+						get data() {
+							return discographyMap
+						},
+						hasNext(type: ReleaseType) {
+							return discography[type].hasNextPage
+						},
+						async next(type: ReleaseType): Promise<void> {
+							if (discography[type].isFetchingNextPage) return
 
-						await discography[type].fetchNextPage()
-					},
-					get isLoading() {
-						return initDiscographies.isLoading
-					},
-				}}
-			/>
+							await discography[type].fetchNextPage()
+						},
+						get isLoading() {
+							return initDiscographies.isLoading
+						},
+					}}
+				/>
 			)}
 		</Show>
 	)
