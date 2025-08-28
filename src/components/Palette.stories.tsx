@@ -9,35 +9,35 @@ type Color = {
 
 let colors: Color[] = [
 	{
-		name: "Slate",
+		name: "slate",
 		colors: [
 			"#f3f4f5",
 			"#e8eaed",
 			"#d5d7db",
-			"#b8bbc0",
-			"#999fa7",
-			"#7a7d85",
-			"#595e65",
+			"#c0c3c8",
+			"#a0a4ab",
+			"#7c8088",
+			"#595c64",
 			"#3a3d44",
 			"#1b1e25",
 		],
 	},
 	{
-		name: "Reimu",
+		name: "reimu",
 		colors: [
 			"#fff0ef",
-			"#ffe4e1",
+			"#fce1df",
 			"#ffcac6",
 			"#ff9e99",
 			"#f87572",
 			"#db464c",
 			"#a82f33",
-			"#6f1c1e",
-			"#370600",
+			"#6f1c1b",
+			"#3d0c07",
 		],
 	},
 	{
-		name: "Blue",
+		name: "blue",
 		colors: [
 			"#edf4ff",
 			"#deeaff",
@@ -51,21 +51,21 @@ let colors: Color[] = [
 		],
 	},
 	{
-		name: "Marisa",
+		name: "marisa",
 		colors: [
 			"#fbf3d1",
 			"#f7eab8",
-			"#efd598",
-			"#d8b669",
-			"#c39744",
-			"#9f7704",
-			"#81560a",
-			"#543605",
-			"#261903",
+			"#edd698",
+			"#d9b468",
+			"#c79c49",
+			"#a57911",
+			"#845d11",
+			"#553a07",
+			"#261803",
 		],
 	},
 	{
-		name: "Green",
+		name: "green",
 		colors: [
 			"#dcfce6",
 			"#c0f6d2",
@@ -75,7 +75,7 @@ let colors: Color[] = [
 			"#00903a",
 			"#006b28",
 			"#004616",
-			"#002200",
+			"#002206",
 		],
 	},
 ]
@@ -133,29 +133,19 @@ function Palette() {
 
 			<div class="p2 space-y-4">
 				<h1 class="mb-1 text-xl text-slate-900">Border</h1>
-				<div class="grid w-fit grid-cols-7 gap-2 *:border-[1.5px]">
-					<div class="border-slate-50 size-8 rounded border"></div>
+				<div class="grid w-fit grid-cols-6 gap-2 *:border-[1.5px]">
 					<div class="size-8 rounded border border-slate-100"></div>
 					<div class="size-8 rounded border border-slate-200"></div>
 					<div class="size-8 rounded border border-slate-300"></div>
 					<div class="size-8 rounded border border-slate-400"></div>
 					<div class="size-8 rounded border border-slate-500"></div>
 					<div class="size-8 rounded border border-slate-600"></div>
-					<div class="border-slate-50 bg-slate-50 size-8 rounded border"></div>
-					<div class="bg-slate-50 size-8 rounded border border-slate-100"></div>
-					<div class="bg-slate-50 size-8 rounded border border-slate-200"></div>
-					<div class="bg-slate-50 size-8 rounded border border-slate-300"></div>
-					<div class="bg-slate-50 size-8 rounded border border-slate-400"></div>
-					<div class="bg-slate-50 size-8 rounded border border-slate-500"></div>
-					<div class="bg-slate-50 size-8 rounded border border-slate-600"></div>
-					<div class="border-slate-50 size-8 rounded border bg-slate-100"></div>
 					<div class="size-8 rounded border border-slate-100 bg-slate-100"></div>
 					<div class="size-8 rounded border border-slate-200 bg-slate-100"></div>
 					<div class="size-8 rounded border border-slate-300 bg-slate-100"></div>
 					<div class="size-8 rounded border border-slate-400 bg-slate-100"></div>
 					<div class="size-8 rounded border border-slate-500 bg-slate-100"></div>
 					<div class="size-8 rounded border border-slate-600 bg-slate-100"></div>
-					<div class="border-slate-50 size-8 rounded border bg-slate-200"></div>
 					<div class="size-8 rounded border border-slate-100 bg-slate-200"></div>
 					<div class="size-8 rounded border border-slate-200 bg-slate-200"></div>
 					<div class="size-8 rounded border border-slate-300 bg-slate-200"></div>
