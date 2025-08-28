@@ -124,7 +124,7 @@ function Palette() {
 						{(color) => <span style={{ color }}>Text is {color}</span>}
 					</For>
 				</div>
-				<div class="bg-slate-1100 flex flex-col">
+				<div class="flex flex-col bg-slate-900">
 					<For each={colors.find((c) => c.name === "Slate")?.colors}>
 						{(color) => <span style={{ color }}>Text is {color}</span>}
 					</For>

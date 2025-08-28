@@ -17,7 +17,7 @@ export function NewMusic() {
 				<div class="grid grid-cols-2 gap-4">
 					<For each={Array.from({ length: 6 }).fill(0)}>
 						{(_, i) => (
-							<div class="flex items-center rounded-md p-2 hover:bg-gray-50">
+							<div class="flex items-center rounded-md p-2 hover:bg-gray-100">
 								<div class="h-10 w-10 flex-shrink-0 overflow-hidden rounded bg-rose-100">
 									<img
 										src={`https://placehold.co/100x100/red/white?text=${i() + 1}`}
