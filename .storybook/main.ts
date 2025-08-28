@@ -1,8 +1,7 @@
 import type { StorybookConfig } from "storybook-solidjs-vite"
 import { mergeConfig } from "vite"
 
-// oxlint-disable-next-line no-default-export
-export default <StorybookConfig>{
+const config: StorybookConfig = {
 	framework: "storybook-solidjs-vite",
 	stories: ["../src/components/**/*.stories.@(ts|tsx)"],
 	addons: [
@@ -17,7 +16,7 @@ export default <StorybookConfig>{
 			},
 		},
 	],
-// oxlint-disable-next-line require-await
+	// oxlint-disable-next-line require-await
 	async viteFinal(config) {
 		return mergeConfig(config, {
 			define: {
@@ -37,3 +36,6 @@ export default <StorybookConfig>{
 		},
 	},
 }
+
+// oxlint-disable-next-line no-default-export
+export default config
