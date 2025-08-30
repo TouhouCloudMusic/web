@@ -1,0 +1,83 @@
+import type { Release } from "@thc/api"
+import { createContext, Show, Suspense } from "solid-js"
+
+import { Tab } from "~/components/atomic"
+import { PageLayout } from "~/layout/PageLayout"
+import { assertContext } from "~/utils/solid/assertContext"
+
+import { ReleaseInfoCoverImage } from "./comp/ReleaseInfoCoverImage"
+import { ReleaseInfoCredits } from "./comp/ReleaseInfoCredits"
+import { ReleaseInfoDetails } from "./comp/ReleaseInfoDetails"
+import { ReleaseInfoTitleAndArtist } from "./comp/ReleaseInfoTitleAndArtist"
+import { ReleaseInfoTracks } from "./comp/ReleaseInfoTracks"
+
+export type ReleaseInfoPageContext = {
+	release: Release
+}
+
+export const ReleaseInfoPageContext = createContext<ReleaseInfoPageContext>()
+
+type ReleaseInfoPageProps = {
+	release: Release
+}
+
+export function ReleaseInfoPage(props: ReleaseInfoPageProps) {
+	const contextValue: ReleaseInfoPageContext = {
+		get release() {
+			return props.release
+		},
+	}
+
+	return (
+		<PageLayout class="p-8">
+			<Suspense fallback={<div>Loading...</div>}>
+				<ReleaseInfoPageContext.Provider value={contextValue}>
+					<div class="grid grid-cols-[auto_1fr] gap-8">
+						<ReleaseInfoCoverImage />
+						<div class="flex flex-col gap-y-4">
+							<ReleaseInfoTitleAndArtist />
+							<ReleaseInfoDetails />
+						</div>
+						<div class="col-span-full">
+							<ReleaseInfoTabs />
+						</div>
+					</div>
+				</ReleaseInfoPageContext.Provider>
+			</Suspense>
+		</PageLayout>
+	)
+}
+
+const TRIGGER_CLASS = "py-4"
+function ReleaseInfoTabs() {
+	const ctx = assertContext(ReleaseInfoPageContext)
+	return (
+		<Tab.Root>
+			<Tab.List class="mx-4 grid-cols-2 gap-12 border-b border-slate-200">
+				<Show when={ctx.release.tracks && ctx.release.tracks.length > 0}>
+					<Tab.Trigger
+						value={"Tracks"}
+						class={TRIGGER_CLASS}
+					>
+						Tracks
+					</Tab.Trigger>
+				</Show>
+				<Show when={ctx.release.credits && ctx.release.credits.length > 0}>
+					<Tab.Trigger
+						value={"Credits"}
+						class={TRIGGER_CLASS}
+					>
+						Credits
+					</Tab.Trigger>
+				</Show>
+				<Tab.Indicator />
+			</Tab.List>
+			<Tab.Content value="Tracks">
+				<ReleaseInfoTracks />
+			</Tab.Content>
+			<Tab.Content value="Credits">
+				<ReleaseInfoCredits />
+			</Tab.Content>
+		</Tab.Root>
+	)
+}

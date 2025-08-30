@@ -110,7 +110,7 @@ type FallbackProps = {
 }
 
 const DEFAULT_FALLBACK = (
-	<div class="flex h-full w-full animate-pulse items-center justify-center bg-gray-200">
+	<div class="flex h-full w-full animate-pulse items-center justify-center bg-slate-200">
 		<img
 			class="m-auto w-3/4"
 			src="/img/cover/release/1.png"
