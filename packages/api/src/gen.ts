@@ -1099,15 +1099,9 @@ export type components = {
             /** Format: int32 */
             id: number;
             localized_titles?: components["schemas"]["LocalizedTitle"][];
-            /** Format: date */
-            recording_date_end?: string | null;
-            recording_date_end_precision?: null | components["schemas"]["DatePrecision"];
-            /** Format: date */
-            recording_date_start?: string | null;
-            recording_date_start_precision?: null | components["schemas"]["DatePrecision"];
-            /** Format: date */
-            release_date?: string | null;
-            release_date_precision?: null | components["schemas"]["DatePrecision"];
+            recording_date_end?: null | components["schemas"]["DateWithPrecision"];
+            recording_date_start?: null | components["schemas"]["DateWithPrecision"];
+            release_date?: null | components["schemas"]["DateWithPrecision"];
             release_type: components["schemas"]["ReleaseType"];
             title: string;
             tracks?: components["schemas"]["ReleaseTrack"][];
