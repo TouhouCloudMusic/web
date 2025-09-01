@@ -12,12 +12,18 @@ const mockData: Release = {
 	title: "東方紅魔郷 ～ the Embodiment of Scarlet Devil",
 	release_type: "Album",
 	cover_art_url: "https://picsum.photos/400/400?random=1",
-	release_date: "2002-08-11",
-	release_date_precision: "Day",
-	recording_date_start: "2002-06-01",
-	recording_date_start_precision: "Month",
-	recording_date_end: "2002-07-31",
-	recording_date_end_precision: "Month",
+	release_date: {
+		value: "2002-08-11",
+		precision: "Day",
+	},
+	recording_date_start: {
+		value: "2002-06-01",
+		precision: "Month",
+	},
+	recording_date_end: {
+		value: "2002-07-31",
+		precision: "Month",
+	},
 	artists: [
 		{
 			id: 1,
@@ -61,7 +67,7 @@ const mockData: Release = {
 		},
 		{
 			catalog_number: "TEAM-SHA-001",
-			label_id: null,
+			label_id: undefined,
 		},
 	],
 	tracks: [
@@ -86,6 +92,19 @@ const mockData: Release = {
 			artists: [],
 			duration: 184000,
 		},
+		{ "id": 4, "track_number": "4", "song": { "id": 4, "title": "ルーネイトエルフ" }, "artists": [], "duration": 178000 },
+		{ "id": 5, "track_number": "5", "song": { "id": 5, "title": "おてんば恋娘" }, "artists": [], "duration": 174000 },
+		{ "id": 6, "track_number": "6", "song": { "id": 6, "title": "上海紅茶館 ～ Chinese Tea" }, "artists": [], "duration": 221000 },
+		{ "id": 7, "track_number": "7", "song": { "id": 7, "title": "明治十七年の上海アリス" }, "artists": [], "duration": 201000 },
+		{ "id": 8, "track_number": "8", "song": { "id": 8, "title": "ヴワル魔法図書館" }, "artists": [], "duration": 181000 },
+		{ "id": 9, "track_number": "9", "song": { "id": 9, "title": "ラクトガール ～ 少女密室" }, "artists": [], "duration": 203000 },
+		{ "id": 10, "track_number": "10", "song": { "id": 10, "title": "月時計 ～ ルナ・ダイアル" }, "artists": [], "duration": 196000 },
+		{ "id": 11, "track_number": "11", "song": { "id": 11, "title": "メイドと血の懐中時計" }, "artists": [], "duration": 204000 },
+		{ "id": 12, "track_number": "12", "song": { "id": 12, "title": "亡き王女の為のセプテット" }, "artists": [], "duration": 234000 },
+		{ "id": 13, "track_number": "13", "song": { "id": 13, "title": "魔法少女達の百年祭" }, "artists": [], "duration": 224000 },
+		{ "id": 14, "track_number": "14", "song": { "id": 14, "title": "U.N.オーエンは彼女なのか？" }, "artists": [], "duration": 228000 },
+		{ "id": 15, "track_number": "15", "song": { "id": 15, "title": "紅より儚い永遠" }, "artists": [], "duration": 207000 },
+		{ "id": 16, "track_number": "16", "song": { "id": 16, "title": "紅楼 ～ Eastern Dream..." }, "artists": [], "duration": 250000 },
 	],
 	credits: [
 		{
@@ -97,7 +116,7 @@ const mockData: Release = {
 				id: 1,
 				name: "Original Composer",
 			},
-			on: null,
+			on: undefined,
 		},
 		{
 			artist: {
@@ -108,7 +127,7 @@ const mockData: Release = {
 				id: 2,
 				name: "Game Designer",
 			},
-			on: null,
+			on: undefined,
 		},
 		{
 			artist: {
@@ -119,7 +138,7 @@ const mockData: Release = {
 				id: 3,
 				name: "Programmer",
 			},
-			on: null,
+			on: undefined,
 		},
 		{
 			artist: {
@@ -141,7 +160,7 @@ const mockData: Release = {
 				id: 5,
 				name: "Publisher",
 			},
-			on: null,
+			on: undefined,
 		},
 		{
 			artist: {
