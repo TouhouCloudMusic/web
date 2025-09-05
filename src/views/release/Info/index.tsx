@@ -53,25 +53,28 @@ function ReleaseInfoTabs() {
 	const ctx = assertContext(ReleaseInfoPageContext)
 	return (
 		<Tab.Root>
-			<Tab.List class="mx-4 grid-cols-2 gap-12 border-b border-slate-200">
-				<Show when={ctx.release.tracks && ctx.release.tracks.length > 0}>
-					<Tab.Trigger
-						value={"Tracks"}
-						class={TRIGGER_CLASS}
-					>
-						Tracks
-					</Tab.Trigger>
-				</Show>
-				<Show when={ctx.release.credits && ctx.release.credits.length > 0}>
-					<Tab.Trigger
-						value={"Credits"}
-						class={TRIGGER_CLASS}
-					>
-						Credits
-					</Tab.Trigger>
-				</Show>
-				<Tab.Indicator />
-			</Tab.List>
+			<div class="border-b border-slate-300 px-4">
+				<Tab.List class="grid-cols-2 gap-12">
+					<Show when={ctx.release.tracks && ctx.release.tracks.length > 0}>
+						<Tab.Trigger
+							value={"Tracks"}
+							class={TRIGGER_CLASS}
+						>
+							Tracks
+						</Tab.Trigger>
+					</Show>
+					<Show when={ctx.release.credits && ctx.release.credits.length > 0}>
+						<Tab.Trigger
+							value={"Credits"}
+							class={TRIGGER_CLASS}
+						>
+							Credits
+						</Tab.Trigger>
+					</Show>
+					<Tab.Indicator />
+				</Tab.List>
+			</div>
+
 			<Tab.Content value="Tracks">
 				<ReleaseInfoTracks />
 			</Tab.Content>

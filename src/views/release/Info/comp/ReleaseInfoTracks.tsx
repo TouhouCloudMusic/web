@@ -1,16 +1,9 @@
 import { For, Show } from "solid-js"
 
+import { Duration } from "~/domain/shared"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ReleaseInfoPageContext } from ".."
-
-function formatDuration(duration: number | null | undefined) {
-	if (!duration) return null
-	
-	const minutes = Math.floor(duration / 60000)
-	const seconds = Math.floor((duration % 60000) / 1000)
-	return `${minutes}:${seconds.toString().padStart(2, '0')}`
-}
 
 export function ReleaseInfoTracks() {
 	const ctx = assertContext(ReleaseInfoPageContext)
@@ -34,18 +27,18 @@ export function ReleaseInfoTracks() {
 									{track.track_number || "-"}
 								</span>
 								<div class="flex-1">
-									<div class="font-medium text-gray-900">
+									<div class="text-gray-900 font-medium">
 										{track.display_title || track.song.title}
 									</div>
 									<Show when={track.artists && track.artists.length > 0}>
 										<div class="text-gray-600 text-sm">
-											{track.artists!.map(artist => artist.name).join(", ")}
+											{track.artists!.map((artist) => artist.name).join(", ")}
 										</div>
 									</Show>
 								</div>
 								<Show when={track.duration}>
-									<span class="text-gray-500 text-sm font-mono">
-										{formatDuration(track.duration)}
+									<span class="text-gray-500 font-mono text-sm">
+										{Duration.format(track.duration)}
 									</span>
 								</Show>
 							</div>

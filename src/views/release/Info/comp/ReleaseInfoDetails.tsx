@@ -1,48 +1,10 @@
-import type { DatePrecision } from "@thc/api"
-import { Match } from "effect"
 import { For, Show } from "solid-js"
 
+import { DateWithPrecision } from "~/domain/shared"
 import { getPreferredLocalizedTitle } from "~/utils"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ReleaseInfoPageContext } from ".."
-
-const getOpt = Match.type<DatePrecision>().pipe(
-	Match.withReturnType<Intl.DateTimeFormatOptions>(),
-	Match.when("Year", () => ({ year: "numeric" })),
-	Match.when("Month", () => ({
-		year: "numeric",
-		month: "long",
-	})),
-	Match.when("Day", () => ({
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	})),
-	Match.when(Match.undefined, () => ({
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-	})),
-	Match.exhaustive,
-)
-
-function formatDate(dateString: string, precision: DatePrecision): string
-function formatDate(dateString?: null, precision?: null): undefined
-function formatDate(
-	dateString?: string | null,
-	precision?: DatePrecision | null,
-): string | undefined
-function formatDate(
-	dateString?: string | null,
-	precision?: DatePrecision | null,
-): string | undefined {
-	if (!dateString || !precision) return
-
-	const date = new Date(dateString)
-
-	return date.toLocaleDateString(undefined, getOpt(precision))
-}
 
 export function ReleaseInfoDetails() {
 	const ctx = assertContext(ReleaseInfoPageContext)
@@ -57,10 +19,7 @@ export function ReleaseInfoDetails() {
 				<div class="flex">
 					<span class="w-20 text-slate-500">Released:</span>
 					<span class="text-slate-900">
-						{formatDate(
-							ctx.release.release_date,
-							ctx.release.release_date_precision,
-						)}
+						{DateWithPrecision.display(ctx.release.release_date)}
 					</span>
 				</div>
 			</Show>
@@ -76,19 +35,12 @@ export function ReleaseInfoDetails() {
 						<Show when={ctx.release.recording_date_start}>
 							<div>
 								From:{" "}
-								{formatDate(
-									ctx.release.recording_date_start,
-									ctx.release.recording_date_start_precision,
-								)}
+								{DateWithPrecision.display(ctx.release.recording_date_start)}
 							</div>
 						</Show>
 						<Show when={ctx.release.recording_date_end}>
 							<div>
-								To:{" "}
-								{formatDate(
-									ctx.release.recording_date_end,
-									ctx.release.recording_date_end_precision,
-								)}
+								To: {DateWithPrecision.display(ctx.release.recording_date_end)}
 							</div>
 						</Show>
 					</div>
