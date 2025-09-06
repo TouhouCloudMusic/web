@@ -1,6 +1,6 @@
-import { For, Show } from "solid-js"
+import { Show } from "solid-js"
 
-import { getPreferredLocalizedTitle } from "~/domain/localized_title"
+import { Intersperse } from "~/components/data/Intersperse"
 import { DateWithPrecision } from "~/domain/shared"
 import { assertContext } from "~/utils/solid/assertContext"
 
@@ -9,19 +9,15 @@ import { ReleaseInfoPageContext } from "../context"
 export function ReleaseInfoDetails() {
 	const ctx = assertContext(ReleaseInfoPageContext)
 
-	const preferredLocalizedTitle = getPreferredLocalizedTitle(
-		ctx.release.localized_titles,
-	)
-
 	return (
-		<div class="space-y-3 text-sm">
+		<div class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-3 text-sm">
+			<div class="text-tertiary">Type</div>
+			<div>{ctx.release.release_type}</div>
 			<Show when={ctx.release.release_date}>
-				<div class="flex">
-					<span class="w-20 text-tertiary">Released:</span>
-					<span class="text-slate-900">
-						{DateWithPrecision.display(ctx.release.release_date)}
-					</span>
-				</div>
+				<span class="text-tertiary">Released</span>
+				<span class="text-slate-900">
+					{DateWithPrecision.display(ctx.release.release_date)}
+				</span>
 			</Show>
 
 			<Show
@@ -29,55 +25,36 @@ export function ReleaseInfoDetails() {
 					ctx.release.recording_date_start || ctx.release.recording_date_end
 				}
 			>
-				<div class="flex">
-					<span class="w-20 text-tertiary">Recorded:</span>
-					<div class="space-y-1">
-						<Show when={ctx.release.recording_date_start}>
-							<div>
-								From:{" "}
-								{DateWithPrecision.display(ctx.release.recording_date_start)}
-							</div>
-						</Show>
-						<Show when={ctx.release.recording_date_end}>
-							<div>
-								To: {DateWithPrecision.display(ctx.release.recording_date_end)}
-							</div>
-						</Show>
-					</div>
+				<span class="text-tertiary">Recorded</span>
+				<div class="flex items-center">
+					<Show when={ctx.release.recording_date_start}>
+						<span>
+							{DateWithPrecision.display(ctx.release.recording_date_start)}
+						</span>
+					</Show>
+					<Show when={ctx.release.recording_date_end}>
+						<span class="whitespace-pre text-tertiary"> - </span>
+						<span>
+							{DateWithPrecision.display(ctx.release.recording_date_end)}
+						</span>
+					</Show>
 				</div>
 			</Show>
 
 			<Show
 				when={ctx.release.catalog_nums && ctx.release.catalog_nums.length > 0}
 			>
-				<div class="flex">
-					<span class="w-20 text-tertiary">Catalog:</span>
-					<div class="space-y-1">
-						<For each={ctx.release.catalog_nums}>
-							{(catalog) => (
-								<div class="flex items-center space-x-2">
-									<span class="bg-slate-50 rounded px-1 font-mono text-xs">
-										{catalog.catalog_number}
-									</span>
-								</div>
-							)}
-						</For>
-					</div>
-				</div>
-			</Show>
-
-			<Show when={preferredLocalizedTitle}>
-				<div class="flex">
-					<span class="w-20 text-tertiary">Localized:</span>
-					<span class="text-slate-900">
-						{preferredLocalizedTitle?.title}
-						{preferredLocalizedTitle?.language && (
-							<span class="ml-2 text-xs text-tertiary">
-								({preferredLocalizedTitle.language.name})
-							</span>
+				<span class="text-tertiary">Catalog Nums</span>
+				<ul class="flex items-baseline">
+					<Intersperse
+						of={ctx.release.catalog_nums}
+						with={<span class="whitespace-pre"> / </span>}
+					>
+						{(catalog) => (
+							<li class="bg-slate-50 rounded">{catalog.catalog_number}</li>
 						)}
-					</span>
-				</div>
+					</Intersperse>
+				</ul>
 			</Show>
 		</div>
 	)
