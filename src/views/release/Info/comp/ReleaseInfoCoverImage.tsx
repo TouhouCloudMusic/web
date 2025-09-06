@@ -5,18 +5,18 @@ import { ReleaseInfoPageContext } from ".."
 
 export function ReleaseInfoCoverImage() {
 	const ctx = assertContext(ReleaseInfoPageContext)
-	
+
 	return (
 		<Image.Root>
 			<div class="isolate size-64 overflow-hidden rounded-lg bg-slate-100">
 				<Image.Fallback>
-					{(state) =>
-						state !== Image.State.Ok && (
-							<div class="size-full bg-slate-100 flex items-center justify-center">
-								<span class="text-slate-500 text-sm">No Cover Art</span>
-							</div>
-						)
-					}
+					{(state) => (
+						<div class="flex size-full items-center justify-center bg-slate-100">
+							{state !== Image.State.Loading && (
+								<span class="text-sm text-slate-500">No Cover Art</span>
+							)}
+						</div>
+					)}
 				</Image.Fallback>
 				<Image.Img
 					src={ctx.release.cover_art_url ?? undefined}
