@@ -69,10 +69,18 @@ function ReleaseInfoTabs() {
 					<Tab.Indicator />
 				</Tab.List>
 			</div>
-			<Tab.Content value="Tracks">
-				<ReleaseInfoTracks />
-			</Tab.Content>
-			<Tab.Content value="Credits">
+			<Show when={ctx.release.tracks?.length}>
+				<Tab.Content
+					value="Tracks"
+					class="p-4"
+				>
+					<ReleaseInfoTracks />
+				</Tab.Content>
+			</Show>
+			<Tab.Content
+				value="Credits"
+				class="p-4"
+			>
 				<ReleaseInfoCredits />
 			</Tab.Content>
 		</Tab.Root>
