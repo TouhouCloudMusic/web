@@ -30,10 +30,10 @@ export default defineConfig(({ mode }) => {
 
 	return {
 		plugins: [
+			tanstackRouter({ target: "solid", autoCodeSplitting: true }),
 			babelMacrosPlugin(),
 			linguiSolidPlugin(),
 			solidPlugin(),
-			tanstackRouter({ target: "solid" }),
 			tailwindcss(),
 			tsconfigPaths(),
 			generatePlugin(SERVER_URL, isTest),
