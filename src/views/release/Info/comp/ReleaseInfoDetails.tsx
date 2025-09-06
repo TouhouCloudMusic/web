@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js"
 
 import { DateWithPrecision } from "~/domain/shared"
-import { getPreferredLocalizedTitle } from "~/utils"
+import { getPreferredLocalizedTitle } from "~/domain/localized_title"
 import { assertContext } from "~/utils/solid/assertContext"
 
 import { ReleaseInfoPageContext } from ".."

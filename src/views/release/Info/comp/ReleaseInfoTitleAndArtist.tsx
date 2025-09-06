@@ -2,7 +2,7 @@ import { Link } from "@tanstack/solid-router"
 import { createMemo, For, Show } from "solid-js"
 
 import { assertContext } from "~/utils/solid/assertContext"
-import { getPreferredLocalizedTitle } from "~/utils"
+import { getPreferredLocalizedTitle } from "~/domain/localized_title"
 
 import { ReleaseInfoPageContext } from ".."
 
