@@ -1,7 +1,7 @@
 import { Image } from "~/components/image"
 import { assertContext } from "~/utils/solid/assertContext"
 
-import { ReleaseInfoPageContext } from ".."
+import { ReleaseInfoPageContext } from "../context"
 
 export function ReleaseInfoCoverImage() {
 	const ctx = assertContext(ReleaseInfoPageContext)

@@ -1,6 +1,5 @@
-/* @refresh reload */
 import type { Release } from "@thc/api"
-import { createContext, Show, Suspense } from "solid-js"
+import { Show, Suspense } from "solid-js"
 
 import { Tab } from "~/components/atomic"
 import { PageLayout } from "~/layout/PageLayout"
@@ -11,12 +10,7 @@ import { ReleaseInfoCredits } from "./comp/ReleaseInfoCredits"
 import { ReleaseInfoDetails } from "./comp/ReleaseInfoDetails"
 import { ReleaseInfoTitleAndArtist } from "./comp/ReleaseInfoTitleAndArtist"
 import { ReleaseInfoTracks } from "./comp/ReleaseInfoTracks"
-
-export type ReleaseInfoPageContext = {
-	release: Release
-}
-
-export const ReleaseInfoPageContext = createContext<ReleaseInfoPageContext>()
+import { ReleaseInfoPageContext } from "./context"
 
 type ReleaseInfoPageProps = {
 	release: Release
@@ -75,7 +69,6 @@ function ReleaseInfoTabs() {
 					<Tab.Indicator />
 				</Tab.List>
 			</div>
-
 			<Tab.Content value="Tracks">
 				<ReleaseInfoTracks />
 			</Tab.Content>

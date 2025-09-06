@@ -1,10 +1,10 @@
 import { For, Show } from "solid-js"
 
-import { DateWithPrecision } from "~/domain/shared"
 import { getPreferredLocalizedTitle } from "~/domain/localized_title"
+import { DateWithPrecision } from "~/domain/shared"
 import { assertContext } from "~/utils/solid/assertContext"
 
-import { ReleaseInfoPageContext } from ".."
+import { ReleaseInfoPageContext } from "../context"
 
 export function ReleaseInfoDetails() {
 	const ctx = assertContext(ReleaseInfoPageContext)
@@ -17,7 +17,7 @@ export function ReleaseInfoDetails() {
 		<div class="space-y-3 text-sm">
 			<Show when={ctx.release.release_date}>
 				<div class="flex">
-					<span class="w-20 text-slate-500">Released:</span>
+					<span class="w-20 text-tertiary">Released:</span>
 					<span class="text-slate-900">
 						{DateWithPrecision.display(ctx.release.release_date)}
 					</span>
@@ -30,7 +30,7 @@ export function ReleaseInfoDetails() {
 				}
 			>
 				<div class="flex">
-					<span class="w-20 text-slate-500">Recorded:</span>
+					<span class="w-20 text-tertiary">Recorded:</span>
 					<div class="space-y-1">
 						<Show when={ctx.release.recording_date_start}>
 							<div>
@@ -51,7 +51,7 @@ export function ReleaseInfoDetails() {
 				when={ctx.release.catalog_nums && ctx.release.catalog_nums.length > 0}
 			>
 				<div class="flex">
-					<span class="w-20 text-slate-500">Catalog:</span>
+					<span class="w-20 text-tertiary">Catalog:</span>
 					<div class="space-y-1">
 						<For each={ctx.release.catalog_nums}>
 							{(catalog) => (
@@ -68,11 +68,11 @@ export function ReleaseInfoDetails() {
 
 			<Show when={preferredLocalizedTitle}>
 				<div class="flex">
-					<span class="w-20 text-slate-500">Localized:</span>
+					<span class="w-20 text-tertiary">Localized:</span>
 					<span class="text-slate-900">
 						{preferredLocalizedTitle?.title}
 						{preferredLocalizedTitle?.language && (
-							<span class="ml-2 text-xs text-slate-500">
+							<span class="ml-2 text-xs text-tertiary">
 								({preferredLocalizedTitle.language.name})
 							</span>
 						)}

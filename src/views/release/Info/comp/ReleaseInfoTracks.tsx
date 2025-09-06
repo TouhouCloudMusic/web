@@ -3,7 +3,7 @@ import { For, Show } from "solid-js"
 import { Duration } from "~/domain/shared"
 import { assertContext } from "~/utils/solid/assertContext"
 
-import { ReleaseInfoPageContext } from ".."
+import { ReleaseInfoPageContext } from "../context"
 
 export function ReleaseInfoTracks() {
 	const ctx = assertContext(ReleaseInfoPageContext)

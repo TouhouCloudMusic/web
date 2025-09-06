@@ -1,12 +1,11 @@
-/* @refresh reload */
 import { Link } from "@tanstack/solid-router"
-import { createMemo, For, Show } from "solid-js"
+import { createMemo, Show } from "solid-js"
 
 import { Intersperse } from "~/components/data/Intersperse"
 import { getPreferredLocalizedTitle } from "~/domain/localized_title"
 import { assertContext } from "~/utils/solid/assertContext"
 
-import { ReleaseInfoPageContext } from ".."
+import { ReleaseInfoPageContext } from "../context"
 
 export function ReleaseInfoTitleAndArtist() {
 	const ctx = assertContext(ReleaseInfoPageContext)

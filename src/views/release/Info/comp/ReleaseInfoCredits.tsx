@@ -3,7 +3,7 @@ import { For, Show } from "solid-js"
 
 import { assertContext } from "~/utils/solid/assertContext"
 
-import { ReleaseInfoPageContext } from ".."
+import { ReleaseInfoPageContext } from "../context"
 
 export function ReleaseInfoCredits() {
 	const ctx = assertContext(ReleaseInfoPageContext)
