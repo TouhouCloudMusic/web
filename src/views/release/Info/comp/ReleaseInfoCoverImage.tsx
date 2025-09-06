@@ -8,7 +8,7 @@ export function ReleaseInfoCoverImage() {
 
 	return (
 		<Image.Root>
-			<div class="isolate size-64 overflow-hidden rounded-lg bg-slate-100">
+			<div class="isolate size-64 overflow-hidden bg-secondary">
 				<Image.Fallback>
 					{(state) => (
 						<div class="flex size-full items-center justify-center bg-slate-100">

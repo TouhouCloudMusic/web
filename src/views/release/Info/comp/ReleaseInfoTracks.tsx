@@ -11,7 +11,7 @@ import { ReleaseInfoPageContext } from "../context"
 function TrackItem(props: { track: ReleaseTrack }) {
 	return (
 		<li class="col-span-full grid grid-cols-subgrid items-baseline-last gap-4">
-			<span class="text-right font-mono font-extralight">
+			<span class="text-right tracking-tighter tabular-nums">
 				{props.track.track_number}
 			</span>
 			<div>
@@ -29,7 +29,7 @@ function TrackItem(props: { track: ReleaseTrack }) {
 				when={props.track.duration}
 				fallback={<span></span>}
 			>
-				<span class="font-mono text-sm font-light tracking-tighter">
+				<span class="text-sm font-light tabular-nums">
 					{Duration.format(props.track.duration)}
 				</span>
 			</Show>
@@ -70,7 +70,7 @@ export function ReleaseInfoTracks() {
 			<For each={ctx.release.discs}>
 				{(disc, index) => (
 					<div>
-						<h4 class="mb-2 font-light">
+						<h4 class="mb-2 tracking-tight">
 							{disc.name ?? `Disc ${index() + 1}`}
 						</h4>
 						<TrackList
