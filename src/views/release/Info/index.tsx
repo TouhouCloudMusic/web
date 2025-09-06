@@ -1,3 +1,4 @@
+/* @refresh reload */
 import type { Release } from "@thc/api"
 import { createContext, Show, Suspense } from "solid-js"
 

@@ -1,57 +1,47 @@
+/* @refresh reload */
 import { Link } from "@tanstack/solid-router"
 import { createMemo, For, Show } from "solid-js"
 
-import { assertContext } from "~/utils/solid/assertContext"
+import { Intersperse } from "~/components/data/Intersperse"
 import { getPreferredLocalizedTitle } from "~/domain/localized_title"
+import { assertContext } from "~/utils/solid/assertContext"
 
 import { ReleaseInfoPageContext } from ".."
 
 export function ReleaseInfoTitleAndArtist() {
 	const ctx = assertContext(ReleaseInfoPageContext)
-	
+
 	const preferredLocalizedTitle = createMemo(() =>
-		getPreferredLocalizedTitle(ctx.release.localized_titles)
+		getPreferredLocalizedTitle(ctx.release.localized_titles),
 	)
 
 	return (
 		<div class="space-y-2">
-			<h1 class="text-3xl font-bold text-slate-900">{ctx.release.title}</h1>
+			<div>
+				<h1 class="text-2xl text-primary">{ctx.release.title}</h1>
 
-			<Show when={preferredLocalizedTitle()}>
-				<p class="text-lg text-slate-600">
-					{preferredLocalizedTitle()!.title}
-					<Show when={preferredLocalizedTitle()?.language}>
-						<span class="ml-2 text-sm text-slate-500">
-							({preferredLocalizedTitle()!.language.name})
-						</span>
-					</Show>
-				</p>
-			</Show>
-
-			<Show when={ctx.release.artists && ctx.release.artists.length > 0}>
-				<div class="flex items-center space-x-1">
-					<span class="text-slate-500">by</span>
-					<For each={ctx.release.artists}>
-						{(artist, index) => (
-							<>
-								<Link
-									to="/artist/$id"
-									params={{ id: artist.id.toString() }}
-									class="text-primary underline-offset-4 transition-colors hover:underline"
-								>
-									{artist.name}
-								</Link>
-								<Show when={index() < ctx.release.artists!.length - 1}>
-									<span class="text-slate-400">,</span>
-								</Show>
-							</>
-						)}
-					</For>
-				</div>
-			</Show>
-
-			<div class="inline-block rounded-full bg-slate-100 px-2 py-1 text-sm text-slate-700">
-				{ctx.release.release_type}
+				<Show when={preferredLocalizedTitle()}>
+					<p class="text-lg text-tertiary">
+						{preferredLocalizedTitle()!.title}
+					</p>
+				</Show>
+			</div>
+			<div class="flex items-center">
+				<span class="mr-2 text-tertiary">by</span>
+				<Intersperse
+					each={ctx.release.artists}
+					separator={<span class="whitespace-pre">, </span>}
+				>
+					{(artist) => (
+						<Link
+							to="/artist/$id"
+							params={{ id: artist.id.toString() }}
+							class="text-primary underline-offset-4 transition-colors hover:underline"
+						>
+							{artist.name}
+						</Link>
+					)}
+				</Intersperse>
 			</div>
 		</div>
 	)
