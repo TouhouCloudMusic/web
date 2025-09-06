@@ -29,8 +29,8 @@ export function ReleaseInfoTitleAndArtist() {
 			<div class="flex items-center">
 				<span class="mr-2 text-tertiary">by</span>
 				<Intersperse
-					each={ctx.release.artists}
-					separator={<span class="whitespace-pre">, </span>}
+					of={ctx.release.artists}
+					with={<span class="whitespace-pre">, </span>}
 				>
 					{(artist) => (
 						<Link

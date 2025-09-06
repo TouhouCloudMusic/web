@@ -98,8 +98,8 @@ export function ArtistFormMembership(): JSX.Element {
 					class="mb-2"
 				/>
 				<Intersperse
-					each={membership.inner}
-					separator={
+					of={membership.inner}
+					with={
 						<Divider
 							horizonal
 							class="my-2"
