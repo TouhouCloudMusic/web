@@ -913,6 +913,7 @@ export type components = {
                 artists: number[];
                 catalog_nums: components["schemas"]["CatalogNumber"][];
                 credits: components["schemas"]["NewCredit"][];
+                discs: components["schemas"]["NewDisc"][];
                 events: number[];
                 localized_titles: components["schemas"]["NewLocalizedTitle"][];
                 recording_end_date?: null | components["schemas"]["DateWithPrecision"];
@@ -972,6 +973,9 @@ export type components = {
             short_description?: string | null;
             super_roles?: number[] | null;
         };
+        NewDisc: {
+            name?: string | null;
+        };
         NewEvent: {
             alternative_names?: string[] | null;
             description?: string | null;
@@ -1007,6 +1011,7 @@ export type components = {
             artists: number[];
             catalog_nums: components["schemas"]["CatalogNumber"][];
             credits: components["schemas"]["NewCredit"][];
+            discs: components["schemas"]["NewDisc"][];
             events: number[];
             localized_titles: components["schemas"]["NewLocalizedTitle"][];
             recording_end_date?: null | components["schemas"]["DateWithPrecision"];
@@ -1050,23 +1055,15 @@ export type components = {
             type: components["schemas"]["TagRelationType"];
         };
         NewTrack: {
-            Linked: {
-                artists: number[];
-                display_title?: string | null;
-                /** Format: int32 */
-                duration?: number | null;
-                /** Format: int32 */
-                song_id: number;
-                track_number?: string | null;
-            };
-        } | {
-            Unlinked: {
-                artists: number[];
-                display_title: string;
-                /** Format: int32 */
-                duration?: number | null;
-                track_number?: string | null;
-            };
+            artists: number[];
+            /** Format: int32 */
+            disc_index: number;
+            display_title?: string | null;
+            /** Format: int32 */
+            duration?: number | null;
+            /** Format: int32 */
+            song_id: number;
+            track_number?: string | null;
         };
         Paginated_Credit: {
             items: {
@@ -1096,6 +1093,7 @@ export type components = {
             catalog_nums?: components["schemas"]["CatalogNumber"][];
             cover_art_url?: string | null;
             credits?: components["schemas"]["ReleaseCredit"][];
+            discs?: components["schemas"]["ReleaseDisc"][];
             /** Format: int32 */
             id: number;
             localized_titles?: components["schemas"]["LocalizedTitle"][];
@@ -1120,8 +1118,15 @@ export type components = {
             on?: number[] | null;
             role: components["schemas"]["CreditRoleRef"];
         };
+        ReleaseDisc: {
+            /** Format: int32 */
+            id: number;
+            name?: string | null;
+        };
         ReleaseTrack: {
             artists?: components["schemas"]["ReleaseArtist"][];
+            /** Format: int32 */
+            disc_id: number;
             display_title?: string | null;
             /**
              * Format: int32
@@ -1294,6 +1299,7 @@ export type NewCorrectionNewSongLyrics = components['schemas']['NewCorrection_Ne
 export type NewCorrectionNewTag = components['schemas']['NewCorrection_NewTag'];
 export type NewCredit = components['schemas']['NewCredit'];
 export type NewCreditRole = components['schemas']['NewCreditRole'];
+export type NewDisc = components['schemas']['NewDisc'];
 export type NewEvent = components['schemas']['NewEvent'];
 export type NewLabel = components['schemas']['NewLabel'];
 export type NewLocalizedName = components['schemas']['NewLocalizedName'];
@@ -1312,6 +1318,7 @@ export type Release = components['schemas']['Release'];
 export type ReleaseArtist = components['schemas']['ReleaseArtist'];
 export type ReleaseCoverArtFormData = components['schemas']['ReleaseCoverArtFormData'];
 export type ReleaseCredit = components['schemas']['ReleaseCredit'];
+export type ReleaseDisc = components['schemas']['ReleaseDisc'];
 export type ReleaseTrack = components['schemas']['ReleaseTrack'];
 export type ReleaseType = components['schemas']['ReleaseType'];
 export type SimpleArtist = components['schemas']['SimpleArtist'];
@@ -1440,11 +1447,17 @@ export interface operations {
                     };
                 };
             };
-            401: {
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -1524,6 +1537,18 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2472,6 +2497,18 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
@@ -2534,6 +2571,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Message"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             401: {
