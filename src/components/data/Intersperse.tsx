@@ -16,7 +16,7 @@ export function Intersperse<T>(props: {
 			{(item, index) => (
 				<>
 					{props.children(item, index)}
-					{lastIdx() != index() ? props.with : <></>}
+					{lastIdx() != index() && props.with}
 				</>
 			)}
 		</For>

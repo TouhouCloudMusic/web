@@ -17,15 +17,7 @@
 		"restriction": "warn",
 		"nursery": "warn"
 	},
-	"plugins": [
-		"import",
-		"jsdoc",
-		"jsx-a11y",
-		"oxc",
-		"promise",
-		"typescript",
-		"unicorn"
-	],
+	"plugins": ["import", "jsx-a11y", "oxc", "promise", "typescript", "unicorn"],
 	"settings": {
 		"jsx-a11y": {
 			"attributes": {
