@@ -26,9 +26,7 @@ function RouteComponent() {
 
 	return (
 		<Show when={query.data && O.getOrThrowWith(query.data, () => notFound())}>
-			{(release) => (
-				<ReleaseInfoPage release={release()} />
-			)}
+			{(release) => <ReleaseInfoPage release={release()} />}
 		</Show>
 	)
 }
