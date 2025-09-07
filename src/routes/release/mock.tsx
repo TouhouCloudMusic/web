@@ -247,7 +247,7 @@ const mockData: Release = {
 			},
 			role: {
 				id: 4,
-				name: "Artist",
+				name: "Arranger",
 			},
 			on: [1, 2, 3, 4, 5],
 		},
@@ -265,7 +265,7 @@ const mockData: Release = {
 		{
 			artist: {
 				id: 3,
-				name: "Mastering Engineer",
+				name: "2",
 			},
 			role: {
 				id: 6,
