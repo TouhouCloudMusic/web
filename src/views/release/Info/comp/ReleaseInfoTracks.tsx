@@ -44,7 +44,7 @@ function TrackList(props: { tracks?: ReleaseTrack[] }) {
 					of={props.tracks}
 					with={
 						<Divider
-							horizonal
+							horizontal
 							class="col-span-full"
 						/>
 					}
