@@ -3,14 +3,14 @@ import { useQuery } from "@tanstack/solid-query"
 import type { Label } from "@thc/api"
 import { LabelQueryOption } from "@thc/query"
 import { debounce, id } from "@thc/toolkit"
-import { createSignal, For, createMemo, Suspense } from "solid-js"
+import { createSignal, createMemo } from "solid-js"
 import type { JSX } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { Dialog } from "~/component/dialog"
 
-import * as SearchDialog from "./__internal"
+import { EntitySearchDialog } from "./EntitySearchDialog"
 
 type LabelSearchDialogProps = {
 	onSelect: (label: Label) => void
@@ -38,55 +38,32 @@ export function LabelSearchDialog(props: LabelSearchDialogProps): JSX.Element {
 	}))
 
 	return (
-		<SearchDialog.Root>
-			<Dialog.Trigger
-				as={Button}
-				variant="Tertiary"
-				class="h-max p-2"
-				disabled={props.disabled}
-			>
-				<PlusIcon class="size-4 text-slate-600" />
-			</Dialog.Trigger>
-
-			<SearchDialog.Content>
-				<div class="mb-6 space-y-4">
-					<SearchDialog.Label>
-						<Trans>Search Label</Trans>
-					</SearchDialog.Label>
-					<SearchDialog.Input
-						placeholder={t`Search...`}
-						value={searchKeyword()}
-						onInput={onInput}
-						class="h-9 w-full"
-					/>
+		<EntitySearchDialog
+			title={<Trans>Search Label</Trans>}
+			trigger={
+				<Dialog.Trigger
+					as={Button}
+					variant="Tertiary"
+					class="h-max p-2"
+					disabled={props.disabled}
+				>
+					<PlusIcon class="size-4 text-slate-600" />
+				</Dialog.Trigger>
+			}
+			value={searchKeyword()}
+			onInput={onInput}
+			items={() => labelsQuery.data}
+			onSelect={props.onSelect}
+			item={(label) => (
+				<div class="flex items-center justify-between">
+					<div class="text-left text-lg font-light text-primary">
+						{label.name}
+					</div>
+					<div class="opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+						<PlusIcon class="size-4 text-tertiary" />
+					</div>
 				</div>
-
-				<SearchDialog.List>
-					<Suspense>
-						<For each={labelsQuery.data}>
-							{(label) => (
-								<SearchDialog.Item>
-									<SearchDialog.ItemIndicator />
-									<button
-										type="button"
-										class="w-full"
-										onClick={() => props.onSelect(label)}
-									>
-										<div class="flex items-center justify-between">
-											<div class="text-left text-lg font-light text-primary">
-												{label.name}
-											</div>
-											<div class="opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-												<PlusIcon class="size-4 text-tertiary" />
-											</div>
-										</div>
-									</button>
-								</SearchDialog.Item>
-							)}
-						</For>
-					</Suspense>
-				</SearchDialog.List>
-			</SearchDialog.Content>
-		</SearchDialog.Root>
+			)}
+		/>
 	)
 }

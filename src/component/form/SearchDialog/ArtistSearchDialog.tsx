@@ -3,14 +3,14 @@ import { useQuery } from "@tanstack/solid-query"
 import type { Artist, ArtistCommonFilter } from "@thc/api"
 import { ArtistQueryOption } from "@thc/query"
 import { debounce, id } from "@thc/toolkit"
-import { createSignal, For, createMemo, Suspense } from "solid-js"
+import { createSignal, createMemo } from "solid-js"
 import type { JSX } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { Dialog } from "~/component/dialog"
 
-import * as SearchDialog from "./__internal"
+import { EntitySearchDialog } from "./EntitySearchDialog"
 
 type ArtistSearchDialogProps = {
 	onSelect: (artist: Artist) => void
@@ -44,59 +44,36 @@ export function ArtistSearchDialog(
 	}))
 
 	return (
-		<SearchDialog.Root>
-			<Dialog.Trigger
-				as={Button}
-				variant="Tertiary"
-				class="h-max p-2"
-				disabled={props.disabled}
-			>
-				<PlusIcon class="size-4 text-slate-600" />
-			</Dialog.Trigger>
-
-			<SearchDialog.Content>
-				<div class="mb-6 space-y-4">
-					<SearchDialog.Label>
-						<Trans>Search Artist</Trans>
-					</SearchDialog.Label>
-					<SearchDialog.Input
-						placeholder={t`Search...`}
-						value={searchKeyword()}
-						onInput={onInput}
-						class="h-9 w-full"
-					/>
+		<EntitySearchDialog
+			title={<Trans>Search Artist</Trans>}
+			trigger={
+				<Dialog.Trigger
+					as={Button}
+					variant="Tertiary"
+					class="h-max p-2"
+					disabled={props.disabled}
+				>
+					<PlusIcon class="size-4 text-slate-600" />
+				</Dialog.Trigger>
+			}
+			value={searchKeyword()}
+			onInput={onInput}
+			items={() =>
+				artistsQuery.data?.filter(
+					(x) => !props.filter?.exclusion?.includes(x.id),
+				)
+			}
+			onSelect={props.onSelect}
+			item={(artist) => (
+				<div class="flex items-center justify-between">
+					<div class="text-left text-lg font-light text-primary">
+						{artist.name}
+					</div>
+					<div class="opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+						<PlusIcon class="size-4 text-tertiary" />
+					</div>
 				</div>
-
-				<SearchDialog.List>
-					<Suspense>
-						<For
-							each={artistsQuery.data?.filter(
-								(x) => !props.filter?.exclusion?.includes(x.id),
-							)}
-						>
-							{(artist) => (
-								<SearchDialog.Item>
-									<SearchDialog.ItemIndicator />
-									<button
-										type="button"
-										class="w-full"
-										onClick={() => props.onSelect(artist)}
-									>
-										<div class="flex items-center justify-between">
-											<div class="text-left text-lg font-light text-primary">
-												{artist.name}
-											</div>
-											<div class="opacity-0 transition-opacity duration-150 group-hover:opacity-100">
-												<PlusIcon class="size-4 text-tertiary" />
-											</div>
-										</div>
-									</button>
-								</SearchDialog.Item>
-							)}
-						</For>
-					</Suspense>
-				</SearchDialog.List>
-			</SearchDialog.Content>
-		</SearchDialog.Root>
+			)}
+		/>
 	)
 }
