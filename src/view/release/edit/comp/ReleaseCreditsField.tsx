@@ -16,10 +16,11 @@ import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
+import {
+	ArtistSearchDialog,
+	CreditRoleSearchDialog,
+} from "~/component/form/SearchDialog"
 import { NewReleaseCorrection as NewReleaseCorrectionSchema } from "~/domain/release"
-import { ArtistSearchDialog } from "~/view/artist/edit/comp/ArtistSearchDialog"
-
-import { CreditRoleSearchDialog } from "./CreditRoleSearchDialog"
 
 type ReleaseFormStore = FormStore<typeof NewReleaseCorrectionSchema>
 

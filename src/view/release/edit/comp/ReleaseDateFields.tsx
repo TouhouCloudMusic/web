@@ -10,14 +10,14 @@ export function ReleaseDateFields(props: { of: ReleaseFormStore }) {
 	const { t } = useLingui()
 	return (
 		<>
-            <DateWithPrecision
-                label={t`Release date`}
-                setValue={(v) =>
-                    setInput(props.of, {
-                        path: ["data", "release_date"],
-                        input: (v ?? ({} as unknown as never)),
-                    })
-                }
+			<DateWithPrecision
+				label={t`Release date`}
+				setValue={(v) =>
+					setInput(props.of, {
+						path: ["data", "release_date"],
+						input: v ?? ({} as unknown as never),
+					})
+				}
 				error={
 					getErrors(props.of, {
 						path: ["data", "release_date"],
@@ -25,14 +25,14 @@ export function ReleaseDateFields(props: { of: ReleaseFormStore }) {
 				}
 			/>
 
-            <DateWithPrecision
-                label={t`Recording start`}
-                setValue={(v) =>
-                    setInput(props.of, {
-                        path: ["data", "recording_date_start"],
-                        input: (v ?? ({} as unknown as never)),
-                    })
-                }
+			<DateWithPrecision
+				label={t`Recording start`}
+				setValue={(v) =>
+					setInput(props.of, {
+						path: ["data", "recording_date_start"],
+						input: v ?? ({} as unknown as never),
+					})
+				}
 				error={
 					getErrors(props.of, {
 						path: ["data", "recording_date_start"],
@@ -40,14 +40,14 @@ export function ReleaseDateFields(props: { of: ReleaseFormStore }) {
 				}
 			/>
 
-            <DateWithPrecision
-                label={t`Recording end`}
-                setValue={(v) =>
-                    setInput(props.of, {
-                        path: ["data", "recording_date_end"],
-                        input: (v ?? ({} as unknown as never)),
-                    })
-                }
+			<DateWithPrecision
+				label={t`Recording end`}
+				setValue={(v) =>
+					setInput(props.of, {
+						path: ["data", "recording_date_end"],
+						input: v ?? ({} as unknown as never),
+					})
+				}
 				error={
 					getErrors(props.of, {
 						path: ["data", "recording_date_end"],

@@ -1,23 +1,25 @@
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useQuery } from "@tanstack/solid-query"
-import type { CreditRoleRef } from "@thc/api"
-import { CreditRoleQueryOption } from "@thc/query"
+import type { Label } from "@thc/api"
+import { LabelQueryOption } from "@thc/query"
 import { debounce, id } from "@thc/toolkit"
-import { createMemo, createSignal, Suspense, For } from "solid-js"
+import { createSignal, For, createMemo, Suspense } from "solid-js"
 import type { JSX } from "solid-js"
 import { PlusIcon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { Dialog } from "~/component/dialog"
-import { SearchDialog } from "~/component/form/SearchDialog"
 
-type Props = {
-	onSelect: (role: CreditRoleRef) => void
+import * as SearchDialog from "./__internal"
+
+type LabelSearchDialogProps = {
+	onSelect: (label: Label) => void
 	disabled?: boolean
 }
 
-export function CreditRoleSearchDialog(props: Props): JSX.Element {
+export function LabelSearchDialog(props: LabelSearchDialogProps): JSX.Element {
 	const { t } = useLingui()
+
 	const [searchKeyword, setSearchKeyword] = createSignal("")
 
 	const onInput = debounce(300, (e: Event) => {
@@ -26,12 +28,13 @@ export function CreditRoleSearchDialog(props: Props): JSX.Element {
 
 	const searchTerm = createMemo(() => {
 		const keyword = searchKeyword().trim()
-		return keyword.length > 0 ? keyword : ""
+		return keyword.length > 1 ? keyword : undefined
 	})
 
-	const rolesQuery = useQuery(() => ({
-		...CreditRoleQueryOption.findByKeyword(searchTerm()),
+	const labelsQuery = useQuery(() => ({
+		...LabelQueryOption.findByKeyword(searchTerm()!),
 		placeholderData: id,
+		enabled: Boolean(searchTerm()),
 	}))
 
 	return (
@@ -48,7 +51,7 @@ export function CreditRoleSearchDialog(props: Props): JSX.Element {
 			<SearchDialog.Content>
 				<div class="mb-6 space-y-4">
 					<SearchDialog.Label>
-						<Trans>Search Role</Trans>
+						<Trans>Search Label</Trans>
 					</SearchDialog.Label>
 					<SearchDialog.Input
 						placeholder={t`Search...`}
@@ -60,18 +63,18 @@ export function CreditRoleSearchDialog(props: Props): JSX.Element {
 
 				<SearchDialog.List>
 					<Suspense>
-						<For each={rolesQuery.data}>
-							{(role) => (
+						<For each={labelsQuery.data}>
+							{(label) => (
 								<li class="group relative border-slate-300 p-4 text-left transition-all duration-150 not-first:border-t last:border-b hover:bg-slate-100 active:bg-slate-100">
 									<div class="absolute top-0 left-0 h-full w-px origin-left scale-y-0 transform-gpu bg-reimu-600 transition-all ease-in-out group-hover:scale-y-100"></div>
 									<button
 										type="button"
 										class="w-full"
-										onClick={() => props.onSelect(role)}
+										onClick={() => props.onSelect(label)}
 									>
 										<div class="flex items-center justify-between">
 											<div class="text-left text-lg font-light text-primary">
-												{role.name}
+												{label.name}
 											</div>
 											<div class="opacity-0 transition-opacity duration-150 group-hover:opacity-100">
 												<PlusIcon class="size-4 text-tertiary" />

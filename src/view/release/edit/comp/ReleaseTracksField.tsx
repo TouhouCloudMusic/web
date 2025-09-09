@@ -8,13 +8,17 @@ import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
+import { ArtistSearchDialog } from "~/component/form/SearchDialog"
+
 import { SongSearchDialog } from "../comp/SongSearchDialog"
-import { ArtistSearchDialog } from "~/view/artist/edit/comp/ArtistSearchDialog"
 import type { ReleaseFormStore } from "./types"
 
 export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 	return (
-		<FieldArray of={props.of} path={["data", "tracks"]}>
+		<FieldArray
+			of={props.of}
+			path={["data", "tracks"]}
+		>
 			{(fa) => (
 				<div class="flex min-h-32 w-full flex-col">
 					<div class="mb-4 flex place-content-between items-center gap-4">
@@ -53,7 +57,10 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 							{(_, idx) => (
 								<li class="grid grid-cols-1 gap-2 rounded border border-slate-200 p-3">
 									<div class="grid grid-cols-2 gap-2">
-										<Field of={props.of} path={["data", "tracks", idx(), "disc_index"]}>
+										<Field
+											of={props.of}
+											path={["data", "tracks", idx(), "disc_index"]}
+										>
 											{(field) => (
 												<InputField.Root>
 													<InputField.Input
@@ -69,7 +76,10 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 											)}
 										</Field>
 
-										<Field of={props.of} path={["data", "tracks", idx(), "track_number"]}>
+										<Field
+											of={props.of}
+											path={["data", "tracks", idx(), "track_number"]}
+										>
 											{(field) => (
 												<InputField.Root>
 													<InputField.Input
@@ -86,7 +96,10 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 									</div>
 
 									<div class="grid grid-cols-2 gap-2">
-										<Field of={props.of} path={["data", "tracks", idx(), "display_title"]}>
+										<Field
+											of={props.of}
+											path={["data", "tracks", idx(), "display_title"]}
+										>
 											{(field) => (
 												<InputField.Root>
 													<InputField.Input
@@ -101,7 +114,10 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 											)}
 										</Field>
 
-										<Field of={props.of} path={["data", "tracks", idx(), "duration"]}>
+										<Field
+											of={props.of}
+											path={["data", "tracks", idx(), "duration"]}
+										>
 											{(field) => (
 												<InputField.Root>
 													<InputField.Input
@@ -119,10 +135,18 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 									</div>
 
 									<div class="flex items-center gap-2">
-										<Field of={props.of} path={["data", "tracks", idx(), "song_id"]}>
+										<Field
+											of={props.of}
+											path={["data", "tracks", idx(), "song_id"]}
+										>
 											{(field) => (
 												<>
-													<input {...field.props} type="number" hidden value={field.input as number | undefined} />
+													<input
+														{...field.props}
+														type="number"
+														hidden
+														value={field.input as number | undefined}
+													/>
 													<div class="text-sm text-slate-700">
 														Song ID: {field.input as number | undefined}
 													</div>
@@ -139,13 +163,21 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 										/>
 									</div>
 
-									<TrackArtistsField of={props.of} trackIndex={idx()} />
+									<TrackArtistsField
+										of={props.of}
+										trackIndex={idx()}
+									/>
 
 									<div class="flex justify-end">
 										<Button
 											variant="Tertiary"
 											size="Sm"
-											onClick={() => remove(props.of, { path: ["data", "tracks"], at: idx() })}
+											onClick={() =>
+												remove(props.of, {
+													path: ["data", "tracks"],
+													at: idx(),
+												})
+											}
 										>
 											<Cross1Icon />
 										</Button>
@@ -160,9 +192,15 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 	)
 }
 
-function TrackArtistsField(props: { of: ReleaseFormStore; trackIndex: number }) {
+function TrackArtistsField(props: {
+	of: ReleaseFormStore
+	trackIndex: number
+}) {
 	return (
-		<FieldArray of={props.of} path={["data", "tracks", props.trackIndex, "artists"]}>
+		<FieldArray
+			of={props.of}
+			path={["data", "tracks", props.trackIndex, "artists"]}
+		>
 			{(fa) => (
 				<div class="flex flex-col gap-2">
 					<div class="flex items-center gap-2">
@@ -185,11 +223,22 @@ function TrackArtistsField(props: { of: ReleaseFormStore; trackIndex: number }) 
 								<li class="grid grid-cols-[1fr_auto] gap-2">
 									<Field
 										of={props.of}
-										path={["data", "tracks", props.trackIndex, "artists", idx()]}
+										path={[
+											"data",
+											"tracks",
+											props.trackIndex,
+											"artists",
+											idx(),
+										]}
 									>
 										{(field) => (
 											<>
-												<input {...field.props} type="number" hidden value={field.input as number | undefined} />
+												<input
+													{...field.props}
+													type="number"
+													hidden
+													value={field.input as number | undefined}
+												/>
 												<div class="text-sm text-slate-700">
 													Artist ID: {field.input as number | undefined}
 												</div>
@@ -200,7 +249,10 @@ function TrackArtistsField(props: { of: ReleaseFormStore; trackIndex: number }) 
 										variant="Tertiary"
 										size="Sm"
 										onClick={() =>
-											remove(props.of, { path: ["data", "tracks", props.trackIndex, "artists"], at: idx() })
+											remove(props.of, {
+												path: ["data", "tracks", props.trackIndex, "artists"],
+												at: idx(),
+											})
 										}
 									>
 										<Cross1Icon />

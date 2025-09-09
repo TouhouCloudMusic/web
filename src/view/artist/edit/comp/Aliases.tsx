@@ -8,9 +8,9 @@ import { Divider } from "~/component/atomic/Divider"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { Intersperse } from "~/component/data/Intersperse"
+import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import { useArtistForm } from "../context"
-import { ArtistSearchDialog } from "./ArtistSearchDialog"
 import { FieldArrayFallback } from "./FieldArrayFallback"
 
 export const ArtistFormAliasesField = () => {

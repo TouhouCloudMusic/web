@@ -6,8 +6,8 @@ import { Cross1Icon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
+import { EventSearchDialog } from "~/component/form/SearchDialog"
 
-import { EventSearchDialog } from "../comp/EventSearchDialog"
 import type { ReleaseFormStore } from "./types"
 
 export function ReleaseEventsField(props: { of: ReleaseFormStore }) {

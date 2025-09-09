@@ -76,7 +76,10 @@ export function LocalizedTitlesField(props: { of: ReleaseFormStore }) {
 										variant="Tertiary"
 										size="Sm"
 										onClick={() =>
-											remove(props.of, { path: ["data", "localized_titles"], at: idx() })
+											remove(props.of, {
+												path: ["data", "localized_titles"],
+												at: idx(),
+											})
 										}
 									>
 										<Cross1Icon />
@@ -97,13 +100,13 @@ function LanguageCombobox(props: {
 	langs: { id: number; name: string }[]
 	of: ReleaseFormStore
 }) {
-    let onChange = (v: { id: number; name: string } | null) => {
-        setInput(props.of, {
-            path: ["data", "localized_titles", props.index, "language_id"],
-            // 允许清空语言
-            input: (v ? v.id : undefined) as unknown as number,
-        })
-    }
+	let onChange = (v: { id: number; name: string } | null) => {
+		setInput(props.of, {
+			path: ["data", "localized_titles", props.index, "language_id"],
+			// 允许清空语言
+			input: (v ? v.id : undefined) as unknown as number,
+		})
+	}
 
 	return (
 		<Combobox.Root

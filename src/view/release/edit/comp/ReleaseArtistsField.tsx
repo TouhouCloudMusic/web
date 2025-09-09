@@ -7,7 +7,7 @@ import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
-import { ArtistSearchDialog } from "~/view/artist/edit/comp/ArtistSearchDialog"
+import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import type { ReleaseFormStore } from "./types"
 
