@@ -75,8 +75,8 @@ export function ArtistSearchDialog(
 							)}
 						>
 							{(artist) => (
-								<li class="group relative border-slate-300 p-4 text-left transition-all duration-150 not-first:border-t last:border-b hover:bg-slate-100 active:bg-slate-100">
-									<div class="absolute top-0 left-0 h-full w-px origin-left scale-y-0 transform-gpu bg-reimu-600 transition-all ease-in-out group-hover:scale-y-100"></div>
+								<SearchDialog.Item>
+									<SearchDialog.ItemIndicator />
 									<button
 										type="button"
 										class="w-full"
@@ -91,7 +91,7 @@ export function ArtistSearchDialog(
 											</div>
 										</div>
 									</button>
-								</li>
+								</SearchDialog.Item>
 							)}
 						</For>
 					</Suspense>
