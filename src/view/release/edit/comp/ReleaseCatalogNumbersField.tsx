@@ -25,7 +25,7 @@ export function ReleaseCatalogNumbersField(props: {
 			path={["data", "catalog_nums"]}
 		>
 			{(fa) => (
-				<div class={twMerge("flex min-h-32 w-96 flex-col", props.class)}>
+				<div class={twMerge("flex min-h-32 flex-col", props.class)}>
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">
 							<Trans>Catalog Numbers</Trans>

@@ -239,17 +239,17 @@ function FormContent(props: Props) {
 
 			<ReleaseArtistsField
 				of={form}
-				class="row-start-7"
+				class="col-span-2 row-start-7"
 			/>
 
 			<ReleaseCatalogNumbersField
 				of={form}
-				class="row-start-8"
+				class="col-span-2 row-start-8"
 			/>
 
 			<ReleaseEventsField
 				of={form}
-				class="row-start-9"
+				class="col-span-2 row-start-9"
 			/>
 
 			<ReleaseTracksField
