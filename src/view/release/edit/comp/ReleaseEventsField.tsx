@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
+import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { EventSearchDialog } from "~/component/form/SearchDialog"
 
 import { EventInfo } from "./EntityInfo"
@@ -39,7 +40,10 @@ export function ReleaseEventsField(props: {
 						</div>
 					</div>
 					<ul class="flex h-full flex-col gap-2">
-						<For each={fa.items}>
+						<For
+							each={fa.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<li class="grid h-fit grid-cols-[1fr_auto]">
 									<Field

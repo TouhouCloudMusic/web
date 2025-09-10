@@ -9,6 +9,7 @@ import { twMerge } from "tailwind-merge"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
+import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { LanguageCombobox } from "~/component/form/stateful/LanguageCombobox"
 import type { NewLocalizedTitle } from "~/domain/release"
 
@@ -46,7 +47,10 @@ export function LocalizedTitlesField(props: {
 						</Button>
 					</div>
 					<ul class="flex h-full flex-col gap-2">
-						<For each={fa.items}>
+						<For
+							each={fa.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<LocalizedTitleItem
 									index={idx()}

@@ -22,6 +22,7 @@ import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
 import { Dialog } from "~/component/dialog"
+import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import { SongSearchDialog } from "../comp/SongSearchDialog"
@@ -450,7 +451,10 @@ function TrackArtistsField(props: {
 					</div>
 
 					<ul class="flex flex-col gap-1">
-						<For each={fa.items}>
+						<For
+							each={fa.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<li class="grid grid-cols-[1fr_auto] gap-2">
 									<Field

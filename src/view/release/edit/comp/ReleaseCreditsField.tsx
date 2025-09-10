@@ -16,6 +16,7 @@ import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
+import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import {
 	ArtistSearchDialog,
 	CreditRoleSearchDialog,
@@ -69,7 +70,10 @@ export function ReleaseCreditsField(props: {
 						</Button>
 					</div>
 					<ul class="flex h-full flex-col gap-4">
-						<For each={fa.items}>
+						<For
+							each={fa.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<li class="grid grid-cols-1 gap-2 rounded border border-slate-200 p-3">
 									<div class="grid grid-cols-2 gap-2">

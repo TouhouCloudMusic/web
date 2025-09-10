@@ -11,6 +11,7 @@ import { twMerge } from "tailwind-merge"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
+import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { LabelSearchDialog } from "~/component/form/SearchDialog"
 
 import type { ReleaseFormStore } from "./types"
@@ -47,7 +48,10 @@ export function ReleaseCatalogNumbersField(props: {
 						</Button>
 					</div>
 					<ul class="flex h-full flex-col gap-2">
-						<For each={fa.items}>
+						<For
+							each={fa.items}
+							fallback={<FieldArrayFallback />}
+						>
 							{(_, idx) => (
 								<li class="grid grid-cols-[1fr_auto_auto] gap-2">
 									<Field
