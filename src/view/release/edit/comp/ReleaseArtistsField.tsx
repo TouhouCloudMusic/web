@@ -1,17 +1,25 @@
 // 发行艺人字段
-import { Field, FieldArray, insert, remove } from "@formisch/solid"
+import { Field, FieldArray, getInput, insert, remove } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
 import type { Artist } from "@thc/api"
 import { For } from "solid-js"
-import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { Cross1Icon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
+import { ArtistInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 
 export function ReleaseArtistsField(props: { of: ReleaseFormStore }) {
+	const releaseArtistFilter = (artist: Artist) => {
+		const selected =
+			(getInput(props.of, { path: ["data", "artists"] }) as
+				| number[]
+				| undefined) ?? []
+		return !selected.includes(artist.id)
+	}
 	return (
 		<FieldArray
 			of={props.of}
@@ -31,6 +39,7 @@ export function ReleaseArtistsField(props: { of: ReleaseFormStore }) {
 										initialInput: artist.id,
 									})
 								}
+								dataFilter={releaseArtistFilter}
 							/>
 						</div>
 					</div>
@@ -51,7 +60,9 @@ export function ReleaseArtistsField(props: { of: ReleaseFormStore }) {
 													value={field.input as number | undefined}
 												/>
 												<div class="text-sm text-slate-700">
-													ID: {field.input as number | undefined}
+													<ArtistInfo
+														id={() => field.input as number | undefined}
+													/>
 												</div>
 											</>
 										)}

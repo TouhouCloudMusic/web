@@ -20,7 +20,6 @@ type Props = {
 }
 
 export function EventSearchDialog(props: Props): JSX.Element {
-	const { t } = useLingui()
 	const [searchKeyword, setSearchKeyword] = createSignal("")
 
 	const onInput = debounce(300, (e: Event) => {
@@ -53,7 +52,7 @@ export function EventSearchDialog(props: Props): JSX.Element {
 			}
 			value={searchKeyword()}
 			onInput={onInput}
-			items={() => eventsQuery.data}
+			items={eventsQuery.data}
 			onSelect={props.onSelect}
 			item={(event) => (
 				<div class="flex items-center justify-between">

@@ -15,17 +15,15 @@ import { EntitySearchDialog } from "./EntitySearchDialog"
 type ArtistSearchDialogProps = {
 	onSelect: (artist: Artist) => void
 	disabled?: boolean
-	filter?: ArtistCommonFilter
+	queryFilter?: ArtistCommonFilter
+	dataFilter?: (artist: Artist) => boolean
 }
 
 export function ArtistSearchDialog(
 	props: ArtistSearchDialogProps,
 ): JSX.Element {
-	const { t } = useLingui()
-
 	const [searchKeyword, setSearchKeyword] = createSignal("")
 
-	// oxlint-disable-next-line no-magic-numbers
 	const onInput = debounce(300, (e: Event) => {
 		setSearchKeyword((e.target as HTMLInputElement).value)
 	})
@@ -37,9 +35,15 @@ export function ArtistSearchDialog(
 
 	const artistsQuery = useQuery(() => ({
 		...ArtistQueryOption.findByKeyword(searchTerm()!, {
-			artist_type: props.filter?.artist_type,
+			artist_type: props.queryFilter?.artist_type,
 		}),
-		placeholderData: id,
+		placeholderData: (artist) => {
+			if (!artist) return
+			if (props.dataFilter) {
+				return artist.filter(props.dataFilter)
+			}
+			return artist
+		},
 		enabled: Boolean(searchTerm()),
 	}))
 
@@ -58,11 +62,7 @@ export function ArtistSearchDialog(
 			}
 			value={searchKeyword()}
 			onInput={onInput}
-			items={() =>
-				artistsQuery.data?.filter(
-					(x) => !props.filter?.exclusion?.includes(x.id),
-				)
-			}
+			items={artistsQuery.data}
 			onSelect={props.onSelect}
 			item={(artist) => (
 				<div class="flex items-center justify-between">

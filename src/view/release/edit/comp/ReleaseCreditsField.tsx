@@ -15,18 +15,25 @@ import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
-import { InputField } from "~/component/atomic/form/Input"
 import {
 	ArtistSearchDialog,
 	CreditRoleSearchDialog,
 } from "~/component/form/SearchDialog"
 import { NewReleaseCorrection as NewReleaseCorrectionSchema } from "~/domain/release"
 
+import { ArtistInfo, CreditRoleInfo } from "./EntityInfo"
+
 type ReleaseFormStore = FormStore<typeof NewReleaseCorrectionSchema>
 
 export function ReleaseCreditsField(props: {
 	of: ReleaseFormStore
 }): JSX.Element {
+	const creditArtistFilter = (rowIndex: number) => (artist: Artist) => {
+		const current = getInput(props.of, {
+			path: ["data", "credits", rowIndex, "artist_id"],
+		}) as number | undefined
+		return artist.id !== current
+	}
 	return (
 		<FieldArray
 			of={props.of}
@@ -77,7 +84,9 @@ export function ReleaseCreditsField(props: {
 														value={field.input as number | undefined}
 													/>
 													<div class="text-sm text-slate-700">
-														Artist ID: {field.input as number | undefined}
+														<ArtistInfo
+															id={() => field.input as number | undefined}
+														/>
 													</div>
 												</>
 											)}
@@ -89,6 +98,7 @@ export function ReleaseCreditsField(props: {
 													input: artist.id,
 												})
 											}
+											dataFilter={creditArtistFilter(idx())}
 										/>
 									</div>
 
@@ -106,7 +116,9 @@ export function ReleaseCreditsField(props: {
 														value={field.input as number | undefined}
 													/>
 													<div class="text-sm text-slate-700">
-														Role ID: {field.input as number | undefined}
+														<CreditRoleInfo
+															id={() => field.input as number | undefined}
+														/>
 													</div>
 												</>
 											)}

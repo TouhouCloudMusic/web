@@ -8,6 +8,7 @@ import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { EventSearchDialog } from "~/component/form/SearchDialog"
 
+import { EventInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 
 export function ReleaseEventsField(props: { of: ReleaseFormStore }) {
@@ -50,7 +51,9 @@ export function ReleaseEventsField(props: { of: ReleaseFormStore }) {
 													value={field.input as number | undefined}
 												/>
 												<div class="text-sm text-slate-700">
-													Event ID: {field.input as number | undefined}
+													<EventInfo
+														id={() => field.input as number | undefined}
+													/>
 												</div>
 											</>
 										)}

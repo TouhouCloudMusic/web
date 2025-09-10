@@ -18,8 +18,6 @@ type LabelSearchDialogProps = {
 }
 
 export function LabelSearchDialog(props: LabelSearchDialogProps): JSX.Element {
-	const { t } = useLingui()
-
 	const [searchKeyword, setSearchKeyword] = createSignal("")
 
 	const onInput = debounce(300, (e: Event) => {
@@ -52,7 +50,7 @@ export function LabelSearchDialog(props: LabelSearchDialogProps): JSX.Element {
 			}
 			value={searchKeyword()}
 			onInput={onInput}
-			items={() => labelsQuery.data}
+			items={labelsQuery.data}
 			onSelect={props.onSelect}
 			item={(label) => (
 				<div class="flex items-center justify-between">

@@ -1,4 +1,4 @@
-import type { JSX, Accessor } from "solid-js"
+import type { JSX } from "solid-js"
 import { For, Suspense } from "solid-js"
 
 import * as SearchDialog from "./__internal"
@@ -9,7 +9,7 @@ type EntitySearchDialogProps<T> = {
 	value: string
 	onInput: (e: Event) => void
 	onSelect: (item: T) => void
-	items: Accessor<readonly T[] | undefined>
+	items?: T[] | undefined
 	item: (item: T) => JSX.Element
 }
 
@@ -32,7 +32,7 @@ export function EntitySearchDialog<T>(
 
 				<SearchDialog.List>
 					<Suspense>
-						<For each={props.items()}>
+						<For each={props.items}>
 							{(item) => (
 								<SearchDialog.Item>
 									<SearchDialog.ItemIndicator />

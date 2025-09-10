@@ -55,7 +55,7 @@ export const ArtistFormAliasesField = () => {
 				<div class="flex gap-2">
 					<ArtistSearchDialog
 						onSelect={handleSelect}
-						filter={filter()}
+						queryFilter={filter()}
 					/>
 				</div>
 			</div>

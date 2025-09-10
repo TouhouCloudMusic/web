@@ -1,5 +1,11 @@
-// 曲目字段（与页面内联实现对齐）
-import { Field, FieldArray, insert, remove, setInput } from "@formisch/solid"
+import {
+	Field,
+	FieldArray,
+	getInput,
+	insert,
+	remove,
+	setInput,
+} from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
 import type { Artist } from "@thc/api"
 import { For } from "solid-js"
@@ -11,6 +17,7 @@ import { InputField } from "~/component/atomic/form/Input"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import { SongSearchDialog } from "../comp/SongSearchDialog"
+import { ArtistInfo, SongInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 
 export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
@@ -148,7 +155,9 @@ export function ReleaseTracksField(props: { of: ReleaseFormStore }) {
 														value={field.input as number | undefined}
 													/>
 													<div class="text-sm text-slate-700">
-														Song ID: {field.input as number | undefined}
+														<SongInfo
+															id={() => field.input as number | undefined}
+														/>
 													</div>
 												</>
 											)}
@@ -196,6 +205,13 @@ function TrackArtistsField(props: {
 	of: ReleaseFormStore
 	trackIndex: number
 }) {
+	const trackArtistFilter = (artist: Artist) => {
+		const selected =
+			(getInput(props.of, {
+				path: ["data", "tracks", props.trackIndex, "artists"],
+			}) as number[] | undefined) ?? []
+		return !selected.includes(artist.id)
+	}
 	return (
 		<FieldArray
 			of={props.of}
@@ -214,6 +230,7 @@ function TrackArtistsField(props: {
 									initialInput: artist.id,
 								})
 							}
+							dataFilter={trackArtistFilter}
 						/>
 					</div>
 
@@ -240,7 +257,9 @@ function TrackArtistsField(props: {
 													value={field.input as number | undefined}
 												/>
 												<div class="text-sm text-slate-700">
-													Artist ID: {field.input as number | undefined}
+													<ArtistInfo
+														id={() => field.input as number | undefined}
+													/>
 												</div>
 											</>
 										)}

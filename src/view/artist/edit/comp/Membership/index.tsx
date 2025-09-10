@@ -89,7 +89,10 @@ export function ArtistFormMembership(): JSX.Element {
 				<ArtistSearchDialog
 					onSelect={membership.push}
 					disabled={isDisabled()}
-					filter={filter()}
+					queryFilter={filter()}
+					dataFilter={(artist) =>
+						!membership.inner.some((m) => m.id === artist.id)
+					}
 				/>
 			</div>
 			<ul class="flex h-full flex-col">

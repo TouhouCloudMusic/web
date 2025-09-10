@@ -146,7 +146,6 @@ function LabelInfo(props: { id: () => number | undefined }) {
 			onSome: (label) => (
 				<span class="inline-flex items-baseline gap-2">
 					<span class="text-primary">{label.name}</span>
-					<span class="text-xs text-slate-400">ID: {label.id}</span>
 				</span>
 			),
 			onNone: () => (
