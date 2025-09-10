@@ -80,7 +80,7 @@ export function ReleaseTracksField(props: {
 								)}
 							</For>
 							<Show when={visibleTrackIndices.length === 0}>
-								<li class="rounded border border-dashed border-slate-400 p-3 text-sm text-slate-500">
+								<li class="flex h-full items-center justify-center rounded text-secondary">
 									<Trans>No tracks under this disc.</Trans>
 								</li>
 							</Show>

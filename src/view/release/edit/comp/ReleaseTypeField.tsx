@@ -25,7 +25,7 @@ export function ReleaseTypeField(props: {
 					<FormComp.Label class="col-span-full">Release Type</FormComp.Label>
 					<select
 						{...field.props}
-						class="mr-2 rounded border border-slate-400 px-2 py-1 text-lg"
+						class="mr-2 rounded border border-slate-400 px-2 py-1 text-lg font-light"
 						value={field.input}
 					>
 						<option
