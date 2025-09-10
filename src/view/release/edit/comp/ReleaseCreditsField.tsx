@@ -12,6 +12,7 @@ import type { Artist } from "@thc/api"
 import type { JSX } from "solid-js"
 import { For } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
@@ -27,6 +28,7 @@ type ReleaseFormStore = FormStore<typeof NewReleaseCorrectionSchema>
 
 export function ReleaseCreditsField(props: {
 	of: ReleaseFormStore
+	class?: string
 }): JSX.Element {
 	const creditArtistFilter = (rowIndex: number) => (artist: Artist) => {
 		const current = getInput(props.of, {
@@ -40,7 +42,7 @@ export function ReleaseCreditsField(props: {
 			path={["data", "credits"]}
 		>
 			{(fa) => (
-				<div class="flex min-h-32 w-full flex-col">
+				<div class={twMerge("flex min-h-32 w-full flex-col", props.class)}>
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">
 							<Trans>Credits</Trans>

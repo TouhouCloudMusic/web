@@ -13,6 +13,7 @@ export interface DateWithPrecisionProps {
 	label: string
 	setValue(val?: TDateWithPrecision.In): void
 	error: string | undefined
+	class?: string
 }
 
 interface Store {
@@ -95,7 +96,7 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 	)
 
 	return (
-		<div>
+		<div class={props.class}>
 			<FormComp.Label>{props.label}</FormComp.Label>
 			<div class="flex gap-4">
 				<InputField.Root>

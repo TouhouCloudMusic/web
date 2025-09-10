@@ -2,33 +2,37 @@
 import { Field } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
 import { For } from "solid-js"
+import { twMerge } from "tailwind-merge"
 
 import { FormComp } from "~/component/atomic/form"
 import { RELEASE_TYPES } from "~/domain/release"
 
 import type { ReleaseFormStore } from "./types"
 
-export function ReleaseTypeField(props: { of: ReleaseFormStore }) {
+export function ReleaseTypeField(props: {
+	of: ReleaseFormStore
+	class?: string
+}) {
 	return (
 		<Field
 			of={props.of}
 			path={["data", "release_type"]}
 		>
 			{(field) => (
-				<div class="flex flex-col gap-1">
+				<div class={twMerge("col-span-full", props.class)}>
 					<FormComp.Label>
 						<Trans>Release Type</Trans>
 					</FormComp.Label>
 					<select
 						{...field.props}
-						class="h-9 rounded border border-slate-300 px-2"
-						value={(field.input as string | undefined) ?? ""}
+						class="rounded border border-slate-400 px-2 py-1 text-lg"
+						value={field.input}
 					>
 						<option
 							value=""
 							disabled
 						>
-							<Trans>-- Please select artist type --</Trans>
+							-- Please select release type --
 						</option>
 						<For each={RELEASE_TYPES}>
 							{(rt) => <option value={rt}>{rt}</option>}

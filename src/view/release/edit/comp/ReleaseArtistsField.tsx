@@ -4,6 +4,7 @@ import { Trans } from "@lingui-solid/solid/macro"
 import type { Artist } from "@thc/api"
 import { For } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
+import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
@@ -12,7 +13,10 @@ import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 import { ArtistInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 
-export function ReleaseArtistsField(props: { of: ReleaseFormStore }) {
+export function ReleaseArtistsField(props: {
+	of: ReleaseFormStore
+	class?: string
+}) {
 	const releaseArtistFilter = (artist: Artist) => {
 		const selected =
 			(getInput(props.of, { path: ["data", "artists"] }) as
@@ -26,7 +30,7 @@ export function ReleaseArtistsField(props: { of: ReleaseFormStore }) {
 			path={["data", "artists"]}
 		>
 			{(fa) => (
-				<div class="flex min-h-32 w-96 flex-col">
+				<div class={twMerge("flex min-h-32 w-96 flex-col", props.class)}>
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">
 							<Trans>Artists</Trans>

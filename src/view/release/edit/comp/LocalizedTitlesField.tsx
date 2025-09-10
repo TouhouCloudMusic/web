@@ -1,30 +1,30 @@
 // 多语言标题字段
 import { Field, FieldArray, insert, remove, setInput } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
-import { useQuery } from "@tanstack/solid-query"
-import { LanguagesQuery } from "@thc/query"
+import type { Language } from "@thc/api"
 import { For } from "solid-js"
-import { CheckIcon, Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { twMerge } from "tailwind-merge"
 
-import { Combobox } from "~/component/atomic/Combobox"
-import { Divider } from "~/component/atomic/Divider"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
+import { LanguageCombobox } from "~/component/form/stateful/LanguageCombobox"
 import type { NewLocalizedTitle } from "~/domain/release"
 
 import type { ReleaseFormStore } from "./types"
 
-export function LocalizedTitlesField(props: { of: ReleaseFormStore }) {
-	const langs = useQuery(() => LanguagesQuery.findAll())
-
+export function LocalizedTitlesField(props: {
+	of: ReleaseFormStore
+	class?: string
+}) {
 	return (
 		<FieldArray
 			of={props.of}
 			path={["data", "localized_titles"]}
 		>
 			{(fa) => (
-				<div class="flex min-h-32 w-96 flex-col">
+				<div class={twMerge("flex min-h-32 w-full flex-col", props.class)}>
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">
 							<Trans>Localized Titles</Trans>
@@ -48,44 +48,10 @@ export function LocalizedTitlesField(props: { of: ReleaseFormStore }) {
 					<ul class="flex h-full flex-col gap-2">
 						<For each={fa.items}>
 							{(_, idx) => (
-								<li class="grid grid-cols-[1fr_auto] grid-rows-2 gap-2">
-									<LanguageCombobox
-										index={idx()}
-										langs={langs.data ?? []}
-										of={props.of}
-									/>
-									<Field
-										of={props.of}
-										path={["data", "localized_titles", idx(), "title"]}
-									>
-										{(field) => (
-											<InputField.Root>
-												<InputField.Input
-													{...field.props}
-													placeholder="Localized title"
-													value={field.input as string | undefined}
-												/>
-												<InputField.Error>
-													{field.errors ? field.errors[0] : undefined}
-												</InputField.Error>
-											</InputField.Root>
-										)}
-									</Field>
-
-									<Button
-										variant="Tertiary"
-										size="Sm"
-										onClick={() =>
-											remove(props.of, {
-												path: ["data", "localized_titles"],
-												at: idx(),
-											})
-										}
-									>
-										<Cross1Icon />
-									</Button>
-									{idx() < fa.items.length - 1 && <Divider horizontal />}
-								</li>
+								<LocalizedTitleItem
+									index={idx()}
+									of={props.of}
+								/>
 							)}
 						</For>
 					</ul>
@@ -95,50 +61,46 @@ export function LocalizedTitlesField(props: { of: ReleaseFormStore }) {
 	)
 }
 
-function LanguageCombobox(props: {
-	index: number
-	langs: { id: number; name: string }[]
-	of: ReleaseFormStore
-}) {
-	let onChange = (v: { id: number; name: string } | null) => {
+function LocalizedTitleItem(props: { index: number; of: ReleaseFormStore }) {
+	let onLangChange = (v: Language | null) => {
 		setInput(props.of, {
 			path: ["data", "localized_titles", props.index, "language_id"],
-			// 允许清空语言
 			input: (v ? v.id : undefined) as unknown as number,
 		})
 	}
 
 	return (
-		<Combobox.Root
-			placeholder="Select language"
-			options={props.langs}
-			optionValue="id"
-			optionTextValue="name"
-			optionLabel="name"
-			onChange={onChange}
-			itemComponent={(itemProps) => (
-				<Combobox.Item item={itemProps.item}>
-					<Combobox.ItemLabel>
-						{itemProps.item.rawValue.name}
-					</Combobox.ItemLabel>
-					<Combobox.ItemIndicator>
-						<CheckIcon class="text-primary" />
-					</Combobox.ItemIndicator>
-				</Combobox.Item>
-			)}
-		>
-			<Combobox.Control>
-				<Combobox.Input />
-				<Combobox.Trigger>
-					<Combobox.Icon />
-				</Combobox.Trigger>
-			</Combobox.Control>
-
-			<Combobox.Portal>
-				<Combobox.Content>
-					<Combobox.Listbox />
-				</Combobox.Content>
-			</Combobox.Portal>
-		</Combobox.Root>
+		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
+			<Field
+				of={props.of}
+				path={["data", "localized_titles", props.index, "title"]}
+			>
+				{(field) => (
+					<InputField.Root>
+						<InputField.Input
+							{...field.props}
+							placeholder="Title"
+							value={field.input as string | undefined}
+						/>
+						<InputField.Error>
+							{field.errors ? field.errors[0] : undefined}
+						</InputField.Error>
+					</InputField.Root>
+				)}
+			</Field>
+			<LanguageCombobox onChange={onLangChange} />
+			<Button
+				variant="Tertiary"
+				size="Sm"
+				onClick={() =>
+					remove(props.of, {
+						path: ["data", "localized_titles"],
+						at: props.index,
+					})
+				}
+			>
+				<Cross1Icon />
+			</Button>
+		</li>
 	)
 }

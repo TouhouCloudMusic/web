@@ -6,6 +6,7 @@ import { LabelQueryOption } from "@thc/query"
 import { Option as O } from "effect"
 import { For } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
@@ -14,14 +15,17 @@ import { LabelSearchDialog } from "~/component/form/SearchDialog"
 
 import type { ReleaseFormStore } from "./types"
 
-export function ReleaseCatalogNumbersField(props: { of: ReleaseFormStore }) {
+export function ReleaseCatalogNumbersField(props: {
+	of: ReleaseFormStore
+	class?: string
+}) {
 	return (
 		<FieldArray
 			of={props.of}
 			path={["data", "catalog_nums"]}
 		>
 			{(fa) => (
-				<div class="flex min-h-32 w-96 flex-col">
+				<div class={twMerge("flex min-h-32 w-96 flex-col", props.class)}>
 					<div class="mb-4 flex place-content-between items-center gap-4">
 						<FormComp.Label class="m-0">
 							<Trans>Catalog Numbers</Trans>
