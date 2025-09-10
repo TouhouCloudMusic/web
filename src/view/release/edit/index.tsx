@@ -254,12 +254,12 @@ function FormContent(props: Props) {
 
 			<ReleaseTracksField
 				of={form}
-				class="row-start-10"
+				class="col-span-2 row-start-10"
 			/>
 
 			<ReleaseCreditsField
 				of={form}
-				class="row-start-11"
+				class="col-span-2 row-start-11"
 			/>
 		</Form>
 	)

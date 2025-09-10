@@ -9,12 +9,19 @@ import {
 import { Trans } from "@lingui-solid/solid/macro"
 import type { Artist } from "@thc/api"
 import { For, Show, createSignal } from "solid-js"
-import { Cross1Icon, PlusIcon, Pencil1Icon } from "solid-radix-icons"
+import {
+	Cross1Icon,
+	PlusIcon,
+	Pencil1Icon,
+	ArrowLeftIcon,
+	ArrowRightIcon,
+} from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
+import { Dialog } from "~/component/dialog"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import { SongSearchDialog } from "../comp/SongSearchDialog"
@@ -54,7 +61,7 @@ export function ReleaseTracksField(props: {
 					.map(({ i }) => i)
 
 				return (
-					<div class={twMerge("flex min-h-32 w-full flex-col", props.class)}>
+					<div class={twMerge("flex min-h-32 flex-col", props.class)}>
 						<TrackHeader
 							of={props.of}
 							selectedDisc={selectedDisc}
@@ -63,7 +70,7 @@ export function ReleaseTracksField(props: {
 						<ul class="flex h-full flex-col gap-4">
 							<For each={visibleTrackIndices}>
 								{(realIndex) => (
-									<li class="grid grid-cols-1 gap-2 rounded border border-slate-200 p-3">
+									<li class="grid grid-cols-1 gap-2 rounded border border-slate-400 p-3">
 										<TrackItem
 											of={props.of}
 											index={realIndex}
@@ -72,7 +79,7 @@ export function ReleaseTracksField(props: {
 								)}
 							</For>
 							<Show when={visibleTrackIndices.length === 0}>
-								<li class="rounded border border-dashed border-slate-200 p-3 text-sm text-slate-500">
+								<li class="rounded border border-dashed border-slate-400 p-3 text-sm text-slate-500">
 									<Trans>No tracks under this disc.</Trans>
 								</li>
 							</Show>
@@ -115,7 +122,12 @@ function TrackHeader(props: {
 			: `Disc ${currentDiscIdx() + 1}`
 	}
 
-	const onCycleDisc = () => {
+	function onPrevDisc() {
+		if (discCount === 0) return
+		props.setSelectedDisc((currentDiscIdx() - 1 + discCount) % discCount)
+	}
+
+	function onNextDisc() {
 		if (discCount === 0) return
 		props.setSelectedDisc((currentDiscIdx() + 1) % discCount)
 	}
@@ -129,10 +141,7 @@ function TrackHeader(props: {
 		props.setSelectedDisc(nextIndex)
 	}
 
-	const onEditDiscName = () => {
-		const prev = (discs[currentDiscIdx()]?.name ?? ``).trim()
-		const next = prompt("Disc name", prev)
-		if (next === null) return
+	function onConfirmRename(next: string) {
 		setInput(props.of, {
 			path: ["data", "discs", currentDiscIdx(), "name"],
 			input: next,
@@ -140,37 +149,11 @@ function TrackHeader(props: {
 	}
 
 	return (
-		<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-			<div class="flex items-center gap-2">
+		<div class="mb-4 flex flex-col gap-2">
+			<div class="flex items-center justify-between">
 				<FormComp.Label class="m-0">
 					<Trans>Tracks</Trans>
 				</FormComp.Label>
-				<button
-					type="button"
-					class="cursor-pointer rounded border border-slate-200 px-2 py-1 text-sm text-slate-700 select-none"
-					title="Click to switch disc"
-					onClick={onCycleDisc}
-				>
-					{currentDiscName()}
-				</button>
-				<Button
-					variant="Tertiary"
-					size="Sm"
-					onClick={onEditDiscName}
-					title="Rename disc"
-				>
-					<Pencil1Icon class="size-4" />
-				</Button>
-				<Button
-					variant="Tertiary"
-					size="Sm"
-					onClick={onAddDisc}
-					title="Add disc"
-				>
-					<PlusIcon class="size-4" />
-				</Button>
-			</div>
-			<div>
 				<Button
 					variant="Tertiary"
 					class="h-max p-2"
@@ -180,7 +163,113 @@ function TrackHeader(props: {
 					<PlusIcon class="size-4" />
 				</Button>
 			</div>
+			<div class="flex items-center justify-between gap-2">
+				<Button
+					variant="Tertiary"
+					class="h-max p-2"
+					onClick={onPrevDisc}
+					title="Previous disc"
+				>
+					<ArrowLeftIcon class="size-4" />
+				</Button>
+				<div class="flex items-center gap-2">
+					<div class="rounded border border-slate-400 px-2 py-1 text-sm text-slate-700 select-none">
+						{currentDiscName()}
+					</div>
+					<DiscNameDialog
+						currentName={currentDiscName}
+						onConfirm={onConfirmRename}
+					/>
+					<Button
+						variant="Tertiary"
+						size="Sm"
+						onClick={onAddDisc}
+						title="Add disc"
+					>
+						<PlusIcon class="size-4" />
+					</Button>
+				</div>
+				<Button
+					variant="Tertiary"
+					class="h-max p-2"
+					onClick={onNextDisc}
+					title="Next disc"
+				>
+					<ArrowRightIcon class="size-4" />
+				</Button>
+			</div>
 		</div>
+	)
+}
+
+type DiscNameDialogProps = {
+	currentName: () => string
+	onConfirm: (name: string) => void
+}
+
+function DiscNameDialog(props: DiscNameDialogProps) {
+	let [open, setOpen] = createSignal(false)
+	let [name, setName] = createSignal("")
+
+	let syncOpen = (state: boolean) => {
+		setOpen(state)
+		if (state) {
+			let initial = props.currentName().trim()
+			setName(initial)
+		}
+	}
+
+	let onInput = (e: Event) => {
+		let value = (e.target as HTMLInputElement).value
+		setName(value)
+	}
+
+	let confirm = () => {
+		let next = name().trim()
+		props.onConfirm(next)
+		setOpen(false)
+	}
+
+	return (
+		<Dialog.Root
+			open={open()}
+			onOpenChange={syncOpen}
+		>
+			<Dialog.Trigger
+				as={Button}
+				variant="Tertiary"
+				size="Sm"
+				title="Rename disc"
+			>
+				<Pencil1Icon class="size-4" />
+			</Dialog.Trigger>
+			<Dialog.Portal>
+				<Dialog.Overlay />
+				<Dialog.Content class="w-full max-w-sm p-4">
+					<Dialog.Title class="text-lg">Rename Disc</Dialog.Title>
+					<div class="mt-4 space-y-2">
+						<InputField.Root>
+							<InputField.Label>Disc Name</InputField.Label>
+							<InputField.Input
+								placeholder="Disc name"
+								value={name()}
+								onInput={onInput}
+							/>
+						</InputField.Root>
+					</div>
+					<div class="mt-4 flex justify-end gap-2">
+						<Dialog.CloseButton variant="Tertiary">取消</Dialog.CloseButton>
+						<Button
+							variant="Primary"
+							color="Reimu"
+							onClick={confirm}
+						>
+							确定
+						</Button>
+					</div>
+				</Dialog.Content>
+			</Dialog.Portal>
+		</Dialog.Root>
 	)
 }
 
