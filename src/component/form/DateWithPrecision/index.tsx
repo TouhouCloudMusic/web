@@ -2,7 +2,6 @@ import dayjs from "dayjs"
 import { createEffect, createMemo, on } from "solid-js"
 import { createStore } from "solid-js/store"
 
-import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
 import type {
 	DatePrecision,
@@ -10,10 +9,8 @@ import type {
 } from "~/domain/shared"
 
 export interface DateWithPrecisionProps {
-	label: string
-	setValue(val?: TDateWithPrecision.In): void
-	error: string | undefined
 	class?: string
+	setValue(val?: TDateWithPrecision.In): void
 }
 
 interface Store {
@@ -37,7 +34,19 @@ const onChange =
 		f(value)
 	}
 
-// oxlint-disable-next-line max-lines-per-function
+function getPrecision(store: Store) {
+	if (store.d) {
+		return "Day"
+	}
+	if (store.m) {
+		return "Month"
+	}
+	if (store.y) {
+		return "Year"
+	}
+	return
+}
+
 export function DateWithPrecision(props: DateWithPrecisionProps) {
 	const [store, setStore] = createStore<Store>({})
 
@@ -53,11 +62,9 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		}
 		setStore("y", val)
 	}
-
 	const setMonth = (val?: number) => {
 		setStore("m", val)
 	}
-
 	const setDay = (val?: number) => {
 		if (val && val > maxDay()!) {
 			val = maxDay()
@@ -69,18 +76,9 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		store.y ? new Date(store.y, (store.m ?? 1) - 1, store.d) : undefined,
 	)
 
-	const precision = createMemo<DatePrecision | undefined>(() => {
-		if (store.d) {
-			return "Day"
-		}
-		if (store.m) {
-			return "Month"
-		}
-		if (store.y) {
-			return "Year"
-		}
-		return
-	})
+	const precision = createMemo<DatePrecision | undefined>(() =>
+		getPrecision(store),
+	)
 
 	createEffect(
 		on(date, (date) => {
@@ -95,41 +93,39 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		}),
 	)
 
+	let klass = createMemo(() => `${props.class}`)
+
 	return (
-		<div class={props.class}>
-			<FormComp.Label>{props.label}</FormComp.Label>
-			<div class="flex gap-4">
-				<InputField.Root>
-					<InputField.Input
-						class="no-spinner"
-						onChange={onChange(setYear)}
-						placeholder="Year"
-						type="number"
-						value={store.y}
-					/>
-				</InputField.Root>
-				<InputField.Root>
-					<InputField.Input
-						class="no-spinner"
-						disabled={!store.y}
-						onChange={onChange(setMonth)}
-						placeholder="Month"
-						type="number"
-						value={store.m}
-					/>
-				</InputField.Root>
-				<InputField.Root>
-					<InputField.Input
-						class="no-spinner"
-						disabled={!store.m}
-						onChange={onChange(setDay)}
-						placeholder="Day"
-						type="number"
-						value={store.d}
-					/>
-				</InputField.Root>
-			</div>
-			<FormComp.ErrorMessage>{props.error}</FormComp.ErrorMessage>
-		</div>
+		<>
+			<InputField.Root class={klass()}>
+				<InputField.Input
+					class="no-spinner"
+					onChange={onChange(setYear)}
+					placeholder="Year"
+					type="number"
+					value={store.y}
+				/>
+			</InputField.Root>
+			<InputField.Root class={klass()}>
+				<InputField.Input
+					class="no-spinner"
+					disabled={!store.y}
+					onChange={onChange(setMonth)}
+					placeholder="Month"
+					type="number"
+					value={store.m}
+				/>
+			</InputField.Root>
+			<InputField.Root class={klass()}>
+				<InputField.Input
+					class="no-spinner"
+					disabled={!store.m}
+					onChange={onChange(setDay)}
+					placeholder="Day"
+					type="number"
+					value={store.d}
+				/>
+			</InputField.Root>
+		</>
 	)
 }

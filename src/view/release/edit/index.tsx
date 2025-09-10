@@ -4,9 +4,10 @@ import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useBlocker } from "@tanstack/solid-router"
 import type { Release } from "@thc/api"
 import type { JSX } from "solid-js"
-import { Show } from "solid-js"
+import { For, Show } from "solid-js"
 
 import { Button } from "~/component/atomic/button"
+import { FormComp } from "~/component/atomic/form"
 import { DateWithPrecision } from "~/component/form/DateWithPrecision"
 import { NewReleaseCorrection as NewReleaseCorrectionSchema } from "~/domain/release"
 import type { NewReleaseCorrection } from "~/domain/release"
@@ -189,53 +190,49 @@ function FormContent(props: Props) {
 				class="col-span-2 row-start-3"
 			/>
 
-			<DateWithPrecision
-				class="col-span-3 row-start-4"
-				label={t`Release date`}
-				setValue={(v) =>
-					setInput(form, {
-						path: ["data", "release_date"],
-						input: v ?? ({} as unknown as never),
-					})
-				}
-				error={
-					getErrors(form, {
-						path: ["data", "release_date"],
-					})?.[0]
-				}
-			/>
-
-			<DateWithPrecision
-				class="col-span-3 row-start-5"
-				label={t`Recording start`}
-				setValue={(v) =>
-					setInput(form, {
-						path: ["data", "recording_date_start"],
-						input: v ?? ({} as unknown as never),
-					})
-				}
-				error={
-					getErrors(form, {
-						path: ["data", "recording_date_start"],
-					})?.[0]
-				}
-			/>
-
-			<DateWithPrecision
-				class="col-span-3 row-start-6"
-				label={t`Recording end`}
-				setValue={(v) =>
-					setInput(form, {
-						path: ["data", "recording_date_end"],
-						input: v ?? ({} as unknown as never),
-					})
-				}
-				error={
-					getErrors(form, {
-						path: ["data", "recording_date_end"],
-					})?.[0]
-				}
-			/>
+			{(
+				[
+					{
+						key: "release_date",
+						label: t`Release date`,
+						class: "row-start-4",
+					},
+					{
+						key: "recording_date_start",
+						label: t`Recording start`,
+						class: "row-start-5",
+					},
+					{
+						key: "recording_date_end",
+						label: t`Recording end`,
+						class: "row-start-6",
+					},
+				] as const
+			).map((it) => {
+				return (
+					<div
+						class={["col-span-3 grid grid-cols-subgrid", it.class].join(" ")}
+					>
+						<FormComp.Label class="col-span-full">{it.label}</FormComp.Label>
+						<DateWithPrecision
+							class="pr-2"
+							setValue={(v) =>
+								setInput(form, {
+									path: ["data", it.key],
+									input: v ?? ({} as unknown as never),
+								})
+							}
+						/>
+						<FormComp.ErrorMessage>
+							{
+								getErrors(form, {
+									path: ["data", it.key],
+								})?.[0]
+							}
+						</FormComp.ErrorMessage>
+					</div>
+				)
+			})}
 
 			<ReleaseArtistsField
 				of={form}
