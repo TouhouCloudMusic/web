@@ -19,7 +19,7 @@ import {
 	ArtistSearchDialog,
 	CreditRoleSearchDialog,
 } from "~/component/form/SearchDialog"
-import { NewReleaseCorrection as NewReleaseCorrectionSchema } from "~/domain/release"
+import type { NewReleaseCorrection as NewReleaseCorrectionSchema } from "~/domain/release"
 
 import { ArtistInfo, CreditRoleInfo } from "./EntityInfo"
 
@@ -137,7 +137,7 @@ export function ReleaseCreditsField(props: {
 										of={props.of}
 										path={["data", "credits", idx(), "on"]}
 									>
-										{(onFa) => (
+										{() => (
 											<div class="flex flex-col gap-1">
 												<FormComp.Label class="m-0">
 													<Trans>On Tracks</Trans>
