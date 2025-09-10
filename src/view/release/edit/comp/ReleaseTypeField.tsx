@@ -19,13 +19,13 @@ export function ReleaseTypeField(props: {
 			path={["data", "release_type"]}
 		>
 			{(field) => (
-				<div class={twMerge("col-span-full", props.class)}>
-					<FormComp.Label>
-						<Trans>Release Type</Trans>
-					</FormComp.Label>
+				<div
+					class={twMerge("col-span-full grid grid-cols-subgrid", props.class)}
+				>
+					<FormComp.Label class="col-span-full">Release Type</FormComp.Label>
 					<select
 						{...field.props}
-						class="rounded border border-slate-400 px-2 py-1 text-lg"
+						class="mr-2 rounded border border-slate-400 px-2 py-1 text-lg"
 						value={field.input}
 					>
 						<option

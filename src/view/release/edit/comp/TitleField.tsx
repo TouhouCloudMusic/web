@@ -19,11 +19,7 @@ export function TitleField(props: { of: ReleaseFormStore; class?: string }) {
 					<FormComp.Label>Title</FormComp.Label>
 					<InputField.Input
 						{...field.props}
-						id={
-							Array.isArray(field.path)
-								? field.path.join(".")
-								: String(field.path)
-						}
+						class="mr-2"
 						placeholder="Title"
 						value={field.input as string | undefined}
 					/>
