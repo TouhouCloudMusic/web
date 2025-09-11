@@ -157,7 +157,7 @@ const Ctx = createContext<ReturnType<typeof createReleaseFormContext>>()
 export const useReleaseFormContext = (): ReturnType<
 	typeof createReleaseFormContext
 > => {
-	return assertContext(Ctx, "Relesae Form Context")
+	return assertContext(Ctx, "Release Form Context")
 }
 
 // oxlint-disable-next-line max-lines-per-function
