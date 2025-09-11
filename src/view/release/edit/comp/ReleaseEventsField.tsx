@@ -18,28 +18,28 @@ export function ReleaseEventsField(props: {
 	class?: string
 }) {
 	return (
-		<FieldArray
-			of={props.of}
-			path={["data", "events"]}
-		>
-			{(fa) => (
-				<div class={twMerge("flex min-h-32 flex-col", props.class)}>
-					<div class="mb-4 flex place-content-between items-center gap-4">
-						<FormComp.Label class="m-0">
-							<Trans>Events</Trans>
-						</FormComp.Label>
-						<div class="flex gap-2">
-							<EventSearchDialog
-								onSelect={(ev) =>
-									insert(props.of, {
-										path: ["data", "events"],
-										initialInput: ev.id,
-									})
-								}
-							/>
-						</div>
-					</div>
-					<ul class="flex h-full flex-col gap-2">
+		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
+			<div class="mb-4 flex place-content-between items-center gap-4">
+				<FormComp.Label class="m-0">
+					<Trans>Events</Trans>
+				</FormComp.Label>
+				<div class="flex gap-2">
+					<EventSearchDialog
+						onSelect={(ev) =>
+							insert(props.of, {
+								path: ["data", "events"],
+								initialInput: ev.id,
+							})
+						}
+					/>
+				</div>
+			</div>
+			<ul class="flex h-full flex-col gap-2">
+				<FieldArray
+					of={props.of}
+					path={["data", "events"]}
+				>
+					{(fa) => (
 						<For
 							each={fa.items}
 							fallback={<FieldArrayFallback />}
@@ -70,7 +70,10 @@ export function ReleaseEventsField(props: {
 										variant="Tertiary"
 										size="Sm"
 										onClick={() =>
-											remove(props.of, { path: ["data", "events"], at: idx() })
+											remove(props.of, {
+												path: ["data", "events"],
+												at: idx(),
+											})
 										}
 									>
 										<Cross1Icon />
@@ -78,9 +81,9 @@ export function ReleaseEventsField(props: {
 								</li>
 							)}
 						</For>
-					</ul>
-				</div>
-			)}
-		</FieldArray>
+					)}
+				</FieldArray>
+			</ul>
+		</div>
 	)
 }

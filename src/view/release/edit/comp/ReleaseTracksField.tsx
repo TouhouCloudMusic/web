@@ -8,7 +8,7 @@ import {
 } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
 import type { Artist } from "@thc/api"
-import { For, Show, createSignal } from "solid-js"
+import { For, Show, createMemo, createSignal } from "solid-js"
 import {
 	Cross1Icon,
 	PlusIcon,
@@ -24,6 +24,7 @@ import { InputField } from "~/component/atomic/form/Input"
 import { Dialog } from "~/component/dialog"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
+import type { NewDisc } from "~/domain/release"
 
 import { SongSearchDialog } from "../comp/SongSearchDialog"
 import { ArtistInfo, SongInfo } from "./EntityInfo"
@@ -36,59 +37,51 @@ export function ReleaseTracksField(props: {
 	const [selectedDisc, setSelectedDisc] = createSignal(0)
 
 	return (
-		<FieldArray
-			of={props.of}
-			path={["data", "tracks"]}
-		>
-			{() => {
-				const discs =
-					(getInput(props.of, { path: ["data", "discs"] }) as
-						| { name?: string }[]
-						| undefined) ?? []
-				if (discs.length === 0) {
-					insert(props.of, {
-						path: ["data", "discs"],
-						initialInput: { name: "" } as unknown as { name?: string },
+		<div class={props.class}>
+			<TrackHeader
+				of={props.of}
+				selectedDisc={selectedDisc}
+				setSelectedDisc={setSelectedDisc}
+			/>
+			<FieldArray
+				of={props.of}
+				path={["data", "tracks"]}
+			>
+				{(fa) => {
+					const visibleTrackIndices = createMemo(() => {
+						const items = fa.items
+						return items
+							.map((_, i) => i)
+							.filter((i) => {
+								const di = getInput(props.of, {
+									path: ["data", "tracks", i, "disc_index"],
+								})
+								return di === selectedDisc()
+							})
 					})
-				}
 
-				const tracks =
-					(getInput(props.of, { path: ["data", "tracks"] }) as
-						| Array<{ disc_index: number }>
-						| undefined) ?? []
-				const visibleTrackIndices = tracks
-					.map((t, i) => ({ t, i }))
-					.filter(({ t }) => t.disc_index === selectedDisc())
-					.map(({ i }) => i)
-
-				return (
-					<div class={twMerge("flex min-h-32 flex-col", props.class)}>
-						<TrackHeader
-							of={props.of}
-							selectedDisc={selectedDisc}
-							setSelectedDisc={setSelectedDisc}
-						/>
+					return (
 						<ul class="flex h-full flex-col gap-4">
-							<For each={visibleTrackIndices}>
-								{(realIndex) => (
+							<For each={visibleTrackIndices()}>
+								{(trackIdx) => (
 									<li class="grid grid-cols-1 gap-2 rounded border border-slate-400 p-3">
 										<TrackItem
 											of={props.of}
-											index={realIndex}
+											index={trackIdx}
 										/>
 									</li>
 								)}
 							</For>
-							<Show when={visibleTrackIndices.length === 0}>
+							<Show when={visibleTrackIndices().length === 0}>
 								<li class="flex h-full items-center justify-center rounded text-secondary">
 									<Trans>No tracks under this disc.</Trans>
 								</li>
 							</Show>
 						</ul>
-					</div>
-				)
-			}}
-		</FieldArray>
+					)
+				}}
+			</FieldArray>
+		</div>
 	)
 }
 
@@ -97,52 +90,50 @@ function TrackHeader(props: {
 	selectedDisc: () => number
 	setSelectedDisc: (n: number) => void
 }) {
-	const onAddTrack = () =>
+	const discs = createMemo(() =>
+		getInput(props.of, { path: ["data", "discs"] }),
+	)
+	const discCount = createMemo(() => discs().length)
+
+	const onAddTrack = () => {
+		if (discCount() === 0) {
+			const initialDisc: NewDisc = { name: "" }
+			insert(props.of, { path: ["data", "discs"], initialInput: initialDisc })
+			props.setSelectedDisc(0)
+		}
 		insert(props.of, {
 			path: ["data", "tracks"],
 			initialInput: {
 				disc_index: props.selectedDisc(),
-				song_id: 0,
-				artists: [],
-				track_number: "",
-				display_title: "",
-				duration: undefined,
 			},
 		})
-
-	const discs =
-		(getInput(props.of, { path: ["data", "discs"] }) as
-			| { name?: string }[]
-			| undefined) ?? []
-	const discCount = discs.length
-	const currentDiscIdx = () => props.selectedDisc()
-	const currentDiscName = () => {
-		const d = discs[currentDiscIdx()]
-		return d && d.name && d.name.trim().length > 0
-			? d.name
-			: `Disc ${currentDiscIdx() + 1}`
 	}
 
-	function onPrevDisc() {
-		if (discCount === 0) return
-		props.setSelectedDisc((currentDiscIdx() - 1 + discCount) % discCount)
+	const currentDiscIdx = props.selectedDisc
+	const currentDiscName = createMemo(() => {
+		const d = discs()[currentDiscIdx()]
+		if (d && d.name && d.name.length > 0) return d.name
+		return `Disc ${currentDiscIdx() + 1}`
+	})
+
+	const onPrevDisc = () => {
+		if (discCount() === 0) return
+		props.setSelectedDisc((currentDiscIdx() - 1 + discCount()) % discCount())
 	}
 
-	function onNextDisc() {
-		if (discCount === 0) return
-		props.setSelectedDisc((currentDiscIdx() + 1) % discCount)
+	const onNextDisc = () => {
+		if (discCount() === 0) return
+		props.setSelectedDisc((currentDiscIdx() + 1) % discCount())
 	}
 
 	const onAddDisc = () => {
-		const nextIndex = discCount
-		insert(props.of, {
-			path: ["data", "discs"],
-			initialInput: { name: "" } as unknown as { name?: string },
-		})
+		const nextIndex = discCount()
+		const initial: NewDisc = { name: "" }
+		insert(props.of, { path: ["data", "discs"], initialInput: initial })
 		props.setSelectedDisc(nextIndex)
 	}
 
-	function onConfirmRename(next: string) {
+	const onConfirmRename = (next: string) => {
 		setInput(props.of, {
 			path: ["data", "discs", currentDiscIdx(), "name"],
 			input: next,
@@ -174,10 +165,10 @@ function TrackHeader(props: {
 					<ArrowLeftIcon class="size-4" />
 				</Button>
 				<div class="flex items-center gap-2">
-					<div class="rounded border border-slate-400 px-2 py-1 text-sm text-slate-700 select-none">
+					<div class="rounded px-2 leading-none text-primary">
 						{currentDiscName()}
 					</div>
-					<DiscNameDialog
+					<EditDiscNameDialog
 						currentName={currentDiscName}
 						onConfirm={onConfirmRename}
 					/>
@@ -185,6 +176,7 @@ function TrackHeader(props: {
 						variant="Tertiary"
 						size="Sm"
 						onClick={onAddDisc}
+						class="p-2"
 						title="Add disc"
 					>
 						<PlusIcon class="size-4" />
@@ -192,7 +184,7 @@ function TrackHeader(props: {
 				</div>
 				<Button
 					variant="Tertiary"
-					class="h-max p-2"
+					class="p-2"
 					onClick={onNextDisc}
 					title="Next disc"
 				>
@@ -208,7 +200,7 @@ type DiscNameDialogProps = {
 	onConfirm: (name: string) => void
 }
 
-function DiscNameDialog(props: DiscNameDialogProps) {
+function EditDiscNameDialog(props: DiscNameDialogProps) {
 	let [open, setOpen] = createSignal(false)
 	let [name, setName] = createSignal("")
 
@@ -239,6 +231,7 @@ function DiscNameDialog(props: DiscNameDialogProps) {
 			<Dialog.Trigger
 				as={Button}
 				variant="Tertiary"
+				class="h-full p-2"
 				size="Sm"
 				title="Rename disc"
 			>
@@ -246,11 +239,10 @@ function DiscNameDialog(props: DiscNameDialogProps) {
 			</Dialog.Trigger>
 			<Dialog.Portal>
 				<Dialog.Overlay />
-				<Dialog.Content class="w-full max-w-sm p-4">
+				<Dialog.Content class="w-full max-w-sm rounded p-4">
 					<Dialog.Title class="text-lg">Rename Disc</Dialog.Title>
 					<div class="mt-4 space-y-2">
 						<InputField.Root>
-							<InputField.Label>Disc Name</InputField.Label>
 							<InputField.Input
 								placeholder="Disc name"
 								value={name()}
@@ -259,13 +251,13 @@ function DiscNameDialog(props: DiscNameDialogProps) {
 						</InputField.Root>
 					</div>
 					<div class="mt-4 flex justify-end gap-2">
-						<Dialog.CloseButton variant="Tertiary">取消</Dialog.CloseButton>
+						<Dialog.CloseButton variant="Tertiary">Cancel</Dialog.CloseButton>
 						<Button
 							variant="Primary"
 							color="Reimu"
 							onClick={confirm}
 						>
-							确定
+							Confirm
 						</Button>
 					</div>
 				</Dialog.Content>
@@ -428,6 +420,19 @@ function TrackArtistsField(props: {
 			}) as number[] | undefined) ?? []
 		return !selected.includes(artist.id)
 	}
+
+	const insertArtist = (artist: Artist) =>
+		insert(props.of, {
+			path: ["data", "tracks", props.trackIndex, "artists"],
+			initialInput: artist.id,
+		})
+
+	const removeArtist = (idx: number) => () =>
+		remove(props.of, {
+			path: ["data", "tracks", props.trackIndex, "artists"],
+			at: idx,
+		})
+
 	return (
 		<FieldArray
 			of={props.of}
@@ -440,12 +445,7 @@ function TrackArtistsField(props: {
 							<Trans>Track Artists</Trans>
 						</FormComp.Label>
 						<ArtistSearchDialog
-							onSelect={(artist: Artist) =>
-								insert(props.of, {
-									path: ["data", "tracks", props.trackIndex, "artists"],
-									initialInput: artist.id,
-								})
-							}
+							onSelect={insertArtist}
 							dataFilter={trackArtistFilter}
 						/>
 					</div>
@@ -473,12 +473,10 @@ function TrackArtistsField(props: {
 													{...field.props}
 													type="number"
 													hidden
-													value={field.input as number | undefined}
+													value={field.input}
 												/>
 												<div class="text-sm text-slate-700">
-													<ArtistInfo
-														id={() => field.input as number | undefined}
-													/>
+													<ArtistInfo id={() => field.input} />
 												</div>
 											</>
 										)}
@@ -486,12 +484,7 @@ function TrackArtistsField(props: {
 									<Button
 										variant="Tertiary"
 										size="Sm"
-										onClick={() =>
-											remove(props.of, {
-												path: ["data", "tracks", props.trackIndex, "artists"],
-												at: idx(),
-											})
-										}
+										onClick={removeArtist(idx())}
 									>
 										<Cross1Icon />
 									</Button>
