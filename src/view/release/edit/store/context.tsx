@@ -119,7 +119,7 @@ const createReleaseFormContext = (
 				setState("trackArtists", (list) => list.toSpliced(idx, 1))
 			})
 		},
-		setTrackSong: (trackIdx: number, song: Song) => {
+		setTrackSong: (trackIdx: number) => (song: Song) => {
 			setState("trackSongs", trackIdx, song)
 			setInput(form, {
 				path: ["data", "tracks", trackIdx, "song_id"],

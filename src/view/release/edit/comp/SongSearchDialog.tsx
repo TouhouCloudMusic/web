@@ -12,6 +12,7 @@ import { Dialog } from "~/component/dialog"
 import { SearchDialog } from "~/component/form/SearchDialog"
 
 type Props = {
+	icon?: JSX.Element
 	onSelect: (song: Song) => void
 	disabled?: boolean
 }
@@ -43,7 +44,7 @@ export function SongSearchDialog(props: Props): JSX.Element {
 				class="h-max p-2"
 				disabled={props.disabled}
 			>
-				<PlusIcon class="size-4 text-slate-600" />
+				{props.icon}
 			</Dialog.Trigger>
 
 			<SearchDialog.Content>
