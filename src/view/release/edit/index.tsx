@@ -163,13 +163,6 @@ function FormContent(props: Props) {
 		initialInput: initialValues,
 	})
 
-	createEffect(() => {
-		let val = getInput(form)
-		console.log(val)
-		let err = getErrors(form)
-		console.log(err)
-	})
-
 	const { handleSubmit } = useReleaseFormSubmission(props)
 
 	useBlocker({
