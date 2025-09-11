@@ -100,7 +100,7 @@ function TrackHeader(props: {
 	})
 
 	const isDefaultName = createMemo(() => {
-		return !Boolean(discs()[props.selectedDisc()]?.name)
+		return !discs()[props.selectedDisc()]?.name
 	})
 
 	const onPrevDisc = () => {
