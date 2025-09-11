@@ -1,5 +1,5 @@
-// 事件字段
-import { Field, FieldArray, insert, remove } from "@formisch/solid"
+// 事件字段（受控组件）
+import { Field } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
 import { For } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
@@ -10,13 +10,11 @@ import { FormComp } from "~/component/atomic/form"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { EventSearchDialog } from "~/component/form/SearchDialog"
 
+import { useReleaseFormContext } from "../store/context"
 import { EventInfo } from "./EntityInfo"
-import type { ReleaseFormStore } from "./types"
 
-export function ReleaseEventsField(props: {
-	of: ReleaseFormStore
-	class?: string
-}) {
+export function ReleaseEventsField(props: { class?: string }) {
+	const ctx = useReleaseFormContext()
 	return (
 		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
 			<div class="mb-4 flex place-content-between items-center gap-4">
@@ -24,65 +22,43 @@ export function ReleaseEventsField(props: {
 					<Trans>Events</Trans>
 				</FormComp.Label>
 				<div class="flex gap-2">
-					<EventSearchDialog
-						onSelect={(ev) =>
-							insert(props.of, {
-								path: ["data", "events"],
-								initialInput: ev.id,
-							})
-						}
-					/>
+					<EventSearchDialog onSelect={ctx.addEvent} />
 				</div>
 			</div>
 			<ul class="flex h-full flex-col gap-2">
-				<FieldArray
-					of={props.of}
-					path={["data", "events"]}
+				<For
+					each={ctx.events}
+					fallback={<FieldArrayFallback />}
 				>
-					{(fa) => (
-						<For
-							each={fa.items}
-							fallback={<FieldArrayFallback />}
-						>
-							{(_, idx) => (
-								<li class="grid h-fit grid-cols-[1fr_auto]">
-									<Field
-										of={props.of}
-										path={["data", "events", idx()]}
-									>
-										{(field) => (
-											<>
-												<input
-													{...field.props}
-													type="number"
-													hidden
-													value={field.input as number | undefined}
-												/>
-												<div class="text-sm text-slate-700">
-													<EventInfo
-														id={() => field.input as number | undefined}
-													/>
-												</div>
-											</>
-										)}
-									</Field>
-									<Button
-										variant="Tertiary"
-										size="Sm"
-										onClick={() =>
-											remove(props.of, {
-												path: ["data", "events"],
-												at: idx(),
-											})
-										}
-									>
-										<Cross1Icon />
-									</Button>
-								</li>
-							)}
-						</For>
+					{(ev, idx) => (
+						<li class="grid h-fit grid-cols-[1fr_auto]">
+							<div class="text-sm text-slate-700">
+								<EventInfo value={{ id: ev.id, name: ev.name }} />
+							</div>
+
+							<Field
+								of={ctx.form}
+								path={["data", "events", idx()]}
+							>
+								{(field) => (
+									<input
+										{...field.props}
+										type="number"
+										hidden
+										value={field.input}
+									/>
+								)}
+							</Field>
+							<Button
+								variant="Tertiary"
+								size="Sm"
+								onClick={ctx.removeEventAt(idx())}
+							>
+								<Cross1Icon />
+							</Button>
+						</li>
 					)}
-				</FieldArray>
+				</For>
 			</ul>
 		</div>
 	)

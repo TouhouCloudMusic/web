@@ -1,14 +1,7 @@
-import {
-	Field,
-	FieldArray,
-	getInput,
-	insert,
-	remove,
-	setInput,
-} from "@formisch/solid"
+import { Field, FieldArray, getInput, insert, setInput } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
-import type { Artist } from "@thc/api"
-import { For, Show, createMemo, createSignal } from "solid-js"
+import type { Artist, Song } from "@thc/api"
+import { For, createMemo, createSignal } from "solid-js"
 import {
 	Cross1Icon,
 	PlusIcon,
@@ -16,35 +9,31 @@ import {
 	ArrowLeftIcon,
 	ArrowRightIcon,
 } from "solid-radix-icons"
-import { twMerge } from "tailwind-merge"
+import { twJoin } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
 import { Dialog } from "~/component/dialog"
-import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 import type { NewDisc } from "~/domain/release"
 
 import { SongSearchDialog } from "../comp/SongSearchDialog"
+import { useReleaseFormContext } from "../store/context"
 import { ArtistInfo, SongInfo } from "./EntityInfo"
-import type { ReleaseFormStore } from "./types"
 
-export function ReleaseTracksField(props: {
-	of: ReleaseFormStore
-	class?: string
-}) {
+export function ReleaseTracksField(props: { class?: string }) {
+	const store = useReleaseFormContext()
 	const [selectedDisc, setSelectedDisc] = createSignal(0)
 
 	return (
-		<div class={props.class}>
+		<div class={twJoin("flex flex-col", props.class)}>
 			<TrackHeader
-				of={props.of}
 				selectedDisc={selectedDisc}
 				setSelectedDisc={setSelectedDisc}
 			/>
 			<FieldArray
-				of={props.of}
+				of={store.form}
 				path={["data", "tracks"]}
 			>
 				{(fa) => {
@@ -53,7 +42,7 @@ export function ReleaseTracksField(props: {
 						return items
 							.map((_, i) => i)
 							.filter((i) => {
-								const di = getInput(props.of, {
+								const di = getInput(store.form, {
 									path: ["data", "tracks", i, "disc_index"],
 								})
 								return di === selectedDisc()
@@ -62,21 +51,20 @@ export function ReleaseTracksField(props: {
 
 					return (
 						<ul class="flex h-full flex-col gap-4">
-							<For each={visibleTrackIndices()}>
+							<For
+								each={visibleTrackIndices()}
+								fallback={
+									<li class="flex h-32 items-center justify-center rounded text-secondary">
+										<Trans>No tracks under this disc.</Trans>
+									</li>
+								}
+							>
 								{(trackIdx) => (
 									<li class="grid grid-cols-1 gap-2 rounded border border-slate-400 p-3">
-										<TrackItem
-											of={props.of}
-											index={trackIdx}
-										/>
+										<TrackItem index={trackIdx} />
 									</li>
 								)}
 							</For>
-							<Show when={visibleTrackIndices().length === 0}>
-								<li class="flex h-full items-center justify-center rounded text-secondary">
-									<Trans>No tracks under this disc.</Trans>
-								</li>
-							</Show>
 						</ul>
 					)
 				}}
@@ -85,57 +73,59 @@ export function ReleaseTracksField(props: {
 	)
 }
 
+// oxlint-disable-next-line max-lines-per-function
 function TrackHeader(props: {
-	of: ReleaseFormStore
 	selectedDisc: () => number
 	setSelectedDisc: (n: number) => void
 }) {
+	const store = useReleaseFormContext()
 	const discs = createMemo(() =>
-		getInput(props.of, { path: ["data", "discs"] }),
+		getInput(store.form, { path: ["data", "discs"] }),
 	)
 	const discCount = createMemo(() => discs().length)
 
 	const onAddTrack = () => {
 		if (discCount() === 0) {
 			const initialDisc: NewDisc = { name: "" }
-			insert(props.of, { path: ["data", "discs"], initialInput: initialDisc })
+			insert(store.form, { path: ["data", "discs"], initialInput: initialDisc })
 			props.setSelectedDisc(0)
 		}
-		insert(props.of, {
-			path: ["data", "tracks"],
-			initialInput: {
-				disc_index: props.selectedDisc(),
-			},
-		})
+		store.addTrack(props.selectedDisc())
 	}
 
-	const currentDiscIdx = props.selectedDisc
 	const currentDiscName = createMemo(() => {
-		const d = discs()[currentDiscIdx()]
+		const d = discs()[props.selectedDisc()]
 		if (d && d.name && d.name.length > 0) return d.name
-		return `Disc ${currentDiscIdx() + 1}`
+		return `Disc ${props.selectedDisc() + 1}`
+	})
+
+	const isDefaultName = createMemo(() => {
+		return !Boolean(discs()[props.selectedDisc()]?.name)
 	})
 
 	const onPrevDisc = () => {
 		if (discCount() === 0) return
-		props.setSelectedDisc((currentDiscIdx() - 1 + discCount()) % discCount())
+		props.setSelectedDisc(
+			(props.selectedDisc() - 1 + discCount()) % discCount(),
+		)
 	}
 
 	const onNextDisc = () => {
 		if (discCount() === 0) return
-		props.setSelectedDisc((currentDiscIdx() + 1) % discCount())
+		props.setSelectedDisc((props.selectedDisc() + 1) % discCount())
 	}
 
 	const onAddDisc = () => {
 		const nextIndex = discCount()
 		const initial: NewDisc = { name: "" }
-		insert(props.of, { path: ["data", "discs"], initialInput: initial })
+		insert(store.form, { path: ["data", "discs"], initialInput: initial })
 		props.setSelectedDisc(nextIndex)
 	}
 
 	const onConfirmRename = (next: string) => {
-		setInput(props.of, {
-			path: ["data", "discs", currentDiscIdx(), "name"],
+		if (currentDiscName() === next) return
+		setInput(store.form, {
+			path: ["data", "discs", props.selectedDisc(), "name"],
 			input: next,
 		})
 	}
@@ -165,8 +155,13 @@ function TrackHeader(props: {
 					<ArrowLeftIcon class="size-4" />
 				</Button>
 				<div class="flex items-center gap-2">
-					<div class="rounded px-2 leading-none text-primary">
-						{currentDiscName()}
+					<div
+						class={twJoin(
+							"rounded px-2 leading-none text-primary",
+							isDefaultName() && "text-tertiary",
+						)}
+					>
+						{currentDiscName()} {isDefaultName() && "(default)"}
 					</div>
 					<EditDiscNameDialog
 						currentName={currentDiscName}
@@ -266,38 +261,24 @@ function EditDiscNameDialog(props: DiscNameDialogProps) {
 	)
 }
 
-function TrackItem(props: { of: ReleaseFormStore; index: number }) {
+function TrackItem(props: { index: number }) {
 	return (
 		<div class="grid grid-cols-1 gap-2">
-			<TrackMetaFields
-				of={props.of}
-				index={props.index}
-			/>
-			<TrackDisplayFields
-				of={props.of}
-				index={props.index}
-			/>
-			<TrackSongPicker
-				of={props.of}
-				index={props.index}
-			/>
-			<TrackArtistsField
-				of={props.of}
-				trackIndex={props.index}
-			/>
-			<RemoveTrackButton
-				of={props.of}
-				index={props.index}
-			/>
+			<TrackMetaFields index={props.index} />
+			<TrackDisplayFields index={props.index} />
+			<TrackSongPicker index={props.index} />
+			<TrackArtistsField trackIndex={props.index} />
+			<RemoveTrackButton index={props.index} />
 		</div>
 	)
 }
 
-function TrackMetaFields(props: { of: ReleaseFormStore; index: number }) {
+function TrackMetaFields(props: { index: number }) {
+	const store = useReleaseFormContext()
 	return (
 		<div class="grid grid-cols-1 gap-2">
 			<Field
-				of={props.of}
+				of={store.form}
 				path={["data", "tracks", props.index, "track_number"]}
 			>
 				{(field) => (
@@ -317,11 +298,12 @@ function TrackMetaFields(props: { of: ReleaseFormStore; index: number }) {
 	)
 }
 
-function TrackDisplayFields(props: { of: ReleaseFormStore; index: number }) {
+function TrackDisplayFields(props: { index: number }) {
+	const store = useReleaseFormContext()
 	return (
 		<div class="grid grid-cols-2 gap-2">
 			<Field
-				of={props.of}
+				of={store.form}
 				path={["data", "tracks", props.index, "display_title"]}
 			>
 				{(field) => (
@@ -339,7 +321,7 @@ function TrackDisplayFields(props: { of: ReleaseFormStore; index: number }) {
 			</Field>
 
 			<Field
-				of={props.of}
+				of={store.form}
 				path={["data", "tracks", props.index, "duration"]}
 			>
 				{(field) => (
@@ -360,11 +342,13 @@ function TrackDisplayFields(props: { of: ReleaseFormStore; index: number }) {
 	)
 }
 
-function TrackSongPicker(props: { of: ReleaseFormStore; index: number }) {
+function TrackSongPicker(props: { index: number }) {
+	const store = useReleaseFormContext()
+	const songValue = () => store.trackSongs[props.index]
 	return (
 		<div class="flex items-center gap-2">
 			<Field
-				of={props.of}
+				of={store.form}
 				path={["data", "tracks", props.index, "song_id"]}
 			>
 				{(field) => (
@@ -376,32 +360,32 @@ function TrackSongPicker(props: { of: ReleaseFormStore; index: number }) {
 							value={field.input as number | undefined}
 						/>
 						<div class="text-sm text-slate-700">
-							<SongInfo id={() => field.input as number | undefined} />
+							{songValue() ? (
+								<SongInfo value={songValue()!} />
+							) : (
+								<span class="text-slate-400">No song selected</span>
+							)}
 						</div>
 					</>
 				)}
 			</Field>
 			<SongSearchDialog
-				onSelect={(song) =>
-					setInput(props.of, {
-						path: ["data", "tracks", props.index, "song_id"],
-						input: song.id,
-					})
-				}
+				onSelect={(song: Song) => {
+					store.setTrackSong(props.index, song)
+				}}
 			/>
 		</div>
 	)
 }
 
-function RemoveTrackButton(props: { of: ReleaseFormStore; index: number }) {
+function RemoveTrackButton(props: { index: number }) {
+	const store = useReleaseFormContext()
 	return (
 		<div class="flex justify-end">
 			<Button
 				variant="Tertiary"
 				size="Sm"
-				onClick={() =>
-					remove(props.of, { path: ["data", "tracks"], at: props.index })
-				}
+				onClick={store.removeTrackAt(props.index)}
 			>
 				<Cross1Icon />
 			</Button>
@@ -409,91 +393,49 @@ function RemoveTrackButton(props: { of: ReleaseFormStore; index: number }) {
 	)
 }
 
-function TrackArtistsField(props: {
-	of: ReleaseFormStore
-	trackIndex: number
-}) {
-	const trackArtistFilter = (artist: Artist) => {
-		const selected =
-			(getInput(props.of, {
-				path: ["data", "tracks", props.trackIndex, "artists"],
-			}) as number[] | undefined) ?? []
-		return !selected.includes(artist.id)
+function TrackArtistsField(props: { trackIndex: number }) {
+	const store = useReleaseFormContext()
+	const value = () => store.trackArtists[props.trackIndex] ?? []
+	const trackArtistFilter = (artist: Artist) =>
+		!value().some((a) => a.id === artist.id)
+	const insertArtist = (artist: Artist) => {
+		if (!trackArtistFilter(artist)) return
+		store.addTrackArtist(props.trackIndex, artist)
+	}
+	const removeArtist = (idx: number) => () => {
+		store.removeTrackArtistAt(props.trackIndex, idx)()
 	}
 
-	const insertArtist = (artist: Artist) =>
-		insert(props.of, {
-			path: ["data", "tracks", props.trackIndex, "artists"],
-			initialInput: artist.id,
-		})
-
-	const removeArtist = (idx: number) => () =>
-		remove(props.of, {
-			path: ["data", "tracks", props.trackIndex, "artists"],
-			at: idx,
-		})
-
 	return (
-		<FieldArray
-			of={props.of}
-			path={["data", "tracks", props.trackIndex, "artists"]}
-		>
-			{(fa) => (
-				<div class="flex flex-col gap-2">
-					<div class="flex items-center gap-2">
-						<FormComp.Label class="m-0">
-							<Trans>Track Artists</Trans>
-						</FormComp.Label>
-						<ArtistSearchDialog
-							onSelect={insertArtist}
-							dataFilter={trackArtistFilter}
-						/>
-					</div>
+		<div class="flex flex-col gap-2">
+			<div class="flex items-center gap-2">
+				<FormComp.Label class="m-0">
+					<Trans>Track Artists</Trans>
+				</FormComp.Label>
+				<ArtistSearchDialog
+					onSelect={insertArtist}
+					dataFilter={trackArtistFilter}
+				/>
+			</div>
 
-					<ul class="flex flex-col gap-1">
-						<For
-							each={fa.items}
-							fallback={<FieldArrayFallback />}
-						>
-							{(_, idx) => (
-								<li class="grid grid-cols-[1fr_auto] gap-2">
-									<Field
-										of={props.of}
-										path={[
-											"data",
-											"tracks",
-											props.trackIndex,
-											"artists",
-											idx(),
-										]}
-									>
-										{(field) => (
-											<>
-												<input
-													{...field.props}
-													type="number"
-													hidden
-													value={field.input}
-												/>
-												<div class="text-sm text-slate-700">
-													<ArtistInfo id={() => field.input} />
-												</div>
-											</>
-										)}
-									</Field>
-									<Button
-										variant="Tertiary"
-										size="Sm"
-										onClick={removeArtist(idx())}
-									>
-										<Cross1Icon />
-									</Button>
-								</li>
-							)}
-						</For>
-					</ul>
-				</div>
-			)}
-		</FieldArray>
+			<ul class="flex flex-col gap-1">
+				<For each={value()}>
+					{(artist, idx) => (
+						<li class="grid grid-cols-[1fr_auto] gap-2">
+							<div class="text-sm text-slate-700">
+								<ArtistInfo value={{ id: artist.id, name: artist.name }} />
+							</div>
+							<Button
+								variant="Tertiary"
+								size="Sm"
+								onClick={removeArtist(idx())}
+							>
+								<Cross1Icon />
+							</Button>
+						</li>
+					)}
+				</For>
+			</ul>
+		</div>
 	)
 }

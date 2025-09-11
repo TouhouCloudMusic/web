@@ -1,6 +1,4 @@
-// 发行艺人字段
-import { Field, FieldArray, getInput, insert, remove } from "@formisch/solid"
-import { Trans } from "@lingui-solid/solid/macro"
+import { Field } from "@formisch/solid"
 import type { Artist } from "@thc/api"
 import { For } from "solid-js"
 import { Cross1Icon } from "solid-radix-icons"
@@ -11,86 +9,67 @@ import { FormComp } from "~/component/atomic/form"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
+import { useReleaseFormContext } from "../store/context"
 import { ArtistInfo } from "./EntityInfo"
-import type { ReleaseFormStore } from "./types"
 
-export function ReleaseArtistsField(props: {
-	of: ReleaseFormStore
-	class?: string
-}) {
-	const releaseArtistFilter = (artist: Artist) => {
-		const selected =
-			(getInput(props.of, { path: ["data", "artists"] }) as
-				| number[]
-				| undefined) ?? []
-		return !selected.includes(artist.id)
-	}
+export function ReleaseArtistsField(props: { class?: string }) {
+	const store = useReleaseFormContext()
+	const releaseArtistFilter = (artist: Artist) =>
+		!store.artists.some((a) => a.id === artist.id)
+
 	return (
-		<FieldArray
-			of={props.of}
-			path={["data", "artists"]}
-		>
-			{(fa) => (
-				<div class={twMerge("flex min-h-32 flex-col", props.class)}>
-					<div class="mb-4 flex place-content-between items-center gap-4">
-						<FormComp.Label class="m-0">
-							<Trans>Artists</Trans>
-						</FormComp.Label>
-						<div class="flex gap-2">
-							<ArtistSearchDialog
-								onSelect={(artist: Artist) =>
-									insert(props.of, {
-										path: ["data", "artists"],
-										initialInput: artist.id,
-									})
-								}
-								dataFilter={releaseArtistFilter}
-							/>
-						</div>
-					</div>
-					<ul class="flex h-full flex-col gap-2">
-						<For
-							each={fa.items}
-							fallback={<FieldArrayFallback />}
-						>
-							{(_, idx) => (
-								<li class="grid h-fit grid-cols-[1fr_auto]">
-									<Field
-										of={props.of}
-										path={["data", "artists", idx()]}
-									>
-										{(field) => (
-											<>
-												<input
-													{...field.props}
-													type="number"
-													hidden
-													value={field.input as number | undefined}
-												/>
-												<div class="text-sm text-slate-700">
-													<ArtistInfo
-														id={() => field.input as number | undefined}
-													/>
-												</div>
-											</>
-										)}
-									</Field>
-
-									<Button
-										variant="Tertiary"
-										size="Sm"
-										onClick={() =>
-											remove(props.of, { path: ["data", "artists"], at: idx() })
-										}
-									>
-										<Cross1Icon />
-									</Button>
-								</li>
-							)}
-						</For>
-					</ul>
+		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
+			<div class="mb-4 flex place-content-between items-center gap-4">
+				<FormComp.Label class="m-0">Artists</FormComp.Label>
+				<div class="flex gap-2">
+					<ArtistSearchDialog
+						onSelect={store.addArtist}
+						dataFilter={releaseArtistFilter}
+					/>
 				</div>
-			)}
-		</FieldArray>
+			</div>
+			<ul class="flex h-full flex-col gap-2">
+				<For
+					each={store.artists}
+					fallback={<FieldArrayFallback />}
+				>
+					{(artist, idx) => (
+						<li class="grid h-fit grid-cols-[1fr_auto]">
+							<div class="text-sm text-slate-700">
+								<ArtistInfo value={{ id: artist.id, name: artist.name }} />
+							</div>
+
+							<Field
+								of={store.form}
+								path={["data", "artists", idx()]}
+							>
+								{(field) => (
+									<>
+										<input
+											{...field.props}
+											type="number"
+											hidden
+											value={field.input}
+										/>
+										<For each={field.errors}>
+											{(error) => (
+												<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
+											)}
+										</For>
+									</>
+								)}
+							</Field>
+							<Button
+								variant="Tertiary"
+								size="Sm"
+								onClick={store.removeArtistAt(idx())}
+							>
+								<Cross1Icon />
+							</Button>
+						</li>
+					)}
+				</For>
+			</ul>
+		</div>
 	)
 }

@@ -1,10 +1,15 @@
-import { Form, createForm, getErrors, setInput } from "@formisch/solid"
-//
+import {
+	Form,
+	createForm,
+	getErrors,
+	getInput,
+	setInput,
+} from "@formisch/solid"
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useBlocker } from "@tanstack/solid-router"
 import type { Release } from "@thc/api"
 import type { JSX } from "solid-js"
-import { For, Show } from "solid-js"
+import { createEffect, Show } from "solid-js"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
@@ -16,12 +21,14 @@ import { PageLayout } from "~/layout/PageLayout"
 import { LocalizedTitlesField } from "./comp/LocalizedTitlesField"
 import { ReleaseArtistsField } from "./comp/ReleaseArtistsField"
 import { ReleaseCatalogNumbersField } from "./comp/ReleaseCatalogNumbersField"
+// types for credits now live in store context
 import { ReleaseCreditsField } from "./comp/ReleaseCreditsField"
 import { ReleaseEventsField } from "./comp/ReleaseEventsField"
 import { ReleaseTracksField } from "./comp/ReleaseTracksField"
 import { ReleaseTypeField } from "./comp/ReleaseTypeField"
 import { TitleField } from "./comp/TitleField"
 import { useReleaseFormSubmission } from "./hook/useFormSubmission"
+import { ReleaseFormContextProvider } from "./store/context"
 
 type Props =
 	| {
@@ -175,89 +182,79 @@ function FormContent(props: Props) {
 			class="grid grid-cols-5 content-start space-y-8 px-8 pt-8"
 			onSubmit={handleSubmit}
 		>
-			<TitleField
-				of={form}
-				class="col-span-2 row-start-1"
-			/>
+			<ReleaseFormContextProvider form={form}>
+				<TitleField
+					of={form}
+					class="col-span-2 row-start-1"
+				/>
 
-			<ReleaseTypeField
-				of={form}
-				class="col-span-2 row-start-2"
-			/>
+				<ReleaseTypeField
+					of={form}
+					class="col-span-2 row-start-2"
+				/>
 
-			<LocalizedTitlesField
-				of={form}
-				class="col-span-2 row-start-3"
-			/>
+				<LocalizedTitlesField
+					of={form}
+					class="col-span-2 row-start-3"
+				/>
 
-			{(
-				[
-					{
-						key: "release_date",
-						label: t`Release date`,
-						class: "row-start-4",
-					},
-					{
-						key: "recording_date_start",
-						label: t`Recording start`,
-						class: "row-start-5",
-					},
-					{
-						key: "recording_date_end",
-						label: t`Recording end`,
-						class: "row-start-6",
-					},
-				] as const
-			).map((it) => {
-				return (
-					<div
-						class={["col-span-3 grid grid-cols-subgrid", it.class].join(" ")}
-					>
-						<FormComp.Label class="col-span-full">{it.label}</FormComp.Label>
-						<DateWithPrecision
-							class="pr-2"
-							setValue={(v) =>
-								setInput(form, {
-									path: ["data", it.key],
-									input: v ?? ({} as unknown as never),
-								})
-							}
-						/>
-						<FormComp.ErrorMessage>
-							{
-								getErrors(form, {
-									path: ["data", it.key],
-								})?.[0]
-							}
-						</FormComp.ErrorMessage>
-					</div>
-				)
-			})}
+				{(
+					[
+						{
+							key: "release_date",
+							label: t`Release date`,
+							class: "row-start-4",
+						},
+						{
+							key: "recording_date_start",
+							label: t`Recording start`,
+							class: "row-start-5",
+						},
+						{
+							key: "recording_date_end",
+							label: t`Recording end`,
+							class: "row-start-6",
+						},
+					] as const
+				).map((it) => {
+					return (
+						<div
+							class={["col-span-3 grid grid-cols-subgrid", it.class].join(" ")}
+						>
+							<FormComp.Label class="col-span-full">{it.label}</FormComp.Label>
+							<DateWithPrecision
+								class="pr-2"
+								setValue={(v) =>
+									setInput(form, {
+										path: ["data", it.key],
+										input: v ?? ({} as unknown as never),
+									})
+								}
+							/>
+							<FormComp.ErrorMessage>
+								{
+									getErrors(form, {
+										path: ["data", it.key],
+									})?.[0]
+								}
+							</FormComp.ErrorMessage>
+						</div>
+					)
+				})}
 
-			<ReleaseArtistsField
-				of={form}
-				class="col-span-2 row-start-7"
-			/>
+				<ReleaseArtistsField class="col-span-2 row-start-7" />
 
-			<ReleaseCatalogNumbersField
-				of={form}
-				class="col-span-2 row-start-8"
-			/>
+				<ReleaseCatalogNumbersField
+					of={form}
+					class="col-span-2 row-start-8"
+				/>
 
-			<ReleaseEventsField
-				of={form}
-				class="col-span-2 row-start-9"
-			/>
+				<ReleaseEventsField class="col-span-2 row-start-9" />
 
-			<ReleaseTracksField
-				of={form}
-				class="col-span-2 row-start-10"
-			/>
+				<ReleaseTracksField class="col-span-2 row-start-10" />
 
-			<ReleaseCreditsField
-				of={form}
-				class="col-span-2 row-start-11"
-			/>
+				<ReleaseCreditsField class="col-span-2 row-start-11" />
+			</ReleaseFormContextProvider>
 		</Form>
 	)
 }
