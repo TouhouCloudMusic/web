@@ -62,7 +62,13 @@ export function ArtistSearchDialog(
 			}
 			value={searchKeyword()}
 			onInput={onInput}
-			items={artistsQuery.data}
+			items={
+				artistsQuery.isSuccess
+					? props.dataFilter
+						? artistsQuery.data.filter(props.dataFilter)
+						: artistsQuery.data
+					: []
+			}
 			onSelect={props.onSelect}
 			item={(artist) => (
 				<div class="flex items-center justify-between">
