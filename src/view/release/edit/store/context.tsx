@@ -1,11 +1,11 @@
 import { insert, remove, setInput } from "@formisch/solid"
 import type {
-	Artist,
 	Event,
 	Song,
 	CreditRoleRef,
 	Label,
 	Release,
+	SimpleArtist,
 } from "@thc/api"
 import { batch, createContext } from "solid-js"
 import type { ParentProps } from "solid-js"
@@ -16,17 +16,21 @@ import { assertContext } from "~/utils/solid"
 
 import type { ReleaseFormStore } from "../comp/types"
 
-export type CreditRow = { artist?: Artist; role?: CreditRoleRef; on: number[] }
+export type CreditRow = {
+	artist?: SimpleArtist
+	role?: CreditRoleRef
+	on: number[]
+}
 
 type ReleaseFormContextValue = {
-	artists: Artist[]
+	artists: SimpleArtist[]
 
 	events: Event[]
 
 	credits: CreditRow[]
 
 	trackSongs: (Song | undefined)[]
-	trackArtists: Artist[][]
+	trackArtists: SimpleArtist[][]
 
 	// TODO: type alias from api
 	catalogLabels: ({ id: number; name: string } | undefined)[]
@@ -44,7 +48,7 @@ function createReleaseFormContext(
 		get artists() {
 			return state.artists
 		},
-		addArtist: (a: Artist) => {
+		addArtist: (a: SimpleArtist) => {
 			if (state.artists.some((x) => x.id === a.id)) return
 			insert(form, { path: ["data", "artists"], initialInput: a.id })
 			setState("artists", state.artists.length, a)
@@ -78,7 +82,7 @@ function createReleaseFormContext(
 			remove(form, { path: ["data", "credits"], at: idx })
 			setState("credits", (list) => list.toSpliced(idx, 1))
 		},
-		setCreditArtist: (idx: number) => (a: Artist) => {
+		setCreditArtist: (idx: number) => (a: SimpleArtist) => {
 			setState("credits", idx, (row) => ({
 				...(row ?? { on: [] }),
 				artist: a,
@@ -144,7 +148,7 @@ function createReleaseFormContext(
 				input: song.id,
 			})
 		},
-		addTrackArtist: (trackIdx: number, a: Artist) => {
+		addTrackArtist: (trackIdx: number, a: SimpleArtist) => {
 			if (state.trackArtists[trackIdx]?.some((x) => x.id === a.id)) return
 			const len = state.trackArtists[trackIdx]?.length ?? 0
 			setState("trackArtists", trackIdx, len, a)
@@ -205,13 +209,14 @@ export function ReleaseFormContextProvider(
 	props: ParentProps<{ form: ReleaseFormStore; initValue?: Release }>,
 ) {
 	const [state, setState] = createStore<ReleaseFormContextValue>({
-		artists: [],
+		artists:
+			props.initValue?.artists?.map((a) => ({ id: a.id, name: a.name })) ?? [],
 
 		events: [],
 
 		credits:
 			props.initValue?.credits?.map((c) => ({
-				artist: undefined,
+				artist: { id: c.artist.id, name: c.artist.name },
 				role: c.role,
 				on: c.on ?? [],
 			})) ?? [],
@@ -221,7 +226,10 @@ export function ReleaseFormContextProvider(
 				id: t.song.id,
 				title: t.song.title,
 			})) ?? [],
-		trackArtists: props.initValue?.tracks?.map(() => []) ?? [],
+		trackArtists:
+			props.initValue?.tracks?.map((t) =>
+				(t.artists ?? []).map((a) => ({ id: a.id, name: a.name })),
+			) ?? [],
 
 		// TODO: 后端尚未返回标签名称，使用占位名称进行初始化
 		catalogLabels:
