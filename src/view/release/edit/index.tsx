@@ -163,6 +163,15 @@ function FormContent(props: Props) {
 		initialInput: initialValues,
 	})
 
+	if (import.meta.env.DEV) {
+		createEffect(() => {
+			let val = getInput(form)
+			console.log(val)
+			let err = getErrors(form)
+			console.log(err)
+		})
+	}
+
 	const { handleSubmit } = useReleaseFormSubmission(props)
 
 	useBlocker({
@@ -227,6 +236,7 @@ function FormContent(props: Props) {
 								setValue={(v) =>
 									setInput(form, {
 										path: ["data", it.key],
+										// Upstream Error: https://github.com/fabian-hiller/formisch/issues/15
 										input: v ?? ({} as unknown as never),
 									})
 								}

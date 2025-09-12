@@ -93,7 +93,7 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		}),
 	)
 
-	let klass = createMemo(() => `${props.class}`)
+	let klass = createMemo(() => (props.class ? props.class : ""))
 
 	return (
 		<>
