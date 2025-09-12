@@ -1,5 +1,12 @@
 import { insert, remove, setInput } from "@formisch/solid"
-import type { Artist, Event, Song, CreditRoleRef } from "@thc/api"
+import type {
+	Artist,
+	Event,
+	Song,
+	CreditRoleRef,
+	Label,
+	Release,
+} from "@thc/api"
 import { batch, createContext } from "solid-js"
 import type { ParentProps } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -17,6 +24,8 @@ type ReleaseFormContextValue = {
 	credits: CreditRow[]
 	trackSongs: (Song | undefined)[]
 	trackArtists: Artist[][]
+	// TODO: type alias from api
+	catalogLabels: ({ id: number; name: string } | undefined)[]
 }
 
 function createReleaseFormContext(
@@ -40,6 +49,9 @@ function createReleaseFormContext(
 		},
 		get trackArtists() {
 			return state.trackArtists
+		},
+		get catalogLabels() {
+			return state.catalogLabels
 		},
 		addArtist: (a: Artist) => {
 			if (state.artists.some((x) => x.id === a.id)) return
@@ -147,6 +159,24 @@ function createReleaseFormContext(
 				input: next.map((a) => a.id),
 			})
 		},
+		addCatalogNumber: () => {
+			insert(form, {
+				path: ["data", "catalog_nums"],
+				initialInput: { catalog_number: "", label_id: undefined },
+			})
+			setState("catalogLabels", state.catalogLabels.length, undefined)
+		},
+		removeCatalogNumberAt: (idx: number) => () => {
+			remove(form, { path: ["data", "catalog_nums"], at: idx })
+			setState("catalogLabels", (list) => list.toSpliced(idx, 1))
+		},
+		setCatalogLabel: (idx: number) => (label: Label) => {
+			setInput(form, {
+				path: ["data", "catalog_nums", idx, "label_id"],
+				input: label.id,
+			})
+			setState("catalogLabels", idx, { id: label.id, name: label.name })
+		},
 	}
 
 	return store
@@ -162,7 +192,7 @@ export const useReleaseFormContext = (): ReturnType<
 
 // oxlint-disable-next-line max-lines-per-function
 export function ReleaseFormContextProvider(
-	props: ParentProps<{ form: ReleaseFormStore }>,
+	props: ParentProps<{ form: ReleaseFormStore; initValue?: Release }>,
 ) {
 	const [state, setState] = createStore<ReleaseFormContextValue>({
 		artists: [],
@@ -170,6 +200,12 @@ export function ReleaseFormContextProvider(
 		credits: [],
 		trackSongs: [],
 		trackArtists: [],
+		// TODO: 后端尚未返回标签名称，使用占位名称进行初始化
+		catalogLabels:
+			props.initValue?.catalog_nums?.map((c) => {
+				const id = (c as unknown as { label_id?: number | null }).label_id
+				return typeof id === "number" ? { id, name: `Label #${id}` } : undefined
+			}) ?? [],
 	})
 
 	const store = createReleaseFormContext(props.form, state, setState)

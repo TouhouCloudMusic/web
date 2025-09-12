@@ -76,10 +76,9 @@ export function useReleaseFormInitialValues(
 						(() => {
 							const discs = props.release.discs ?? []
 							const indexById = new Map<number, number>()
-							discs.forEach((d, i) => {
-								if (typeof d.id === "number") indexById.set(d.id, i)
-							})
-
+							for (const [i, disc] of discs.entries()) {
+								indexById.set(disc.id, i)
+							}
 							const tracks = props.release.tracks
 
 							return tracks?.map((t) => ({

@@ -1,10 +1,7 @@
 // 目录号字段
-import { Field, FieldArray, insert, remove, setInput } from "@formisch/solid"
+import { Field, FieldArray } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
-import { useQuery } from "@tanstack/solid-query"
-import { LabelQueryOption } from "@thc/query"
-import { Option as O } from "effect"
-import { For } from "solid-js"
+import { For, Show } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -14,40 +11,37 @@ import { InputField } from "~/component/atomic/form/Input"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { LabelSearchDialog } from "~/component/form/SearchDialog"
 
+import { useReleaseFormContext } from "../store/context"
+import { LabelInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 
+// oxlint-disable-next-line max-lines-per-function
 export function ReleaseCatalogNumbersField(props: {
 	of: ReleaseFormStore
 	class?: string
 }) {
+	const ctx = useReleaseFormContext()
+
 	return (
-		<FieldArray
-			of={props.of}
-			path={["data", "catalog_nums"]}
-		>
-			{(fa) => (
-				<div class={twMerge("flex min-h-32 flex-col", props.class)}>
-					<div class="mb-4 flex place-content-between items-center gap-4">
-						<FormComp.Label class="m-0">
-							<Trans>Catalog Numbers</Trans>
-						</FormComp.Label>
-						<Button
-							variant="Tertiary"
-							class="h-max p-2"
-							onClick={() =>
-								insert(props.of, {
-									path: ["data", "catalog_nums"],
-									initialInput: {
-										catalog_number: "",
-										label_id: undefined,
-									} as unknown as { catalog_number: string; label_id?: number },
-								})
-							}
-						>
-							<PlusIcon class="size-4" />
-						</Button>
-					</div>
-					<ul class="flex h-full flex-col gap-2">
+		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
+			<div class="mb-4 flex place-content-between items-center gap-4">
+				<FormComp.Label class="m-0">
+					<Trans>Catalog Numbers</Trans>
+				</FormComp.Label>
+				<Button
+					variant="Tertiary"
+					class="h-max p-2"
+					onClick={ctx.addCatalogNumber}
+				>
+					<PlusIcon class="size-4" />
+				</Button>
+			</div>
+			<ul class="flex h-full flex-col gap-2">
+				<FieldArray
+					of={props.of}
+					path={["data", "catalog_nums"]}
+				>
+					{(fa) => (
 						<For
 							each={fa.items}
 							fallback={<FieldArrayFallback />}
@@ -63,7 +57,7 @@ export function ReleaseCatalogNumbersField(props: {
 												<InputField.Input
 													{...field.props}
 													placeholder="Catalog No."
-													value={field.input as string | undefined}
+													value={field.input}
 												/>
 												<InputField.Error>
 													{field.errors ? field.errors[0] : undefined}
@@ -72,7 +66,6 @@ export function ReleaseCatalogNumbersField(props: {
 										)}
 									</Field>
 
-									{/* 以对话框搜索选择 Label，移除手填 ID */}
 									<Field
 										of={props.of}
 										path={["data", "catalog_nums", idx(), "label_id"]}
@@ -83,27 +76,24 @@ export function ReleaseCatalogNumbersField(props: {
 													{...field.props}
 													type="number"
 													hidden
-													value={field.input as number | undefined}
+													value={field.input ?? undefined}
 												/>
 												<div class="flex items-center gap-2">
 													<div class="text-sm text-slate-700">
-														<LabelInfo
-															id={() => field.input as number | undefined}
-														/>
+														<Show
+															when={ctx.catalogLabels[idx()]}
+															fallback={
+																<span class="text-slate-400">
+																	<Trans>No label selected</Trans>
+																</span>
+															}
+														>
+															{(lbl) => <LabelInfo value={lbl()} />}
+														</Show>
 													</div>
 
 													<LabelSearchDialog
-														onSelect={(label) =>
-															setInput(props.of, {
-																path: [
-																	"data",
-																	"catalog_nums",
-																	idx(),
-																	"label_id",
-																],
-																input: label.id,
-															})
-														}
+														onSelect={ctx.setCatalogLabel(idx())}
 													/>
 												</div>
 											</>
@@ -113,56 +103,16 @@ export function ReleaseCatalogNumbersField(props: {
 									<Button
 										variant="Tertiary"
 										size="Sm"
-										onClick={() =>
-											remove(props.of, {
-												path: ["data", "catalog_nums"],
-												at: idx(),
-											})
-										}
+										onClick={ctx.removeCatalogNumberAt(idx())}
 									>
 										<Cross1Icon />
 									</Button>
 								</li>
 							)}
 						</For>
-					</ul>
-				</div>
-			)}
-		</FieldArray>
+					)}
+				</FieldArray>
+			</ul>
+		</div>
 	)
-}
-
-// 行内标签信息展示：优先显示标签名称，回退到“未选择”或“未找到”。
-function LabelInfo(props: { id: () => number | undefined }) {
-	const id = props.id
-	const labelQuery = useQuery(() => ({
-		...LabelQueryOption.findById(id()!),
-		enabled: Boolean(id()),
-	}))
-
-	const render = () => {
-		const v = id()
-		if (!v)
-			return (
-				<span class="text-slate-400">
-					<Trans>No label selected</Trans>
-				</span>
-			)
-		const data = labelQuery.data
-		if (!data) return <span class="text-slate-400">...</span>
-		return O.match(data, {
-			onSome: (label) => (
-				<span class="inline-flex items-baseline gap-2">
-					<span class="text-primary">{label.name}</span>
-				</span>
-			),
-			onNone: () => (
-				<span class="text-slate-400">
-					<Trans>Label not found</Trans>
-				</span>
-			),
-		})
-	}
-
-	return render()
 }
