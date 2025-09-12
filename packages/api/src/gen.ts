@@ -642,8 +642,7 @@ export type components = {
         };
         CatalogNumber: {
             catalog_number: string;
-            /** Format: int32 */
-            label_id?: number | null;
+            label?: null | components["schemas"]["SimpleLabel"];
         };
         /** @enum {string} */
         CorrectionType: "Create" | "Update" | "Delete";
@@ -855,6 +854,11 @@ export type components = {
             /** @description Aliases without own page */
             text_aliases?: components["schemas"]["EntityIdent"][] | null;
         };
+        NewCatalogNumber: {
+            catalog_number: string;
+            /** Format: int32 */
+            label_id?: number | null;
+        };
         NewCorrection_NewArtist: {
             data: {
                 /** @description List of id of artist aliases */
@@ -911,7 +915,7 @@ export type components = {
         NewCorrection_NewRelease: {
             data: {
                 artists: number[];
-                catalog_nums: components["schemas"]["CatalogNumber"][];
+                catalog_nums: components["schemas"]["NewCatalogNumber"][];
                 credits: components["schemas"]["NewCredit"][];
                 discs: components["schemas"]["NewDisc"][];
                 events: number[];
@@ -1009,7 +1013,7 @@ export type components = {
         };
         NewRelease: {
             artists: number[];
-            catalog_nums: components["schemas"]["CatalogNumber"][];
+            catalog_nums: components["schemas"]["NewCatalogNumber"][];
             credits: components["schemas"]["NewCredit"][];
             discs: components["schemas"]["NewDisc"][];
             events: number[];
@@ -1094,6 +1098,7 @@ export type components = {
             cover_art_url?: string | null;
             credits?: components["schemas"]["ReleaseCredit"][];
             discs?: components["schemas"]["ReleaseDisc"][];
+            events?: components["schemas"]["SimpleEvent"][];
             /** Format: int32 */
             id: number;
             localized_titles?: components["schemas"]["LocalizedTitle"][];
@@ -1141,6 +1146,16 @@ export type components = {
         /** @enum {string} */
         ReleaseType: "Album" | "Ep" | "Single" | "Compilation" | "Demo" | "Other";
         SimpleArtist: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+        };
+        SimpleEvent: {
+            /** Format: int32 */
+            id: number;
+            name: string;
+        };
+        SimpleLabel: {
             /** Format: int32 */
             id: number;
             name: string;
@@ -1289,6 +1304,7 @@ export type Location = components['schemas']['Location'];
 export type Membership = components['schemas']['Membership'];
 export type Message = components['schemas']['Message'];
 export type NewArtist = components['schemas']['NewArtist'];
+export type NewCatalogNumber = components['schemas']['NewCatalogNumber'];
 export type NewCorrectionNewArtist = components['schemas']['NewCorrection_NewArtist'];
 export type NewCorrectionNewCreditRole = components['schemas']['NewCorrection_NewCreditRole'];
 export type NewCorrectionNewEvent = components['schemas']['NewCorrection_NewEvent'];
@@ -1322,6 +1338,8 @@ export type ReleaseDisc = components['schemas']['ReleaseDisc'];
 export type ReleaseTrack = components['schemas']['ReleaseTrack'];
 export type ReleaseType = components['schemas']['ReleaseType'];
 export type SimpleArtist = components['schemas']['SimpleArtist'];
+export type SimpleEvent = components['schemas']['SimpleEvent'];
+export type SimpleLabel = components['schemas']['SimpleLabel'];
 export type SimpleRelease = components['schemas']['SimpleRelease'];
 export type Song = components['schemas']['Song'];
 export type SongCredit = components['schemas']['SongCredit'];
