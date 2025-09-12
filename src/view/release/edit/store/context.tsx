@@ -19,11 +19,11 @@ type ReleaseFormContextValue = {
 	trackArtists: Artist[][]
 }
 
-const createReleaseFormContext = (
+function createReleaseFormContext(
 	form: ReleaseFormStore,
 	state: ReleaseFormContextValue,
 	setState: SetStoreFunction<ReleaseFormContextValue>,
-) => {
+) {
 	const store = {
 		form,
 		get artists() {

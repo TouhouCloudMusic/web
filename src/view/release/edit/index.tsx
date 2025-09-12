@@ -7,7 +7,6 @@ import {
 } from "@formisch/solid"
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useBlocker } from "@tanstack/solid-router"
-import type { Release } from "@thc/api"
 import type { JSX } from "solid-js"
 import { createEffect, Show } from "solid-js"
 
@@ -21,23 +20,15 @@ import { PageLayout } from "~/layout/PageLayout"
 import { LocalizedTitlesField } from "./comp/LocalizedTitlesField"
 import { ReleaseArtistsField } from "./comp/ReleaseArtistsField"
 import { ReleaseCatalogNumbersField } from "./comp/ReleaseCatalogNumbersField"
-// types for credits now live in store context
 import { ReleaseCreditsField } from "./comp/ReleaseCreditsField"
 import { ReleaseEventsField } from "./comp/ReleaseEventsField"
 import { ReleaseTracksField } from "./comp/ReleaseTracksField"
 import { ReleaseTypeField } from "./comp/ReleaseTypeField"
 import { TitleField } from "./comp/TitleField"
+import { useReleaseFormInitialValues } from "./hook/useFormInitialValues"
+import type { EditReleasePageProps as Props } from "./hook/useFormInitialValues"
 import { useReleaseFormSubmission } from "./hook/useFormSubmission"
 import { ReleaseFormContextProvider } from "./store/context"
-
-type Props =
-	| {
-			type: "new"
-	  }
-	| {
-			type: "edit"
-			release: Release
-	  }
 
 export function EditReleasePage(props: Props): JSX.Element {
 	return (
@@ -82,67 +73,6 @@ function PageHeader(props: { type: Props["type"] }) {
 	)
 }
 
-function useReleaseFormInitialValues(props: Props): NewReleaseCorrection {
-	return props.type === "new"
-		? {
-				type: "Create",
-				description: "",
-				data: {
-					title: "",
-					release_type: undefined as unknown as never,
-					release_date: undefined,
-					recording_date_start: undefined,
-					recording_date_end: undefined,
-					localized_titles: [],
-					artists: [],
-					events: [],
-					catalog_nums: [],
-					credits: [],
-					discs: [{ name: "" }],
-					tracks: [],
-				},
-			}
-		: {
-				type: "Update",
-				description: "",
-				data: {
-					title: props.release.title,
-					release_type: props.release.release_type,
-					release_date: props.release.release_date
-						? {
-								value: new Date(props.release.release_date.value),
-								precision: props.release.release_date.precision,
-							}
-						: undefined,
-					recording_date_start: props.release.recording_date_start
-						? {
-								value: new Date(props.release.recording_date_start.value),
-								precision: props.release.recording_date_start.precision,
-							}
-						: undefined,
-					recording_date_end: props.release.recording_date_end
-						? {
-								value: new Date(props.release.recording_date_end.value),
-								precision: props.release.recording_date_end.precision,
-							}
-						: undefined,
-					localized_titles:
-						props.release.localized_titles?.map((lt) => ({
-							language_id: lt.language.id,
-							title: lt.title,
-						})) ?? [],
-					artists: props.release.artists?.map((a) => a.id) ?? [],
-					events: [],
-					catalog_nums: props.release.catalog_nums ?? [],
-					credits: [],
-					discs:
-						props.release.discs?.map((d) => ({ name: d.name ?? undefined }))
-						?? [],
-					tracks: [],
-				},
-			}
-}
-
 // oxlint-disable-next-line max-lines-per-function
 function FormContent(props: Props) {
 	const { t } = useLingui()
@@ -181,7 +111,10 @@ function FormContent(props: Props) {
 			class="grid grid-cols-5 content-start space-y-8 px-8 pt-8"
 			onSubmit={handleSubmit}
 		>
-			<ReleaseFormContextProvider form={form}>
+			<ReleaseFormContextProvider
+				form={form}
+				initValue={props.type === "edit" ? props.release : undefined}
+			>
 				<TitleField
 					of={form}
 					class="col-span-2 row-start-1"

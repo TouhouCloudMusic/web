@@ -13,9 +13,9 @@ import { useReleaseFormContext } from "../store/context"
 import { ArtistInfo } from "./EntityInfo"
 
 export function ReleaseArtistsField(props: { class?: string }) {
-	const store = useReleaseFormContext()
+	const ctx = useReleaseFormContext()
 	const releaseArtistFilter = (artist: Artist) =>
-		!store.artists.some((a) => a.id === artist.id)
+		!ctx.artists.some((a) => a.id === artist.id)
 
 	return (
 		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
@@ -23,14 +23,14 @@ export function ReleaseArtistsField(props: { class?: string }) {
 				<FormComp.Label class="m-0">Artists</FormComp.Label>
 				<div class="flex gap-2">
 					<ArtistSearchDialog
-						onSelect={store.addArtist}
+						onSelect={ctx.addArtist}
 						dataFilter={releaseArtistFilter}
 					/>
 				</div>
 			</div>
 			<ul class="flex h-full flex-col gap-2">
 				<For
-					each={store.artists}
+					each={ctx.artists}
 					fallback={<FieldArrayFallback />}
 				>
 					{(artist, idx) => (
@@ -40,7 +40,7 @@ export function ReleaseArtistsField(props: { class?: string }) {
 							</div>
 
 							<Field
-								of={store.form}
+								of={ctx.form}
 								path={["data", "artists", idx()]}
 							>
 								{(field) => (
@@ -62,7 +62,7 @@ export function ReleaseArtistsField(props: { class?: string }) {
 							<Button
 								variant="Tertiary"
 								size="Sm"
-								onClick={store.removeArtistAt(idx())}
+								onClick={ctx.removeArtistAt(idx())}
 							>
 								<Cross1Icon />
 							</Button>

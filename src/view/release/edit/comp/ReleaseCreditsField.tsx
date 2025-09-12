@@ -59,7 +59,7 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 											{...field.props}
 											type="number"
 											hidden
-											value={field.input as number | undefined}
+											value={field.input ?? undefined}
 										/>
 									)}
 								</Field>
@@ -87,7 +87,7 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 											{...field.props}
 											type="number"
 											hidden
-											value={field.input as number | undefined}
+											value={field.input ?? undefined}
 										/>
 									)}
 								</Field>

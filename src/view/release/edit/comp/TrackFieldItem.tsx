@@ -40,7 +40,7 @@ function TrackNumInput(props: { index: number }) {
 					<InputField.Input
 						{...field.props}
 						placeholder="Track number"
-						value={field.input as string | undefined}
+						value={field.input ?? undefined}
 					/>
 					<InputField.Error>
 						{field.errors ? field.errors[0] : undefined}
@@ -62,7 +62,7 @@ function DisplayTitleInput(props: { index: number }) {
 					<InputField.Input
 						{...field.props}
 						placeholder="Display title"
-						value={field.input as string | undefined}
+						value={field.input ?? undefined}
 					/>
 					<InputField.Error>
 						{field.errors ? field.errors[0] : undefined}
@@ -87,7 +87,7 @@ function DurationInput(props: { index: number }) {
 						{...field.props}
 						type="number"
 						placeholder="Duration (ms)"
-						value={field.input as number | undefined}
+						value={field.input ?? undefined}
 					/>
 					<InputField.Error>
 						{field.errors ? field.errors[0] : undefined}
@@ -114,7 +114,7 @@ function TrackSongPicker(props: { index: number }) {
 							{...field.props}
 							type="number"
 							hidden
-							value={field.input as number | undefined}
+							value={field.input ?? undefined}
 						/>
 						<div class="text-slate-700">
 							{songValue() ? (

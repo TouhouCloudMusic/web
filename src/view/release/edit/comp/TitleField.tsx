@@ -21,7 +21,7 @@ export function TitleField(props: { of: ReleaseFormStore; class?: string }) {
 						{...field.props}
 						class="mr-2"
 						placeholder="Title"
-						value={field.input as string | undefined}
+						value={field.input ?? undefined}
 					/>
 					<InputField.Error>
 						{field.errors ? field.errors[0] : undefined}

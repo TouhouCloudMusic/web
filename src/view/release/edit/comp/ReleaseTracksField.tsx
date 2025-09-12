@@ -203,11 +203,6 @@ function EditDiscNameDialog(props: DiscNameDialogProps) {
 		}
 	}
 
-	let onInput = (e: Event) => {
-		let value = (e.target as HTMLInputElement).value
-		setName(value)
-	}
-
 	let confirm = () => {
 		let next = name().trim()
 		props.onConfirm(next)
@@ -237,7 +232,10 @@ function EditDiscNameDialog(props: DiscNameDialogProps) {
 							<InputField.Input
 								placeholder="Disc name"
 								value={name()}
-								onInput={onInput}
+								onInput={(e: Event) => {
+									let value = (e.target as HTMLInputElement).value
+									setName(value)
+								}}
 							/>
 						</InputField.Root>
 					</div>

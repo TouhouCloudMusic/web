@@ -1,6 +1,4 @@
-// 发行类型字段
 import { Field } from "@formisch/solid"
-import { Trans } from "@lingui-solid/solid/macro"
 import { For } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
