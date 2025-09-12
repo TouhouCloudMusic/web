@@ -45,19 +45,21 @@ export function EditReleasePage(props: Props): JSX.Element {
 			<PageHeader type={props.type} />
 			<FormContent {...props} />
 
-			<div class="sticky bottom-0 col-span-full flex justify-end gap-4 border-t border-slate-200 bg-white p-4">
-				<Button
-					variant="Tertiary"
-					onClick={() => history.back()}
-				>
-					<Trans>Back</Trans>
-				</Button>
-				<Button
-					variant="Primary"
-					type="submit"
-				>
-					<Trans>Submit</Trans>
-				</Button>
+			<div class="sticky bottom-0 col-span-full mt-12 flex justify-end border-t border-slate-300 bg-white p-4">
+				<div class="grid grid-cols-2 gap-2">
+					<Button
+						variant="Tertiary"
+						onClick={() => history.back()}
+					>
+						<Trans>Back</Trans>
+					</Button>
+					<Button
+						variant="Primary"
+						type="submit"
+					>
+						<Trans>Submit</Trans>
+					</Button>
+				</div>
 			</div>
 		</PageLayout>
 	)
@@ -67,24 +69,12 @@ function PageHeader(props: { type: Props["type"] }) {
 	return (
 		<div class="border-b-1 border-slate-300 p-8">
 			<div class="flex items-center gap-4">
-				<Button
-					class="size-6 p-0"
-					variant="Tertiary"
-					size="Sm"
-					onClick={() => {
-						history.back()
-					}}
-				>
-					<span class="sr-only">Back</span>
-					{/* simple back chevron */}
-					<div aria-hidden>‹</div>
-				</Button>
 				<h1 class="text-2xl font-light">
 					<Show
 						when={props.type === "new"}
-						fallback={<Trans>Edit Release</Trans>}
+						fallback={<>Edit Release</>}
 					>
-						<Trans>Create Release</Trans>
+						Create Release
 					</Show>
 				</h1>
 			</div>
