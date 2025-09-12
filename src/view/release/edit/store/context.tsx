@@ -20,14 +20,19 @@ export type CreditRow = { artist?: Artist; role?: CreditRoleRef; on: number[] }
 
 type ReleaseFormContextValue = {
 	artists: Artist[]
+
 	events: Event[]
+
 	credits: CreditRow[]
+
 	trackSongs: (Song | undefined)[]
 	trackArtists: Artist[][]
+
 	// TODO: type alias from api
 	catalogLabels: ({ id: number; name: string } | undefined)[]
 }
 
+// oxlint-disable-next-line max-lines-per-function
 function createReleaseFormContext(
 	form: ReleaseFormStore,
 	state: ReleaseFormContextValue,
@@ -35,23 +40,9 @@ function createReleaseFormContext(
 ) {
 	const store = {
 		form,
+
 		get artists() {
 			return state.artists
-		},
-		get events() {
-			return state.events
-		},
-		get credits() {
-			return state.credits
-		},
-		get trackSongs() {
-			return state.trackSongs
-		},
-		get trackArtists() {
-			return state.trackArtists
-		},
-		get catalogLabels() {
-			return state.catalogLabels
 		},
 		addArtist: (a: Artist) => {
 			if (state.artists.some((x) => x.id === a.id)) return
@@ -62,6 +53,10 @@ function createReleaseFormContext(
 			remove(form, { path: ["data", "artists"], at: idx })
 			setState("artists", (users) => users.toSpliced(idx, 1))
 		},
+
+		get events() {
+			return state.events
+		},
 		addEvent: (e: Event) => {
 			if (state.events.some((x) => x.id === e.id)) return
 			insert(form, { path: ["data", "events"], initialInput: e.id })
@@ -70,6 +65,10 @@ function createReleaseFormContext(
 		removeEventAt: (idx: number) => () => {
 			remove(form, { path: ["data", "events"], at: idx })
 			setState("events", (list) => list.toSpliced(idx, 1))
+		},
+
+		get credits() {
+			return state.credits
 		},
 		addCreditRow: () => {
 			insert(form, { path: ["data", "credits"], initialInput: {} })
@@ -114,6 +113,13 @@ function createReleaseFormContext(
 					input: on,
 				})
 			},
+
+		get trackSongs() {
+			return state.trackSongs
+		},
+		get trackArtists() {
+			return state.trackArtists
+		},
 		addTrack: (discIndex: number) => {
 			batch(() => {
 				insert(form, {
@@ -159,6 +165,10 @@ function createReleaseFormContext(
 				input: next.map((a) => a.id),
 			})
 		},
+
+		get catalogLabels() {
+			return state.catalogLabels
+		},
 		addCatalogNumber: () => {
 			insert(form, {
 				path: ["data", "catalog_nums"],
@@ -196,10 +206,23 @@ export function ReleaseFormContextProvider(
 ) {
 	const [state, setState] = createStore<ReleaseFormContextValue>({
 		artists: [],
+
 		events: [],
-		credits: [],
-		trackSongs: [],
-		trackArtists: [],
+
+		credits:
+			props.initValue?.credits?.map((c) => ({
+				artist: undefined,
+				role: c.role,
+				on: c.on ?? [],
+			})) ?? [],
+
+		trackSongs:
+			props.initValue?.tracks?.map((t) => ({
+				id: t.song.id,
+				title: t.song.title,
+			})) ?? [],
+		trackArtists: props.initValue?.tracks?.map(() => []) ?? [],
+
 		// TODO: 后端尚未返回标签名称，使用占位名称进行初始化
 		catalogLabels:
 			props.initValue?.catalog_nums?.map((c) => {

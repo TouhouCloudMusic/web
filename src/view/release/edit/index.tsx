@@ -108,7 +108,7 @@ function FormContent(props: Props) {
 	return (
 		<Form
 			of={form}
-			class="grid grid-cols-5 content-start space-y-8 px-8 pt-8"
+			class="grid grid-cols-5 content-start space-y-8 gap-x-2 px-8 pt-8"
 			onSubmit={handleSubmit}
 		>
 			<ReleaseFormContextProvider
@@ -122,7 +122,7 @@ function FormContent(props: Props) {
 
 				<ReleaseTypeField
 					of={form}
-					class="col-span-2 row-start-2"
+					class="col-span-1 row-start-2"
 				/>
 
 				<LocalizedTitlesField
@@ -155,7 +155,6 @@ function FormContent(props: Props) {
 						>
 							<FormComp.Label class="col-span-full">{it.label}</FormComp.Label>
 							<DateWithPrecision
-								class="pr-2"
 								setValue={(v) =>
 									setInput(form, {
 										path: ["data", it.key],
