@@ -6,6 +6,9 @@ import type {
 	Label,
 	Release,
 	SimpleArtist,
+	SimpleEvent,
+	SimpleLabel,
+	ReleaseCredit,
 } from "@thc/api"
 import { batch, createContext } from "solid-js"
 import type { ParentProps } from "solid-js"
@@ -16,24 +19,17 @@ import { assertContext } from "~/utils/solid"
 
 import type { ReleaseFormStore } from "../comp/types"
 
-export type CreditRow = {
-	artist?: SimpleArtist
-	role?: CreditRoleRef
-	on: number[]
-}
-
 type ReleaseFormContextValue = {
 	artists: SimpleArtist[]
 
-	events: Event[]
+	events: SimpleEvent[]
 
-	credits: CreditRow[]
+	credits: ReleaseCredit[]
 
 	trackSongs: (Song | undefined)[]
 	trackArtists: SimpleArtist[][]
 
-	// TODO: type alias from api
-	catalogLabels: ({ id: number; name: string } | undefined)[]
+	catalogLabels: (SimpleLabel | undefined)[]
 }
 
 // oxlint-disable-next-line max-lines-per-function
@@ -209,17 +205,11 @@ export function ReleaseFormContextProvider(
 	props: ParentProps<{ form: ReleaseFormStore; initValue?: Release }>,
 ) {
 	const [state, setState] = createStore<ReleaseFormContextValue>({
-		artists:
-			props.initValue?.artists?.map((a) => ({ id: a.id, name: a.name })) ?? [],
+		artists: props.initValue?.artists ?? [],
 
-		events: [],
+		events: props.initValue?.events ?? [],
 
-		credits:
-			props.initValue?.credits?.map((c) => ({
-				artist: { id: c.artist.id, name: c.artist.name },
-				role: c.role,
-				on: c.on ?? [],
-			})) ?? [],
+		credits: props.initValue?.credits ?? [],
 
 		trackSongs:
 			props.initValue?.tracks?.map((t) => ({
@@ -231,12 +221,8 @@ export function ReleaseFormContextProvider(
 				(t.artists ?? []).map((a) => ({ id: a.id, name: a.name })),
 			) ?? [],
 
-		// TODO: 后端尚未返回标签名称，使用占位名称进行初始化
 		catalogLabels:
-			props.initValue?.catalog_nums?.map((c) => {
-				const id = (c as unknown as { label_id?: number | null }).label_id
-				return typeof id === "number" ? { id, name: `Label #${id}` } : undefined
-			}) ?? [],
+			props.initValue?.catalog_nums?.map((c) => c.label ?? undefined) ?? [],
 	})
 
 	const store = createReleaseFormContext(props.form, state, setState)
