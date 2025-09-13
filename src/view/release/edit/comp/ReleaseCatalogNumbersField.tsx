@@ -11,7 +11,7 @@ import { InputField } from "~/component/atomic/form/Input"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { LabelSearchDialog } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../store/context"
+import { useReleaseFormContext } from "../context"
 import { LabelInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 

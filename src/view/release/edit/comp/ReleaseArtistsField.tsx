@@ -9,7 +9,7 @@ import { FormComp } from "~/component/atomic/form"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../store/context"
+import { useReleaseFormContext } from "../context"
 import { ArtistInfo } from "./EntityInfo"
 
 export function ReleaseArtistsField(props: { class?: string }) {

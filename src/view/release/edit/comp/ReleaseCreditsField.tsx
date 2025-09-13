@@ -13,7 +13,7 @@ import {
 	CreditRoleSearchDialog,
 } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../store/context"
+import { useReleaseFormContext } from "../context"
 import { ArtistInfo, CreditRoleInfo } from "./EntityInfo"
 
 export function ReleaseCreditsField(props: { class?: string }): JSX.Element {

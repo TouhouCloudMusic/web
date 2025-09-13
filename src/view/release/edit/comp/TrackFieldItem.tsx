@@ -10,7 +10,7 @@ import { InputField } from "~/component/atomic/form/Input"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import { SongSearchDialog } from "../comp/SongSearchDialog"
-import { useReleaseFormContext } from "../store/context"
+import { useReleaseFormContext } from "../context"
 import { ArtistInfo, SongInfo } from "./EntityInfo"
 
 export function TrackItem(props: { index: number }) {

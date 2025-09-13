@@ -15,7 +15,7 @@ import { InputField } from "~/component/atomic/form/Input"
 import { Dialog } from "~/component/dialog"
 import type { NewDisc } from "~/domain/release"
 
-import { useReleaseFormContext } from "../store/context"
+import { useReleaseFormContext } from "../context"
 import { TrackItem } from "./TrackFieldItem"
 
 export function ReleaseTracksField(props: { class?: string }) {

@@ -10,7 +10,7 @@ import { FormComp } from "~/component/atomic/form"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { EventSearchDialog } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../store/context"
+import { useReleaseFormContext } from "../context"
 import { EventInfo } from "./EntityInfo"
 
 export function ReleaseEventsField(props: { class?: string }) {

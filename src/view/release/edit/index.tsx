@@ -25,10 +25,10 @@ import { ReleaseEventsField } from "./comp/ReleaseEventsField"
 import { ReleaseTracksField } from "./comp/ReleaseTracksField"
 import { ReleaseTypeField } from "./comp/ReleaseTypeField"
 import { TitleField } from "./comp/TitleField"
+import { ReleaseFormContextProvider } from "./context"
 import { useReleaseFormInitialValues } from "./hook/useFormInitialValues"
 import type { EditReleasePageProps as Props } from "./hook/useFormInitialValues"
 import { useReleaseFormSubmission } from "./hook/useFormSubmission"
-import { ReleaseFormContextProvider } from "./store/context"
 
 export function EditReleasePage(props: Props): JSX.Element {
 	return (

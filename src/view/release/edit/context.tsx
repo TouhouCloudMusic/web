@@ -17,7 +17,7 @@ import type { SetStoreFunction } from "solid-js/store"
 
 import { assertContext } from "~/utils/solid"
 
-import type { ReleaseFormStore } from "../comp/types"
+import type { ReleaseFormStore } from "./comp/types"
 
 type ReleaseFormContextValue = {
 	artists: SimpleArtist[]
