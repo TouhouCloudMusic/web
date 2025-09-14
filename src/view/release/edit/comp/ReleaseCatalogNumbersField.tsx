@@ -3,7 +3,7 @@ import { Trans } from "@lingui-solid/solid/macro"
 import type { Label, SimpleLabel } from "@thc/api"
 import { For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
-import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { Cross1Icon, Pencil1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
@@ -71,7 +71,7 @@ export function ReleaseCatalogNumbersField(props: {
 							fallback={<FieldArrayFallback />}
 						>
 							{(_, idx) => (
-								<li class="grid grid-cols-[1fr_auto_auto] gap-2">
+								<li class="grid grid-cols-[repeat(2,minmax(0,1fr))_auto_auto] items-center gap-2">
 									<Field
 										of={props.of}
 										path={["data", "catalog_nums", idx(), "catalog_number"]}
@@ -102,24 +102,22 @@ export function ReleaseCatalogNumbersField(props: {
 													hidden
 													value={field.input ?? undefined}
 												/>
-												<div class="flex items-center gap-2">
-													<div class="text-sm text-slate-700">
-														<Show
-															when={labels[idx()]}
-															fallback={
-																<span class="text-slate-400">
-																	<Trans>No label selected</Trans>
-																</span>
-															}
-														>
-															{(lbl) => <LabelInfo value={lbl()} />}
-														</Show>
-													</div>
-
-													<LabelSearchDialog
-														onSelect={setCatalogLabelAt(idx())}
-													/>
+												<div>
+													<Show
+														when={labels[idx()]}
+														fallback={
+															<span class="text-tertiary">
+																<Trans>No label selected</Trans>
+															</span>
+														}
+													>
+														{(lbl) => <LabelInfo value={lbl()} />}
+													</Show>
 												</div>
+
+												<LabelSearchDialog onSelect={setCatalogLabelAt(idx())}>
+													<Pencil1Icon />
+												</LabelSearchDialog>
 											</>
 										)}
 									</Field>
@@ -127,6 +125,7 @@ export function ReleaseCatalogNumbersField(props: {
 									<Button
 										variant="Tertiary"
 										size="Sm"
+										class="p-2"
 										onClick={removeCatalogNumberAt(idx())}
 									>
 										<Cross1Icon />
