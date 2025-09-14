@@ -29,7 +29,7 @@ export function ReleaseCreditsField(props: {
 
 	const addCreditRow = () => {
 		insert(props.of, { path: ["data", "credits"], initialInput: {} })
-		setCredits(credits.length, { on: [] } as unknown as ReleaseCredit)
+		setCredits(credits.length, { on: [] })
 	}
 
 	const removeCreditRowAt = (idx: number) => () => {

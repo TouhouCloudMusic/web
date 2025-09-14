@@ -112,7 +112,7 @@ export function ReleaseCatalogNumbersField(props: {
 																</span>
 															}
 														>
-															{(lbl) => <LabelInfo value={lbl()!} />}
+															{(lbl) => <LabelInfo value={lbl()} />}
 														</Show>
 													</div>
 
