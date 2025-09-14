@@ -59,9 +59,7 @@ export function useReleaseFormInitialValues(
 							title: lt.title,
 						})) ?? [],
 					artists: props.release.artists?.map((a) => a.id) ?? [],
-					// If backend provides events on Release, map to ids; else empty
-					// events: props.release.events?.map((e) => e.id) ?? [],
-					events: [],
+					events: props.release.events?.map((e) => e.id) ?? [],
 					catalog_nums: props.release.catalog_nums ?? [],
 					credits:
 						props.release.credits?.map((c) => ({

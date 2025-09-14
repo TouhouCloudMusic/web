@@ -1,5 +1,4 @@
 // oxlint-disable no-magic-numbers
-import type { Release } from "@thc/api"
 import { describe, it, expect } from "vitest"
 
 import { useReleaseFormInitialValues } from "./useFormInitialValues"
@@ -41,6 +40,10 @@ describe("useReleaseFormInitialValues", () => {
 				{ id: 10, name: "A" },
 				{ id: 20, name: "B" },
 			],
+			events: [
+				{ id: 1000, name: "Event X" },
+				{ id: 2000, name: "Event Y" },
+			],
 			localized_titles: [
 				{ language: { id: 1, code: "en", name: "English" }, title: "EN" },
 				{ language: { id: 2, code: "ja", name: "Japanese" }, title: "JP" },
@@ -53,7 +56,27 @@ describe("useReleaseFormInitialValues", () => {
 				{ id: 1, name: "Disc A" },
 				{ id: 2, name: undefined },
 			],
-			tracks: [],
+			tracks: [
+				{
+					id: 101,
+					track_number: "A1",
+					song: { id: 1001, title: "Song A" },
+					artists: [
+						{ id: 10, name: "A" },
+						{ id: 20, name: "B" },
+					],
+					duration: 123000,
+					disc_id: 2,
+				},
+				{
+					id: 102,
+					track_number: undefined,
+					song: { id: 1002, title: "Song B" },
+					artists: [{ id: 20, name: "B" }],
+					duration: undefined,
+					disc_id: 1,
+				},
+			],
 			credits: [
 				{
 					artist: { id: 10, name: "A" },
@@ -83,6 +106,9 @@ describe("useReleaseFormInitialValues", () => {
 		// Artists become ids array
 		expect(result.data.artists).toEqual([10, 20])
 
+		// Events become ids array
+		expect(result.data.events).toEqual([1000, 2000])
+
 		// Catalog numbers pass through
 		expect(result.data.catalog_nums).toEqual([
 			{ catalog_number: "CAT-001", label_id: 1 },
@@ -96,5 +122,25 @@ describe("useReleaseFormInitialValues", () => {
 
 		// Discs mapped to name shape
 		expect(result.data.discs).toEqual([{ name: "Disc A" }, { name: undefined }])
+
+		// Tracks normalized correctly
+		expect(result.data.tracks).toEqual([
+			{
+				artists: [10, 20],
+				disc_index: 1, // disc_id 2 -> index 1
+				display_title: undefined,
+				duration: 123000,
+				song_id: 1001,
+				track_number: "A1",
+			},
+			{
+				artists: [20],
+				disc_index: 0, // disc_id 1 -> index 0
+				display_title: undefined,
+				duration: undefined,
+				song_id: 1002,
+				track_number: undefined,
+			},
+		])
 	})
 })
