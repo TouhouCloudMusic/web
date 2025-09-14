@@ -2,7 +2,7 @@ import { Field, getInput, insert, remove, setInput } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
 import type { ReleaseCredit } from "@thc/api"
 import type { JSX } from "solid-js"
-import { For } from "solid-js"
+import { createMemo, For } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
@@ -68,12 +68,37 @@ export function ReleaseCreditsField(props: {
 			})
 		}
 
-	const trackIndices = () => {
-		const tracks = getInput(props.of, {
-			path: ["data", "tracks"],
-		}) as unknown[]
-		const len = Array.isArray(tracks) ? tracks.length : 0
-		return Array.from({ length: len }, (_, i) => i)
+	let trackValues = createMemo(() =>
+		getInput(props.of, { path: ["data", "tracks"] }),
+	)
+
+	const sortedTrackIndices = createMemo(() => {
+		const tracks = trackValues()
+		const counters = new Map<number, number>()
+		const within = tracks.map((t) => {
+			const discIdx = t?.disc_index ?? 0
+			const currIdx = counters.get(discIdx) ?? 0
+			counters.set(discIdx, currIdx + 1)
+			return currIdx + 1
+		})
+		return tracks
+			.map((_, i) => i)
+			.toSorted((a, b) => {
+				const da = tracks[a]?.disc_index ?? 0
+				const db = tracks[b]?.disc_index ?? 0
+				if (da !== db) return da - db
+				return within[a]! - within[b]!
+			})
+	})
+
+	const renderTrackLabel = (tIndex: number) => {
+		const tracks = trackValues()
+		const discIndex = tracks[tIndex]?.disc_index ?? 0
+		let withinDisc = 0
+		for (let i = 0; i <= tIndex; i += 1) {
+			if (tracks[i]?.disc_index === discIndex) withinDisc += 1
+		}
+		return `Disc ${discIndex + 1} Track ${withinDisc}`
 	}
 
 	return (
@@ -97,14 +122,14 @@ export function ReleaseCreditsField(props: {
 				>
 					{(credit, idx) => (
 						<li class="grid grid-cols-1 gap-2 rounded border border-slate-200 p-3">
-							<div class="grid grid-cols-2 gap-2">
+							<div class="grid grid-cols-[1fr_auto_1fr_auto_auto] items-center gap-2">
 								<div class="text-sm text-slate-700">
 									{credit.artist ? (
 										<ArtistInfo
 											value={{ id: credit.artist.id, name: credit.artist.name }}
 										/>
 									) : (
-										<span class="text-slate-400">Select artist</span>
+										<span class="text-tertiary">Select artist</span>
 									)}
 								</div>
 								<Field
@@ -122,16 +147,14 @@ export function ReleaseCreditsField(props: {
 								</Field>
 
 								<ArtistSearchDialog onSelect={setCreditArtistAt(idx())} />
-							</div>
 
-							<div class="grid grid-cols-2 gap-2">
 								<div class="text-sm text-slate-700">
 									{credit.role ? (
 										<CreditRoleInfo
 											value={{ id: credit.role.id, name: credit.role.name }}
 										/>
 									) : (
-										<span class="text-slate-400">Select role</span>
+										<span class="text-tertiary">Select role</span>
 									)}
 								</div>
 								{/* Hidden field for role_id */}
@@ -149,40 +172,47 @@ export function ReleaseCreditsField(props: {
 									)}
 								</Field>
 								<CreditRoleSearchDialog onSelect={setCreditRoleAt(idx())} />
-							</div>
 
-							<div class="flex flex-col gap-1">
-								<FormComp.Label class="m-0">
-									<Trans>On Tracks</Trans>
-								</FormComp.Label>
-								{/* TODO: this should get track names */}
-								<For each={trackIndices()}>
-									{(tIndex) => (
-										<label class="flex items-center gap-2 text-sm">
-											<input
-												type="checkbox"
-												checked={credit.on?.includes(tIndex) ?? false}
-												onChange={(e) =>
-													toggleCreditOnTrack(
-														idx(),
-														tIndex,
-													)((e.target as HTMLInputElement).checked)
-												}
-											/>
-											<span>Track #{tIndex + 1}</span>
-										</label>
-									)}
-								</For>
-							</div>
-
-							<div class="flex justify-end">
 								<Button
 									variant="Tertiary"
 									size="Sm"
+									class="h-full p-2"
 									onClick={removeCreditRowAt(idx())}
 								>
 									<Cross1Icon />
 								</Button>
+							</div>
+
+							<div class="flex flex-col gap-1">
+								<FormComp.Label>
+									<Trans>On Tracks</Trans>
+								</FormComp.Label>
+								{/* TODO: this should get track names */}
+								<For each={sortedTrackIndices()}>
+									{(tIndex) => (
+										<Field
+											of={props.of}
+											path={["data", "credits", idx(), "on"]}
+										>
+											{(field) => (
+												<label class="flex items-center gap-2 text-sm">
+													<input
+														{...field.props}
+														type="checkbox"
+														onChange={(e) => {
+															field.props.onChange(e)
+															toggleCreditOnTrack(
+																idx(),
+																tIndex,
+															)(e.target.checked)
+														}}
+													/>
+													<span>{renderTrackLabel(tIndex)}</span>
+												</label>
+											)}
+										</Field>
+									)}
+								</For>
 							</div>
 						</li>
 					)}
