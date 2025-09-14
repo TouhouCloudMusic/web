@@ -1,5 +1,6 @@
 import { FieldArray, getInput, insert, setInput } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
+import type { ReleaseTrack } from "@thc/api"
 import { For, createMemo, createSignal } from "solid-js"
 import {
 	PlusIcon,
@@ -15,21 +16,25 @@ import { InputField } from "~/component/atomic/form/Input"
 import { Dialog } from "~/component/dialog"
 import type { NewDisc } from "~/domain/release"
 
-import { useReleaseFormContext } from "../context"
 import { TrackItem } from "./TrackFieldItem"
+import type { ReleaseFormStore } from "./types"
 
-export function ReleaseTracksField(props: { class?: string }) {
-	const store = useReleaseFormContext()
+export function ReleaseTracksField(props: {
+	of: ReleaseFormStore
+	initTracks?: ReleaseTrack[]
+	class?: string
+}) {
 	const [selectedDisc, setSelectedDisc] = createSignal(0)
 
 	return (
 		<div class={twJoin("flex flex-col", props.class)}>
 			<TrackHeader
+				of={props.of}
 				selectedDisc={selectedDisc}
 				setSelectedDisc={setSelectedDisc}
 			/>
 			<FieldArray
-				of={store.form}
+				of={props.of}
 				path={["data", "tracks"]}
 			>
 				{(fa) => {
@@ -38,7 +43,7 @@ export function ReleaseTracksField(props: { class?: string }) {
 						return items
 							.map((_, i) => i)
 							.filter((i) => {
-								const di = getInput(store.form, {
+								const di = getInput(props.of, {
 									path: ["data", "tracks", i, "disc_index"],
 								})
 								return di === selectedDisc()
@@ -57,7 +62,11 @@ export function ReleaseTracksField(props: { class?: string }) {
 							>
 								{(trackIdx) => (
 									<li class="grid grid-cols-1 gap-2 rounded border border-slate-400 p-3">
-										<TrackItem index={trackIdx} />
+										<TrackItem
+											index={trackIdx}
+											of={props.of}
+											initTrack={props.initTracks?.[trackIdx]}
+										/>
 									</li>
 								)}
 							</For>
@@ -71,22 +80,25 @@ export function ReleaseTracksField(props: { class?: string }) {
 
 // oxlint-disable-next-line max-lines-per-function
 function TrackHeader(props: {
+	of: ReleaseFormStore
 	selectedDisc: () => number
 	setSelectedDisc: (n: number) => void
 }) {
-	const store = useReleaseFormContext()
 	const discs = createMemo(() =>
-		getInput(store.form, { path: ["data", "discs"] }),
+		getInput(props.of, { path: ["data", "discs"] }),
 	)
 	const discCount = createMemo(() => discs().length)
 
 	const onAddTrack = () => {
 		if (discCount() === 0) {
 			const initialDisc: NewDisc = { name: "" }
-			insert(store.form, { path: ["data", "discs"], initialInput: initialDisc })
+			insert(props.of, { path: ["data", "discs"], initialInput: initialDisc })
 			props.setSelectedDisc(0)
 		}
-		store.addTrack(props.selectedDisc())
+		insert(props.of, {
+			path: ["data", "tracks"],
+			initialInput: { disc_index: props.selectedDisc() },
+		})
 	}
 
 	const currentDiscName = createMemo(() => {
@@ -114,13 +126,13 @@ function TrackHeader(props: {
 	const onAddDisc = () => {
 		const nextIndex = discCount()
 		const initial: NewDisc = { name: "" }
-		insert(store.form, { path: ["data", "discs"], initialInput: initial })
+		insert(props.of, { path: ["data", "discs"], initialInput: initial })
 		props.setSelectedDisc(nextIndex)
 	}
 
 	const onConfirmRename = (next: string) => {
 		if (currentDiscName() === next) return
-		setInput(store.form, {
+		setInput(props.of, {
 			path: ["data", "discs", props.selectedDisc(), "name"],
 			input: next,
 		})

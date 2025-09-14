@@ -1,7 +1,8 @@
-// 目录号字段
-import { Field, FieldArray } from "@formisch/solid"
+import { Field, FieldArray, insert, remove, setInput } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
+import type { Label, SimpleLabel } from "@thc/api"
 import { For, Show } from "solid-js"
+import { createStore } from "solid-js/store"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -11,16 +12,39 @@ import { InputField } from "~/component/atomic/form/Input"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { LabelSearchDialog } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../context"
 import { LabelInfo } from "./EntityInfo"
 import type { ReleaseFormStore } from "./types"
 
 // oxlint-disable-next-line max-lines-per-function
 export function ReleaseCatalogNumbersField(props: {
 	of: ReleaseFormStore
+	initCatalogLabels?: (SimpleLabel | undefined)[]
 	class?: string
 }) {
-	const ctx = useReleaseFormContext()
+	const [labels, setLabels] = createStore<(SimpleLabel | undefined)[]>([
+		...(props.initCatalogLabels ?? []),
+	])
+
+	const addCatalogNumber = () => {
+		insert(props.of, {
+			path: ["data", "catalog_nums"],
+			initialInput: { catalog_number: "", label_id: undefined },
+		})
+		setLabels(labels.length, undefined)
+	}
+
+	const removeCatalogNumberAt = (idx: number) => () => {
+		remove(props.of, { path: ["data", "catalog_nums"], at: idx })
+		setLabels((list) => list.toSpliced(idx, 1))
+	}
+
+	const setCatalogLabelAt = (idx: number) => (label: Label) => {
+		setInput(props.of, {
+			path: ["data", "catalog_nums", idx, "label_id"],
+			input: label.id,
+		})
+		setLabels(idx, label)
+	}
 
 	return (
 		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
@@ -31,7 +55,7 @@ export function ReleaseCatalogNumbersField(props: {
 				<Button
 					variant="Tertiary"
 					class="h-max p-2"
-					onClick={ctx.addCatalogNumber}
+					onClick={addCatalogNumber}
 				>
 					<PlusIcon class="size-4" />
 				</Button>
@@ -81,19 +105,19 @@ export function ReleaseCatalogNumbersField(props: {
 												<div class="flex items-center gap-2">
 													<div class="text-sm text-slate-700">
 														<Show
-															when={ctx.catalogLabels[idx()]}
+															when={labels[idx()]}
 															fallback={
 																<span class="text-slate-400">
 																	<Trans>No label selected</Trans>
 																</span>
 															}
 														>
-															{(lbl) => <LabelInfo value={lbl()} />}
+															{(lbl) => <LabelInfo value={lbl()!} />}
 														</Show>
 													</div>
 
 													<LabelSearchDialog
-														onSelect={ctx.setCatalogLabel(idx())}
+														onSelect={setCatalogLabelAt(idx())}
 													/>
 												</div>
 											</>
@@ -103,7 +127,7 @@ export function ReleaseCatalogNumbersField(props: {
 									<Button
 										variant="Tertiary"
 										size="Sm"
-										onClick={ctx.removeCatalogNumberAt(idx())}
+										onClick={removeCatalogNumberAt(idx())}
 									>
 										<Cross1Icon />
 									</Button>

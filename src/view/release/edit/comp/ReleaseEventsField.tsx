@@ -1,7 +1,9 @@
 // 事件字段（受控组件）
-import { Field } from "@formisch/solid"
+import { Field, insert, remove } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
+import type { SimpleEvent } from "@thc/api"
 import { For } from "solid-js"
+import { createStore } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -10,11 +12,28 @@ import { FormComp } from "~/component/atomic/form"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { EventSearchDialog } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../context"
 import { EventInfo } from "./EntityInfo"
+import type { ReleaseFormStore } from "./types"
 
-export function ReleaseEventsField(props: { class?: string }) {
-	const ctx = useReleaseFormContext()
+export function ReleaseEventsField(props: {
+	of: ReleaseFormStore
+	initEvents?: SimpleEvent[]
+	class?: string
+}) {
+	const [events, setEvents] = createStore<SimpleEvent[]>([
+		...(props.initEvents ?? []),
+	])
+
+	const addEvent = (e: SimpleEvent) => {
+		if (events.some((x) => x.id === e.id)) return
+		insert(props.of, { path: ["data", "events"], initialInput: e.id })
+		setEvents(events.length, e)
+	}
+
+	const removeEventAt = (idx: number) => () => {
+		remove(props.of, { path: ["data", "events"], at: idx })
+		setEvents((list) => list.toSpliced(idx, 1))
+	}
 	return (
 		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
 			<div class="mb-4 flex place-content-between items-center gap-4">
@@ -22,12 +41,12 @@ export function ReleaseEventsField(props: { class?: string }) {
 					<Trans>Events</Trans>
 				</FormComp.Label>
 				<div class="flex gap-2">
-					<EventSearchDialog onSelect={ctx.addEvent} />
+					<EventSearchDialog onSelect={addEvent} />
 				</div>
 			</div>
 			<ul class="flex h-full flex-col gap-2">
 				<For
-					each={ctx.events}
+					each={events}
 					fallback={<FieldArrayFallback />}
 				>
 					{(ev, idx) => (
@@ -37,7 +56,7 @@ export function ReleaseEventsField(props: { class?: string }) {
 							</div>
 
 							<Field
-								of={ctx.form}
+								of={props.of}
 								path={["data", "events", idx()]}
 							>
 								{(field) => (
@@ -52,7 +71,7 @@ export function ReleaseEventsField(props: { class?: string }) {
 							<Button
 								variant="Tertiary"
 								size="Sm"
-								onClick={ctx.removeEventAt(idx())}
+								onClick={removeEventAt(idx())}
 							>
 								<Cross1Icon />
 							</Button>

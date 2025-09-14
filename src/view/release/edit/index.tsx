@@ -14,7 +14,6 @@ import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { DateWithPrecision } from "~/component/form/DateWithPrecision"
 import { NewReleaseCorrection as NewReleaseCorrectionSchema } from "~/domain/release"
-import type { NewReleaseCorrection } from "~/domain/release"
 import { PageLayout } from "~/layout/PageLayout"
 
 import { LocalizedTitlesField } from "./comp/LocalizedTitlesField"
@@ -25,7 +24,6 @@ import { ReleaseEventsField } from "./comp/ReleaseEventsField"
 import { ReleaseTracksField } from "./comp/ReleaseTracksField"
 import { ReleaseTypeField } from "./comp/ReleaseTypeField"
 import { TitleField } from "./comp/TitleField"
-import { ReleaseFormContextProvider } from "./context"
 import { useReleaseFormInitialValues } from "./hook/useFormInitialValues"
 import type { EditReleasePageProps as Props } from "./hook/useFormInitialValues"
 import { useReleaseFormSubmission } from "./hook/useFormSubmission"
@@ -111,82 +109,100 @@ function FormContent(props: Props) {
 			class="grid grid-cols-5 content-start space-y-8 gap-x-2 px-8 pt-8"
 			onSubmit={handleSubmit}
 		>
-			<ReleaseFormContextProvider
-				form={form}
-				initValue={props.type === "edit" ? props.release : undefined}
-			>
-				<TitleField
-					of={form}
-					class="col-span-2 row-start-1"
-				/>
+			<TitleField
+				of={form}
+				class="col-span-2 row-start-1"
+			/>
 
-				<ReleaseTypeField
-					of={form}
-					class="col-span-1 row-start-2"
-				/>
+			<ReleaseTypeField
+				of={form}
+				class="col-span-1 row-start-2"
+			/>
 
-				<LocalizedTitlesField
-					of={form}
-					class="col-span-2 row-start-3"
-				/>
+			<LocalizedTitlesField
+				of={form}
+				class="col-span-2 row-start-3"
+			/>
 
-				{(
-					[
-						{
-							key: "release_date",
-							label: t`Release date`,
-							class: "row-start-4",
-						},
-						{
-							key: "recording_date_start",
-							label: t`Recording start`,
-							class: "row-start-5",
-						},
-						{
-							key: "recording_date_end",
-							label: t`Recording end`,
-							class: "row-start-6",
-						},
-					] as const
-				).map((it) => {
-					return (
-						<div
-							class={["col-span-3 grid grid-cols-subgrid", it.class].join(" ")}
-						>
-							<FormComp.Label class="col-span-full">{it.label}</FormComp.Label>
-							<DateWithPrecision
-								setValue={(v) =>
-									setInput(form, {
-										path: ["data", it.key],
-										// Upstream Error: https://github.com/fabian-hiller/formisch/issues/15
-										input: v ?? ({} as unknown as never),
-									})
-								}
-							/>
-							<FormComp.ErrorMessage>
-								{
-									getErrors(form, {
-										path: ["data", it.key],
-									})?.[0]
-								}
-							</FormComp.ErrorMessage>
-						</div>
-					)
-				})}
+			{(
+				[
+					{
+						key: "release_date",
+						label: t`Release date`,
+						class: "row-start-4",
+					},
+					{
+						key: "recording_date_start",
+						label: t`Recording start`,
+						class: "row-start-5",
+					},
+					{
+						key: "recording_date_end",
+						label: t`Recording end`,
+						class: "row-start-6",
+					},
+				] as const
+			).map((it) => {
+				return (
+					<div
+						class={["col-span-3 grid grid-cols-subgrid", it.class].join(" ")}
+					>
+						<FormComp.Label class="col-span-full">{it.label}</FormComp.Label>
+						<DateWithPrecision
+							setValue={(v) =>
+								setInput(form, {
+									path: ["data", it.key],
+									// TODO: Upstream formisch error
+									// oxlint-disable-next-line no-null
+									input: v ?? null,
+								})
+							}
+						/>
+						<FormComp.ErrorMessage>
+							{
+								getErrors(form, {
+									path: ["data", it.key],
+								})?.[0]
+							}
+						</FormComp.ErrorMessage>
+					</div>
+				)
+			})}
 
-				<ReleaseArtistsField class="col-span-2 row-start-7" />
+			<ReleaseArtistsField
+				of={form}
+				initArtists={props.type === "edit" ? props.release.artists : []}
+				class="col-span-2 row-start-7"
+			/>
 
-				<ReleaseCatalogNumbersField
-					of={form}
-					class="col-span-2 row-start-8"
-				/>
+			<ReleaseCatalogNumbersField
+				of={form}
+				initCatalogLabels={
+					props.type === "edit"
+						? (props.release.catalog_nums?.map((c) => c.label ?? undefined)
+							?? [])
+						: []
+				}
+				class="col-span-2 row-start-8"
+			/>
 
-				<ReleaseEventsField class="col-span-2 row-start-9" />
+			<ReleaseEventsField
+				of={form}
+				initEvents={props.type === "edit" ? props.release.events : []}
+				class="col-span-2 row-start-9"
+			/>
 
-				<ReleaseTracksField class="col-span-2 row-start-10" />
+			<ReleaseTracksField
+				of={form}
+				initTracks={props.type === "edit" ? props.release.tracks : []}
+				class="col-span-2 row-start-10"
+			/>
 
-				<ReleaseCreditsField class="col-span-2 row-start-11" />
-			</ReleaseFormContextProvider>
+			<ReleaseCreditsField
+				of={form}
+				initCredits={props.type === "edit" ? props.release.credits : []}
+				class="col-span-2 row-start-11"
+			/>
 		</Form>
 	)
 }

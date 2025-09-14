@@ -1,7 +1,9 @@
-import { Field } from "@formisch/solid"
+import { Field, getInput, insert, remove, setInput } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
+import type { ReleaseCredit } from "@thc/api"
 import type { JSX } from "solid-js"
 import { For } from "solid-js"
+import { createStore } from "solid-js/store"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -13,11 +15,66 @@ import {
 	CreditRoleSearchDialog,
 } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../context"
 import { ArtistInfo, CreditRoleInfo } from "./EntityInfo"
+import type { ReleaseFormStore } from "./types"
 
-export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
-	const store = useReleaseFormContext()
+export function ReleaseCreditsField(props: {
+	of: ReleaseFormStore
+	initCredits?: ReleaseCredit[]
+	class?: string
+}): JSX.Element {
+	const [credits, setCredits] = createStore<ReleaseCredit[]>([
+		...(props.initCredits ?? []),
+	])
+
+	const addCreditRow = () => {
+		insert(props.of, { path: ["data", "credits"], initialInput: {} })
+		setCredits(credits.length, { on: [] } as unknown as ReleaseCredit)
+	}
+
+	const removeCreditRowAt = (idx: number) => () => {
+		remove(props.of, { path: ["data", "credits"], at: idx })
+		setCredits((list) => list.toSpliced(idx, 1))
+	}
+
+	const setCreditArtistAt =
+		(idx: number) => (a: { id: number; name: string }) => {
+			setCredits(idx, (row) => ({ ...(row ?? { on: [] }), artist: a }))
+			setInput(props.of, {
+				path: ["data", "credits", idx, "artist_id"],
+				input: a.id,
+			})
+		}
+
+	const setCreditRoleAt =
+		(idx: number) => (r: { id: number; name: string }) => {
+			setCredits(idx, (row) => ({ ...(row ?? { on: [] }), role: r }))
+			setInput(props.of, {
+				path: ["data", "credits", idx, "role_id"],
+				input: r.id,
+			})
+		}
+
+	const toggleCreditOnTrack =
+		(rowIdx: number, trackIdx: number) => (checked: boolean) => {
+			const curr = credits[rowIdx]?.on ?? []
+			const on = checked
+				? [...curr, trackIdx]
+				: curr.filter((x) => x !== trackIdx)
+			setCredits(rowIdx, (row) => ({ ...(row ?? { on: [] }), on }))
+			setInput(props.of, {
+				path: ["data", "credits", rowIdx, "on"],
+				input: on,
+			})
+		}
+
+	const trackIndices = () => {
+		const tracks = getInput(props.of, {
+			path: ["data", "tracks"],
+		}) as unknown[]
+		const len = Array.isArray(tracks) ? tracks.length : 0
+		return Array.from({ length: len }, (_, i) => i)
+	}
 
 	return (
 		<div class={twMerge("flex min-h-32 w-full flex-col", props.class)}>
@@ -28,14 +85,14 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 				<Button
 					variant="Tertiary"
 					class="h-max p-2"
-					onClick={store.addCreditRow}
+					onClick={addCreditRow}
 				>
 					<PlusIcon class="size-4" />
 				</Button>
 			</div>
 			<ul class="flex h-full flex-col gap-4">
 				<For
-					each={store.credits}
+					each={credits}
 					fallback={<FieldArrayFallback />}
 				>
 					{(credit, idx) => (
@@ -51,7 +108,7 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 									)}
 								</div>
 								<Field
-									of={store.form}
+									of={props.of}
 									path={["data", "credits", idx(), "artist_id"]}
 								>
 									{(field) => (
@@ -64,7 +121,7 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 									)}
 								</Field>
 
-								<ArtistSearchDialog onSelect={store.setCreditArtist(idx())} />
+								<ArtistSearchDialog onSelect={setCreditArtistAt(idx())} />
 							</div>
 
 							<div class="grid grid-cols-2 gap-2">
@@ -79,7 +136,7 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 								</div>
 								{/* Hidden field for role_id */}
 								<Field
-									of={store.form}
+									of={props.of}
 									path={["data", "credits", idx(), "role_id"]}
 								>
 									{(field) => (
@@ -91,27 +148,28 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 										/>
 									)}
 								</Field>
-								<CreditRoleSearchDialog onSelect={store.setCreditRole(idx())} />
+								<CreditRoleSearchDialog onSelect={setCreditRoleAt(idx())} />
 							</div>
 
 							<div class="flex flex-col gap-1">
 								<FormComp.Label class="m-0">
 									<Trans>On Tracks</Trans>
 								</FormComp.Label>
-								<For each={store.trackSongs}>
-									{(_, tIdx) => (
+								{/* TODO: this should get track names */}
+								<For each={trackIndices()}>
+									{(tIndex) => (
 										<label class="flex items-center gap-2 text-sm">
 											<input
 												type="checkbox"
-												checked={credit.on?.includes(tIdx()) ?? false}
+												checked={credit.on?.includes(tIndex) ?? false}
 												onChange={(e) =>
-													store.toggleCreditOnTrack(
+													toggleCreditOnTrack(
 														idx(),
-														tIdx(),
+														tIndex,
 													)((e.target as HTMLInputElement).checked)
 												}
 											/>
-											<span>Track #{tIdx() + 1}</span>
+											<span>Track #{tIndex + 1}</span>
 										</label>
 									)}
 								</For>
@@ -121,7 +179,7 @@ export function ReleaseCreditsField(props: { class?: string }): JSX.Element {
 								<Button
 									variant="Tertiary"
 									size="Sm"
-									onClick={store.removeCreditRowAt(idx())}
+									onClick={removeCreditRowAt(idx())}
 								>
 									<Cross1Icon />
 								</Button>

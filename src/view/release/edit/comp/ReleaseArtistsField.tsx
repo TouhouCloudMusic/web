@@ -1,6 +1,8 @@
-import { Field } from "@formisch/solid"
-import type { Artist } from "@thc/api"
+import { Field, insert, remove } from "@formisch/solid"
+import type { SimpleArtist } from "@thc/api"
+import { complement } from "@thc/toolkit"
 import { For } from "solid-js"
+import { createStore } from "solid-js/store"
 import { Cross1Icon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -9,13 +11,31 @@ import { FormComp } from "~/component/atomic/form"
 import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
-import { useReleaseFormContext } from "../context"
 import { ArtistInfo } from "./EntityInfo"
+import type { ReleaseFormStore } from "./types"
 
-export function ReleaseArtistsField(props: { class?: string }) {
-	const ctx = useReleaseFormContext()
-	const releaseArtistFilter = (artist: Artist) =>
-		!ctx.artists.some((a) => a.id === artist.id)
+export function ReleaseArtistsField(props: {
+	of: ReleaseFormStore
+	initArtists?: SimpleArtist[]
+	class?: string
+}) {
+	const [artists, setArtists] = createStore<SimpleArtist[]>([
+		...(props.initArtists ?? []),
+	])
+
+	const contain = (artist: SimpleArtist) =>
+		artists.some((a) => a.id === artist.id)
+
+	const addArtist = (artist: SimpleArtist) => {
+		if (contain(artist)) return
+		insert(props.of, { path: ["data", "artists"], initialInput: artist.id })
+		setArtists(artists.length, { id: artist.id, name: artist.name })
+	}
+
+	const removeArtistAt = (idx: number) => () => {
+		remove(props.of, { path: ["data", "artists"], at: idx })
+		setArtists((list) => list.toSpliced(idx, 1))
+	}
 
 	return (
 		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
@@ -23,14 +43,14 @@ export function ReleaseArtistsField(props: { class?: string }) {
 				<FormComp.Label class="m-0">Artists</FormComp.Label>
 				<div class="flex gap-2">
 					<ArtistSearchDialog
-						onSelect={ctx.addArtist}
-						dataFilter={releaseArtistFilter}
+						onSelect={addArtist}
+						dataFilter={complement(contain)}
 					/>
 				</div>
 			</div>
 			<ul class="flex h-full flex-col gap-2">
 				<For
-					each={ctx.artists}
+					each={artists}
 					fallback={<FieldArrayFallback />}
 				>
 					{(artist, idx) => (
@@ -40,7 +60,7 @@ export function ReleaseArtistsField(props: { class?: string }) {
 							</div>
 
 							<Field
-								of={ctx.form}
+								of={props.of}
 								path={["data", "artists", idx()]}
 							>
 								{(field) => (
@@ -62,7 +82,7 @@ export function ReleaseArtistsField(props: { class?: string }) {
 							<Button
 								variant="Tertiary"
 								size="Sm"
-								onClick={ctx.removeArtistAt(idx())}
+								onClick={removeArtistAt(idx())}
 							>
 								<Cross1Icon />
 							</Button>
