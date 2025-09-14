@@ -34,6 +34,9 @@ export function ReleaseTypeField(props: {
 							{(rt) => <option value={rt}>{rt}</option>}
 						</For>
 					</select>
+					<For each={field.errors}>
+						{(error) => <FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>}
+					</For>
 				</div>
 			)}
 		</Field>

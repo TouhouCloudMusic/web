@@ -181,6 +181,11 @@ function TrackSongPicker(props: {
 								<span class="text-slate-400">No song selected</span>
 							)}
 						</div>
+						<For each={field.errors}>
+							{(error) => (
+								<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
+							)}
+						</For>
 					</>
 				)}
 			</Field>

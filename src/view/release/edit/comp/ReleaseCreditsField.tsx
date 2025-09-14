@@ -83,12 +83,20 @@ function ReleaseCreditArtist(props: {
 				path={["data", "credits", props.index, "artist_id"]}
 			>
 				{(field) => (
-					<input
-						{...field.props}
-						type="number"
-						hidden
-						value={field.input ?? undefined}
-					/>
+					<>
+						<input
+							{...field.props}
+							type="number"
+							hidden
+							value={field.input ?? undefined}
+						/>
+
+						<For each={field.errors}>
+							{(error) => (
+								<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
+							)}
+						</For>
+					</>
 				)}
 			</Field>
 			<ArtistSearchDialog onSelect={props.onSelectArtist} />
@@ -116,12 +124,19 @@ function ReleaseCreditRole(props: {
 				path={["data", "credits", props.index, "role_id"]}
 			>
 				{(field) => (
-					<input
-						{...field.props}
-						type="number"
-						hidden
-						value={field.input ?? undefined}
-					/>
+					<>
+						<input
+							{...field.props}
+							type="number"
+							hidden
+							value={field.input ?? undefined}
+						/>
+						<For each={field.errors}>
+							{(error) => (
+								<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
+							)}
+						</For>
+					</>
 				)}
 			</Field>
 			<CreditRoleSearchDialog onSelect={props.onSelectRole} />
