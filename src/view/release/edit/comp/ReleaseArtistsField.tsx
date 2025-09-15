@@ -1,4 +1,4 @@
-import { Field, insert, remove } from "@formisch/solid"
+import { Field, getErrors, insert, remove } from "@formisch/solid"
 import type { SimpleArtist } from "@thc/api"
 import { complement } from "@thc/toolkit"
 import { For } from "solid-js"
@@ -48,6 +48,9 @@ export function ReleaseArtistsField(props: {
 					/>
 				</div>
 			</div>
+			<FormComp.ErrorList
+				errors={getErrors(props.of, { path: ["data", "artists"] })}
+			/>
 			<ul class="flex h-full flex-col gap-2">
 				<For
 					each={artists}

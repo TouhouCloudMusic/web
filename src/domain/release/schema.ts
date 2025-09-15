@@ -49,7 +49,10 @@ export const NewRelease = v.object({
 	recording_date_start: v.nullish(DateWithPrecision.Schema),
 	recording_date_end: v.nullish(DateWithPrecision.Schema),
 	localized_titles: v.array(NewLocalizedTitle),
-	artists: v.array(EntityId),
+	artists: v.pipe(
+		v.array(EntityId),
+		v.minLength(1, "release must have artists"),
+	),
 	events: v.array(EntityId),
 	catalog_nums: v.array(CatalogNumber),
 	credits: v.array(NewCredit),
