@@ -2,6 +2,7 @@
 import type { Release } from "@thc/api"
 
 import type { NewReleaseCorrection } from "~/domain/release"
+import { DateWithPrecision } from "~/domain/shared"
 
 export type EditReleasePageProps =
 	| { type: "new" }
@@ -35,24 +36,13 @@ export function useReleaseFormInitialValues(
 				data: {
 					title: props.release.title,
 					release_type: props.release.release_type,
-					release_date: props.release.release_date
-						? {
-								value: new Date(props.release.release_date.value),
-								precision: props.release.release_date.precision,
-							}
-						: undefined,
-					recording_date_start: props.release.recording_date_start
-						? {
-								value: new Date(props.release.recording_date_start.value),
-								precision: props.release.recording_date_start.precision,
-							}
-						: undefined,
-					recording_date_end: props.release.recording_date_end
-						? {
-								value: new Date(props.release.recording_date_end.value),
-								precision: props.release.recording_date_end.precision,
-							}
-						: undefined,
+					release_date: DateWithPrecision.toInput(props.release.release_date),
+					recording_date_start: DateWithPrecision.toInput(
+						props.release.recording_date_start,
+					),
+					recording_date_end: DateWithPrecision.toInput(
+						props.release.recording_date_end,
+					),
 					localized_titles:
 						props.release.localized_titles?.map((lt) => ({
 							language_id: lt.language.id,
