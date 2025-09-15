@@ -231,9 +231,7 @@ function TrackArtistsField(props: {
 				<For each={props.artists}>
 					{(artist, idx) => (
 						<li class="grid grid-cols-[1fr_auto] gap-2">
-							<div class="text-sm text-slate-700">
-								<ArtistInfo value={{ id: artist.id, name: artist.name }} />
-							</div>
+							<ArtistInfo value={artist} />
 							<Button
 								variant="Tertiary"
 								size="Sm"

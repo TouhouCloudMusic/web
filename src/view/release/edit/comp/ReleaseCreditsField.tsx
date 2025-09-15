@@ -71,13 +71,12 @@ function ReleaseCreditArtist(props: {
 }): JSX.Element {
 	return (
 		<>
-			<div class="text-sm text-slate-700">
-				{props.artist ? (
-					<ArtistInfo value={props.artist} />
-				) : (
-					<span class="text-tertiary">Select artist</span>
-				)}
-			</div>
+			{props.artist ? (
+				<ArtistInfo value={props.artist} />
+			) : (
+				<span class="text-tertiary">Select artist</span>
+			)}
+
 			<Field
 				of={props.of}
 				path={["data", "credits", props.index, "artist_id"]}
@@ -112,13 +111,11 @@ function ReleaseCreditRole(props: {
 }): JSX.Element {
 	return (
 		<>
-			<div class="text-sm text-slate-700">
-				{props.role ? (
-					<CreditRoleInfo value={props.role} />
-				) : (
-					<span class="text-tertiary">Select role</span>
-				)}
-			</div>
+			{props.role ? (
+				<CreditRoleInfo value={props.role} />
+			) : (
+				<span class="text-tertiary">Select role</span>
+			)}
 			<Field
 				of={props.of}
 				path={["data", "credits", props.index, "role_id"]}

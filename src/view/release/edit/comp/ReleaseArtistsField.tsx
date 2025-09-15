@@ -55,9 +55,7 @@ export function ReleaseArtistsField(props: {
 				>
 					{(artist, idx) => (
 						<li class="grid h-fit grid-cols-[1fr_auto]">
-							<div class="text-sm text-slate-700">
-								<ArtistInfo value={{ id: artist.id, name: artist.name }} />
-							</div>
+							<ArtistInfo value={{ id: artist.id, name: artist.name }} />
 
 							<Field
 								of={props.of}

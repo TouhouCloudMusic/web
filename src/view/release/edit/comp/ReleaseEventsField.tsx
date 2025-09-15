@@ -51,9 +51,7 @@ export function ReleaseEventsField(props: {
 				>
 					{(ev, idx) => (
 						<li class="grid h-fit grid-cols-[1fr_auto]">
-							<div class="text-sm text-slate-700">
-								<EventInfo value={{ id: ev.id, name: ev.name }} />
-							</div>
+							<EventInfo value={{ id: ev.id, name: ev.name }} />
 
 							<Field
 								of={props.of}
