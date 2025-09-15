@@ -21,15 +21,15 @@ interface Store {
 
 const THIS_YEAR = new Date().getFullYear()
 
-const onChange =
+const onInput =
 	(f: (value?: number) => void) =>
 	(
-		e: Event & {
+		e: InputEvent & {
 			currentTarget: HTMLInputElement
-			target: HTMLInputElement
+			target: Element
 		},
 	) => {
-		const value = Number.parseInt(e.target.value, 10)
+		const value = Number.parseInt(e.currentTarget.value, 10)
 
 		f(value)
 	}
@@ -93,14 +93,14 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		}),
 	)
 
-	let klass = createMemo(() => (props.class ? props.class : ""))
+	let klass = createMemo(() => props.class)
 
 	return (
 		<>
 			<InputField.Root class={klass()}>
 				<InputField.Input
 					class="no-spinner"
-					onChange={onChange(setYear)}
+					onInput={onInput(setYear)}
 					placeholder="Year"
 					type="number"
 					value={store.y}
@@ -110,7 +110,7 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 				<InputField.Input
 					class="no-spinner"
 					disabled={!store.y}
-					onChange={onChange(setMonth)}
+					onInput={onInput(setMonth)}
 					placeholder="Month"
 					type="number"
 					value={store.m}
@@ -120,7 +120,7 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 				<InputField.Input
 					class="no-spinner"
 					disabled={!store.m}
-					onChange={onChange(setDay)}
+					onInput={onInput(setDay)}
 					placeholder="Day"
 					type="number"
 					value={store.d}
