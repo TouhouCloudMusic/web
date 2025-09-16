@@ -5,7 +5,6 @@ import {
 	getErrors,
 	getInput,
 	setInput,
-	submit,
 } from "@formisch/solid"
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useBlocker } from "@tanstack/solid-router"
@@ -73,11 +72,12 @@ function FormContent(props: Props) {
 		})
 	}
 
-	const { handleSubmit, mutation } = useReleaseFormSubmission(props)
+	const { handleSubmit } = useReleaseFormSubmission(props)
 
 	useBlocker({
 		shouldBlockFn() {
-			if (!form.isDirty) return false
+			if (form.isSubmitted) return false
+			if (form.isDirty) return true
 
 			const msg = confirm(
 				t`Are you sure you want to leave this page? Your changes will be lost.`,
@@ -197,6 +197,7 @@ function FormContent(props: Props) {
 					<Button
 						variant="Primary"
 						type="submit"
+						class={form.isSubmitting ? "cursor-wait opacity-80" : ""}
 						onClick={() => {
 							if (import.meta.env.DEV) {
 								let errs = getAllErrors(form)
@@ -204,7 +205,7 @@ function FormContent(props: Props) {
 							}
 						}}
 					>
-						<Trans>Submit</Trans>
+						<Trans>{form.isSubmitting ? "Submitting" : "Submit"}</Trans>
 					</Button>
 				</div>
 			</div>
