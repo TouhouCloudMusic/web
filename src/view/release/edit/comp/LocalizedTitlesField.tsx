@@ -90,6 +90,7 @@ function LocalizedTitleItem(props: { index: number; of: ReleaseFormStore }) {
 					</InputField.Root>
 				)}
 			</Field>
+			{/* TODO: form init value */}
 			<LanguageCombobox onChange={onLangChange} />
 			<Button
 				variant="Tertiary"

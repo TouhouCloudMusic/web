@@ -67,6 +67,7 @@ export function ArtistFormLocalizedNames() {
 										)}
 									</M.Field>
 
+									{/* TODO: form init value */}
 									<LanguageCombobox onChange={createOnLangChange(idx())} />
 									<Button
 										variant="Tertiary"

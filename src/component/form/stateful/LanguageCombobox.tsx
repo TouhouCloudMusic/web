@@ -8,6 +8,7 @@ import { Combobox } from "~/component/atomic/Combobox"
 export function LanguageCombobox(props: {
 	onChange: (v: Language | null) => void
 	placeholder?: string
+	value?: Language
 }) {
 	const langs = useQuery(() => LanguagesQuery.findAll())
 
@@ -18,6 +19,7 @@ export function LanguageCombobox(props: {
 			optionValue="id"
 			optionTextValue="name"
 			optionLabel="name"
+			value={props.value}
 			onChange={props.onChange}
 			itemComponent={(itemProps) => (
 				<Combobox.Item item={itemProps.item}>
