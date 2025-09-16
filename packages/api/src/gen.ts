@@ -1377,6 +1377,18 @@ export interface operations {
                     "application/json": components["schemas"]["Data_Option_i32"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
@@ -1416,6 +1428,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecArtist"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -1499,6 +1523,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataOptionArtist"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -1592,6 +1628,18 @@ export interface operations {
                     "application/json": components["schemas"]["DataPaginatedAppearance"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -1626,6 +1674,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataPaginatedCredit"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -1665,6 +1725,18 @@ export interface operations {
                     "application/json": components["schemas"]["DataPaginatedDiscography"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -1700,6 +1772,18 @@ export interface operations {
                     "application/json": components["schemas"]["DataInitDiscography"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -1733,6 +1817,30 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
         };
     };
     upload_avatar: {
@@ -1756,11 +1864,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -1785,11 +1917,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -1814,11 +1970,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -1839,6 +2019,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataOptionCreditRole"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -1878,11 +2070,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -1903,6 +2119,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecCreditRoleSummary"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -1936,6 +2164,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecEvent"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -1973,11 +2213,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -1998,6 +2262,30 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Data_Event"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
         };
@@ -2025,11 +2313,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2067,6 +2379,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecLabel"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             401: {
@@ -2110,11 +2434,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2135,6 +2483,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataOptionLabel"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             401: {
@@ -2180,11 +2540,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2203,6 +2587,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecLanguage"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -2234,6 +2630,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataUserProfile"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             404: {
@@ -2277,11 +2685,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2302,6 +2734,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataUserProfile"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             404: {
@@ -2396,6 +2840,18 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecRelease"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -2449,6 +2905,18 @@ export interface operations {
                 };
                 content?: never;
             };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
         };
     };
     find_release_by_id: {
@@ -2468,6 +2936,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataOptionRelease"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -2525,6 +3005,18 @@ export interface operations {
                 };
                 content?: never;
             };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
         };
     };
     upload_release_cover_art: {
@@ -2568,6 +3060,18 @@ export interface operations {
                 };
                 content?: never;
             };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
         };
     };
     sign_in: {
@@ -2591,6 +3095,18 @@ export interface operations {
                     "application/json": components["schemas"]["DataUserProfile"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
@@ -2598,6 +3114,18 @@ export interface operations {
                 content?: never;
             };
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2628,11 +3156,47 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2657,7 +3221,31 @@ export interface operations {
                     "application/json": components["schemas"]["DataUserProfile"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2688,6 +3276,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecSong"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -2725,11 +3325,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2751,6 +3375,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataOptionSongLyrics"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -2788,11 +3424,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2819,11 +3479,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2844,6 +3528,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecSongLyrics"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
@@ -2879,6 +3575,18 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionSong"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -2904,7 +3612,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["NewSong"];
+                "application/json": components["schemas"]["NewCorrection_NewSong"];
             };
         };
         responses: {
@@ -2916,11 +3624,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -2941,6 +3673,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecTag"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             401: {
@@ -2984,6 +3728,18 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
@@ -3021,6 +3777,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataOptionTag"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             401: {
@@ -3066,11 +3834,35 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
             401: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
         };
     };
@@ -3089,6 +3881,18 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DataVecUserRole"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
                 };
             };
             500: {
