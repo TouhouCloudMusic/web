@@ -31,7 +31,6 @@ export function SongLanguagesField(props: {
 	const addLanguage = () => {
 		insert(props.of, {
 			path: ["data", "languages"],
-			initialInput: undefined as unknown as number,
 		})
 		setSelectedLanguages(selectedLanguages.length, undefined)
 	}

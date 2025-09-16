@@ -29,10 +29,6 @@ export function SongCreditsField(props: {
 	const addCredit = () => {
 		insert(props.of, {
 			path: ["data", "credits"],
-			initialInput: {
-				artist_id: undefined as unknown as number,
-				role_id: undefined as unknown as number,
-			},
 		})
 		setMeta(meta.length, {})
 	}

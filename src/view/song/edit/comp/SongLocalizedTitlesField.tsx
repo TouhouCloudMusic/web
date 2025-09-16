@@ -25,10 +25,6 @@ export function SongLocalizedTitlesField(props: {
 	const addLocalizedTitle = () => {
 		insert(props.of, {
 			path: ["data", "localized_titles"],
-			initialInput: {
-				language_id: undefined as unknown as number,
-				name: "",
-			},
 		})
 		setLanguages(languages.length, undefined)
 	}
