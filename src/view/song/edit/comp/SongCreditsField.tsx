@@ -1,0 +1,179 @@
+import { Field, getErrors, insert, remove, setInput } from "@formisch/solid"
+import type { CreditRoleRef, SimpleArtist, SongCredit } from "@thc/api"
+import { For } from "solid-js"
+import { createStore } from "solid-js/store"
+import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { twMerge } from "tailwind-merge"
+
+import { Button } from "~/component/atomic/button"
+import { FormComp } from "~/component/atomic/form"
+import {
+	ArtistSearchDialog,
+	CreditRoleSearchDialog,
+} from "~/component/form/SearchDialog"
+
+import type { SongFormStore } from "./types"
+
+export function SongCreditsField(props: {
+	of: SongFormStore
+	initCredits?: SongCredit[]
+	class?: string
+}) {
+	const [meta, setMeta] = createStore<CreditMeta[]>(
+		props.initCredits?.map((credit) => ({
+			artist: credit.artist,
+			role: credit.role,
+		})) ?? [],
+	)
+
+	const addCredit = () => {
+		insert(props.of, {
+			path: ["data", "credits"],
+			initialInput: {
+				artist_id: undefined as unknown as number,
+				role_id: undefined as unknown as number,
+			},
+		})
+		setMeta(meta.length, {})
+	}
+
+	const removeCreditAt = (idx: number) => () => {
+		remove(props.of, { path: ["data", "credits"], at: idx })
+		setMeta((list) => list.toSpliced(idx, 1))
+	}
+
+	const setArtistAt = (idx: number) => (artist: SimpleArtist) => {
+		setMeta(idx, (entry) => ({ ...entry, artist }))
+		setInput(props.of, {
+			path: ["data", "credits", idx, "artist_id"],
+			input: artist.id,
+		})
+	}
+
+	const setRoleAt = (idx: number) => (role: CreditRoleRef) => {
+		setMeta(idx, (entry) => ({ ...entry, role }))
+		setInput(props.of, {
+			path: ["data", "credits", idx, "role_id"],
+			input: role.id,
+		})
+	}
+
+	return (
+		<div class={twMerge("flex min-h-32 flex-col", props.class)}>
+			<div class="mb-4 flex place-content-between items-center gap-4">
+				<FormComp.Label class="m-0">Credits</FormComp.Label>
+				<Button
+					variant="Tertiary"
+					class="h-max p-2"
+					onClick={addCredit}
+				>
+					<PlusIcon class="size-4" />
+				</Button>
+			</div>
+			<FormComp.ErrorList
+				errors={getErrors(props.of, { path: ["data", "credits"] })}
+			/>
+			<ul class="flex flex-col gap-3">
+				<For each={meta}>
+					{(_, idx) => (
+						<CreditRow
+							of={props.of}
+							entry={meta[idx()]}
+							index={idx()}
+							onSelectArtist={setArtistAt(idx())}
+							onSelectRole={setRoleAt(idx())}
+							onRemove={removeCreditAt(idx())}
+						/>
+					)}
+				</For>
+			</ul>
+		</div>
+	)
+}
+
+function CreditRow(props: {
+	of: SongFormStore
+	entry: CreditMeta | undefined
+	index: number
+	onSelectArtist: (artist: SimpleArtist) => void
+	onSelectRole: (role: CreditRoleRef) => void
+	onRemove: () => void
+}) {
+	return (
+		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-start gap-4">
+			<div class="flex flex-col gap-2">
+				<CreditEntityLabel
+					placeholder="Select artist"
+					value={props.entry?.artist?.name}
+				/>
+				<Field
+					of={props.of}
+					path={["data", "credits", props.index, "artist_id"]}
+				>
+					{(field) => (
+						<>
+							<input
+								{...field.props}
+								type="number"
+								hidden
+								value={field.input ?? undefined}
+							/>
+							<For each={field.errors}>
+								{(error) => (
+									<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
+								)}
+							</For>
+						</>
+					)}
+				</Field>
+				<ArtistSearchDialog onSelect={props.onSelectArtist} />
+			</div>
+			<div class="flex flex-col gap-2">
+				<CreditEntityLabel
+					placeholder="Select role"
+					value={props.entry?.role?.name}
+				/>
+				<Field
+					of={props.of}
+					path={["data", "credits", props.index, "role_id"]}
+				>
+					{(field) => (
+						<>
+							<input
+								{...field.props}
+								type="number"
+								hidden
+								value={field.input ?? undefined}
+							/>
+							<For each={field.errors}>
+								{(error) => (
+									<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
+								)}
+							</For>
+						</>
+					)}
+				</Field>
+				<CreditRoleSearchDialog onSelect={props.onSelectRole} />
+			</div>
+			<Button
+				variant="Tertiary"
+				size="Sm"
+				onClick={props.onRemove}
+			>
+				<Cross1Icon />
+			</Button>
+		</li>
+	)
+}
+
+type CreditMeta = {
+	artist?: SimpleArtist
+	role?: CreditRoleRef
+}
+
+function CreditEntityLabel(props: { value?: string; placeholder: string }) {
+	if (props.value) {
+		return <span class="text-primary">{props.value}</span>
+	}
+	return <span class="text-tertiary">{props.placeholder}</span>
+}
