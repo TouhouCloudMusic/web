@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/solid-query"
-import type { NewCorrectionNewSong, NewSong } from "@thc/api"
+import type { NewCorrectionNewSong } from "@thc/api"
 import { SongApi } from "@thc/api"
 import { Either } from "effect"
 
 type Params =
 	| { type: "Create"; data: NewCorrectionNewSong }
-	| { type: "Update"; id: number; data: NewSong }
+	| { type: "Update"; id: number; data: NewCorrectionNewSong }
 
 export const getInstance = () =>
 	useMutation(() => ({

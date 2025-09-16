@@ -36,9 +36,8 @@ export function useSongFormSubmission(props: Props) {
 			return
 		}
 
-		// TODO: Align update payload with create once API expects correction wrapper
 		mutation.mutate(
-			{ type: "Update", id: props.song.id, data: output.data },
+			{ type: "Update", id: props.song.id, data: output },
 			{
 				onSuccess() {
 					void navigator({ to: `/song/${props.song.id}` })
@@ -52,5 +51,5 @@ export function useSongFormSubmission(props: Props) {
 		)
 	}
 
-	return { handleSubmit, mutation }
+	return { handleSubmit }
 }
