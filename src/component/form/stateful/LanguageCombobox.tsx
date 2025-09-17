@@ -9,13 +9,20 @@ export function LanguageCombobox(props: {
 	onChange: (v: Language | null) => void
 	placeholder?: string
 	value?: Language
+	filter?: (lang: Language) => boolean
 }) {
 	const langs = useQuery(() => LanguagesQuery.findAll())
 
 	return (
 		<Combobox.Root
 			placeholder={props.placeholder ?? "Select language"}
-			options={langs.isSuccess ? langs.data : []}
+			options={
+				langs.isSuccess
+					? props.filter
+						? langs.data.filter((l) => props.filter?.(l))
+						: langs.data
+					: []
+			}
 			optionValue="id"
 			optionTextValue="name"
 			optionLabel="name"
