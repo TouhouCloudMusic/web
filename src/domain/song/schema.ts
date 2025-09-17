@@ -8,14 +8,14 @@ import {
 } from "~/domain/shared/schema"
 
 export const NewSongCredit = v.object({
-	artist_id: EntityId,
-	role_id: EntityId,
+	artist_id: v.message(EntityId, "Artist not selected"),
+	role_id: v.message(EntityId, "Credit role not selected"),
 })
 export type NewSongCredit = v.InferInput<typeof NewSongCredit>
 
 export const NewSong = v.object({
-	title: EntityIdent,
-	languages: v.array(EntityId),
+	title: v.message(EntityIdent, "Title is required and must be non-empty"),
+	languages: v.array(v.message(EntityId, "Language not selected")),
 	localized_titles: v.array(NewLocalizedName),
 	credits: v.array(NewSongCredit),
 })
