@@ -1,6 +1,6 @@
 import { Field, getErrors, insert, remove, setInput } from "@formisch/solid"
 import type { CreditRoleRef, SimpleArtist, SongCredit } from "@thc/api"
-import { For } from "solid-js"
+import { For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Cross1Icon, PlusIcon, Pencil1Icon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
@@ -174,8 +174,12 @@ type CreditMeta = {
 }
 
 function CreditEntityLabel(props: { value?: string; placeholder: string }) {
-	if (props.value) {
-		return <span class="text-primary">{props.value}</span>
-	}
-	return <span class="text-tertiary">{props.placeholder}</span>
+	return (
+		<Show
+			when={props.value}
+			fallback={<span class="text-tertiary">{props.placeholder}</span>}
+		>
+			{(val) => <span class="text-primary">{val()}</span>}
+		</Show>
+	)
 }
