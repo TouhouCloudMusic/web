@@ -15,6 +15,7 @@ import { EntitySearchDialog } from "./EntitySearchDialog"
 type Props = {
 	onSelect: (role: CreditRoleRef) => void
 	disabled?: boolean
+	icon: JSX.Element
 }
 
 export function CreditRoleSearchDialog(props: Props): JSX.Element {
@@ -45,12 +46,12 @@ export function CreditRoleSearchDialog(props: Props): JSX.Element {
 					class="h-max p-2"
 					disabled={props.disabled}
 				>
-					<PlusIcon class="size-4 text-slate-600" />
+					{props.icon}
 				</Dialog.Trigger>
 			}
 			value={searchKeyword()}
 			onInput={onInput}
-			items={() => rolesQuery.data}
+			items={rolesQuery.data}
 			onSelect={props.onSelect}
 			item={(role) => (
 				<div class="flex items-center justify-between">

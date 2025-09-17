@@ -3,7 +3,7 @@ import type { SimpleArtist } from "@thc/api"
 import { complement } from "@thc/toolkit"
 import { For } from "solid-js"
 import { createStore } from "solid-js/store"
-import { Cross1Icon } from "solid-radix-icons"
+import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
@@ -45,6 +45,7 @@ export function ReleaseArtistsField(props: {
 					<ArtistSearchDialog
 						onSelect={addArtist}
 						dataFilter={complement(contain)}
+						icon={<PlusIcon class="size-4 text-slate-600" />}
 					/>
 				</div>
 			</div>

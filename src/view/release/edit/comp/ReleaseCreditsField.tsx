@@ -98,7 +98,10 @@ function ReleaseCreditArtist(props: {
 					</>
 				)}
 			</Field>
-			<ArtistSearchDialog onSelect={props.onSelectArtist} />
+			<ArtistSearchDialog
+				onSelect={props.onSelectArtist}
+				icon={<PlusIcon class="size-4 text-slate-600" />}
+			/>
 		</>
 	)
 }
@@ -136,7 +139,10 @@ function ReleaseCreditRole(props: {
 					</>
 				)}
 			</Field>
-			<CreditRoleSearchDialog onSelect={props.onSelectRole} />
+			<CreditRoleSearchDialog
+				onSelect={props.onSelectRole}
+				icon={<PlusIcon class="size-4 text-slate-600" />}
+			/>
 		</>
 	)
 }

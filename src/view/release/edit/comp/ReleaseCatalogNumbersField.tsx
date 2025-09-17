@@ -115,9 +115,10 @@ export function ReleaseCatalogNumbersField(props: {
 													</Show>
 												</div>
 
-												<LabelSearchDialog onSelect={setCatalogLabelAt(idx())}>
-													<Pencil1Icon />
-												</LabelSearchDialog>
+												<LabelSearchDialog
+													onSelect={setCatalogLabelAt(idx())}
+													icon={<Pencil1Icon />}
+												/>
 											</>
 										)}
 									</Field>
