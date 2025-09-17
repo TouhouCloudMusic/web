@@ -2,7 +2,7 @@ import { Field, getErrors, insert, remove, setInput } from "@formisch/solid"
 import type { CreditRoleRef, SimpleArtist, SongCredit } from "@thc/api"
 import { For } from "solid-js"
 import { createStore } from "solid-js/store"
-import { Cross1Icon, PlusIcon } from "solid-radix-icons"
+import { Cross1Icon, PlusIcon, Pencil1Icon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
@@ -69,7 +69,7 @@ export function SongCreditsField(props: {
 			<FormComp.ErrorList
 				errors={getErrors(props.of, { path: ["data", "credits"] })}
 			/>
-			<ul class="flex flex-col gap-3">
+			<ul class="flex flex-col gap-2">
 				<For each={meta}>
 					{(_, idx) => (
 						<CreditRow
@@ -96,68 +96,70 @@ function CreditRow(props: {
 	onRemove: () => void
 }) {
 	return (
-		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-start gap-4">
-			<div class="flex flex-col gap-2">
+		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-x-2 gap-y-1">
+			<div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
 				<CreditEntityLabel
 					placeholder="Select artist"
 					value={props.entry?.artist?.name}
 				/>
-				<Field
-					of={props.of}
-					path={["data", "credits", props.index, "artist_id"]}
-				>
-					{(field) => (
-						<>
-							<input
-								{...field.props}
-								type="number"
-								hidden
-								value={field.input ?? undefined}
-							/>
-							<For each={field.errors}>
-								{(error) => (
-									<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
-								)}
-							</For>
-						</>
-					)}
-				</Field>
-				<ArtistSearchDialog onSelect={props.onSelectArtist} />
+				<ArtistSearchDialog
+					onSelect={props.onSelectArtist}
+					icon={<Pencil1Icon class="size-4" />}
+				/>
 			</div>
-			<div class="flex flex-col gap-2">
+			<div class="grid grid-cols-[1fr_auto] items-center gap-x-2">
 				<CreditEntityLabel
 					placeholder="Select role"
 					value={props.entry?.role?.name}
 				/>
-				<Field
-					of={props.of}
-					path={["data", "credits", props.index, "role_id"]}
-				>
-					{(field) => (
-						<>
-							<input
-								{...field.props}
-								type="number"
-								hidden
-								value={field.input ?? undefined}
-							/>
-							<For each={field.errors}>
-								{(error) => (
-									<FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>
-								)}
-							</For>
-						</>
-					)}
-				</Field>
-				<CreditRoleSearchDialog onSelect={props.onSelectRole} />
+				<CreditRoleSearchDialog
+					onSelect={props.onSelectRole}
+					icon={<Pencil1Icon class="size-4" />}
+				/>
 			</div>
 			<Button
 				variant="Tertiary"
-				size="Sm"
 				onClick={props.onRemove}
+				class="aspect-square"
 			>
-				<Cross1Icon />
+				<Cross1Icon class="mx-auto" />
 			</Button>
+			<Field
+				of={props.of}
+				path={["data", "credits", props.index, "artist_id"]}
+			>
+				{(field) => (
+					<>
+						<input
+							{...field.props}
+							type="number"
+							hidden
+							value={field.input ?? undefined}
+						/>
+						<ul class="grid grid-cols-subgrid">
+							<FormComp.ErrorList errors={field.errors} />
+						</ul>
+					</>
+				)}
+			</Field>
+			<Field
+				of={props.of}
+				path={["data", "credits", props.index, "role_id"]}
+			>
+				{(field) => (
+					<>
+						<input
+							{...field.props}
+							type="number"
+							hidden
+							value={field.input ?? undefined}
+						/>
+						<ul class="grid grid-cols-subgrid">
+							<FormComp.ErrorList errors={field.errors} />
+						</ul>
+					</>
+				)}
+			</Field>
 		</li>
 	)
 }

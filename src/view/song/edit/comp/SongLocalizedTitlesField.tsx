@@ -1,4 +1,11 @@
-import { Field, FieldArray, insert, remove, setInput } from "@formisch/solid"
+import {
+	Field,
+	FieldArray,
+	insert,
+	remove,
+	setInput,
+	getErrors,
+} from "@formisch/solid"
 import type { Language, LocalizedTitle } from "@thc/api"
 import { For } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -91,7 +98,7 @@ function LocalizedTitleItem(props: {
 	onRemove: () => void
 }) {
 	return (
-		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-2">
+		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] grid-rows-[auto_auto] items-stretch gap-x-2 gap-y-1">
 			<Field
 				of={props.of}
 				path={["data", "localized_titles", props.index, "name"]}
@@ -103,9 +110,6 @@ function LocalizedTitleItem(props: {
 							placeholder="Title"
 							value={field.input as string | undefined}
 						/>
-						<InputField.Error>
-							{field.errors ? field.errors[0] : undefined}
-						</InputField.Error>
 					</InputField.Root>
 				)}
 			</Field>
@@ -128,13 +132,31 @@ function LocalizedTitleItem(props: {
 					</>
 				)}
 			</Field>
-			<Button
-				variant="Tertiary"
-				size="Sm"
-				onClick={props.onRemove}
-			>
-				<Cross1Icon />
-			</Button>
+			<div class="h-full self-stretch">
+				<Button
+					variant="Tertiary"
+					size="Sm"
+					onClick={props.onRemove}
+					class="grid h-full w-full place-items-center"
+				>
+					<Cross1Icon />
+				</Button>
+			</div>
+
+			<ul>
+				<FormComp.ErrorList
+					errors={getErrors(props.of, {
+						path: ["data", "localized_titles", props.index, "name"],
+					})}
+				/>
+			</ul>
+			<ul>
+				<FormComp.ErrorList
+					errors={getErrors(props.of, {
+						path: ["data", "localized_titles", props.index, "language_id"],
+					})}
+				/>
+			</ul>
 		</li>
 	)
 }

@@ -77,7 +77,7 @@ export function SongLanguagesField(props: {
 							fallback={<FieldArrayFallback />}
 						>
 							{(_, idx) => (
-								<li class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+								<li class="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
 									<Field
 										of={props.of}
 										path={["data", "languages", idx()]}
@@ -98,10 +98,10 @@ export function SongLanguagesField(props: {
 												/>
 												<Button
 													variant="Tertiary"
-													size="Sm"
+													class="aspect-square"
 													onClick={removeLanguageAt(idx())}
 												>
-													<Cross1Icon />
+													<Cross1Icon class="mx-auto" />
 												</Button>
 												<ul>
 													<FormComp.ErrorList errors={field.errors} />
