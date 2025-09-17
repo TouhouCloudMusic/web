@@ -2,13 +2,13 @@ import {
 	Field,
 	FieldArray,
 	getErrors,
+	getInput,
 	insert,
 	remove,
 	setInput,
 } from "@formisch/solid"
 import type { Language } from "@thc/api"
-import { For } from "solid-js"
-import { createStore } from "solid-js/store"
+import { createMemo, For } from "solid-js"
 import { Cross1Icon, PlusIcon } from "solid-radix-icons"
 import { twMerge } from "tailwind-merge"
 
@@ -24,30 +24,27 @@ export function SongLanguagesField(props: {
 	initLanguages?: Language[]
 	class?: string
 }) {
-	const [selectedLanguages, setSelectedLanguages] = createStore<
-		(Language | undefined)[]
-	>([...(props.initLanguages ?? [])])
+	let selectedLanguages = createMemo(() => {
+		return getInput(props.of, { path: ["data", "languages"] })
+	})
 
 	const addLanguage = () => {
 		insert(props.of, {
 			path: ["data", "languages"],
 		})
-		setSelectedLanguages(selectedLanguages.length, undefined)
 	}
 
 	const removeLanguageAt = (index: number) => () => {
 		remove(props.of, { path: ["data", "languages"], at: index })
-		setSelectedLanguages((list) => list.toSpliced(index, 1))
 	}
 
 	const setLanguageAt = (index: number) => (lang: Language | null) => {
 		if (!lang) return
-		const alreadySelected = selectedLanguages.some(
-			(entry, entryIndex) => entry?.id === lang.id && entryIndex !== index,
+		const alreadySelected = selectedLanguages().some(
+			(entry) => entry === lang.id,
 		)
 		if (alreadySelected) return
 
-		setSelectedLanguages(index, lang)
 		setInput(props.of, {
 			path: ["data", "languages", index],
 			input: lang.id,
@@ -89,7 +86,9 @@ export function SongLanguagesField(props: {
 											<>
 												<LanguageCombobox
 													onChange={setLanguageAt(idx())}
-													value={selectedLanguages[idx()]}
+													filter={(lang) => {
+														return !selectedLanguages().includes(lang.id)
+													}}
 												/>
 												<input
 													{...field.props}
@@ -97,23 +96,19 @@ export function SongLanguagesField(props: {
 													hidden
 													value={field.input ?? undefined}
 												/>
-												<For each={field.errors}>
-													{(error) => (
-														<FormComp.ErrorMessage>
-															{error}
-														</FormComp.ErrorMessage>
-													)}
-												</For>
+												<Button
+													variant="Tertiary"
+													size="Sm"
+													onClick={removeLanguageAt(idx())}
+												>
+													<Cross1Icon />
+												</Button>
+												<ul>
+													<FormComp.ErrorList errors={field.errors} />
+												</ul>
 											</>
 										)}
 									</Field>
-									<Button
-										variant="Tertiary"
-										size="Sm"
-										onClick={removeLanguageAt(idx())}
-									>
-										<Cross1Icon />
-									</Button>
 								</li>
 							)}
 						</For>

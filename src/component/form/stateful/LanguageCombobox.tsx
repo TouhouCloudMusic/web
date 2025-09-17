@@ -5,13 +5,19 @@ import { CheckIcon } from "solid-radix-icons"
 
 import { Combobox } from "~/component/atomic/Combobox"
 
+// TODO: global singleton
+const useLang = () => useQuery(LanguagesQuery.findAll)
+let langs: ReturnType<typeof useLang>
+
 export function LanguageCombobox(props: {
 	onChange: (v: Language | null) => void
 	placeholder?: string
 	value?: Language
 	filter?: (lang: Language) => boolean
 }) {
-	const langs = useQuery(() => LanguagesQuery.findAll())
+	if (!langs) {
+		langs = useLang()
+	}
 
 	return (
 		<Combobox.Root
@@ -19,7 +25,7 @@ export function LanguageCombobox(props: {
 			options={
 				langs.isSuccess
 					? props.filter
-						? langs.data.filter((l) => props.filter?.(l))
+						? langs.data.filter(props.filter)
 						: langs.data
 					: []
 			}
