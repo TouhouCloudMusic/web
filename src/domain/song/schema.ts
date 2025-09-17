@@ -9,8 +9,9 @@ import {
 
 export const NewSongCredit = v.object({
 	artist_id: v.message(EntityId, "Artist not selected"),
-	role_id: v.message(EntityId, "Credit role not selected"),
+	role_id: v.optional(EntityId),
 })
+
 export type NewSongCredit = v.InferInput<typeof NewSongCredit>
 
 export const NewSong = v.object({
