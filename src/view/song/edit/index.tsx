@@ -76,10 +76,10 @@ function FormContent(props: Props) {
 			of={form}
 			onSubmit={(out) => handleSubmit(out)}
 		>
-			<div class="grid grid-cols-4 content-start gap-x-2 gap-y-8 px-8 pt-8">
+			<div class="grid grid-cols-5 content-start space-y-8 gap-x-2 px-8 pt-8">
 				<SongTitleField
 					of={form}
-					class="col-span-2"
+					class="col-span-2 row-start-1"
 				/>
 
 				<SongLanguagesField
@@ -87,7 +87,7 @@ function FormContent(props: Props) {
 					initLanguages={
 						props.type === "edit" ? (props.song.languages ?? []) : []
 					}
-					class="col-span-2"
+					class="col-span-2 row-start-2"
 				/>
 
 				<SongLocalizedTitlesField
@@ -95,14 +95,15 @@ function FormContent(props: Props) {
 					initLocalizedTitles={
 						props.type === "edit" ? (props.song.localized_titles ?? []) : []
 					}
-					class="col-span-4"
+					class="col-span-2 row-start-3"
 				/>
 
 				<SongCreditsField
 					of={form}
 					initCredits={props.type === "edit" ? (props.song.credits ?? []) : []}
-					class="col-span-4"
+					class="col-span-2 row-start-4"
 				/>
+				<div></div>
 			</div>
 			<div class="sticky bottom-0 col-span-full mt-12 flex justify-end border-t border-slate-300 bg-white p-4">
 				<div class="grid grid-cols-2 gap-2">
