@@ -15,7 +15,7 @@ import { twMerge } from "tailwind-merge"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
-import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
+import { FieldArrayFallback } from "~/component/form"
 import { LanguageCombobox } from "~/component/form/stateful/LanguageCombobox"
 
 import type { SongFormStore } from "./types"
@@ -68,7 +68,7 @@ export function SongLocalizedTitlesField(props: {
 				path={["data", "localized_titles"]}
 			>
 				{(fa) => (
-					<ul class="flex flex-col gap-2">
+					<ul class="flex min-h-32 flex-col gap-2">
 						<For
 							each={fa.items}
 							fallback={<FieldArrayFallback />}

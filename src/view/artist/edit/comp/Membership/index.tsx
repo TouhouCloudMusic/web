@@ -10,7 +10,7 @@ import { Divider } from "~/component/atomic/Divider"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { Intersperse } from "~/component/data/Intersperse"
-import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
+import { FieldArrayFallback } from "~/component/form"
 import { ArtistSearchDialog } from "~/component/form/SearchDialog"
 
 import { useArtistForm } from "../../context"

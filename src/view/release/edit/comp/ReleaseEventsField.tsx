@@ -9,7 +9,7 @@ import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
-import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
+import { FieldArrayFallback } from "~/component/form"
 import { EventSearchDialog } from "~/component/form/SearchDialog"
 
 import { EventInfo } from "./EntityInfo"

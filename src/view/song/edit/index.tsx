@@ -3,6 +3,7 @@ import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useBlocker } from "@tanstack/solid-router"
 import type { JSX } from "solid-js"
 import { createEffect, Show } from "solid-js"
+import { twJoin } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { NewSongCorrection } from "~/domain/song"
@@ -109,6 +110,7 @@ function FormContent(props: Props) {
 				<div class="grid grid-cols-2 gap-2">
 					<Button
 						variant="Tertiary"
+						class="px-3 py-1.5"
 						onClick={() => history.back()}
 					>
 						<Trans>Back</Trans>
@@ -116,7 +118,10 @@ function FormContent(props: Props) {
 					<Button
 						variant="Primary"
 						type="submit"
-						class={form.isSubmitting ? "cursor-wait opacity-80" : ""}
+						class={twJoin(
+							"px-3 py-1.5",
+							form.isSubmitting ? "cursor-wait opacity-80" : "",
+						)}
 						onClick={() => {
 							if (import.meta.env.DEV) {
 								const errs = getAllErrors(form)

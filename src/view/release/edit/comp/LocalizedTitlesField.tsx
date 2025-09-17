@@ -8,7 +8,7 @@ import { twMerge } from "tailwind-merge"
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
 import { InputField } from "~/component/atomic/form/Input"
-import { FieldArrayFallback } from "~/component/form/FieldArrayFallback"
+import { FieldArrayFallback } from "~/component/form"
 import { LanguageCombobox } from "~/component/form/stateful/LanguageCombobox"
 
 import type { ReleaseFormStore } from "./types"

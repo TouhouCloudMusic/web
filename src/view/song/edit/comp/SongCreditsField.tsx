@@ -7,6 +7,7 @@ import { twMerge } from "tailwind-merge"
 
 import { Button } from "~/component/atomic/button"
 import { FormComp } from "~/component/atomic/form"
+import { FieldArrayFallback } from "~/component/form"
 import {
 	ArtistSearchDialog,
 	CreditRoleSearchDialog,
@@ -69,8 +70,11 @@ export function SongCreditsField(props: {
 			<FormComp.ErrorList
 				errors={getErrors(props.of, { path: ["data", "credits"] })}
 			/>
-			<ul class="flex flex-col gap-2">
-				<For each={meta}>
+			<ul class="flex min-h-32 flex-col gap-2">
+				<For
+					each={meta}
+					fallback={<FieldArrayFallback />}
+				>
 					{(_, idx) => (
 						<CreditRow
 							of={props.of}
