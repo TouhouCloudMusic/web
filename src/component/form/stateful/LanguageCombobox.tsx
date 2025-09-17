@@ -23,6 +23,7 @@ export function LanguageCombobox(props: {
 		<Combobox.Root
 			placeholder={props.placeholder ?? "Select language"}
 			options={
+				// oxlint-disable-next-line no-nested-ternary
 				langs.isSuccess
 					? props.filter
 						? langs.data.filter(props.filter)

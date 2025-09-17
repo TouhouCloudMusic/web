@@ -108,7 +108,7 @@ function LocalizedTitleItem(props: {
 						<InputField.Input
 							{...field.props}
 							placeholder="Title"
-							value={field.input as string | undefined}
+							value={field.input}
 						/>
 					</InputField.Root>
 				)}
