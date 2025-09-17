@@ -19,7 +19,6 @@ type Props = {
 }
 
 export function CreditRoleSearchDialog(props: Props): JSX.Element {
-	const { t } = useLingui()
 	const [searchKeyword, setSearchKeyword] = createSignal("")
 
 	const onInput = debounce(300, (e: Event) => {
@@ -28,12 +27,13 @@ export function CreditRoleSearchDialog(props: Props): JSX.Element {
 
 	const searchTerm = createMemo(() => {
 		const keyword = searchKeyword().trim()
-		return keyword.length > 0 ? keyword : ""
+		return keyword.length > 1 ? keyword : undefined
 	})
 
 	const rolesQuery = useQuery(() => ({
-		...CreditRoleQueryOption.findByKeyword(searchTerm()),
+		...CreditRoleQueryOption.findByKeyword(searchTerm()!),
 		placeholderData: id,
+		enabled: Boolean(searchTerm()),
 	}))
 
 	return (
