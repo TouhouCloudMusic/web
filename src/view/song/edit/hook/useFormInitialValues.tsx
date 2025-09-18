@@ -13,6 +13,7 @@ export function useSongFormInitialValues(
 				description: "",
 				data: {
 					title: "",
+					artists: [],
 					languages: [],
 					localized_titles: [],
 					credits: [],
@@ -23,6 +24,7 @@ export function useSongFormInitialValues(
 				description: "",
 				data: {
 					title: props.song.title,
+					artists: props.song.artists?.map((artist) => artist.id) ?? [],
 					languages: props.song.languages?.map((lang) => lang.id) ?? [],
 					localized_titles:
 						props.song.localized_titles?.map((lt) => ({
@@ -32,7 +34,7 @@ export function useSongFormInitialValues(
 					credits:
 						props.song.credits?.map((credit) => ({
 							artist_id: credit.artist.id,
-							role_id: credit.role.id,
+							role_id: credit.role?.id ?? undefined,
 						})) ?? [],
 				},
 			}

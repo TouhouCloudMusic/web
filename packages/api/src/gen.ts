@@ -932,6 +932,7 @@ export type components = {
         };
         NewCorrection_NewSong: {
             data: {
+                artists?: number[] | null;
                 credits?: components["schemas"]["NewSongCredit"][] | null;
                 languages?: number[] | null;
                 localized_titles?: components["schemas"]["NewLocalizedName"][] | null;
@@ -1026,6 +1027,7 @@ export type components = {
             tracks: components["schemas"]["NewTrack"][];
         };
         NewSong: {
+            artists?: number[] | null;
             credits?: components["schemas"]["NewSongCredit"][] | null;
             languages?: number[] | null;
             localized_titles?: components["schemas"]["NewLocalizedName"][] | null;
@@ -1035,7 +1037,7 @@ export type components = {
             /** Format: int32 */
             artist_id: number;
             /** Format: int32 */
-            role_id: number;
+            role_id?: number | null;
         };
         NewSongLyrics: {
             content: string;
@@ -1179,7 +1181,7 @@ export type components = {
         };
         SongCredit: {
             artist: components["schemas"]["SimpleArtist"];
-            role: components["schemas"]["CreditRoleRef"];
+            role?: null | components["schemas"]["CreditRoleRef"];
         };
         SongLyrics: {
             content: string;

@@ -23,7 +23,7 @@ export function SongCreditsField(props: {
 	const [meta, setMeta] = createStore<CreditMeta[]>(
 		props.initCredits?.map((credit) => ({
 			artist: credit.artist,
-			role: credit.role,
+			role: credit.role ?? undefined,
 		})) ?? [],
 	)
 

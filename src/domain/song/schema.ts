@@ -16,6 +16,7 @@ export type NewSongCredit = v.InferInput<typeof NewSongCredit>
 
 export const NewSong = v.object({
 	title: v.message(EntityIdent, "Title is required and must be non-empty"),
+	artists: v.array(EntityId),
 	languages: v.array(v.message(EntityId, "Language not selected")),
 	localized_titles: v.array(NewLocalizedName),
 	credits: v.array(NewSongCredit),

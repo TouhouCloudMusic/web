@@ -9,6 +9,7 @@ import { Button } from "~/component/atomic/button"
 import { NewSongCorrection } from "~/domain/song"
 import { PageLayout } from "~/layout/PageLayout"
 
+import { SongArtistsField } from "./comp/SongArtistsField"
 import { SongCreditsField } from "./comp/SongCreditsField"
 import { SongLanguagesField } from "./comp/SongLanguagesField"
 import { SongLocalizedTitlesField } from "./comp/SongLocalizedTitlesField"
@@ -83,12 +84,18 @@ function FormContent(props: Props) {
 					class="col-span-2 row-start-1"
 				/>
 
+				<SongArtistsField
+					of={form}
+					initArtists={props.type === "edit" ? (props.song.artists ?? []) : []}
+					class="col-span-2 row-start-2"
+				/>
+
 				<SongLanguagesField
 					of={form}
 					initLanguages={
 						props.type === "edit" ? (props.song.languages ?? []) : []
 					}
-					class="col-span-2 row-start-2"
+					class="col-span-2 row-start-3"
 				/>
 
 				<SongLocalizedTitlesField
@@ -96,13 +103,13 @@ function FormContent(props: Props) {
 					initLocalizedTitles={
 						props.type === "edit" ? (props.song.localized_titles ?? []) : []
 					}
-					class="col-span-2 row-start-3"
+					class="col-span-2 row-start-4"
 				/>
 
 				<SongCreditsField
 					of={form}
 					initCredits={props.type === "edit" ? (props.song.credits ?? []) : []}
-					class="col-span-2 row-start-4"
+					class="col-span-2 row-start-5"
 				/>
 				<div></div>
 			</div>
