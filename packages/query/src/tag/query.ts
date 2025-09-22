@@ -3,12 +3,13 @@ import { TagApi } from "@thc/api"
 import { Either, identity } from "effect"
 
 export const QUERY_KEYS = {
+	DETAIL_ID: "tag::detail",
 	DETAIL_KEYWORD: "tag::detail::keyword",
 }
 
 export function findById(id: number) {
 	return queryOptions({
-		queryKey: ["tag::detail", id],
+		queryKey: [QUERY_KEYS.DETAIL_ID, id],
 		queryFn: async () => {
 			const result = await TagApi.findTagById({
 				path: { id },

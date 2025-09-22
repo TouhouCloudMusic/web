@@ -7,12 +7,10 @@ export const TagType = v.union(
 		v.literal(x),
 	),
 )
-export type TagType = v.InferInput<typeof TagType>
 
 export const TagRelationType = v.union(
 	(["Inherit", "Derive"] as const).map((x) => v.literal(x)),
 )
-export type TagRelationType = v.InferInput<typeof TagRelationType>
 
 export const NewTagRelation = v.object({
 	related_tag_id: v.message(EntityId, "Tag not selected"),

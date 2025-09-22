@@ -1,6 +1,7 @@
 import { Field } from "@formisch/solid"
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import type { TagMutation } from "@thc/query"
+import { For } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
 import { FormComp } from "~/component/atomic/form"
@@ -33,9 +34,10 @@ export function TagFormDesc(props: Props) {
 							value={field.input ?? ""}
 							class="min-h-32"
 						/>
-						<InputField.Error>
-							{field.errors ? field.errors[0] : undefined}
-						</InputField.Error>
+
+						<For each={field.errors}>
+							{(error) => <InputField.Error>{error}</InputField.Error>}
+						</For>
 					</InputField.Root>
 				)}
 			</Field>
@@ -51,9 +53,9 @@ export function TagFormDesc(props: Props) {
 							type="hidden"
 							value={field.input}
 						/>
-						<InputField.Error>
-							{field.errors ? field.errors[0] : undefined}
-						</InputField.Error>
+						<For each={field.errors}>
+							{(error) => <InputField.Error>{error}</InputField.Error>}
+						</For>
 					</InputField.Root>
 				)}
 			</Field>

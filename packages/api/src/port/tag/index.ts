@@ -32,7 +32,10 @@ export async function create(options: Opt<"create_tag">) {
 
 export async function upsertCorrection(options: Opt<"upsert_tag_correction">) {
 	const res = await FetchClient.POST("/tag/{id}", {
-		params: options,
+		params: {
+			path: options.path,
+			query: options.query,
+		},
 		body: options.body,
 	})
 

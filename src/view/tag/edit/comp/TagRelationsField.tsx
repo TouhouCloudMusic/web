@@ -7,7 +7,7 @@ import {
 	setInput,
 } from "@formisch/solid"
 import { Trans } from "@lingui-solid/solid/macro"
-import type { Tag, TagRef } from "@thc/api"
+import type { Tag, TagRef, TagRelationType } from "@thc/api"
 import { For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { Cross1Icon, Pencil1Icon, PlusIcon } from "solid-radix-icons"
@@ -18,7 +18,6 @@ import { Button } from "~/component/atomic/button"
 import { FieldArrayFallback } from "~/component/form"
 import { TagSearchDialog } from "~/component/form/SearchDialog"
 import { TagM } from "~/domain/tag"
-import type { TagRelationType } from "~/domain/tag"
 
 import { useTagForm } from "../context"
 import type { TagFormStore } from "./types"
@@ -36,10 +35,15 @@ export function TagFormRelationsField(props: Props) {
 		tag?.relations?.map((relation) => relation.tag) ?? [],
 	)
 
-	const isDuplicate = (candidate: Tag, ignoreIndex?: number) =>
-		tagRefs.some(
-			(entry, idx) => idx !== ignoreIndex && entry?.id === candidate.id,
-		)
+	const isRelationExists = (candidate: Tag, ignoreIndex?: number) => {
+		if (candidate.id === tag?.id) return true
+		return tagRefs.some((entry, idx) => {
+			if (!entry) return false
+			if (idx === ignoreIndex) return false
+
+			return entry.id === candidate.id
+		})
+	}
 
 	const addRelation = () => {
 		insert(formStore, { path: ["data", "relations"] })
@@ -52,7 +56,7 @@ export function TagFormRelationsField(props: Props) {
 	}
 
 	const setTagAt = (index: number) => (selected: Tag) => {
-		if (isDuplicate(selected, index)) return
+		if (isRelationExists(selected, index)) return
 		setTagRefs(index, () => TagM.toTagRef(selected))
 		setInput(formStore, {
 			path: ["data", "relations", index, "related_tag_id"],
@@ -94,7 +98,7 @@ export function TagFormRelationsField(props: Props) {
 									tagRef={tagRefs[idx()]}
 									onSelectTag={setTagAt(idx())}
 									onRemove={removeRelationAt(idx())}
-									isTagSelectable={(tag) => !isDuplicate(tag, idx())}
+									dataFilter={(tag) => !isRelationExists(tag, idx())}
 								/>
 							)}
 						</For>
@@ -111,15 +115,10 @@ type RelationRowProps = {
 	tagRef: TagRef | undefined
 	onSelectTag: (tag: Tag) => void
 	onRemove: () => void
-	isTagSelectable: (tag: Tag) => boolean
+	dataFilter: (tag: Tag) => boolean
 }
 
 function RelationRow(props: RelationRowProps) {
-	const canSelectTag = (candidate: Tag) => {
-		if (props.tagRef?.id === candidate.id) return true
-		return props.isTagSelectable(candidate)
-	}
-
 	return (
 		<li class="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] gap-x-2 gap-y-1">
 			<div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2">
@@ -129,7 +128,7 @@ function RelationRow(props: RelationRowProps) {
 				/>
 				<TagSearchDialog
 					onSelect={props.onSelectTag}
-					dataFilter={canSelectTag}
+					dataFilter={props.dataFilter}
 					icon={<Pencil1Icon class="size-4" />}
 				/>
 			</div>

@@ -4,7 +4,7 @@ import type { TagType } from "@thc/api"
 import { For } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
-import { FormComp } from "~/component/atomic/form"
+import { FormComp, Select } from "~/component/atomic"
 
 import { useTagForm } from "../context"
 
@@ -27,18 +27,27 @@ export function TagFormTypeField(props: Props) {
 					<FormComp.Label>
 						<Trans>Tag Type</Trans>
 					</FormComp.Label>
-					<div class="rounded-sm border border-slate-300 font-light">
-						<select
-							{...field.props}
-							class="box-border h-8 w-full rounded px-1 whitespace-nowrap focus:outline-1 focus:outline-reimu-600"
-							value={field.input ?? ""}
+					<Select
+						{...field.props}
+						value={field.input}
+					>
+						<Select.Option
+							value=""
+							selected={!field.input}
 						>
-							<option value="">-- Please Select Type -- </option>
-							<For each={TAG_TYPES}>
-								{(type) => <option value={type}>{type}</option>}
-							</For>
-						</select>
-					</div>
+							-- Please Select Type --{" "}
+						</Select.Option>
+						<For each={TAG_TYPES}>
+							{(type) => (
+								<Select.Option
+									value={type}
+									selected={field.input === type}
+								>
+									{type}
+								</Select.Option>
+							)}
+						</For>
+					</Select>
 					<For each={field.errors}>
 						{(error) => <FormComp.ErrorMessage>{error}</FormComp.ErrorMessage>}
 					</For>

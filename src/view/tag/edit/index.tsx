@@ -1,10 +1,10 @@
 /* @refresh reload */
-import { Form, createForm } from "@formisch/solid"
+import { Form, createForm, getInput } from "@formisch/solid"
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useBlocker } from "@tanstack/solid-router"
 import type { Tag } from "@thc/api"
 import type { JSX } from "solid-js"
-import { Show } from "solid-js"
+import { createEffect, Show } from "solid-js"
 
 import { FormActionBar } from "~/component/form"
 import { NewTagCorrection } from "~/domain/tag"

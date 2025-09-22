@@ -4,12 +4,13 @@ import { twMerge } from "tailwind-merge"
 
 import { tw } from "~/utils"
 
+// TODO: border color
 export const INPUT_LIKE_BASE_CLASS = tw(`
 	bg-primary
 
 	rounded
 
-	border border-slate-400
+	border border-slate-300
 	aria-invalid:border-reimu-600
 
 	disabled:bg-slate-100

@@ -46,7 +46,7 @@ export function createTagFormSubmission(props: Props) {
 			{
 				onSuccess() {
 					void queryClient.invalidateQueries({
-						queryKey: [TagQueryOption.TAG_SEARCH_QUERY_KEY],
+						queryKey: [TagQueryOption.QUERY_KEYS.DETAIL_ID, props.tag.id],
 					})
 					void navigator({ to: `/tag/${props.tag.id}` })
 				},
