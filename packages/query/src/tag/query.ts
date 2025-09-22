@@ -2,6 +2,10 @@ import { queryOptions } from "@tanstack/solid-query"
 import { TagApi } from "@thc/api"
 import { Either, identity } from "effect"
 
+export const QUERY_KEYS = {
+	DETAIL_KEYWORD: "tag::detail::keyword",
+}
+
 export function findById(id: number) {
 	return queryOptions({
 		queryKey: ["tag::detail", id],
@@ -22,7 +26,7 @@ export function findById(id: number) {
 
 export function findByKeyword(keyword: string) {
 	return queryOptions({
-		queryKey: ["tag::search", keyword],
+		queryKey: [QUERY_KEYS.DETAIL_KEYWORD, keyword],
 		queryFn: async () => {
 			const result = await TagApi.findTagByKeyword({
 				query: { keyword },

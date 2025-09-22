@@ -1,6 +1,7 @@
+import { useQueryClient } from "@tanstack/solid-query"
 import { useNavigate } from "@tanstack/solid-router"
 import type { Tag } from "@thc/api"
-import { TagMutation } from "@thc/query"
+import { TagMutation, TagQueryOption } from "@thc/query"
 import type { InferOutput } from "valibot"
 
 import type { NewTagCorrection } from "~/domain/tag"
@@ -16,6 +17,7 @@ type Props =
 
 export function createTagFormSubmission(props: Props) {
 	const navigator = useNavigate()
+	const queryClient = useQueryClient()
 	const mutation = TagMutation.getInstance()
 
 	const handleSubmit = (output: InferOutput<typeof NewTagCorrection>) => {
@@ -24,6 +26,9 @@ export function createTagFormSubmission(props: Props) {
 				{ type: "Create", data: output },
 				{
 					onSuccess() {
+						void queryClient.invalidateQueries({
+							queryKey: [TagQueryOption.QUERY_KEYS.DETAIL_KEYWORD],
+						})
 						void navigator({ to: `/` })
 					},
 					onError(error) {
@@ -40,6 +45,9 @@ export function createTagFormSubmission(props: Props) {
 			{ type: "Update", id: props.tag.id, data: output },
 			{
 				onSuccess() {
+					void queryClient.invalidateQueries({
+						queryKey: [TagQueryOption.TAG_SEARCH_QUERY_KEY],
+					})
 					void navigator({ to: `/tag/${props.tag.id}` })
 				},
 				onError(error) {

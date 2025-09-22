@@ -73,7 +73,7 @@ export function TagSearchDialog(props: TagSearchDialogProps): JSX.Element {
 				<div class="flex items-center justify-between">
 					<div class="flex flex-col text-left font-light text-primary">
 						<span class="text-lg">{tag.name}</span>
-						<span class="text-xs text-tertiary">{tag.type}</span>
+						<span class="text-sm text-tertiary">{tag.type}</span>
 					</div>
 					<div class="opacity-0 transition-opacity duration-150 group-hover:opacity-100">
 						<PlusIcon class="size-4 text-tertiary" />

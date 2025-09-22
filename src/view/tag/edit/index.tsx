@@ -14,6 +14,7 @@ import { TagFormAltNamesField } from "./comp/TagAltNames"
 import { TagFormDescriptionField } from "./comp/TagDescription"
 import { TagFormDesc } from "./comp/TagFormActions"
 import { TagFormNameField } from "./comp/TagName"
+import { TagFormRelationsField } from "./comp/TagRelationsField"
 import { TagFormShortDescriptionField } from "./comp/TagShortDescription"
 import { TagFormTypeField } from "./comp/TagTypeField"
 import { TagFormProvider } from "./context"
@@ -42,7 +43,7 @@ function PageHeader(props: { type: Props["type"] }) {
 	return (
 		<div class="border-b-1 border-slate-300 p-8">
 			<div class="flex items-center gap-4">
-				<h1 class="text-2xl font-light">
+				<h1 class="text-2xl font-light tracking-tight">
 					<Show
 						when={props.type === "new"}
 						fallback={<Trans>Edit Tag</Trans>}

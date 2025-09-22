@@ -16,17 +16,19 @@ export type TagRelationType = v.InferInput<typeof TagRelationType>
 
 export const NewTagRelation = v.object({
 	related_tag_id: v.message(EntityId, "Tag not selected"),
-	type: TagRelationType,
+	type: v.message(TagRelationType, "Relation type is required"),
 })
 export type NewTagRelation = v.InferInput<typeof NewTagRelation>
 
 export const NewTag = v.object({
 	name: v.message(EntityIdent, "Name is required and must be non-empty"),
 	type: TagType,
-	short_description: v.nullish(v.string()),
-	description: v.nullish(v.string()),
-	alt_names: v.nullish(v.array(EntityIdent)),
-	relations: v.nullish(v.array(NewTagRelation)),
+	short_description: v.optional(v.string()),
+	description: v.optional(v.string()),
+	alt_names: v.optional(
+		v.array(v.message(EntityIdent, "Name is required and must be non-empty")),
+	),
+	relations: v.optional(v.array(NewTagRelation)),
 })
 export type NewTag = v.InferInput<typeof NewTag>
 
