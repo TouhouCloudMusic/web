@@ -1,3 +1,4 @@
+import { DateExt } from "@thc/toolkit/data"
 import dayjs from "dayjs"
 import { createEffect, createMemo, on } from "solid-js"
 import { createStore } from "solid-js/store"
@@ -86,9 +87,13 @@ export function DateWithPrecision(props: DateWithPrecisionProps) {
 		setStore("d", val)
 	}
 
-	const date = createMemo(() =>
-		store.y ? new Date(store.y, (store.m ?? 1) - 1, store.d ?? 1) : undefined,
-	)
+	const date = createMemo(() => {
+		if (!store.y) return
+		const year = store.y
+		const month = store.m ?? 1
+		const day = store.d ?? 1
+		return DateExt.fromYMD(year, month, day)
+	})
 
 	const precision = createMemo<DatePrecision | undefined>(() =>
 		getPrecision(store),
