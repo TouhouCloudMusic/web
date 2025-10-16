@@ -21,6 +21,7 @@ import { Route as SongIdRouteImport } from './route/song/$id'
 import { Route as ReleaseNewRouteImport } from './route/release/new'
 import { Route as ReleaseMockRouteImport } from './route/release/mock'
 import { Route as ReleaseIdRouteImport } from './route/release/$id'
+import { Route as LabelNewRouteImport } from './route/label/new'
 import { Route as EventNewRouteImport } from './route/event/new'
 import { Route as EventMockRouteImport } from './route/event/mock'
 import { Route as EventIdRouteImport } from './route/event/$id'
@@ -31,6 +32,7 @@ import { Route as ArtistIdIndexRouteImport } from './route/artist/$id.index'
 import { Route as TagIdEditRouteImport } from './route/tag/$id.edit'
 import { Route as SongIdEditRouteImport } from './route/song/$id.edit'
 import { Route as ReleaseIdEditRouteImport } from './route/release/$id.edit'
+import { Route as LabelIdEditRouteImport } from './route/label/$id.edit'
 import { Route as EventIdEditRouteImport } from './route/event/$id.edit'
 import { Route as ArtistIdEditRouteImport } from './route/artist/$id.edit'
 import { Route as userProfileEditRouteImport } from './route/(user)/profile_.edit'
@@ -96,6 +98,11 @@ const ReleaseIdRoute = ReleaseIdRouteImport.update({
   path: '/release/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LabelNewRoute = LabelNewRouteImport.update({
+  id: '/label/new',
+  path: '/label/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventNewRoute = EventNewRouteImport.update({
   id: '/event/new',
   path: '/event/new',
@@ -146,6 +153,11 @@ const ReleaseIdEditRoute = ReleaseIdEditRouteImport.update({
   path: '/edit',
   getParentRoute: () => ReleaseIdRoute,
 } as any)
+const LabelIdEditRoute = LabelIdEditRouteImport.update({
+  id: '/label/$id/edit',
+  path: '/label/$id/edit',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EventIdEditRoute = EventIdEditRouteImport.update({
   id: '/edit',
   path: '/edit',
@@ -177,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/event/$id': typeof EventIdRouteWithChildren
   '/event/mock': typeof EventMockRoute
   '/event/new': typeof EventNewRoute
+  '/label/new': typeof LabelNewRoute
   '/release/$id': typeof ReleaseIdRouteWithChildren
   '/release/mock': typeof ReleaseMockRoute
   '/release/new': typeof ReleaseNewRoute
@@ -190,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/profile/edit': typeof userProfileEditRoute
   '/artist/$id/edit': typeof ArtistIdEditRoute
   '/event/$id/edit': typeof EventIdEditRoute
+  '/label/$id/edit': typeof LabelIdEditRoute
   '/release/$id/edit': typeof ReleaseIdEditRoute
   '/song/$id/edit': typeof SongIdEditRoute
   '/tag/$id/edit': typeof TagIdEditRoute
@@ -205,6 +219,7 @@ export interface FileRoutesByTo {
   '/event/$id': typeof EventIdRouteWithChildren
   '/event/mock': typeof EventMockRoute
   '/event/new': typeof EventNewRoute
+  '/label/new': typeof LabelNewRoute
   '/release/$id': typeof ReleaseIdRouteWithChildren
   '/release/mock': typeof ReleaseMockRoute
   '/release/new': typeof ReleaseNewRoute
@@ -218,6 +233,7 @@ export interface FileRoutesByTo {
   '/profile/edit': typeof userProfileEditRoute
   '/artist/$id/edit': typeof ArtistIdEditRoute
   '/event/$id/edit': typeof EventIdEditRoute
+  '/label/$id/edit': typeof LabelIdEditRoute
   '/release/$id/edit': typeof ReleaseIdEditRoute
   '/song/$id/edit': typeof SongIdEditRoute
   '/tag/$id/edit': typeof TagIdEditRoute
@@ -234,6 +250,7 @@ export interface FileRoutesById {
   '/event/$id': typeof EventIdRouteWithChildren
   '/event/mock': typeof EventMockRoute
   '/event/new': typeof EventNewRoute
+  '/label/new': typeof LabelNewRoute
   '/release/$id': typeof ReleaseIdRouteWithChildren
   '/release/mock': typeof ReleaseMockRoute
   '/release/new': typeof ReleaseNewRoute
@@ -247,6 +264,7 @@ export interface FileRoutesById {
   '/(user)/profile_/edit': typeof userProfileEditRoute
   '/artist/$id/edit': typeof ArtistIdEditRoute
   '/event/$id/edit': typeof EventIdEditRoute
+  '/label/$id/edit': typeof LabelIdEditRoute
   '/release/$id/edit': typeof ReleaseIdEditRoute
   '/song/$id/edit': typeof SongIdEditRoute
   '/tag/$id/edit': typeof TagIdEditRoute
@@ -264,6 +282,7 @@ export interface FileRouteTypes {
     | '/event/$id'
     | '/event/mock'
     | '/event/new'
+    | '/label/new'
     | '/release/$id'
     | '/release/mock'
     | '/release/new'
@@ -277,6 +296,7 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/artist/$id/edit'
     | '/event/$id/edit'
+    | '/label/$id/edit'
     | '/release/$id/edit'
     | '/song/$id/edit'
     | '/tag/$id/edit'
@@ -292,6 +312,7 @@ export interface FileRouteTypes {
     | '/event/$id'
     | '/event/mock'
     | '/event/new'
+    | '/label/new'
     | '/release/$id'
     | '/release/mock'
     | '/release/new'
@@ -305,6 +326,7 @@ export interface FileRouteTypes {
     | '/profile/edit'
     | '/artist/$id/edit'
     | '/event/$id/edit'
+    | '/label/$id/edit'
     | '/release/$id/edit'
     | '/song/$id/edit'
     | '/tag/$id/edit'
@@ -320,6 +342,7 @@ export interface FileRouteTypes {
     | '/event/$id'
     | '/event/mock'
     | '/event/new'
+    | '/label/new'
     | '/release/$id'
     | '/release/mock'
     | '/release/new'
@@ -333,6 +356,7 @@ export interface FileRouteTypes {
     | '/(user)/profile_/edit'
     | '/artist/$id/edit'
     | '/event/$id/edit'
+    | '/label/$id/edit'
     | '/release/$id/edit'
     | '/song/$id/edit'
     | '/tag/$id/edit'
@@ -349,6 +373,7 @@ export interface RootRouteChildren {
   EventIdRoute: typeof EventIdRouteWithChildren
   EventMockRoute: typeof EventMockRoute
   EventNewRoute: typeof EventNewRoute
+  LabelNewRoute: typeof LabelNewRoute
   ReleaseIdRoute: typeof ReleaseIdRouteWithChildren
   ReleaseMockRoute: typeof ReleaseMockRoute
   ReleaseNewRoute: typeof ReleaseNewRoute
@@ -361,6 +386,7 @@ export interface RootRouteChildren {
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
   ArtistIdEditRoute: typeof ArtistIdEditRoute
+  LabelIdEditRoute: typeof LabelIdEditRoute
   ArtistIdIndexRoute: typeof ArtistIdIndexRoute
 }
 
@@ -450,6 +476,13 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof ReleaseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/label/new': {
+      id: '/label/new'
+      path: '/label/new'
+      fullPath: '/label/new'
+      preLoaderRoute: typeof LabelNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/event/new': {
       id: '/event/new'
       path: '/event/new'
@@ -519,6 +552,13 @@ declare module '@tanstack/solid-router' {
       fullPath: '/release/$id/edit'
       preLoaderRoute: typeof ReleaseIdEditRouteImport
       parentRoute: typeof ReleaseIdRoute
+    }
+    '/label/$id/edit': {
+      id: '/label/$id/edit'
+      path: '/label/$id/edit'
+      fullPath: '/label/$id/edit'
+      preLoaderRoute: typeof LabelIdEditRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/event/$id/edit': {
       id: '/event/$id/edit'
@@ -605,6 +645,7 @@ const rootRouteChildren: RootRouteChildren = {
   EventIdRoute: EventIdRouteWithChildren,
   EventMockRoute: EventMockRoute,
   EventNewRoute: EventNewRoute,
+  LabelNewRoute: LabelNewRoute,
   ReleaseIdRoute: ReleaseIdRouteWithChildren,
   ReleaseMockRoute: ReleaseMockRoute,
   ReleaseNewRoute: ReleaseNewRoute,
@@ -617,6 +658,7 @@ const rootRouteChildren: RootRouteChildren = {
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
   ArtistIdEditRoute: ArtistIdEditRoute,
+  LabelIdEditRoute: LabelIdEditRoute,
   ArtistIdIndexRoute: ArtistIdIndexRoute,
 }
 export const routeTree = rootRouteImport
