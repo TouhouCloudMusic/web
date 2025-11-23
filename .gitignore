@@ -30,3 +30,6 @@ dist
 src/constant/server.ts
 
 src/stories
+
+# Environment Variables
+.env
