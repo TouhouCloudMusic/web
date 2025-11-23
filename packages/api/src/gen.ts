@@ -59,7 +59,7 @@ export type paths = {
             path?: never;
             cookie?: never;
         };
-        get: operations["find_artist_apperances"];
+        get: operations["find_artist_appearances"];
         put?: never;
         post?: never;
         delete?: never;
@@ -420,6 +420,22 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sign-in": {
         parameters: {
             query?: never;
@@ -664,21 +680,6 @@ export type components = {
             name: string;
             short_description: string;
         };
-        Data_Event: {
-            data: {
-                alternative_names?: components["schemas"]["AlternativeName"][];
-                description?: string;
-                end_date?: null | components["schemas"]["DateWithPrecision"];
-                /** Format: int32 */
-                id: number;
-                location?: components["schemas"]["Location"];
-                name?: string;
-                short_description?: string;
-                start_date?: null | components["schemas"]["DateWithPrecision"];
-            };
-            /** @enum {string} */
-            status: "Ok";
-        };
         Data_Option_i32: {
             data: null | number;
             /** @enum {string} */
@@ -694,6 +695,10 @@ export type components = {
         };
         DataOptionCreditRole: {
             data: null | components["schemas"]["CreditRole"];
+            status: string;
+        };
+        DataOptionEvent: {
+            data: null | components["schemas"]["Event"];
             status: string;
         };
         DataOptionLabel: {
@@ -726,6 +731,10 @@ export type components = {
         };
         DataPaginatedDiscography: {
             data: components["schemas"]["Paginated_Discography"];
+            status: string;
+        };
+        DataSearchResult: {
+            data: components["schemas"]["SearchResult"];
             status: string;
         };
         DataUserProfile: {
@@ -1151,6 +1160,16 @@ export type components = {
         };
         /** @enum {string} */
         ReleaseType: "Album" | "Ep" | "Single" | "Compilation" | "Demo" | "Other";
+        SearchResult: {
+            artists: components["schemas"]["Artist"][];
+            events: components["schemas"]["Event"][];
+            labels: components["schemas"]["Label"][];
+            releases: components["schemas"]["Release"][];
+            songs: components["schemas"]["Song"][];
+            tags: components["schemas"]["Tag"][];
+        };
+        /** @enum {string} */
+        SearchType: "all" | "song" | "artist" | "release" | "label" | "event" | "tag";
         SimpleArtist: {
             /** Format: int32 */
             id: number;
@@ -1277,11 +1296,11 @@ export type CorrectionType = components['schemas']['CorrectionType'];
 export type CreditRole = components['schemas']['CreditRole'];
 export type CreditRoleRef = components['schemas']['CreditRoleRef'];
 export type CreditRoleSummary = components['schemas']['CreditRoleSummary'];
-export type DataEvent = components['schemas']['Data_Event'];
 export type DataOptionI32 = components['schemas']['Data_Option_i32'];
 export type DataInitDiscography = components['schemas']['DataInitDiscography'];
 export type DataOptionArtist = components['schemas']['DataOptionArtist'];
 export type DataOptionCreditRole = components['schemas']['DataOptionCreditRole'];
+export type DataOptionEvent = components['schemas']['DataOptionEvent'];
 export type DataOptionLabel = components['schemas']['DataOptionLabel'];
 export type DataOptionRelease = components['schemas']['DataOptionRelease'];
 export type DataOptionSong = components['schemas']['DataOptionSong'];
@@ -1290,6 +1309,7 @@ export type DataOptionTag = components['schemas']['DataOptionTag'];
 export type DataPaginatedAppearance = components['schemas']['DataPaginatedAppearance'];
 export type DataPaginatedCredit = components['schemas']['DataPaginatedCredit'];
 export type DataPaginatedDiscography = components['schemas']['DataPaginatedDiscography'];
+export type DataSearchResult = components['schemas']['DataSearchResult'];
 export type DataUserProfile = components['schemas']['DataUserProfile'];
 export type DataVecArtist = components['schemas']['DataVecArtist'];
 export type DataVecCreditRoleSummary = components['schemas']['DataVecCreditRoleSummary'];
@@ -1348,6 +1368,8 @@ export type ReleaseCredit = components['schemas']['ReleaseCredit'];
 export type ReleaseDisc = components['schemas']['ReleaseDisc'];
 export type ReleaseTrack = components['schemas']['ReleaseTrack'];
 export type ReleaseType = components['schemas']['ReleaseType'];
+export type SearchResult = components['schemas']['SearchResult'];
+export type SearchType = components['schemas']['SearchType'];
 export type SimpleArtist = components['schemas']['SimpleArtist'];
 export type SimpleEvent = components['schemas']['SimpleEvent'];
 export type SimpleLabel = components['schemas']['SimpleLabel'];
@@ -1618,7 +1640,7 @@ export interface operations {
             };
         };
     };
-    find_artist_apperances: {
+    find_artist_appearances: {
         parameters: {
             query: {
                 cursor: number;
@@ -2273,7 +2295,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Data_Event"];
+                    "application/json": components["schemas"]["DataOptionEvent"];
                 };
             };
             400: {
@@ -3071,6 +3093,52 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
+            };
+        };
+    };
+    search: {
+        parameters: {
+            query: {
+                keyword: string;
+                type?: null | components["schemas"]["SearchType"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataSearchResult"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                };
             };
             500: {
                 headers: {
@@ -3927,7 +3995,7 @@ export enum ApiPaths {
     create_artist = "/artist",
     find_artist_by_id = "/artist/{id}",
     upsert_artist_correction = "/artist/{id}",
-    find_artist_apperances = "/artist/{id}/appearances",
+    find_artist_appearances = "/artist/{id}/appearances",
     get_artist_credits = "/artist/{id}/credits",
     find_artist_discographies_by_type = "/artist/{id}/discographies",
     find_artist_discographies_init = "/artist/{id}/discographies/init",
@@ -3957,6 +4025,7 @@ export enum ApiPaths {
     find_release_by_id = "/release/{id}",
     update_release = "/release/{id}",
     upload_release_cover_art = "/release/{id}/cover-art",
+    search = "/search",
     sign_in = "/sign-in",
     sign_out = "/sign-out",
     sign_up = "/sign-up",

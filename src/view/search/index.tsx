@@ -5,6 +5,7 @@ import { MagnifyingGlassIcon } from "solid-radix-icons"
 import { Tab } from "~/component/atomic"
 import { Input } from "~/component/atomic/Input"
 import { PageLayout } from "~/layout/PageLayout"
+import { GeneralSearchResult } from "./comp/GeneralSearchResult"
 
 export function SearchView() {
 	const search = useSearch({ from: "/search" })
@@ -104,7 +105,7 @@ function SearchTabs() {
 				value="General"
 				class="p-4"
 			>
-				<div class="text-slate-600">General search results</div>
+				<GeneralSearchResult />
 			</Tab.Content>
 			<Tab.Content
 				value="Songs"

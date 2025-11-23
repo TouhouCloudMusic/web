@@ -1,4 +1,5 @@
 import * as Kobalte from "@kobalte/core/button"
+import { useNavigate } from "@tanstack/solid-router"
 import { match } from "arktype"
 import { mergeProps } from "solid-js"
 import type { JSX } from "solid-js"
@@ -71,6 +72,53 @@ export function Button(props: Props) {
 	})
 
 	return <Kobalte.Button {...final_props} />
+}
+
+export interface LinkButtonProps extends JSX.AnchorHTMLAttributes<HTMLAnchorElement> {
+	variant?: Variant
+	size?: Size
+	color?: AppColor
+}
+
+export function LinkButton(props: LinkButtonProps) {
+	const BUTTON_COMMON_STYLES = `rounded-sm transition-all font-medium p-1`
+	const DEFAULT_COLOR: AppColor = "Gray"
+	const navigate = useNavigate()
+	
+	let variant_color = match.in<Variant>().match({
+		"'Primary'": () => PrimaryColor[props.color ?? DEFAULT_COLOR],
+		"'Tertiary'": () => TertiaryColor[props.color ?? DEFAULT_COLOR],
+		default: () => SecondaryColor[props.color ?? DEFAULT_COLOR],
+	})
+
+	let final_props: LinkButtonProps = mergeProps(props, {
+		get class() {
+			let size_class = props.size ? SizeClass[props.size] : undefined
+			let variant = props.variant ?? "Secondary"
+
+			let variant_class = VariantClass[variant]
+			let color_class = variant_color(variant)
+
+			return twMerge(
+				BUTTON_COMMON_STYLES,
+				size_class,
+				variant_class,
+				color_class,
+				props.class,
+			)
+		},
+		onClick: (e: MouseEvent & { currentTarget: HTMLAnchorElement; target: Element }) => {
+			if (props.href && !props.href.startsWith("http") && props.target !== "_blank") {
+				e.preventDefault()
+				navigate({ to: props.href })
+			}
+			if (typeof props.onClick === "function") {
+				props.onClick(e)
+			}
+		},
+	})
+
+	return <a {...final_props}>{props.children}</a>
 }
 
 const SizeClass = {
