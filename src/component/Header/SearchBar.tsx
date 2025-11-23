@@ -30,7 +30,7 @@ export function SearchBar() {
 		e.preventDefault()
 		const keyword = inputRef.value.trim()
 		if (keyword) {
-			navigate({ to: "/search", search: { keyword } })
+			navigate({ to: "/search", search: { keyword, type: "general" } })
 		}
 	}
 

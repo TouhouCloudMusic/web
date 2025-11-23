@@ -5,21 +5,22 @@ import { MagnifyingGlassIcon } from "solid-radix-icons"
 import { Tab } from "~/component/atomic"
 import { Input } from "~/component/atomic/Input"
 import { PageLayout } from "~/layout/PageLayout"
-import { GeneralSearchResult } from "./comp/GeneralSearchResult"
+import { GeneralSearchResult } from "./views/GeneralSearchResult"
 
 export function SearchView() {
 	const search = useSearch({ from: "/search" })
-	const keyword = () => search().keyword
+	const searchKeyword = () => search().keyword
+	const searchType = () => search().type
 
 	return (
 		<Show
-			when={keyword()}
+			when={searchKeyword() && searchType()}
 			fallback={<DefaultSearchPage />}
 		>
 			<PageLayout class="p-8">
 				<div class="flex-1">
 					<h1 class="mb-3 text-2xl font-bold text-slate-800">
-						Search results of "{keyword()}"
+						Search results of "{searchKeyword()}"
 					</h1>
 					<SearchTabs />
 				</div>
@@ -36,7 +37,7 @@ function DefaultSearchPage() {
 		e.preventDefault()
 		const keyword = inputRef.value.trim()
 		if (keyword) {
-			navigate({ to: "/search", search: { keyword } })
+			navigate({ to: "/search", search: { keyword, type: "general" as const } })
 		}
 	}
 
@@ -63,72 +64,76 @@ function DefaultSearchPage() {
 }
 
 const TRIGGER_CLASS = "py-3 text-sm"
+
+const TYPE_TO_TAB = {
+	song: "Songs",
+	artist: "Artists",
+	release: "Releases",
+	event: "Events",
+	playlist: "Playlists",
+	user: "Users",
+	general: "General",
+} as const
+
+const TAB_TO_TYPE = {
+	Songs: "song",
+	Artists: "artist",
+	Releases: "release",
+	Events: "event",
+	Playlists: "playlist",
+	Users: "user",
+	General: "general",
+} as const
+
 function SearchTabs() {
+	const navigate = useNavigate()
+	const search = useSearch({ from: "/search" })
+	const currentTab = () => TYPE_TO_TAB[search().type ?? "general"]
+
+	const handleTabChange = (value: string) => {
+		const keyword = search().keyword
+		const type = TAB_TO_TYPE[value as keyof typeof TAB_TO_TYPE]
+
+		navigate({ 
+			to: "/search", 
+			search: { keyword, type },
+			replace: true
+		})
+	}
+
 	return (
-		<Tab.Root>
+		<Tab.Root value={currentTab()} onChange={handleTabChange}>
 			<div class="border-b border-slate-300 px-2">
 				<Tab.List class="grid-cols-4 gap-4">
-					<Tab.Trigger
-						value="General"
-						class={TRIGGER_CLASS}
-					>
-						General
-					</Tab.Trigger>
-					<Tab.Trigger
-						value="Songs"
-						class={TRIGGER_CLASS}
-					>
-						Songs
-					</Tab.Trigger>
-					<Tab.Trigger
-						value="Artists"
-						class={TRIGGER_CLASS}
-					>
-						Artists
-					</Tab.Trigger>
-					<Tab.Trigger
-						value="Releases"
-						class={TRIGGER_CLASS}
-					>
-						Releases
-					</Tab.Trigger>
-					<Tab.Trigger
-						value="Events"
-						class={TRIGGER_CLASS}
-					>
-						Events
-					</Tab.Trigger>
+					<Tab.Trigger value="General" class={TRIGGER_CLASS}>General</Tab.Trigger>
+					<Tab.Trigger value="Songs" class={TRIGGER_CLASS}>Songs</Tab.Trigger>
+					<Tab.Trigger value="Artists" class={TRIGGER_CLASS}>Artists</Tab.Trigger>
+					<Tab.Trigger value="Releases" class={TRIGGER_CLASS}>Releases</Tab.Trigger>
+					<Tab.Trigger value="Playlists" class={TRIGGER_CLASS}>Playlists</Tab.Trigger>
+					<Tab.Trigger value="Users" class={TRIGGER_CLASS}>Users</Tab.Trigger>
+					<Tab.Trigger value="Events" class={TRIGGER_CLASS}>Events</Tab.Trigger>
 					<Tab.Indicator />
 				</Tab.List>
 			</div>
-			<Tab.Content
-				value="General"
-				class="p-4"
-			>
+			<Tab.Content value="General" class="p-4">
 				<GeneralSearchResult />
 			</Tab.Content>
-			<Tab.Content
-				value="Songs"
-				class="p-4"
-			>
+			<Tab.Content value="Songs" class="p-4">
 				<div class="text-slate-600">Songs search results</div>
 			</Tab.Content>
-			<Tab.Content
-				value="Artists"
-				class="p-4"
-			>
+			<Tab.Content value="Artists" class="p-4">
 				<div class="text-slate-600">Artists search results</div>
 			</Tab.Content>
-			<Tab.Content
-				value="Releases"
-				class="p-4"
-			>
+			<Tab.Content value="Releases" class="p-4">
 				<div class="text-slate-600">Releases search results</div>
 			</Tab.Content>
-			<Tab.Content
-				value="Events"
-				class="p-4"
-			>
+			<Tab.Content value="Playlists" class="p-4">
+				<div class="text-slate-600">Playlists search results</div>
+			</Tab.Content>
+			<Tab.Content value="Users" class="p-4">
+				<div class="text-slate-600">Users search results</div>
+			</Tab.Content>
+			<Tab.Content value="Events" class="p-4">
 				<div class="text-slate-600">Events search results</div>
 			</Tab.Content>
 		</Tab.Root>

@@ -72,8 +72,8 @@ export function Header() {
 }
 
 function AuthenticatedContent(props: { user: UserProfile }) {
-	let [show, setShow, setRef] = createClickOutside()
-	let close = () => setShow(false)
+	const [show, setShow, setRef] = createClickOutside()
+	const close = () => setShow(false)
 	return (
 		<>
 			<div class="grid h-8 w-8 place-items-center">
@@ -102,7 +102,7 @@ function AuthenticatedContent(props: { user: UserProfile }) {
 
 
 function NotificationButton() {
-	let notification_state = createMemo(() => useCurrentUser().notification_state)
+	const notification_state = createMemo(() => useCurrentUser().notification_state)
 	return (
 		<Button
 			variant="Tertiary"
