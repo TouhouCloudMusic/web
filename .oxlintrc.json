@@ -115,8 +115,6 @@
 		"import/prefer-default-export": "off",
 		"import/no-named-export": "off",
 
-		"jsx-a11y/anchor-is-valid": "off",
-
 		"oxc/no-barrel-file": "off",
 		"oxc/no-const-enum": "off",
 		"oxc/no-optional-chaining": "off",
