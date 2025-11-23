@@ -8,7 +8,7 @@ import {
 	BellSlashIcon,
 } from "@thc/icons/heroicons/24/outline"
 import { createMemo, Match, Show, Switch } from "solid-js"
-import { HamburgerMenuIcon, MagnifyingGlassIcon } from "solid-radix-icons"
+import { HamburgerMenuIcon } from "solid-radix-icons"
 
 import { Button } from "~/component/atomic/button"
 import { NotificationState, useCurrentUser } from "~/state/user"
@@ -19,12 +19,13 @@ import { Avatar } from "../atomic/avatar"
 import { Dialog } from "../dialog"
 import { LeftSidebar } from "./LeftSidebar"
 import { RightSidebar } from "./RightSidebar"
+import { SearchBar } from "./SearchBar"
 
 const HEADER_BTN_CLASS = "size-fit p-1 m-auto"
 
 export function Header() {
 	return (
-		<header class="box-content content-center items-center border-b-1 border-slate-300 bg-primary px-4 py-2">
+		<header class="box-content content-center items-center border-b border-slate-300 bg-primary px-4 py-2">
 			<div class="my-auto flex h-8 items-center justify-between">
 				{/* Left */}
 				<div class="flex items-center gap-3">
@@ -99,16 +100,6 @@ function AuthenticatedContent(props: { user: UserProfile }) {
 	)
 }
 
-function SearchBar() {
-	return (
-		<div class="ml-36 grid w-fit items-center">
-			<input
-				class={`mr-auto h-7 w-96 rounded-xs bg-slate-100 pl-7 outline-transparent duration-200 hover:outline hover:outline-reimu-600 focus:bg-white focus:outline-[1.5px] focus:outline-reimu-600`}
-			/>
-			<MagnifyingGlassIcon class={"absolute col-start-1 ml-2 size-4"} />
-		</div>
-	)
-}
 
 function NotificationButton() {
 	let notification_state = createMemo(() => useCurrentUser().notification_state)
