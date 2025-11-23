@@ -4,7 +4,7 @@ import { type } from "arktype"
 import { SearchView } from "~/view/search"
 
 const SearchSchema = type({
-	keyword: "string",
+	keyword: "string?",
 })
 
 export const Route = createFileRoute("/search")({

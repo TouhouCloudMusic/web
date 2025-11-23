@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './route/__root'
+import { Route as SearchRouteImport } from './route/search'
 import { Route as AuthRouteImport } from './route/auth'
 import { Route as AboutRouteImport } from './route/about'
 import { Route as IndexRouteImport } from './route/index'
@@ -43,6 +44,11 @@ import { Route as ArtistIdEditRouteImport } from './route/artist/$id.edit'
 import { Route as userProfileEditRouteImport } from './route/(user)/profile_.edit'
 import { Route as userProfileUsernameRouteImport } from './route/(user)/profile_.$username'
 
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/search': typeof SearchRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTest_avatar_uploadRoute
   '/artist/new': typeof ArtistNewRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/search': typeof SearchRoute
   '/profile': typeof userProfileRoute
   '/test_avatar_upload': typeof userTest_avatar_uploadRoute
   '/artist/new': typeof ArtistNewRoute
@@ -284,6 +292,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
+  '/search': typeof SearchRoute
   '/(user)/profile': typeof userProfileRoute
   '/(user)/test_avatar_upload': typeof userTest_avatar_uploadRoute
   '/artist/new': typeof ArtistNewRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/search'
     | '/profile'
     | '/test_avatar_upload'
     | '/artist/new'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/search'
     | '/profile'
     | '/test_avatar_upload'
     | '/artist/new'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/auth'
+    | '/search'
     | '/(user)/profile'
     | '/(user)/test_avatar_upload'
     | '/artist/new'
@@ -427,6 +439,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
+  SearchRoute: typeof SearchRoute
   userProfileRoute: typeof userProfileRoute
   userTest_avatar_uploadRoute: typeof userTest_avatar_uploadRoute
   ArtistNewRoute: typeof ArtistNewRoute
@@ -457,6 +470,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/solid-router' {
   interface FileRoutesByPath {
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -739,6 +759,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
+  SearchRoute: SearchRoute,
   userProfileRoute: userProfileRoute,
   userTest_avatar_uploadRoute: userTest_avatar_uploadRoute,
   ArtistNewRoute: ArtistNewRoute,
