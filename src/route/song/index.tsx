@@ -1,13 +1,50 @@
 import { createFileRoute } from "@tanstack/solid-router"
-import { Song } from "@thc/api"
+import type { Song } from "@thc/api"
+import * as v from "valibot"
 
 import { SongDiscover } from "~/view/song/discover"
 
+// NOTE: mock
+const DEFAULT_PAGI_TOTAL = 10
+const DEFAULT_PAGI_PAGE = 1
+const DEFAULT_PAGE_SIZE = 10
+
+/**
+ * TODO:
+ * 需要后端确认具体字段以及 fallback
+ */
+const paginationSearch = v.object({
+	total: v.optional(
+		v.fallback(v.number(), DEFAULT_PAGI_TOTAL),
+		DEFAULT_PAGI_TOTAL,
+	),
+	page: v.optional(
+		v.fallback(v.number(), DEFAULT_PAGI_PAGE),
+		DEFAULT_PAGI_PAGE,
+	),
+	size: v.optional(
+		v.fallback(v.number(), DEFAULT_PAGE_SIZE),
+		DEFAULT_PAGE_SIZE,
+	),
+})
+
+type PaginationSearch = v.InferInput<typeof paginationSearch>
+
+type LoaderData = {
+	songs: Song[]
+	pagination: PaginationSearch
+}
+
 export const Route = createFileRoute("/song/")({
 	component: SongDiscover,
-	loader: async () => {
+	validateSearch: paginationSearch,
+	loaderDeps: ({ search }) => search,
+	loader: async ({ deps }): Promise<LoaderData> => {
 		const data = await Array.fromAsync({ length: 10 }, () => ({ ...mockData }))
-		return data
+		return {
+			songs: data,
+			pagination: { ...deps },
+		}
 	},
 })
 
