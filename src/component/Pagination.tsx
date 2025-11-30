@@ -1,10 +1,26 @@
 import { Pagination as K_Pagination } from "@kobalte/core/pagination"
-import { Accessor, Component, Setter } from "solid-js"
+import { Component } from "solid-js"
 import { twMerge } from "tailwind-merge"
 
+import { tw } from "~/utils"
+
 const PAGINATER_CLASS = "*:inline-flex *:items-center *:justify-between *:gap-2"
-const ITEM_CLASS =
-	"inline-flex h-9 items-center justify-center rounded-md px-3 tabular-nums hover:bg-secondary"
+const ITEM_CLASS = tw(`
+	inline-flex
+    items-center
+    justify-center
+    h-9
+    px-3
+    rounded-md
+    tabular-nums
+    hover:bg-secondary
+
+    data-current:bg-slate-900
+    data-current:hover:bg-slate-900
+    data-current:text-(--background-color-primary)
+    data-current:active:bg-slate-800
+    data-current:disabled:bg-slate-800
+`)
 
 type PaginationProps = {
 	current: number
