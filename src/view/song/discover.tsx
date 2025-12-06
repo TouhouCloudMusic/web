@@ -7,7 +7,7 @@ import {
 	type TableOptions,
 } from "@tanstack/solid-table"
 import type { SimpleArtist, Song } from "@thc/api"
-import { type Component, For, Match, Show, Switch } from "solid-js"
+import { type Component, For, Show } from "solid-js"
 
 import { Pagination } from "~/component/Pagination"
 import { Table } from "~/component/Table"
@@ -17,12 +17,14 @@ import { PageLayout } from "~/layout"
 const route = getRouteApi("/song/")
 
 type TitleCellProps = {
-	localized_titles: string | undefined
+	localized_titles?: string
 	title: string
 	id: number
 }
 
 const TitleCell: Component<TitleCellProps> = (props) => {
+	const displayTitle = () => props.localized_titles ?? props.title
+
 	return (
 		<p class="flex gap-4">
 			<Link
@@ -31,9 +33,7 @@ const TitleCell: Component<TitleCellProps> = (props) => {
 					id: props.id.toString(),
 				}}
 			>
-				<Switch fallback={props.title}>
-					<Match when={props.localized_titles}>{props.localized_titles}</Match>
-				</Switch>
+				{displayTitle()}
 			</Link>
 			<Show when={props.localized_titles}>
 				<span class="text-secondary">{props.title}</span>
@@ -56,15 +56,9 @@ const ArtistCell: Component<ArtistCellProps> = (props) => {
 
 export const SongDiscover = () => {
 	const loadData = route.useLoaderData()
+
 	const songs = () => loadData().songs
-	const pagination = () => {
-		const data = loadData()
-		return {
-			total: data.pagination.total!, // valibot fallback & optional ensure here is not `undefined`
-			page: data.pagination.page!, // valibot fallback & optional ensure here is not `undefined`
-			size: data.pagination.size!, // valibot fallback & optional ensure here is not `undefined`
-		}
-	}
+	const pagination = () => loadData().pagination
 
 	const { i18n } = useLingui()
 
@@ -74,7 +68,6 @@ export const SongDiscover = () => {
 			to: "/song",
 			search: {
 				page,
-				total: pagination().total,
 				size: pagination().size,
 			},
 		})
@@ -82,7 +75,6 @@ export const SongDiscover = () => {
 
 	/**
 	 * TODO:
-	 * table data 与 UI 组件强相关，不建议移到 loader
 	 * 具体 columns 数据选择有待商榷，目前只展示两列：
 	 * Title:
 	 *   - 若无 localized_titles 则展示 title
@@ -99,42 +91,46 @@ export const SongDiscover = () => {
 		columns: [
 			{
 				id: "localized_titles",
-				header: "",
-				accessorFn: (row): TitleCellProps => ({
-					localized_titles: row.localized_titles?.find(
-						(v) => v.language.code == i18n().locale,
-					)?.title,
-					title: row.title,
-					id: row.id,
-				}),
+				header: "歌曲名",
+
+				accessorFn: (row): TitleCellProps => {
+					const localized = row.localized_titles?.find(
+						(v) => v.language.code === i18n().locale,
+					)?.title
+
+					return {
+						localized_titles: localized,
+						title: row.title,
+						id: row.id,
+					}
+				},
+
 				cell: (c: CellContext<Song, TitleCellProps>) => {
-					const value = c.getValue()
-					return (
-						<TitleCell
-							localized_titles={value.localized_titles}
-							title={value.title}
-							id={value.id}
-						/>
-					)
+					return <TitleCell {...c.getValue()} />
 				},
 			},
 			{
 				id: "credits",
-				header: "",
-				accessorFn: (row): SimpleArtist[] => {
-					if (!row.credits) return []
-					// NOTE: mock
-					return row.credits
+				header: "创作者",
+
+				accessorFn: (row): ArtistCellProps => {
+					if (!row.credits) return { artist: [] }
+
+					const artist = row.credits
 						.filter(
 							(c) =>
-								c.role?.name == "Original Composer"
-								|| c.role?.name == "Composer",
+								c.role?.name === "Original Composer"
+								|| c.role?.name === "Composer",
 						)
 						.map((c) => c.artist)
+
+					// NOTE: mock
+					return { artist }
 				},
-				cell: (c: CellContext<Song, ArtistCellProps>) => (
-					<ArtistCell artist={c.getValue().artist} />
-				),
+
+				cell: (c: CellContext<Song, ArtistCellProps>) => {
+					return <ArtistCell {...c.getValue()} />
+				},
 			},
 		],
 		getCoreRowModel: getCoreRowModel(),
