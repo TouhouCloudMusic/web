@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/solid-query"
 import { useNavigate } from "@tanstack/solid-router"
-import { LabelMutation } from "@thc/query"
+import { LabelMutation, LabelQueryOption } from "@thc/query"
 import type { InferOutput } from "valibot"
 
 import type { NewLabelCorrection } from "~/domain/label"
@@ -19,7 +19,7 @@ export function createLabelFormSubmission(props: Props) {
 				{
 					onSuccess() {
 						void queryClient.invalidateQueries({
-							queryKey: ["label::keyword"],
+							queryKey: [LabelQueryOption.QUERY_KEYS.DETAIL_KEYWORD],
 						})
 						void navigator({ to: "/" })
 					},
@@ -38,7 +38,7 @@ export function createLabelFormSubmission(props: Props) {
 			{
 				onSuccess() {
 					void queryClient.invalidateQueries({
-						queryKey: ["label::profile", props.label.id],
+						queryKey: [LabelQueryOption.QUERY_KEYS.DETAIL_ID, props.label.id],
 					})
 					void navigator({ to: `/label/${props.label.id}` })
 				},
