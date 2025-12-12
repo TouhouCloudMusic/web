@@ -12,7 +12,14 @@ import { Route as rootRouteImport } from './route/__root'
 import { Route as AuthRouteImport } from './route/auth'
 import { Route as AboutRouteImport } from './route/about'
 import { Route as IndexRouteImport } from './route/index'
+import { Route as TagIndexRouteImport } from './route/tag/index'
+import { Route as SongIndexRouteImport } from './route/song/index'
+import { Route as ReleaseIndexRouteImport } from './route/release/index'
+import { Route as RecommendationIndexRouteImport } from './route/recommendation/index'
 import { Route as LabelIndexRouteImport } from './route/label/index'
+import { Route as EventIndexRouteImport } from './route/event/index'
+import { Route as ChartIndexRouteImport } from './route/chart/index'
+import { Route as ArtistIndexRouteImport } from './route/artist/index'
 import { Route as TagNewRouteImport } from './route/tag/new'
 import { Route as TagMockRouteImport } from './route/tag/mock'
 import { Route as TagIdRouteImport } from './route/tag/$id'
@@ -55,9 +62,44 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TagIndexRoute = TagIndexRouteImport.update({
+  id: '/tag/',
+  path: '/tag/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SongIndexRoute = SongIndexRouteImport.update({
+  id: '/song/',
+  path: '/song/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReleaseIndexRoute = ReleaseIndexRouteImport.update({
+  id: '/release/',
+  path: '/release/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecommendationIndexRoute = RecommendationIndexRouteImport.update({
+  id: '/recommendation/',
+  path: '/recommendation/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LabelIndexRoute = LabelIndexRouteImport.update({
   id: '/label/',
   path: '/label/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventIndexRoute = EventIndexRouteImport.update({
+  id: '/event/',
+  path: '/event/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChartIndexRoute = ChartIndexRouteImport.update({
+  id: '/chart/',
+  path: '/chart/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ArtistIndexRoute = ArtistIndexRouteImport.update({
+  id: '/artist/',
+  path: '/artist/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TagNewRoute = TagNewRouteImport.update({
@@ -212,7 +254,14 @@ export interface FileRoutesByFullPath {
   '/tag/$id': typeof TagIdRouteWithChildren
   '/tag/mock': typeof TagMockRoute
   '/tag/new': typeof TagNewRoute
+  '/artist': typeof ArtistIndexRoute
+  '/chart': typeof ChartIndexRoute
+  '/event': typeof EventIndexRoute
   '/label': typeof LabelIndexRoute
+  '/recommendation': typeof RecommendationIndexRoute
+  '/release': typeof ReleaseIndexRoute
+  '/song': typeof SongIndexRoute
+  '/tag': typeof TagIndexRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
   '/artist/$id/edit': typeof ArtistIdEditRoute
@@ -244,7 +293,14 @@ export interface FileRoutesByTo {
   '/tag/$id': typeof TagIdRouteWithChildren
   '/tag/mock': typeof TagMockRoute
   '/tag/new': typeof TagNewRoute
+  '/artist': typeof ArtistIndexRoute
+  '/chart': typeof ChartIndexRoute
+  '/event': typeof EventIndexRoute
   '/label': typeof LabelIndexRoute
+  '/recommendation': typeof RecommendationIndexRoute
+  '/release': typeof ReleaseIndexRoute
+  '/song': typeof SongIndexRoute
+  '/tag': typeof TagIndexRoute
   '/profile/$username': typeof userProfileUsernameRoute
   '/profile/edit': typeof userProfileEditRoute
   '/artist/$id/edit': typeof ArtistIdEditRoute
@@ -277,7 +333,14 @@ export interface FileRoutesById {
   '/tag/$id': typeof TagIdRouteWithChildren
   '/tag/mock': typeof TagMockRoute
   '/tag/new': typeof TagNewRoute
+  '/artist/': typeof ArtistIndexRoute
+  '/chart/': typeof ChartIndexRoute
+  '/event/': typeof EventIndexRoute
   '/label/': typeof LabelIndexRoute
+  '/recommendation/': typeof RecommendationIndexRoute
+  '/release/': typeof ReleaseIndexRoute
+  '/song/': typeof SongIndexRoute
+  '/tag/': typeof TagIndexRoute
   '/(user)/profile_/$username': typeof userProfileUsernameRoute
   '/(user)/profile_/edit': typeof userProfileEditRoute
   '/artist/$id/edit': typeof ArtistIdEditRoute
@@ -311,7 +374,14 @@ export interface FileRouteTypes {
     | '/tag/$id'
     | '/tag/mock'
     | '/tag/new'
+    | '/artist'
+    | '/chart'
+    | '/event'
     | '/label'
+    | '/recommendation'
+    | '/release'
+    | '/song'
+    | '/tag'
     | '/profile/$username'
     | '/profile/edit'
     | '/artist/$id/edit'
@@ -343,7 +413,14 @@ export interface FileRouteTypes {
     | '/tag/$id'
     | '/tag/mock'
     | '/tag/new'
+    | '/artist'
+    | '/chart'
+    | '/event'
     | '/label'
+    | '/recommendation'
+    | '/release'
+    | '/song'
+    | '/tag'
     | '/profile/$username'
     | '/profile/edit'
     | '/artist/$id/edit'
@@ -375,7 +452,14 @@ export interface FileRouteTypes {
     | '/tag/$id'
     | '/tag/mock'
     | '/tag/new'
+    | '/artist/'
+    | '/chart/'
+    | '/event/'
     | '/label/'
+    | '/recommendation/'
+    | '/release/'
+    | '/song/'
+    | '/tag/'
     | '/(user)/profile_/$username'
     | '/(user)/profile_/edit'
     | '/artist/$id/edit'
@@ -408,7 +492,14 @@ export interface RootRouteChildren {
   TagIdRoute: typeof TagIdRouteWithChildren
   TagMockRoute: typeof TagMockRoute
   TagNewRoute: typeof TagNewRoute
+  ArtistIndexRoute: typeof ArtistIndexRoute
+  ChartIndexRoute: typeof ChartIndexRoute
+  EventIndexRoute: typeof EventIndexRoute
   LabelIndexRoute: typeof LabelIndexRoute
+  RecommendationIndexRoute: typeof RecommendationIndexRoute
+  ReleaseIndexRoute: typeof ReleaseIndexRoute
+  SongIndexRoute: typeof SongIndexRoute
+  TagIndexRoute: typeof TagIndexRoute
   userProfileUsernameRoute: typeof userProfileUsernameRoute
   userProfileEditRoute: typeof userProfileEditRoute
   ArtistIdEditRoute: typeof ArtistIdEditRoute
@@ -438,11 +529,60 @@ declare module '@tanstack/solid-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tag/': {
+      id: '/tag/'
+      path: '/tag'
+      fullPath: '/tag'
+      preLoaderRoute: typeof TagIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/song/': {
+      id: '/song/'
+      path: '/song'
+      fullPath: '/song'
+      preLoaderRoute: typeof SongIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/release/': {
+      id: '/release/'
+      path: '/release'
+      fullPath: '/release'
+      preLoaderRoute: typeof ReleaseIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recommendation/': {
+      id: '/recommendation/'
+      path: '/recommendation'
+      fullPath: '/recommendation'
+      preLoaderRoute: typeof RecommendationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/label/': {
       id: '/label/'
       path: '/label'
       fullPath: '/label'
       preLoaderRoute: typeof LabelIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/event/': {
+      id: '/event/'
+      path: '/event'
+      fullPath: '/event'
+      preLoaderRoute: typeof EventIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chart/': {
+      id: '/chart/'
+      path: '/chart'
+      fullPath: '/chart'
+      preLoaderRoute: typeof ChartIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/artist/': {
+      id: '/artist/'
+      path: '/artist'
+      fullPath: '/artist'
+      preLoaderRoute: typeof ArtistIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tag/new': {
@@ -706,7 +846,14 @@ const rootRouteChildren: RootRouteChildren = {
   TagIdRoute: TagIdRouteWithChildren,
   TagMockRoute: TagMockRoute,
   TagNewRoute: TagNewRoute,
+  ArtistIndexRoute: ArtistIndexRoute,
+  ChartIndexRoute: ChartIndexRoute,
+  EventIndexRoute: EventIndexRoute,
   LabelIndexRoute: LabelIndexRoute,
+  RecommendationIndexRoute: RecommendationIndexRoute,
+  ReleaseIndexRoute: ReleaseIndexRoute,
+  SongIndexRoute: SongIndexRoute,
+  TagIndexRoute: TagIndexRoute,
   userProfileUsernameRoute: userProfileUsernameRoute,
   userProfileEditRoute: userProfileEditRoute,
   ArtistIdEditRoute: ArtistIdEditRoute,
