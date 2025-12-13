@@ -1,12 +1,11 @@
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
 import { useNavigate } from "@tanstack/solid-router"
 import type { IconProps } from "@thc/icons"
-import { RankingIcon } from "@thc/icons/custom"
-import { cons } from "effect/List"
 import type { JSX } from "solid-js"
 import { For } from "solid-js"
 import {
 	CardStackIcon,
+	BookmarkIcon,
 	EnvelopeClosedIcon,
 	MixerHorizontalIcon,
 	TargetIcon,
@@ -38,34 +37,34 @@ export function LeftSidebar() {
 			to: "/recommendation",
 		},
 		{
-			icon: RankingIcon,
-			text: t`Chart`,
-			to: "/chart",
-		},
-		{
-			icon: CardStackIcon,
-			text: t`Song`,
-			to: "/song",
-		},
-		{
 			icon: CrumpledPaperIcon,
 			text: t`Release`,
-			to: "/release",
+			to: "/release/explore",
 		},
 		{
 			icon: MixerHorizontalIcon,
 			text: t`Artist`,
-			to: "/artist",
+			to: "/artist/explore",
 		},
 		{
-			icon: EnvelopeClosedIcon,
-			text: t`Event`,
-			to: "/event",
+			icon: CardStackIcon,
+			text: t`Song`,
+			to: "/song/explore",
 		},
 		{
 			icon: EnvelopeClosedIcon,
 			text: t`Tag`,
-			to: "/tag",
+			to: "/tag/explore",
+		},
+		{
+			icon: EnvelopeClosedIcon,
+			text: t`Event`,
+			to: "/event/explore",
+		},
+		{
+			icon: BookmarkIcon,
+			text: t`Label`,
+			to: "/label/explore",
 		},
 	]
 
@@ -82,6 +81,8 @@ export function LeftSidebar() {
 							return (
 								<ListItem
 									class="w-full"
+									aria-label={item.text}
+									title={item.text}
 									onClick={() => navigate({ to: item.to })}
 								>
 									<item.icon class="mr-3 h-4 w-4" />

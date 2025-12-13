@@ -36,7 +36,11 @@ type PaginationProps = {
 	class?: string
 }
 
-const buildNearbyPages = (current: number, total: number, nearbyCount: number) => {
+const buildNearbyPages = (
+	current: number,
+	total: number,
+	nearbyCount: number,
+) => {
 	if (total <= 0) return []
 
 	const count = Math.max(1, Math.floor(nearbyCount))
@@ -72,7 +76,10 @@ export const Pagination: Component<PaginationProps> = (props) => {
 	const canNext = () => props.current < props.total
 
 	return (
-		<nav class={paginaterClass()} aria-label="Pagination">
+		<nav
+			class={paginaterClass()}
+			aria-label="Pagination"
+		>
 			<button
 				type="button"
 				class={SQUARE_ITEM_CLASS}
