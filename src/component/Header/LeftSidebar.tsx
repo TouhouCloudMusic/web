@@ -1,6 +1,8 @@
 import { Trans, useLingui } from "@lingui-solid/solid/macro"
+import { useNavigate } from "@tanstack/solid-router"
 import type { IconProps } from "@thc/icons"
 import { RankingIcon } from "@thc/icons/custom"
+import { cons } from "effect/List"
 import type { JSX } from "solid-js"
 import { For } from "solid-js"
 import {
@@ -11,15 +13,13 @@ import {
 	CrumpledPaperIcon,
 	HomeIcon,
 } from "solid-radix-icons"
-import { useNavigate } from "@tanstack/solid-router"
 
 import { ListItem, Sidebar } from "~/component/Sidebar"
-import { cons } from "effect/List"
 
 type ListItemContent = {
 	icon: (props: IconProps) => JSX.Element
-	text: string,
-	to: string,
+	text: string
+	to: string
 }
 
 export function LeftSidebar() {
@@ -80,7 +80,10 @@ export function LeftSidebar() {
 					<For each={LIST_ITEMS}>
 						{(item) => {
 							return (
-								<ListItem class="w-full" onClick={() => navigate({ to: item.to })}>
+								<ListItem
+									class="w-full"
+									onClick={() => navigate({ to: item.to })}
+								>
 									<item.icon class="mr-3 h-4 w-4" />
 									<span>{item.text}</span>
 								</ListItem>
