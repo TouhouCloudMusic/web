@@ -20,6 +20,38 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/{entity_type}/{id}/tag-vote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["vote_tag"];
+        post?: never;
+        delete: operations["delete_vote"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/{entity_type}/{id}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_tags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/artist": {
         parameters: {
             query?: never;
@@ -59,7 +91,7 @@ export type paths = {
             path?: never;
             cookie?: never;
         };
-        get: operations["find_artist_apperances"];
+        get: operations["find_artist_appearances"];
         put?: never;
         post?: never;
         delete?: never;
@@ -126,6 +158,22 @@ export type paths = {
         get?: never;
         put?: never;
         post: operations["upload_artist_profile_image"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/artist/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["explore_artist"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -244,6 +292,22 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/event/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["explore_event"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/health_check": {
         parameters: {
             query?: never;
@@ -286,6 +350,22 @@ export type paths = {
         get: operations["find_label_by_id"];
         put?: never;
         post: operations["upsert_label_correction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/label/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["explore_label"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -420,6 +500,22 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/release/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["explore_release"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/sign-in": {
         parameters: {
             query?: never;
@@ -548,6 +644,22 @@ export type paths = {
         patch?: never;
         trace?: never;
     };
+    "/song/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["explore_song"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/tag": {
         parameters: {
             query?: never;
@@ -574,6 +686,22 @@ export type paths = {
         get: operations["find_tag_by_id"];
         put?: never;
         post: operations["upsert_tag_correction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tag/explore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["explore_tag"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -645,6 +773,8 @@ export type components = {
             label?: null | components["schemas"]["SimpleLabel"];
         };
         /** @enum {string} */
+        CorrectionSortField: "created_at" | "handled_at";
+        /** @enum {string} */
         CorrectionType: "Create" | "Update" | "Delete";
         CreditRole: {
             description: string;
@@ -664,21 +794,6 @@ export type components = {
             name: string;
             short_description: string;
         };
-        Data_Event: {
-            data: {
-                alternative_names?: components["schemas"]["AlternativeName"][];
-                description?: string;
-                end_date?: null | components["schemas"]["DateWithPrecision"];
-                /** Format: int32 */
-                id: number;
-                location?: components["schemas"]["Location"];
-                name?: string;
-                short_description?: string;
-                start_date?: null | components["schemas"]["DateWithPrecision"];
-            };
-            /** @enum {string} */
-            status: "Ok";
-        };
         Data_Option_i32: {
             data: null | number;
             /** @enum {string} */
@@ -694,6 +809,10 @@ export type components = {
         };
         DataOptionCreditRole: {
             data: null | components["schemas"]["CreditRole"];
+            status: string;
+        };
+        DataOptionEvent: {
+            data: null | components["schemas"]["Event"];
             status: string;
         };
         DataOptionLabel: {
@@ -720,12 +839,40 @@ export type components = {
             data: components["schemas"]["Paginated_Discography"];
             status: string;
         };
+        DataPaginatedArtist: {
+            data: components["schemas"]["Paginated_Artist"];
+            status: string;
+        };
         DataPaginatedCredit: {
             data: components["schemas"]["Paginated_Credit"];
             status: string;
         };
         DataPaginatedDiscography: {
             data: components["schemas"]["Paginated_Discography"];
+            status: string;
+        };
+        DataPaginatedEvent: {
+            data: components["schemas"]["Paginated_Event"];
+            status: string;
+        };
+        DataPaginatedLabel: {
+            data: components["schemas"]["Paginated_Label"];
+            status: string;
+        };
+        DataPaginatedRelease: {
+            data: components["schemas"]["Paginated_Release"];
+            status: string;
+        };
+        DataPaginatedSong: {
+            data: components["schemas"]["Paginated_Song"];
+            status: string;
+        };
+        DataPaginatedTag: {
+            data: components["schemas"]["Paginated_Tag"];
+            status: string;
+        };
+        DataPaginatedTagAggregate: {
+            data: components["schemas"]["Paginated_TagAggregate"];
             status: string;
         };
         DataUserProfile: {
@@ -779,7 +926,16 @@ export type components = {
             /** Format: date */
             value: string;
         };
+        DeleteVoteBody: {
+            /** Format: int32 */
+            tag_id: number;
+        };
         EntityIdent: string;
+        Error: {
+            message: string;
+            /** @enum {string} */
+            status: "Err";
+        };
         Event: {
             alternative_names?: components["schemas"]["AlternativeName"][];
             description?: string;
@@ -793,6 +949,11 @@ export type components = {
         };
         /** @enum {string} */
         HandleCorrectionMethod: "Approve" | "Reject";
+        /**
+         * @example 2
+         * @enum {string}
+         */
+        i16: "Veto" | "Low" | "Medium" | "High";
         InitDiscography: {
             album: components["schemas"]["Paginated_Discography"];
             compilation: components["schemas"]["Paginated_Discography"];
@@ -1075,6 +1236,30 @@ export type components = {
             song_id: number;
             track_number?: string | null;
         };
+        Paginated_Artist: {
+            items: {
+                /** @description List of id of artist aliases */
+                aliases?: number[];
+                artist_type: components["schemas"]["ArtistType"];
+                current_location?: components["schemas"]["Location"];
+                end_date?: null | components["schemas"]["DateWithPrecision"];
+                /** Format: int32 */
+                id: number;
+                links?: string[];
+                localized_names?: components["schemas"]["LocalizedName"][];
+                /** @description Groups list for individuals, member list for groups, */
+                memberships?: components["schemas"]["Membership"][];
+                name: string;
+                /** @description Profile image of artist */
+                profile_image_url?: string | null;
+                start_date?: null | components["schemas"]["DateWithPrecision"];
+                start_location?: components["schemas"]["Location"];
+                /** @description Aliases without own page */
+                text_aliases?: string[] | null;
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
         Paginated_Credit: {
             items: {
                 artist: components["schemas"]["ArtistReleaseArtist"][];
@@ -1094,6 +1279,99 @@ export type components = {
                 release_date?: null | components["schemas"]["DateWithPrecision"];
                 release_type: components["schemas"]["ReleaseType"];
                 title: string;
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
+        Paginated_Event: {
+            items: {
+                alternative_names?: components["schemas"]["AlternativeName"][];
+                description?: string;
+                end_date?: null | components["schemas"]["DateWithPrecision"];
+                /** Format: int32 */
+                id: number;
+                location?: components["schemas"]["Location"];
+                name?: string;
+                short_description?: string;
+                start_date?: null | components["schemas"]["DateWithPrecision"];
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
+        Paginated_Label: {
+            items: {
+                dissolved_date?: null | components["schemas"]["DateWithPrecision"];
+                founded_date?: null | components["schemas"]["DateWithPrecision"];
+                founders: number[];
+                /** Format: int32 */
+                id: number;
+                localized_names: components["schemas"]["LocalizedName"][];
+                name: string;
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
+        Paginated_Release: {
+            items: {
+                artists?: components["schemas"]["ReleaseArtist"][];
+                catalog_nums?: components["schemas"]["CatalogNumber"][];
+                cover_art_url?: string | null;
+                credits?: components["schemas"]["ReleaseCredit"][];
+                discs?: components["schemas"]["ReleaseDisc"][];
+                events?: components["schemas"]["SimpleEvent"][];
+                /** Format: int32 */
+                id: number;
+                localized_titles?: components["schemas"]["LocalizedTitle"][];
+                recording_date_end?: null | components["schemas"]["DateWithPrecision"];
+                recording_date_start?: null | components["schemas"]["DateWithPrecision"];
+                release_date?: null | components["schemas"]["DateWithPrecision"];
+                release_type: components["schemas"]["ReleaseType"];
+                title: string;
+                tracks?: components["schemas"]["ReleaseTrack"][];
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
+        Paginated_Song: {
+            items: {
+                artists?: components["schemas"]["SimpleArtist"][];
+                credits?: components["schemas"]["SongCredit"][];
+                /** Format: int32 */
+                id: number;
+                languages?: components["schemas"]["Language"][];
+                localized_titles?: components["schemas"]["LocalizedTitle"][];
+                lyrics?: components["schemas"]["SongLyrics"][];
+                releases?: components["schemas"]["SimpleRelease"][];
+                title: string;
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
+        Paginated_Tag: {
+            items: {
+                alt_names?: components["schemas"]["AlternativeName"][];
+                description: string;
+                /** Format: int32 */
+                id: number;
+                name: string;
+                relations?: components["schemas"]["TagRelation"][];
+                short_description: string;
+                type: components["schemas"]["TagType"];
+            }[];
+            /** Format: int32 */
+            next_cursor?: number | null;
+        };
+        Paginated_TagAggregate: {
+            items: {
+                /** Format: int64 */
+                count: number;
+                /** Format: int32 */
+                id: number;
+                name: string;
+                /** Format: double */
+                relevance: number;
+                /** Format: int32 */
+                user_vote?: number | null;
             }[];
             /** Format: int32 */
             next_cursor?: number | null;
@@ -1201,6 +1479,8 @@ export type components = {
             id: number;
             title: string;
         };
+        /** @enum {string} */
+        SortDirection: "asc" | "desc";
         Tag: {
             alt_names?: components["schemas"]["AlternativeName"][];
             description: string;
@@ -1259,6 +1539,11 @@ export type components = {
         };
         /** @enum {string} */
         UserRoleEnum: "Admin" | "Moderator" | "User";
+        VoteBody: {
+            score: components["schemas"]["i16"];
+            /** Format: int32 */
+            tag_id: number;
+        };
     };
     responses: never;
     parameters: never;
@@ -1273,23 +1558,31 @@ export type ArtistReleaseArtist = components['schemas']['ArtistReleaseArtist'];
 export type ArtistType = components['schemas']['ArtistType'];
 export type AuthCredential = components['schemas']['AuthCredential'];
 export type CatalogNumber = components['schemas']['CatalogNumber'];
+export type CorrectionSortField = components['schemas']['CorrectionSortField'];
 export type CorrectionType = components['schemas']['CorrectionType'];
 export type CreditRole = components['schemas']['CreditRole'];
 export type CreditRoleRef = components['schemas']['CreditRoleRef'];
 export type CreditRoleSummary = components['schemas']['CreditRoleSummary'];
-export type DataEvent = components['schemas']['Data_Event'];
 export type DataOptionI32 = components['schemas']['Data_Option_i32'];
 export type DataInitDiscography = components['schemas']['DataInitDiscography'];
 export type DataOptionArtist = components['schemas']['DataOptionArtist'];
 export type DataOptionCreditRole = components['schemas']['DataOptionCreditRole'];
+export type DataOptionEvent = components['schemas']['DataOptionEvent'];
 export type DataOptionLabel = components['schemas']['DataOptionLabel'];
 export type DataOptionRelease = components['schemas']['DataOptionRelease'];
 export type DataOptionSong = components['schemas']['DataOptionSong'];
 export type DataOptionSongLyrics = components['schemas']['DataOptionSongLyrics'];
 export type DataOptionTag = components['schemas']['DataOptionTag'];
 export type DataPaginatedAppearance = components['schemas']['DataPaginatedAppearance'];
+export type DataPaginatedArtist = components['schemas']['DataPaginatedArtist'];
 export type DataPaginatedCredit = components['schemas']['DataPaginatedCredit'];
 export type DataPaginatedDiscography = components['schemas']['DataPaginatedDiscography'];
+export type DataPaginatedEvent = components['schemas']['DataPaginatedEvent'];
+export type DataPaginatedLabel = components['schemas']['DataPaginatedLabel'];
+export type DataPaginatedRelease = components['schemas']['DataPaginatedRelease'];
+export type DataPaginatedSong = components['schemas']['DataPaginatedSong'];
+export type DataPaginatedTag = components['schemas']['DataPaginatedTag'];
+export type DataPaginatedTagAggregate = components['schemas']['DataPaginatedTagAggregate'];
 export type DataUserProfile = components['schemas']['DataUserProfile'];
 export type DataVecArtist = components['schemas']['DataVecArtist'];
 export type DataVecCreditRoleSummary = components['schemas']['DataVecCreditRoleSummary'];
@@ -1303,9 +1596,12 @@ export type DataVecTag = components['schemas']['DataVecTag'];
 export type DataVecUserRole = components['schemas']['DataVecUserRole'];
 export type DatePrecision = components['schemas']['DatePrecision'];
 export type DateWithPrecision = components['schemas']['DateWithPrecision'];
+export type DeleteVoteBody = components['schemas']['DeleteVoteBody'];
 export type EntityIdent = components['schemas']['EntityIdent'];
+export type Error = components['schemas']['Error'];
 export type Event = components['schemas']['Event'];
 export type HandleCorrectionMethod = components['schemas']['HandleCorrectionMethod'];
+export type I16 = components['schemas']['i16'];
 export type InitDiscography = components['schemas']['InitDiscography'];
 export type Label = components['schemas']['Label'];
 export type Language = components['schemas']['Language'];
@@ -1339,8 +1635,15 @@ export type NewSongLyrics = components['schemas']['NewSongLyrics'];
 export type NewTag = components['schemas']['NewTag'];
 export type NewTagRelation = components['schemas']['NewTagRelation'];
 export type NewTrack = components['schemas']['NewTrack'];
+export type PaginatedArtist = components['schemas']['Paginated_Artist'];
 export type PaginatedCredit = components['schemas']['Paginated_Credit'];
 export type PaginatedDiscography = components['schemas']['Paginated_Discography'];
+export type PaginatedEvent = components['schemas']['Paginated_Event'];
+export type PaginatedLabel = components['schemas']['Paginated_Label'];
+export type PaginatedRelease = components['schemas']['Paginated_Release'];
+export type PaginatedSong = components['schemas']['Paginated_Song'];
+export type PaginatedTag = components['schemas']['Paginated_Tag'];
+export type PaginatedTagAggregate = components['schemas']['Paginated_TagAggregate'];
 export type Release = components['schemas']['Release'];
 export type ReleaseArtist = components['schemas']['ReleaseArtist'];
 export type ReleaseCoverArtFormData = components['schemas']['ReleaseCoverArtFormData'];
@@ -1356,6 +1659,7 @@ export type Song = components['schemas']['Song'];
 export type SongCredit = components['schemas']['SongCredit'];
 export type SongLyrics = components['schemas']['SongLyrics'];
 export type SongRef = components['schemas']['SongRef'];
+export type SortDirection = components['schemas']['SortDirection'];
 export type Tag = components['schemas']['Tag'];
 export type TagRef = components['schemas']['TagRef'];
 export type TagRelation = components['schemas']['TagRelation'];
@@ -1367,6 +1671,7 @@ export type UploadProfileBanner = components['schemas']['UploadProfileBanner'];
 export type UserProfile = components['schemas']['UserProfile'];
 export type UserRole = components['schemas']['UserRole'];
 export type UserRoleEnum = components['schemas']['UserRoleEnum'];
+export type VoteBody = components['schemas']['VoteBody'];
 export type $defs = Record<string, never>;
 export interface operations {
     pending_correction: {
@@ -1389,7 +1694,16 @@ export interface operations {
                     "application/json": components["schemas"]["Data_Option_i32"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1399,15 +1713,51 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
-            401: {
+        };
+    };
+    vote_tag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                entity_type: "artist" | "release" | "song";
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoteBody"];
+            };
+        };
+        responses: {
+            /** @description Vote recorded */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            500: {
+            /** @description Entity or tag not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1417,6 +1767,101 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    delete_vote: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                entity_type: "artist" | "release" | "song";
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteVoteBody"];
+            };
+        };
+        responses: {
+            /** @description Vote deleted */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    get_tags: {
+        parameters: {
+            query?: {
+                cursor?: number | null;
+                limit?: number | null;
+            };
+            header?: never;
+            path: {
+                entity_type: "artist" | "release" | "song";
+                id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedTagAggregate"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -1442,19 +1887,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecArtist"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1464,6 +1906,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1489,19 +1932,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1511,6 +1951,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1537,19 +1978,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionArtist"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1559,6 +1997,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1586,7 +2025,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1596,29 +2044,12 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
     };
-    find_artist_apperances: {
+    find_artist_appearances: {
         parameters: {
             query: {
                 cursor: number;
@@ -1640,19 +2071,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataPaginatedAppearance"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1662,6 +2090,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1688,19 +2117,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataPaginatedCredit"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1710,6 +2136,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1737,19 +2164,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataPaginatedDiscography"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1759,6 +2183,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1784,19 +2209,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataInitDiscography"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1806,6 +2228,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -1829,6 +2252,53 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    explore_artist: {
+        parameters: {
+            query?: {
+                artist_type?: components["schemas"]["ArtistType"][] | null;
+                cursor?: number | null;
+                limit?: number | null;
+                sort_direction?: null | components["schemas"]["SortDirection"];
+                sort_field?: null | components["schemas"]["CorrectionSortField"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedArtist"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -1841,6 +2311,15 @@ export interface operations {
                     };
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
             500: {
                 headers: {
                     [name: string]: unknown;
@@ -1851,6 +2330,19 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -1876,7 +2368,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1886,24 +2387,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -1929,7 +2413,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1939,24 +2432,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -1982,7 +2458,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1992,24 +2477,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2033,19 +2501,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionCreditRole"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2055,6 +2520,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -2082,7 +2548,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2092,24 +2567,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2133,19 +2591,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecCreditRoleSummary"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2155,6 +2610,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -2178,19 +2634,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecEvent"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2200,6 +2653,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -2225,7 +2679,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2235,24 +2698,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2273,10 +2719,19 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Data_Event"];
+                    "application/json": components["schemas"]["DataOptionEvent"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2286,18 +2741,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2325,6 +2769,54 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    explore_event: {
+        parameters: {
+            query?: {
+                cursor?: number | null;
+                limit?: number | null;
+                sort_direction?: null | components["schemas"]["SortDirection"];
+                sort_field?: null | components["schemas"]["CorrectionSortField"];
+                start_date_from?: string | null;
+                start_date_to?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedEvent"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -2337,11 +2829,14 @@ export interface operations {
                     };
                 };
             };
-            401: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "text/plain": string;
+                };
             };
             500: {
                 headers: {
@@ -2353,6 +2848,19 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2371,6 +2879,28 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
             };
         };
     };
@@ -2393,7 +2923,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecLabel"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2403,24 +2942,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2446,7 +2968,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2456,24 +2987,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2497,7 +3011,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionLabel"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2507,24 +3030,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2552,6 +3058,55 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    explore_label: {
+        parameters: {
+            query?: {
+                cursor?: number | null;
+                founded_date_from?: string | null;
+                founded_date_to?: string | null;
+                is_dissolved?: boolean | null;
+                limit?: number | null;
+                sort_direction?: null | components["schemas"]["SortDirection"];
+                sort_field?: null | components["schemas"]["CorrectionSortField"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedLabel"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -2564,11 +3119,14 @@ export interface operations {
                     };
                 };
             };
-            401: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "text/plain": string;
+                };
             };
             500: {
                 headers: {
@@ -2580,6 +3138,19 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2601,19 +3172,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecLanguage"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2623,6 +3191,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -2644,7 +3213,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataUserProfile"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2654,24 +3232,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2697,7 +3258,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2707,24 +3277,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2748,7 +3301,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataUserProfile"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2758,24 +3320,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2801,7 +3346,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2811,24 +3365,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2852,19 +3389,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecRelease"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2874,6 +3408,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -2899,7 +3434,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2909,24 +3453,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -2950,19 +3477,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionRelease"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -2972,6 +3496,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -2999,7 +3524,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3009,24 +3543,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3054,6 +3571,53 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    explore_release: {
+        parameters: {
+            query?: {
+                cursor?: number | null;
+                limit?: number | null;
+                release_type?: components["schemas"]["ReleaseType"][] | null;
+                sort_direction?: null | components["schemas"]["SortDirection"];
+                sort_field?: null | components["schemas"]["CorrectionSortField"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedRelease"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3066,11 +3630,14 @@ export interface operations {
                     };
                 };
             };
-            401: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "text/plain": string;
+                };
             };
             500: {
                 headers: {
@@ -3082,6 +3649,19 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3107,7 +3687,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataUserProfile"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3117,36 +3706,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3168,7 +3728,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3178,36 +3747,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            409: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3233,19 +3773,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataUserProfile"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            409: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3255,18 +3792,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3290,19 +3816,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecSong"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3312,6 +3835,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -3337,7 +3861,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3347,24 +3880,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3389,19 +3905,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionSongLyrics"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3411,6 +3924,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -3436,7 +3950,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3446,24 +3969,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3491,7 +3997,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3501,24 +4016,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3542,19 +4040,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecSongLyrics"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3564,6 +4059,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -3587,19 +4083,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionSong"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3609,6 +4102,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -3636,6 +4130,53 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    explore_song: {
+        parameters: {
+            query?: {
+                cursor?: number | null;
+                language_id?: number[] | null;
+                limit?: number | null;
+                sort_direction?: null | components["schemas"]["SortDirection"];
+                sort_field?: null | components["schemas"]["CorrectionSortField"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedSong"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3648,11 +4189,14 @@ export interface operations {
                     };
                 };
             };
-            401: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "text/plain": string;
+                };
             };
             500: {
                 headers: {
@@ -3664,6 +4208,19 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3687,7 +4244,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecTag"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3697,24 +4263,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3740,7 +4289,16 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3750,24 +4308,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3791,7 +4332,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataOptionTag"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3801,24 +4351,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
-                };
-            };
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3846,6 +4379,53 @@ export interface operations {
                     "application/json": components["schemas"]["Message"];
                 };
             };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/plain": string;
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
+                };
+            };
+        };
+    };
+    explore_tag: {
+        parameters: {
+            query?: {
+                cursor?: number | null;
+                limit?: number | null;
+                sort_direction?: null | components["schemas"]["SortDirection"];
+                sort_field?: null | components["schemas"]["CorrectionSortField"];
+                tag_type?: components["schemas"]["TagType"][] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataPaginatedTag"];
+                };
+            };
             400: {
                 headers: {
                     [name: string]: unknown;
@@ -3858,11 +4438,14 @@ export interface operations {
                     };
                 };
             };
-            401: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "text/plain": string;
+                };
             };
             500: {
                 headers: {
@@ -3874,6 +4457,19 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                };
+            };
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        message: string;
+                        /** @enum {string} */
+                        status: "Err";
+                    };
+                    "text/plain": string;
                 };
             };
         };
@@ -3895,19 +4491,16 @@ export interface operations {
                     "application/json": components["schemas"]["DataVecUserRole"];
                 };
             };
-            400: {
+            /** @description Too Many Requests */
+            429: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        message: string;
-                        /** @enum {string} */
-                        status: "Err";
-                    };
+                    "text/plain": string;
                 };
             };
-            500: {
+            default: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -3917,6 +4510,7 @@ export interface operations {
                         /** @enum {string} */
                         status: "Err";
                     };
+                    "text/plain": string;
                 };
             };
         };
@@ -3925,9 +4519,10 @@ export interface operations {
 export enum ApiPaths {
     find_many_artist = "/artist",
     create_artist = "/artist",
+    explore_artist = "/artist/explore",
     find_artist_by_id = "/artist/{id}",
     upsert_artist_correction = "/artist/{id}",
-    find_artist_apperances = "/artist/{id}/appearances",
+    find_artist_appearances = "/artist/{id}/appearances",
     get_artist_credits = "/artist/{id}/credits",
     find_artist_discographies_by_type = "/artist/{id}/discographies",
     find_artist_discographies_init = "/artist/{id}/discographies/init",
@@ -3940,11 +4535,13 @@ export enum ApiPaths {
     upsert_credit_role_correction = "/credit-role/{id}",
     find_event_by_keyword = "/event",
     create_event = "/event",
+    explore_event = "/event/explore",
     find_event_by_id = "/event/{id}",
     upsert_event_correction = "/event/{id}",
     health_check = "/health_check",
     find_label_by_keyword = "/label",
     create_label = "/label",
+    explore_label = "/label/explore",
     find_label_by_id = "/label/{id}",
     upsert_label_correction = "/label/{id}",
     language_list = "/languages",
@@ -3954,6 +4551,7 @@ export enum ApiPaths {
     profile_with_name = "/profile/{name}",
     find_release_by_keyword = "/release",
     create_release = "/release",
+    explore_release = "/release/explore",
     find_release_by_id = "/release/{id}",
     update_release = "/release/{id}",
     upload_release_cover_art = "/release/{id}/cover-art",
@@ -3966,12 +4564,17 @@ export enum ApiPaths {
     create_song_lyrics = "/song-lyrics",
     find_many_song_lyrics = "/song-lyrics/many",
     update_song_lyrics = "/song-lyrics/{id}",
+    explore_song = "/song/explore",
     find_song_by_id = "/song/{id}",
     update_song = "/song/{id}",
     find_tag_by_keyword = "/tag",
     create_tag = "/tag",
+    explore_tag = "/tag/explore",
     find_tag_by_id = "/tag/{id}",
     upsert_tag_correction = "/tag/{id}",
     user_roles = "/user-roles",
-    pending_correction = "/{entity_type}/{id}/pending-correction"
+    pending_correction = "/{entity_type}/{id}/pending-correction",
+    vote_tag = "/{entity_type}/{id}/tag-vote",
+    delete_vote = "/{entity_type}/{id}/tag-vote",
+    get_tags = "/{entity_type}/{id}/tags"
 }
