@@ -12,7 +12,7 @@
 	},
 	"dependencies": {
 		"@floating-ui/dom": "^1.7.3",
-		"@formisch/solid": "^0.4.0",
+		"@formisch/solid": "^0.7.0",
 		"@kobalte/core": "^0.13.11",
 		"@lingui-solid/solid": "^5.1.4",
 		"@modular-forms/solid": "^0.25.1",
@@ -51,10 +51,10 @@
 		"solid-popper": "^0.3.0",
 		"solid-radix-icons": "^1.0.0",
 		"tailwind-merge": "^3.3.1",
-		"valibot": "1.1.0"
+		"valibot": "1.2.0"
 	},
 	"devDependencies": {
-		"@ark/attest": "^0.48.2",
+		"@ark/attest": "^0.56.0",
 		"@chromatic-com/storybook": "^4.1.1",
 		"@eslint/js": "^9.33.0",
 		"@faker-js/faker": "^9.9.0",
