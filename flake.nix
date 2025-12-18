@@ -33,6 +33,7 @@
       {
         devShell = pkgs.mkShell {
           packages = with pkgs; [
+            just-lsp
             nodejs_22
             pnpm
             just

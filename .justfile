@@ -1,7 +1,5 @@
 mod i18n '.just/i18n'
-mod api '.just/api'
-
-alias gen-api := api::gen-api
+import '.just/api.just'
 
 default:
 	@just --list

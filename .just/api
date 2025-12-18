@@ -1,6 +1,0 @@
-set shell := ["bash", "-c"]
-
-API_SCHEMA := env_var_or_default("API_SCHEMA", "")
-
-gen-api schema=API_SCHEMA:
-	@set -euo pipefail; SCHEMA="{{schema}}"; if [[ -z "$SCHEMA" && -n "${VITE_SERVER_URL:-}" ]]; then SCHEMA="${VITE_SERVER_URL%/}/openapi.json"; fi; if [[ -z "$SCHEMA" ]]; then echo "API_SCHEMA 不能为空（或设置 VITE_SERVER_URL 以默认拼出 /openapi.json）" >&2; exit 1; fi; rm -f packages/api/src/gen.ts; pnpm --filter @thc/api exec openapi-typescript "$SCHEMA" -o packages/api/src/gen.ts --alphabetize --array-length --make-paths-enum --export-type --root-types --root-types-no-schema-prefix
