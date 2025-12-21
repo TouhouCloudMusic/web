@@ -477,8 +477,8 @@ function formatArtists(artists: { name: string }[] | undefined) {
 
 function displayReleaseDate(date: Release["release_date"] | null | undefined) {
 	if (!date) return
-	if ("Year" === date.precision) return date.value.slice(0, 4)
-	if ("Month" === date.precision) return date.value.slice(0, 7)
+	if (date.precision === "Year") return date.value.slice(0, 4)
+	if (date.precision === "Month") return date.value.slice(0, 7)
 	return date.value
 }
 
