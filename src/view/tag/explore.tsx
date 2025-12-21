@@ -9,6 +9,20 @@ import type { TagTreeNode } from "~/mock/tag"
 const DEFAULT_DEPTH = 2
 const ROOT_COUNT = 6
 const MAX_DEPTH = 4
+const MOCK_DELAY_RANGE_MS = [200, 600]
+
+let sleep = (ms: number) => {
+	return new Promise<void>((resolve) => {
+		setTimeout(resolve, ms)
+	})
+}
+
+let mockDelayMs = () => {
+	let min = MOCK_DELAY_RANGE_MS[0] ?? 0
+	let max = MOCK_DELAY_RANGE_MS[1] ?? min
+	let span = Math.max(0, max - min)
+	return min + Math.floor(Math.random() * (span + 1))
+}
 
 export function TagExplore() {
 	let [expandedIds, setExpandedIds] = createSignal<Set<number>>(new Set())
@@ -21,20 +35,26 @@ export function TagExplore() {
 
 	let queryOptions = () => ({
 		queryKey: ["tag::tree", ROOT_COUNT, MAX_DEPTH, DEFAULT_DEPTH],
-		queryFn: () =>
-			createMockTagTree({
+		queryFn: async () => {
+			await sleep(mockDelayMs())
+			return createMockTagTree({
 				rootCount: ROOT_COUNT,
 				maxDepth: MAX_DEPTH,
 				childCountRange: [1, 3],
-			}),
+			})
+		},
 		onSuccess: seedExpanded,
 	})
 
 	let treeQuery = useQuery(queryOptions)
 	let nodes = () => treeQuery.data ?? []
 
-	let toggleExpanded = (id: number) => {
+	let toggleExpanded = (id: number, depth: number, expanded: boolean) => {
 		setHasInteracted(true)
+		if (0 === depth && expanded) {
+			setExpandedIds(new Set<number>())
+			return
+		}
 		setExpandedIds((prev) => {
 			let next = new Set(prev)
 			if (next.has(id)) {
@@ -54,13 +74,13 @@ export function TagExplore() {
 				</h1>
 				<Show
 					when={!treeQuery.isLoading}
-					fallback={<div class="text-sm text-tertiary">Loading...</div>}
+					fallback={<TagTreeSkeleton />}
 				>
 					<Show
 						when={nodes().length > 0}
 						fallback={<div class="text-sm text-tertiary">No tags</div>}
 					>
-						<div class="rounded-md border border-slate-200 p-3">
+						<div class="p-3">
 							<TagTreeList
 								nodes={nodes()}
 								depth={0}
@@ -79,7 +99,7 @@ type TagTreeListProps = {
 	nodes: TagTreeNode[]
 	depth: number
 	expandedIds: () => Set<number>
-	onToggle: (id: number) => void
+	onToggle: (id: number, depth: number, expanded: boolean) => void
 }
 
 function TagTreeList(props: TagTreeListProps) {
@@ -103,7 +123,7 @@ type TagTreeNodeProps = {
 	node: TagTreeNode
 	depth: number
 	expandedIds: () => Set<number>
-	onToggle: (id: number) => void
+	onToggle: (id: number, depth: number, expanded: boolean) => void
 }
 
 function TagTreeNode(props: TagTreeNodeProps) {
@@ -115,7 +135,7 @@ function TagTreeNode(props: TagTreeNodeProps) {
 
 	let toggleNode = () => {
 		if (!hasChildren()) return
-		props.onToggle(props.node.id)
+		props.onToggle(props.node.id, props.depth, isExpanded())
 	}
 
 	return (
@@ -151,7 +171,12 @@ function TagTreeNode(props: TagTreeNodeProps) {
 					>
 						{props.node.name}
 					</Link>
-					<span class="text-xs text-slate-500">{props.node.type}</span>
+					<div class="flex flex-col text-xs text-slate-500">
+						<span>{props.node.type}</span>
+						<Show when={props.node.short_description}>
+							<span class="text-slate-400">{props.node.short_description}</span>
+						</Show>
+					</div>
 				</div>
 			</div>
 			<Show when={isExpanded()}>
@@ -165,6 +190,65 @@ function TagTreeNode(props: TagTreeNodeProps) {
 				</div>
 			</Show>
 		</li>
+	)
+}
+
+type TagTreeSkeletonItemProps = {
+	depth: number
+	width: number
+}
+
+function TagTreeSkeletonItem(props: TagTreeSkeletonItemProps) {
+	let indentStyle = () => ({ "padding-left": `${props.depth * 16}px` })
+	let mainStyle = () => ({ width: `${props.width}px` })
+	let subWidth = () => Math.max(80, props.width - 48)
+	let subStyle = () => ({ width: `${subWidth()}px` })
+
+	return (
+		<div
+			class="flex items-start gap-2"
+			style={indentStyle()}
+		>
+			<div class="mt-1 h-4 w-4 rounded bg-slate-200" />
+			<div class="flex flex-col gap-2">
+				<div
+					class="h-4 rounded bg-slate-200"
+					style={mainStyle()}
+				/>
+				<div
+					class="h-3 rounded bg-slate-100"
+					style={subStyle()}
+				/>
+			</div>
+		</div>
+	)
+}
+
+function TagTreeSkeleton() {
+	const skeletonItems = [
+		{ id: 0, depth: 0, width: 180 },
+		{ id: 1, depth: 1, width: 220 },
+		{ id: 2, depth: 2, width: 200 },
+		{ id: 3, depth: 1, width: 240 },
+		{ id: 4, depth: 2, width: 190 },
+		{ id: 5, depth: 0, width: 210 },
+		{ id: 6, depth: 1, width: 170 },
+		{ id: 7, depth: 2, width: 230 },
+	]
+
+	return (
+		<div class="animate-pulse p-3">
+			<div class="flex flex-col gap-3">
+				<For each={skeletonItems}>
+					{(item) => (
+						<TagTreeSkeletonItem
+							depth={item.depth}
+							width={item.width}
+						/>
+					)}
+				</For>
+			</div>
+		</div>
 	)
 }
 

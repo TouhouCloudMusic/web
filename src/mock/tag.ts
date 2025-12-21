@@ -74,6 +74,7 @@ export type TagTreeNode = {
 	id: number
 	name: string
 	type: Tag["type"]
+	short_description: Tag["short_description"]
 	children: TagTreeNode[]
 }
 
@@ -109,6 +110,7 @@ export function createMockTagTree(params: TagTreeParams): TagTreeNode[] {
 			id: base.id,
 			name: base.name,
 			type: base.type,
+			short_description: base.short_description,
 			children,
 		}
 	}
